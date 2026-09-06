@@ -84,6 +84,10 @@ interface TasbihDao {
     @Delete
     suspend fun delete(tasbih: TasbihEntity)
 
+    /** Startup cleanup: drop retired built-in situational dhikr by id. */
+    @Query("DELETE FROM tasbih WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<String>)
+
     @Query("SELECT COUNT(*) FROM tasbih")
     suspend fun count(): Int
 }

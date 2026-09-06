@@ -41,6 +41,24 @@ class DhikrApplication : Application() {
                 database.routineDao().insertRoutines(SeedData.presetRoutines)
                 database.routineDao().insertSteps(SeedData.presetRoutineSteps)
             }
+            purgeRetiredTasbih()
+        }
+    }
+
+    /**
+     * Drop the retired situational built-in dhikr from an existing database
+     * (fresh installs never seed them). Keeps any the user favourited, and any a
+     * routine step still references — routine_step -> tasbih is RESTRICT, so
+     * deleting a referenced row would throw.
+     */
+    private suspend fun purgeRetiredTasbih() {
+        val tasbihDao = database.tasbihDao()
+        val routineDao = database.routineDao()
+        val favourites = tasbihDao.getBuiltInFavoriteIds().toSet()
+        val purgeable = SeedData.retiredBuiltInIds
+            .filter { it !in favourites && routineDao.countStepsUsingTasbih(it) == 0 }
+        if (purgeable.isNotEmpty()) {
+            tasbihDao.deleteByIds(purgeable)
         }
     }
 }
