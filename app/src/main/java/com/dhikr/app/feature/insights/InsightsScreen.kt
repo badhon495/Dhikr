@@ -39,6 +39,7 @@ import com.dhikr.app.core.database.TasbihHistoryGroup
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.INSIGHTS_SCREEN_TEST_TAG
+import com.dhikr.app.ui.CheckIcon
 import com.dhikr.app.ui.ScheduleIcon
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
@@ -218,6 +219,7 @@ fun InsightsScreen(
                             count < 100 -> colors.sageMid
                             else -> colors.sage
                         }
+                        val goalMet = count > 0 && count >= state.dailyGoalTarget
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -228,6 +230,17 @@ fun InsightsScreen(
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(day.localizedDigits(LocalAppLanguage.current), fontSize = 12.sp, color = colors.text)
+                            if (goalMet) {
+                                Icon(
+                                    imageVector = CheckIcon,
+                                    contentDescription = stringResource(R.string.insights_goal_met),
+                                    tint = colors.terra,
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(2.dp)
+                                        .size(10.dp),
+                                )
+                            }
                         }
                     }
                     repeat(7 - week.size) { Box(modifier = Modifier.weight(1f)) }

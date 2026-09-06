@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.database.HistoryRepository
 import com.dhikr.app.core.database.MonthSummary
+import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.database.TasbihHistoryGroup
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -28,6 +30,7 @@ data class InsightsUiState(
     val calendarIntensity: Map<Int, Int> = emptyMap(),
     val historyByTasbih: List<TasbihHistoryGroup> = emptyList(),
     val previousMonth: MonthSummary? = null,
+    val dailyGoalTarget: Int = 500,
     val isEmpty: Boolean = true,
 )
 
@@ -45,7 +48,10 @@ data class InsightsUiState(
  * the heavy reads overlap instead of running back to back.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class InsightsViewModel(private val repository: HistoryRepository) : ViewModel() {
+class InsightsViewModel(
+    private val repository: HistoryRepository,
+    private val preferencesRepository: AppPreferencesRepository,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(InsightsUiState())
     val uiState: StateFlow<InsightsUiState> = _uiState.asStateFlow()
@@ -77,11 +83,13 @@ class InsightsViewModel(private val repository: HistoryRepository) : ViewModel()
                     }
                     val history = async { repository.historyByTasbih() }
                     val previousMonth = async { repository.previousMonthSummary() }
+                    val dailyGoalTarget = async { preferencesRepository.dailyGoalTarget.first() }
                     _uiState.value = _uiState.value.copy(
                         last7Days = last7Days.await(),
                         calendarIntensity = calendar.await(),
                         historyByTasbih = history.await(),
                         previousMonth = previousMonth.await(),
+                        dailyGoalTarget = dailyGoalTarget.await(),
                     )
                 }
             }
@@ -96,9 +104,12 @@ class InsightsViewModel(private val repository: HistoryRepository) : ViewModel()
         val lang: AppLanguage,
     )
 
-    class Factory(private val repository: HistoryRepository) : ViewModelProvider.Factory {
+    class Factory(
+        private val repository: HistoryRepository,
+        private val preferencesRepository: AppPreferencesRepository,
+    ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            InsightsViewModel(repository) as T
+            InsightsViewModel(repository, preferencesRepository) as T
     }
 }

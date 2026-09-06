@@ -196,6 +196,7 @@
     <string name="insights_bar_chart_description">গত ৭ দিন: %1$s</string>
     <string name="insights_consistency">ধারাবাহিকতা</string>
     <string name="insights_consistency_meta">এই মাসে %1$d দিন</string>
+    <string name="insights_goal_met">দৈনিক লক্ষ্য পূর্ণ</string>
     <string name="insights_legend_less">কম</string>
     <string name="insights_legend_more">বেশি</string>
     <string name="insights_history_title">ইতিহাস</string>

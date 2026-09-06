@@ -348,7 +348,7 @@ fun DhikrApp(
                 }
                 composable(ROUTE_INSIGHTS) {
                     val viewModel: InsightsViewModel = viewModel(
-                        factory = InsightsViewModel.Factory(historyRepository),
+                        factory = InsightsViewModel.Factory(historyRepository, preferencesRepository),
                     )
                     InsightsScreen(
                         viewModel = viewModel,

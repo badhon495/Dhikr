@@ -199,6 +199,7 @@
     <string name="insights_bar_chart_description">Last 7 days: %1$s</string>
     <string name="insights_consistency">Consistency</string>
     <string name="insights_consistency_meta">%1$d days this month</string>
+    <string name="insights_goal_met">Daily goal met</string>
     <string name="insights_legend_less">less</string>
     <string name="insights_legend_more">more</string>
     <string name="insights_history_title">History</string>

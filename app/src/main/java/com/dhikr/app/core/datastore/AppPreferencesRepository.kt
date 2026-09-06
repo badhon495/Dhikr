@@ -42,7 +42,7 @@ class AppPreferencesRepository(private val context: Context) {
     private val benefitsLanguageKey = stringPreferencesKey("benefits_language")
     private val benefitsPromptOverrideKey = stringPreferencesKey("benefits_prompt_override")
 
-    val dailyGoalTarget = context.preferencesDataStore.data.map { it[dailyGoalKey] ?: 100 }
+    val dailyGoalTarget = context.preferencesDataStore.data.map { it[dailyGoalKey] ?: 500 }
 
     suspend fun setDailyGoalTarget(value: Int) {
         context.preferencesDataStore.edit { it[dailyGoalKey] = value }

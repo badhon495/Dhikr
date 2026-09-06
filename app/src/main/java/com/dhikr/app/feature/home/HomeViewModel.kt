@@ -29,7 +29,7 @@ data class ContinueSessionInfo(val tasbihName: String, val count: Int, val targe
 
 data class HomeUiState(
     val dateLabel: String = "",
-    val dailyGoalTarget: Int = 100,
+    val dailyGoalTarget: Int = 500,
     val todayTotal: Int = 0,
     val continueSession: ContinueSessionInfo? = null,
     val favorites: List<TasbihEntity> = emptyList(),
