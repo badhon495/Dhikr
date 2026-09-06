@@ -76,7 +76,11 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // lifewithallah's Morning page, and expanded the "Morning Dhikr" preset
     // routine from the 3-step stub to the full 24-step page sequence. No
     // schema change; bump reseeds. fallbackToDestructiveMigration.
-    version = 18,
+    // v19: added the 8 evening-specific adhkar dhikr (eve_*) from
+    // lifewithallah's Evening page, and expanded the "Evening Dhikr" preset
+    // routine from the 3-step stub to the full 23-step page sequence. No
+    // schema change; bump reseeds. fallbackToDestructiveMigration.
+    version = 19,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {

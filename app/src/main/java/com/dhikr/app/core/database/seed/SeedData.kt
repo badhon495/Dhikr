@@ -863,6 +863,95 @@ object SeedData {
             source = "an-Nasa'i, as-Sunan al-Kubra 10657",
         ),
 
+        // --- Evening adhkar (lifewithallah.com/dhikr-dua/main-adhkar/evening)
+        // Only the time-specific "amsayna/amsa" (evening) wordings that have no
+        // existing built-in. The evening page's other dhikr reuse the same rows
+        // as the morning page (kursi, morn_3quls, istighfar_sayyid, hamm_hazan,
+        // morn_afiyah, morn_fatir, ya_hayyu_astaghith, morn_afini_badani,
+        // hasbiyallah_arsh, morn_raditu, morn_la_yadurru, bihamdihi,
+        // tahlil_wahdahu, morn_tasbih100, durood_ali) — those texts carry no
+        // morning/evening word. The "Evening Dhikr" preset walks the whole page.
+        dhikr(
+            id = "eve_nimah",
+            name = "Allahumma ma amsa bi min ni'matin",
+            arabic = "اللّٰهُمَّ مَا أَمْسَىٰ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+            pronunciation = "আল্লাহুম্মা মা আমসা বি মিন নিমাতিন আও বিআহাদিন মিন খালকিকা ফামিনকা ওয়াহদাকা লা শারিকা লাকা, ফালাকাল হামদু ওয়া লাকাশ শুকর",
+            translation = "হে আল্লাহ, সন্ধ্যায় আমার বা আপনার কোনো সৃষ্টির কাছে যে নিয়ামত পৌঁছেছে তা কেবল আপনার কাছ থেকে, আপনার কোনো শরিক নেই; সকল প্রশংসা ও কৃতজ্ঞতা আপনারই — O Allah, whatever blessing has come to me or to any of Your creation this evening is from You alone, no partner have You; to You is all praise and all thanks",
+            lapTarget = 1,
+            note = "যে সন্ধ্যায় এটি বলে সে রাতের শোকর আদায় করল — আবু দাউদ ৫০৭৩।",
+            source = "Sunan Abi Dawud 5073",
+        ),
+        dhikr(
+            id = "eve_fitrah",
+            name = "Amsayna ala fitratil islam",
+            arabic = "أَمْسَيْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+            pronunciation = "আমসাইনা আলা ফিতরাতিল ইসলাম, ওয়া আলা কালিমাতিল ইখলাস, ওয়া আলা দিনি নাবিয়্যিনা মুহাম্মাদ, ওয়া আলা মিল্লাতি আবিনা ইবরাহিমা হানিফাম মুসলিমাও ওয়া মা কানা মিনাল মুশরিকিন",
+            translation = "আমরা সন্ধ্যায় উপনীত হলাম ইসলামের ফিতরাত, ইখলাসের কালিমা, আমাদের নবি মুহাম্মাদের দ্বীন ও আমাদের পিতা ইবরাহিমের মিল্লাতের উপর—যিনি একনিষ্ঠ মুসলিম ছিলেন, মুশরিকদের অন্তর্ভুক্ত ছিলেন না — We have entered the evening upon the natural way of Islam, the word of sincerity, the religion of our Prophet Muhammad, and the way of our father Ibrahim, upright and Muslim, and he was not of the polytheists",
+            lapTarget = 1,
+            note = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — আহমাদ ১৫৩৬০, নাসাঈ।",
+            source = "Musnad Ahmad 15360",
+        ),
+        dhikr(
+            id = "eve_uthni",
+            name = "Amsaytu uthni alayka hamda",
+            arabic = "أَمْسَيْتُ أُثْنِي عَلَيْكَ حَمْدًا، وَأَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللّٰهُ",
+            pronunciation = "আমসাইতু উছনি আলাইকা হামদা, ওয়া আশহাদু আন লা ইলাহা ইল্লাল্লাহ",
+            translation = "আমি সন্ধ্যায় উপনীত হলাম আপনার প্রশংসা করতে করতে, এবং সাক্ষ্য দিই আল্লাহ ছাড়া কোনো উপাস্য নেই — I have entered the evening praising You, and I bear witness that there is no god but Allah",
+            lapTarget = 3,
+            note = "নাসাঈ, আস-সুনানুল কুবরা ১০৪০৬।",
+            source = "an-Nasa'i, as-Sunan al-Kubra 10406",
+        ),
+        dhikr(
+            id = "eve_mulk_shar",
+            name = "Amsayna wa amsal mulku lillah, Rabbi as'aluka khayra ma fi hadhihil laylah",
+            arabic = "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلّٰهِ وَالْحَمْدُ لِلّٰهِ، لَا إِلَٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+            pronunciation = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহি ওয়াল হামদু লিল্লাহ, লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, রব্বি আসআলুকা খাইরা মা ফি হাযিহিল লাইলাতি ওয়া খাইরা মা বাদাহা, ওয়া আউযু বিকা মিন শাররি মা ফি হাযিহিল লাইলাতি ওয়া শাররি মা বাদাহা, রব্বি আউযু বিকা মিনাল কাসালি ওয়া সূইল কিবার, রব্বি আউযু বিকা মিন আযাবিন ফিন নারি ওয়া আযাবিন ফিল কাবর",
+            translation = "আমরা সন্ধ্যায় উপনীত হলাম আর রাজত্ব আল্লাহরই, সকল প্রশংসা আল্লাহর; আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; হে রব, এই রাত ও পরবর্তীর কল্যাণ চাই, এই রাত ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই; হে রব, অলসতা ও বার্ধক্যের মন্দ থেকে আশ্রয় চাই; হে রব, জাহান্নাম ও কবরের আযাব থেকে আশ্রয় চাই — We have entered the evening and the dominion belongs to Allah… My Lord, I ask You for the good of this night and what follows it, and I seek refuge in You from the evil of this night and what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from the punishment of the Fire and the punishment of the grave",
+            lapTarget = 1,
+            note = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — সহীহ মুসলিম ২৭২৩।",
+            source = "Sahih Muslim 2723",
+        ),
+        dhikr(
+            id = "eve_mulk_alamin",
+            name = "Amsayna wa amsal mulku lillahi Rabbil alamin",
+            arabic = "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلّٰهِ رَبِّ الْعَالَمِينَ، اللّٰهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَٰذِهِ اللَّيْلَةِ، فَتْحَهَا وَنَصْرَهَا وَنُورَهَا وَبَرَكَتَهَا وَهُدَاهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهَا وَشَرِّ مَا بَعْدَهَا",
+            pronunciation = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহি রব্বিল আলামিন, আল্লাহুম্মা ইন্নি আসআলুকা খাইরা হাযিহিল লাইলাহ, ফাতহাহা ওয়া নাসরাহা ওয়া নূরাহা ওয়া বারাকাতাহা ওয়া হুদাহা, ওয়া আউযু বিকা মিন শাররি মা ফিহা ওয়া শাররি মা বাদাহা",
+            translation = "আমরা সন্ধ্যায় উপনীত হলাম আর রাজত্ব বিশ্বজগতের রব আল্লাহরই; হে আল্লাহ, আমি এই রাতের কল্যাণ চাই—এর বিজয়, সাহায্য, নূর, বরকত ও হেদায়েত; আর এর ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই — We have entered the evening and the dominion belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this night: its victory, its help, its light, its blessing and its guidance; and I seek refuge in You from the evil in it and the evil after it",
+            lapTarget = 1,
+            note = "আবু দাউদ ৫০৮৪।",
+            source = "Sunan Abi Dawud 5084",
+        ),
+        dhikr(
+            id = "eve_ushhiduka",
+            name = "Allahumma inni amsaytu ush-hiduka wa ush-hidu hamalata arshik",
+            arabic = "اللّٰهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ وَمَلَائِكَتَكَ وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللّٰهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+            pronunciation = "আল্লাহুম্মা ইন্নি আমসাইতু উশহিদুকা, ওয়া উশহিদু হামালাতা আরশিকা ওয়া মালাইকাতাকা ওয়া জামিআ খালকিকা, আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
+            translation = "হে আল্লাহ, আমি সন্ধ্যায় উপনীত হয়ে আপনাকে, আপনার আরশ বহনকারীদের, ফেরেশতাদের ও সকল সৃষ্টিকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন, এবং মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I have entered the evening calling You to witness, and calling the bearers of Your Throne, Your angels and all Your creation to witness, that You are Allah, none is worthy of worship but You alone, no partner have You, and that Muhammad is Your slave and Messenger",
+            lapTarget = 4,
+            note = "যে সকাল বা সন্ধ্যায় এটি চারবার বলে, আল্লাহ তাকে জাহান্নাম থেকে মুক্ত করে দেন — আবু দাউদ ৫০৬৯।",
+            source = "Sunan Abi Dawud 5069",
+        ),
+        dhikr(
+            id = "eve_bika_amsayna",
+            name = "Allahumma bika amsayna wa bika asbahna",
+            arabic = "اللّٰهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ",
+            pronunciation = "আল্লাহুম্মা বিকা আমসাইনা ওয়া বিকা আসবাহনা ওয়া বিকা নাহইয়া ওয়া বিকা নামুতু ওয়া ইলাইকাল মাসীর",
+            translation = "হে আল্লাহ, আপনার অনুগ্রহে আমরা সন্ধ্যায় উপনীত হলাম, আপনার অনুগ্রহে সকালে, আপনার অনুগ্রহে বাঁচি ও মরি, এবং আপনার কাছেই প্রত্যাবর্তন — O Allah, by You we enter the evening and by You we enter the morning, by You we live and by You we die, and to You is the return",
+            lapTarget = 1,
+            note = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — তিরমিযি ৩৩৯১, আবু দাউদ ৫০৬৮।",
+            source = "Jami at-Tirmidhi 3391; Sunan Abi Dawud 5068",
+        ),
+        dhikr(
+            id = "eve_kalimat_tammat",
+            name = "A'udhu bi kalimatillahit tammati min sharri ma khalaq",
+            arabic = "أَعُوذُ بِكَلِمَاتِ اللّٰهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+            pronunciation = "আউযু বিকালিমাতিল্লাহিত তাম্মাতি মিন শাররি মা খালাক",
+            translation = "আমি আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় তাঁর সৃষ্টির অনিষ্ট থেকে আশ্রয় চাই — I seek refuge in Allah's perfect words from the evil of what He has created",
+            lapTarget = 3,
+            note = "যে সন্ধ্যায় তিনবার এটি বলে, সে রাতে কোনো বিষ বা পোকা তার ক্ষতি করবে না — তিরমিযি ৩৬০৪, ইবনে হিব্বান ১০২১।",
+            source = "Jami at-Tirmidhi 3604",
+        ),
+
         // --- Batch 2 (retained): the four non-situational praise/dua items
         // kept when the occasion-bound adhkar were retired (see retiredBuiltInIds).
         dhikr(
@@ -1030,7 +1119,7 @@ object SeedData {
     )
 
     val presetRoutineSteps: List<RoutineStepEntity> by lazy {
-        coreRoutineSteps + asmaUlHusnaSteps + istighfarSteps + morningSteps
+        coreRoutineSteps + asmaUlHusnaSteps + istighfarSteps + morningSteps + eveningSteps
     }
 
     // Morning Dhikr: the full sequence from
@@ -1068,6 +1157,38 @@ object SeedData {
         RoutineStepEntity(routineId = "morning", tasbihId = id, stepOrder = i, targetCount = count)
     }
 
+    // Evening Dhikr: the full sequence from
+    // lifewithallah.com/dhikr-dua/main-adhkar/evening, in page order. Replaces
+    // the old 3-step stub. Rows shared with the morning page carry no
+    // morning/evening word; the eve_* rows are the "amsayna/amsa" wordings.
+    private val eveningSteps: List<RoutineStepEntity> = listOf(
+        "kursi" to 1,
+        "morn_3quls" to 3,
+        "istighfar_sayyid" to 1,
+        "hamm_hazan" to 1,
+        "morn_afiyah" to 1,
+        "morn_fatir" to 1,
+        "ya_hayyu_astaghith" to 1,
+        "eve_nimah" to 1,
+        "eve_fitrah" to 1,
+        "eve_uthni" to 3,
+        "eve_mulk_shar" to 1,
+        "eve_mulk_alamin" to 1,
+        "eve_ushhiduka" to 4,
+        "eve_bika_amsayna" to 1,
+        "morn_afini_badani" to 3,
+        "hasbiyallah_arsh" to 7,
+        "morn_raditu" to 3,
+        "morn_la_yadurru" to 3,
+        "bihamdihi" to 100,
+        "tahlil_wahdahu" to 100,
+        "morn_tasbih100" to 33,
+        "durood_ali" to 10,
+        "eve_kalimat_tammat" to 3,
+    ).mapIndexed { i, (id, count) ->
+        RoutineStepEntity(routineId = "evening", tasbihId = id, stepOrder = i, targetCount = count)
+    }
+
     // Istighfar: the 9 Qur'anic + 10 sunnah forms from
     // lifewithallah.com/dhikr-dua/main-adhkar/istighfar, in the page's order.
     // Step 13 is the pre-existing `afuww` tasbih (that page's sunnah #4).
@@ -1083,14 +1204,8 @@ object SeedData {
     }
 
     private val coreRoutineSteps: List<RoutineStepEntity> = listOf(
-        // Morning Dhikr steps live in `morningSteps` (full lifewithallah sequence).
-        // Evening Dhikr: same three, evening framing — no separate evening-specific
-        // prototype data exists, so this reuses the same structure as Morning per
-        // the plan's own "Evening Dhikr" listing (plan.md §22) which gives no
-        // distinct counts of its own.
-        RoutineStepEntity(routineId = "evening", tasbihId = "subhan", stepOrder = 0, targetCount = 33),
-        RoutineStepEntity(routineId = "evening", tasbihId = "hamd", stepOrder = 1, targetCount = 33),
-        RoutineStepEntity(routineId = "evening", tasbihId = "akbar", stepOrder = 2, targetCount = 34),
+        // Morning Dhikr steps live in `morningSteps`; Evening Dhikr steps in
+        // `eveningSteps` (both the full lifewithallah sequences).
         // After Salah: matches the prototype's `salah` routine exactly (same 3 steps)
         RoutineStepEntity(routineId = "after_salah", tasbihId = "subhan", stepOrder = 0, targetCount = 33),
         RoutineStepEntity(routineId = "after_salah", tasbihId = "hamd", stepOrder = 1, targetCount = 33),
