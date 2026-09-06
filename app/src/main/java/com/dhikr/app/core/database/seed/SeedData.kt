@@ -712,6 +712,157 @@ object SeedData {
             source = "al-Mu'jam al-Kabir (Tabarani); Musnad ash-Shamiyyin 2155",
         ),
 
+        // --- Morning adhkar (lifewithallah.com/dhikr-dua/main-adhkar/morning)
+        // The dhikr from that page not already covered by an existing built-in.
+        // Ayat al-Kursi (`kursi`), Subhanallahi wa bihamdihi (`bihamdihi`),
+        // La ilaha illallahu wahdahu... (`tahlil_wahdahu`), Hasbiyallahu...
+        // (`hasbiyallah_arsh`), the hamm/hazan dua (`hamm_hazan`), Ya Hayyu ya
+        // Qayyum... (`ya_hayyu_astaghith`), Sayyid al-Istighfar
+        // (`istighfar_sayyid`), Astaghfirullaha wa atubu ilayh
+        // (`istighfar_atubu`), the durood (`durood_ali`) and adada khalqih
+        // (`adada_khalqih`) are reused as-is. The "Morning Dhikr" preset walks
+        // the whole page in order.
+        dhikr(
+            id = "morn_3quls",
+            name = "Al-Ikhlas, Al-Falaq, An-Nas (3 Quls)",
+            arabic = "قُلْ هُوَ اللّٰهُ أَحَدٌ… ۞ قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ… ۞ قُلْ أَعُوذُ بِرَبِّ النَّاسِ…",
+            pronunciation = "কুল হুওয়াল্লাহু আহাদ… কুল আউযু বিরব্বিল ফালাক… কুল আউযু বিরব্বিন নাস…",
+            translation = "সূরা আল-ইখলাস, আল-ফালাক ও আন-নাস — Say: He is Allah, the One… ; Say: I seek refuge in the Lord of the daybreak… ; Say: I seek refuge in the Lord of mankind…",
+            lapTarget = 3,
+            note = "সকাল-সন্ধ্যায় তিনবার পড়লে সবকিছু থেকে যথেষ্ট হয় — তিরমিযি ৩৫৭৫। পূর্ণ সূরা তিনটি তিলাওয়াত করুন।",
+            source = "Jami at-Tirmidhi 3575",
+        ),
+        dhikr(
+            id = "morn_afiyah",
+            name = "Allahumma inni as'alukal afiyata fid dunya wal akhirah",
+            arabic = "اللّٰهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللّٰهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللّٰهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللّٰهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
+            pronunciation = "আল্লাহুম্মা ইন্নি আসআলুকাল আফিয়াতা ফিদ দুনইয়া ওয়াল আখিরাহ, আল্লাহুম্মা ইন্নি আসআলুকাল আফওয়া ওয়াল আফিয়াতা ফি দিনি ওয়া দুনইয়ায়া ওয়া আহলি ওয়া মালি, আল্লাহুম্মাসতুর আওরাতি ওয়া আমিন রাওআতি, আল্লাহুম্মাহফাযনি মিন বাইনি ইয়াদাইয়া ওয়া মিন খালফি ওয়া আন ইয়ামিনি ওয়া আন শিমালি ওয়া মিন ফাওকি, ওয়া আউযু বিআযামাতিকা আন উগতালা মিন তাহতি",
+            translation = "হে আল্লাহ, দুনিয়া ও আখিরাতে সুস্থতা চাই; হে আল্লাহ, আমার দ্বীন, দুনিয়া, পরিবার ও সম্পদে ক্ষমা ও সুস্থতা চাই; হে আল্লাহ, আমার দোষ ঢেকে দিন ও ভয় দূর করুন; হে আল্লাহ, আমার সামনে-পিছনে, ডানে-বামে ও উপর থেকে রক্ষা করুন, এবং নিচ থেকে অতর্কিতে ধ্বংস হওয়া থেকে আপনার মহত্ত্বের অসিলায় আশ্রয় চাই — O Allah, I ask You for wellbeing in this world and the next. O Allah, I ask You for pardon and wellbeing in my religion, my worldly affairs, my family and my wealth. O Allah, conceal my faults and calm my fears. O Allah, guard me from before me and behind me, from my right and my left and from above me, and I seek refuge in Your Greatness from being destroyed from beneath me",
+            lapTarget = 1,
+            note = "নবি (সাঃ) সকাল-সন্ধ্যায় কখনো এ দুআ ছাড়তেন না — আবু দাউদ ৫০৭৪, ইবনে মাজাহ ৩৮৭১।",
+            source = "Sunan Abi Dawud 5074; Sunan Ibn Majah 3871",
+        ),
+        dhikr(
+            id = "morn_fatir",
+            name = "Allahumma Fatiras samawati wal ard, alimal ghaybi wash shahadah",
+            arabic = "اللّٰهُمَّ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَىٰ نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَىٰ مُسْلِمٍ",
+            pronunciation = "আল্লাহুম্মা ফাতিরাস সামাওয়াতি ওয়াল আরদ, আলিমাল গাইবি ওয়াশ শাহাদাহ, রব্বা কুল্লি শাইইন ওয়া মালিকাহু, আশহাদু আন লা ইলাহা ইল্লা আনতা, আউযু বিকা মিন শাররি নাফসি, ওয়া মিন শাররিশ শাইতানি ওয়া শিরকিহি, ওয়া আন আকতারিফা আলা নাফসি সূআন আও আজুররাহু ইলা মুসলিম",
+            translation = "হে আল্লাহ, আসমান-জমিনের স্রষ্টা, দৃশ্য-অদৃশ্যের জ্ঞানী, সবকিছুর রব ও মালিক; আমি সাক্ষ্য দিই আপনি ছাড়া কোনো উপাস্য নেই; আমার নফসের অনিষ্ট থেকে, শয়তান ও তার শিরক থেকে, এবং নিজের বা কোনো মুসলিমের উপর অনিষ্ট ডেকে আনা থেকে আপনার আশ্রয় চাই — O Allah, Creator of the heavens and the earth, Knower of the unseen and the seen, Lord and Sovereign of all things; I bear witness there is no god but You. I seek refuge in You from the evil of my self, from the evil of Shaytan and his shirk, and from bringing evil upon myself or upon a Muslim",
+            lapTarget = 1,
+            note = "নবি (সাঃ) আবু বকর (রাঃ)-কে সকাল-সন্ধ্যা ও শোয়ার সময় পড়তে বলেছেন — তিরমিযি ৩৩৯২।",
+            source = "Jami at-Tirmidhi 3392",
+        ),
+        dhikr(
+            id = "morn_nimah",
+            name = "Allahumma ma asbaha bi min ni'matin",
+            arabic = "اللّٰهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+            pronunciation = "আল্লাহুম্মা মা আসবাহা বি মিন নিমাতিন আও বিআহাদিন মিন খালকিকা ফামিনকা ওয়াহদাকা লা শারিকা লাকা, ফালাকাল হামদু ওয়া লাকাশ শুকর",
+            translation = "হে আল্লাহ, সকালে আমার বা আপনার কোনো সৃষ্টির কাছে যে নিয়ামত পৌঁছেছে তা কেবল আপনার কাছ থেকে, আপনার কোনো শরিক নেই; সকল প্রশংসা ও কৃতজ্ঞতা আপনারই — O Allah, whatever blessing has come to me or to any of Your creation this morning is from You alone, no partner have You; to You is all praise and all thanks",
+            lapTarget = 1,
+            note = "যে সকালে এটি বলে সে সেদিনের শোকর আদায় করল, সন্ধ্যায় বললে সে রাতের শোকর আদায় করল — আবু দাউদ ৫০৭৩।",
+            source = "Sunan Abi Dawud 5073",
+        ),
+        dhikr(
+            id = "morn_fitrah",
+            name = "Asbahna ala fitratil islam",
+            arabic = "أَصْبَحْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+            pronunciation = "আসবাহনা আলা ফিতরাতিল ইসলাম, ওয়া আলা কালিমাতিল ইখলাস, ওয়া আলা দিনি নাবিয়্যিনা মুহাম্মাদ, ওয়া আলা মিল্লাতি আবিনা ইবরাহিমা হানিফাম মুসলিমাও ওয়া মা কানা মিনাল মুশরিকিন",
+            translation = "আমরা সকালে উপনীত হলাম ইসলামের ফিতরাত, ইখলাসের কালিমা, আমাদের নবি মুহাম্মাদের দ্বীন ও আমাদের পিতা ইবরাহিমের মিল্লাতের উপর—যিনি একনিষ্ঠ মুসলিম ছিলেন, মুশরিকদের অন্তর্ভুক্ত ছিলেন না — We have entered the morning upon the natural way of Islam, the word of sincerity, the religion of our Prophet Muhammad, and the way of our father Ibrahim, upright and Muslim, and he was not of the polytheists",
+            lapTarget = 1,
+            note = "নবি (সাঃ) সকালে এটি পড়তেন — আহমাদ ১৫৩৬০।",
+            source = "Musnad Ahmad 15360",
+        ),
+        dhikr(
+            id = "morn_uthni",
+            name = "Asbahtu uthni alayka hamda",
+            arabic = "أَصْبَحْتُ أُثْنِي عَلَيْكَ حَمْدًا، وَأَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللّٰهُ",
+            pronunciation = "আসবাহতু উছনি আলাইকা হামদা, ওয়া আশহাদু আন লা ইলাহা ইল্লাল্লাহ",
+            translation = "আমি সকালে উপনীত হলাম আপনার প্রশংসা করতে করতে, এবং সাক্ষ্য দিই আল্লাহ ছাড়া কোনো উপাস্য নেই — I have entered the morning praising You, and I bear witness that there is no god but Allah",
+            lapTarget = 3,
+            note = "নাসাঈ, আস-সুনানুল কুবরা ১০৩৩১।",
+            source = "an-Nasa'i, as-Sunan al-Kubra 10331",
+        ),
+        dhikr(
+            id = "morn_mulk_shar",
+            name = "Asbahna wa asbahal mulku lillah, Rabbi as'aluka khayra ma fi hadhal yawm",
+            arabic = "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلّٰهِ وَالْحَمْدُ لِلّٰهِ، لَا إِلَٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+            pronunciation = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহি ওয়াল হামদু লিল্লাহ, লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, রব্বি আসআলুকা খাইরা মা ফি হাযাল ইয়াওমি ওয়া খাইরা মা বাদাহু, ওয়া আউযু বিকা মিন শাররি মা ফি হাযাল ইয়াওমি ওয়া শাররি মা বাদাহু, রব্বি আউযু বিকা মিনাল কাসালি ওয়া সূইল কিবার, রব্বি আউযু বিকা মিন আযাবিন ফিন নারি ওয়া আযাবিন ফিল কাবর",
+            translation = "আমরা সকালে উপনীত হলাম আর রাজত্ব আল্লাহরই, সকল প্রশংসা আল্লাহর; আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; হে রব, আজকের ও পরবর্তী কল্যাণ চাই, আজকের ও পরবর্তী অনিষ্ট থেকে আশ্রয় চাই; হে রব, অলসতা ও বার্ধক্যের মন্দ থেকে আশ্রয় চাই; হে রব, জাহান্নাম ও কবরের আযাব থেকে আশ্রয় চাই — We have entered the morning and the dominion belongs to Allah… My Lord, I ask You for the good of this day and what follows it, and I seek refuge in You from the evil of this day and what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from the punishment of the Fire and the punishment of the grave",
+            lapTarget = 1,
+            note = "নবি (সাঃ) সকালে এটি পড়তেন — সহীহ মুসলিম ২৭২৩।",
+            source = "Sahih Muslim 2723",
+        ),
+        dhikr(
+            id = "morn_mulk_alamin",
+            name = "Asbahna wa asbahal mulku lillahi Rabbil alamin",
+            arabic = "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلّٰهِ رَبِّ الْعَالَمِينَ، اللّٰهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَٰذَا الْيَوْمِ، فَتْحَهُ وَنَصْرَهُ وَنُورَهُ وَبَرَكَتَهُ وَهُدَاهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهِ وَشَرِّ مَا بَعْدَهُ",
+            pronunciation = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহি রব্বিল আলামিন, আল্লাহুম্মা ইন্নি আসআলুকা খাইরা হাযাল ইয়াওম, ফাতহাহু ওয়া নাসরাহু ওয়া নূরাহু ওয়া বারাকাতাহু ওয়া হুদাহু, ওয়া আউযু বিকা মিন শাররি মা ফিহি ওয়া শাররি মা বাদাহু",
+            translation = "আমরা সকালে উপনীত হলাম আর রাজত্ব বিশ্বজগতের রব আল্লাহরই; হে আল্লাহ, আমি এই দিনের কল্যাণ চাই—এর বিজয়, সাহায্য, নূর, বরকত ও হেদায়েত; আর এর ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই — We have entered the morning and the dominion belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this day: its victory, its help, its light, its blessing and its guidance; and I seek refuge in You from the evil in it and the evil after it",
+            lapTarget = 1,
+            note = "আবু দাউদ ৫০৮৪।",
+            source = "Sunan Abi Dawud 5084",
+        ),
+        dhikr(
+            id = "morn_ushhiduka",
+            name = "Allahumma inni asbahtu ush-hiduka wa ush-hidu hamalata arshik",
+            arabic = "اللّٰهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ وَمَلَائِكَتَكَ وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللّٰهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+            pronunciation = "আল্লাহুম্মা ইন্নি আসবাহতু উশহিদুকা, ওয়া উশহিদু হামালাতা আরশিকা ওয়া মালাইকাতাকা ওয়া জামিআ খালকিকা, আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
+            translation = "হে আল্লাহ, আমি সকালে উপনীত হয়ে আপনাকে, আপনার আরশ বহনকারীদের, ফেরেশতাদের ও সকল সৃষ্টিকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন, এবং মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I have entered the morning calling You to witness, and calling the bearers of Your Throne, Your angels and all Your creation to witness, that You are Allah, none is worthy of worship but You alone, no partner have You, and that Muhammad is Your slave and Messenger",
+            lapTarget = 4,
+            note = "যে সকাল বা সন্ধ্যায় এটি চারবার বলে, আল্লাহ তাকে জাহান্নাম থেকে মুক্ত করে দেন — আবু দাউদ ৫০৬৯।",
+            source = "Sunan Abi Dawud 5069",
+        ),
+        dhikr(
+            id = "morn_bika_asbahna",
+            name = "Allahumma bika asbahna wa bika amsayna",
+            arabic = "اللّٰهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ",
+            pronunciation = "আল্লাহুম্মা বিকা আসবাহনা ওয়া বিকা আমসাইনা ওয়া বিকা নাহইয়া ওয়া বিকা নামুতু ওয়া ইলাইকান নুশূর",
+            translation = "হে আল্লাহ, আপনার অনুগ্রহে আমরা সকালে উপনীত হলাম, আপনার অনুগ্রহে সন্ধ্যায়, আপনার অনুগ্রহে বাঁচি ও মরি, এবং আপনার কাছেই পুনরুত্থান — O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the resurrection",
+            lapTarget = 1,
+            note = "নবি (সাঃ) সকালে এটি পড়তেন — তিরমিযি ৩৩৯১, আবু দাউদ ৫০৬৮।",
+            source = "Jami at-Tirmidhi 3391; Sunan Abi Dawud 5068",
+        ),
+        dhikr(
+            id = "morn_afini_badani",
+            name = "Allahumma afini fi badani",
+            arabic = "اللّٰهُمَّ عَافِنِي فِي بَدَنِي، اللّٰهُمَّ عَافِنِي فِي سَمْعِي، اللّٰهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ، اللّٰهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ",
+            pronunciation = "আল্লাহুম্মা আফিনি ফি বাদানি, আল্লাহুম্মা আফিনি ফি সামই, আল্লাহুম্মা আফিনি ফি বাসারি, লা ইলাহা ইল্লা আনতা, আল্লাহুম্মা ইন্নি আউযু বিকা মিনাল কুফরি ওয়াল ফাকর, ওয়া আউযু বিকা মিন আযাবিল কাবর, লা ইলাহা ইল্লা আনতা",
+            translation = "হে আল্লাহ, আমার শরীরে সুস্থতা দিন, আমার শ্রবণে সুস্থতা দিন, আমার দৃষ্টিতে সুস্থতা দিন; আপনি ছাড়া কোনো উপাস্য নেই; হে আল্লাহ, কুফর ও দারিদ্র্য থেকে আপনার আশ্রয় চাই, কবরের আযাব থেকে আশ্রয় চাই; আপনি ছাড়া কোনো উপাস্য নেই — O Allah, grant me health in my body. O Allah, grant me health in my hearing. O Allah, grant me health in my sight. There is no god but You. O Allah, I seek refuge in You from disbelief and poverty, and I seek refuge in You from the punishment of the grave. There is no god but You",
+            lapTarget = 3,
+            note = "নবি (সাঃ) সকাল-সন্ধ্যায় এই দুআ ছাড়তেন না — আবু দাউদ ৫০৯০, আহমাদ ২০৪৩০।",
+            source = "Sunan Abi Dawud 5090; Musnad Ahmad 20430",
+        ),
+        dhikr(
+            id = "morn_raditu",
+            name = "Raditu billahi Rabba wa bil-islami dina",
+            arabic = "رَضِيتُ بِاللّٰهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+            pronunciation = "রাদিতু বিল্লাহি রব্বা, ওয়া বিল ইসলামি দিনা, ওয়া বিমুহাম্মাদিন সাল্লাল্লাহু আলাইহি ওয়া সাল্লামা নাবিয়্যা",
+            translation = "আমি আল্লাহকে রব হিসেবে, ইসলামকে দ্বীন হিসেবে ও মুহাম্মাদ (সাঃ)-কে নবি হিসেবে পেয়ে সন্তুষ্ট — I am pleased with Allah as Lord, with Islam as religion and with Muhammad (peace be upon him) as Prophet",
+            lapTarget = 3,
+            note = "যে সকাল-সন্ধ্যায় তিনবার এটি বলে, কিয়ামতের দিন আল্লাহ তাকে সন্তুষ্ট করা তাঁর দায়িত্বে নিয়ে নেন — আহমাদ ১৮৯৬৭, আবু দাউদ ৫০৭২, তিরমিযি ৩৩৮৯।",
+            source = "Musnad Ahmad 18967; Jami at-Tirmidhi 3389",
+        ),
+        dhikr(
+            id = "morn_la_yadurru",
+            name = "Bismillahilladhi la yadurru ma'asmihi shay'",
+            arabic = "بِسْمِ اللّٰهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ",
+            pronunciation = "বিসমিল্লাহিল্লাযি লা ইয়াদুররু মাআসমিহি শাইউন ফিল আরদি ওয়া লা ফিস সামা, ওয়া হুয়াস সামিউল আলিম",
+            translation = "সেই আল্লাহর নামে, যাঁর নামের সাথে আসমান-জমিনের কোনো কিছুই ক্ষতি করতে পারে না; তিনি সর্বশ্রোতা, সর্বজ্ঞ — In the name of Allah, with whose name nothing on earth or in the heaven can cause harm, and He is the All-Hearing, the All-Knowing",
+            lapTarget = 3,
+            note = "যে সকাল-সন্ধ্যায় তিনবার এটি বলে, কোনো কিছুই তার ক্ষতি করতে পারে না — আবু দাউদ ৫০৮৮, তিরমিযি ৩৩৮৮, ইবনে মাজাহ ৩৮৬৯।",
+            source = "Sunan Abi Dawud 5088; Jami at-Tirmidhi 3388",
+        ),
+        dhikr(
+            id = "morn_tasbih100",
+            name = "Subhanallah, Alhamdulillah, Allahu Akbar",
+            arabic = "سُبْحَانَ اللّٰهِ، وَالْحَمْدُ لِلّٰهِ، وَاللّٰهُ أَكْبَرُ",
+            pronunciation = "সুবহানাল্লাহ, ওয়াল হামদু লিল্লাহ, ওয়াল্লাহু আকবার",
+            translation = "আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ সর্বমহান — Glory be to Allah, all praise is due to Allah, and Allah is the Greatest",
+            lapTarget = 100,
+            note = "সকালে ১০০ বার তাসবিহ-তাহমিদ-তাকবির; সেদিন কেউ তার চেয়ে উত্তম আমল নিয়ে আসতে পারে না যে একই বা বেশি বলেছে — নাসাঈ, আস-সুনানুল কুবরা ১০৬৫৭।",
+            source = "an-Nasa'i, as-Sunan al-Kubra 10657",
+        ),
+
         // --- Batch 2 (retained): the four non-situational praise/dua items
         // kept when the occasion-bound adhkar were retired (see retiredBuiltInIds).
         dhikr(
@@ -879,7 +1030,42 @@ object SeedData {
     )
 
     val presetRoutineSteps: List<RoutineStepEntity> by lazy {
-        coreRoutineSteps + asmaUlHusnaSteps + istighfarSteps
+        coreRoutineSteps + asmaUlHusnaSteps + istighfarSteps + morningSteps
+    }
+
+    // Morning Dhikr: the full sequence from
+    // lifewithallah.com/dhikr-dua/main-adhkar/morning, in page order. Replaces
+    // the old 3-step SubhanAllah/Alhamdulillah/AllahuAkbar stub. Each pair is
+    // (tasbihId, count). Reused existing dhikr: kursi, hamm_hazan,
+    // ya_hayyu_astaghith, istighfar_sayyid, hasbiyallah_arsh, bihamdihi,
+    // tahlil_wahdahu, durood_ali, istighfar_atubu, adada_khalqih.
+    private val morningSteps: List<RoutineStepEntity> = listOf(
+        "kursi" to 1,
+        "morn_3quls" to 3,
+        "istighfar_sayyid" to 1,
+        "hamm_hazan" to 1,
+        "morn_afiyah" to 1,
+        "morn_fatir" to 1,
+        "ya_hayyu_astaghith" to 1,
+        "morn_nimah" to 1,
+        "morn_fitrah" to 1,
+        "morn_uthni" to 3,
+        "morn_mulk_shar" to 1,
+        "morn_mulk_alamin" to 1,
+        "morn_ushhiduka" to 4,
+        "morn_bika_asbahna" to 1,
+        "morn_afini_badani" to 3,
+        "hasbiyallah_arsh" to 7,
+        "morn_raditu" to 3,
+        "morn_la_yadurru" to 3,
+        "bihamdihi" to 100,
+        "tahlil_wahdahu" to 100,
+        "morn_tasbih100" to 100,
+        "durood_ali" to 10,
+        "istighfar_atubu" to 100,
+        "adada_khalqih" to 3,
+    ).mapIndexed { i, (id, count) ->
+        RoutineStepEntity(routineId = "morning", tasbihId = id, stepOrder = i, targetCount = count)
     }
 
     // Istighfar: the 9 Qur'anic + 10 sunnah forms from
@@ -897,12 +1083,7 @@ object SeedData {
     }
 
     private val coreRoutineSteps: List<RoutineStepEntity> = listOf(
-        // Morning Dhikr: SubhanAllah x33, Alhamdulillah x33, AllahuAkbar x34 (matches
-        // the prototype's ROUTINES array and design README's own example exactly —
-        // design/Dhikr Android App.dc.html's `morning`/`salah` routine definitions)
-        RoutineStepEntity(routineId = "morning", tasbihId = "subhan", stepOrder = 0, targetCount = 33),
-        RoutineStepEntity(routineId = "morning", tasbihId = "hamd", stepOrder = 1, targetCount = 33),
-        RoutineStepEntity(routineId = "morning", tasbihId = "akbar", stepOrder = 2, targetCount = 34),
+        // Morning Dhikr steps live in `morningSteps` (full lifewithallah sequence).
         // Evening Dhikr: same three, evening framing — no separate evening-specific
         // prototype data exists, so this reuses the same structure as Morning per
         // the plan's own "Evening Dhikr" listing (plan.md §22) which gives no

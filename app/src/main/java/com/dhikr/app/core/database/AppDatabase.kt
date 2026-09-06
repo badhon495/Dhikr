@@ -72,7 +72,11 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // sunnah) from lifewithallah's Istighfar page, plus a non-favorited
     // 19-step "Istighfar" preset routine. No schema change; bump reseeds.
     // No hand migration — fallbackToDestructiveMigration rebuilds + reseeds.
-    version = 17,
+    // v18: added the 14 missing morning-adhkar dhikr (morn_*) from
+    // lifewithallah's Morning page, and expanded the "Morning Dhikr" preset
+    // routine from the 3-step stub to the full 24-step page sequence. No
+    // schema change; bump reseeds. fallbackToDestructiveMigration.
+    version = 18,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
