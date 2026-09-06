@@ -129,6 +129,8 @@
     <string name="routines_title">Routines</string>
     <string name="routines_new_short">+ New</string>
     <string name="routines_step_count">%1$d steps · %2$d counts</string>
+    <string name="routines_show_more">+%1$s more</string>
+    <string name="routines_show_less">Show less</string>
     <string name="routines_new">+ New routine</string>
     <string name="routines_search_placeholder">Search routines</string>
     <string name="routines_search_content_description">Search routines</string>

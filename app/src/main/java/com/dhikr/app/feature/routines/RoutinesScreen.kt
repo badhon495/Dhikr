@@ -31,6 +31,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.AlertDialog
@@ -614,8 +616,13 @@ private fun RoutineCard(
                 modifier = Modifier.padding(top = 2.dp),
             )
         }
+        // Long routines collapse: the first STEP_COLLAPSE_THRESHOLD rows show,
+        // the rest hide behind a "+N more" toggle so the card stays compact.
+        val collapsible = steps.size > STEP_COLLAPSE_THRESHOLD
+        var stepsExpanded by remember(routineWithSteps.routine.id) { mutableStateOf(false) }
+        val visibleSteps = if (collapsible && !stepsExpanded) steps.take(STEP_COLLAPSE_THRESHOLD) else steps
         Column(modifier = Modifier.padding(top = 6.dp)) {
-            steps.forEachIndexed { index, step ->
+            visibleSteps.forEachIndexed { index, step ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -644,6 +651,40 @@ private fun RoutineCard(
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .widthIn(min = 40.dp),
+                    )
+                }
+            }
+            if (collapsible) {
+                // Nested clickable: the toggle consumes the tap so it does not
+                // bubble to the card's combinedClickable (which starts the routine).
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .drawBehindLine(colors.line)
+                        .clickable(role = Role.Button) { stepsExpanded = !stepsExpanded }
+                        .minTapTarget()
+                        .padding(vertical = 10.dp),
+                ) {
+                    Text(
+                        text = if (stepsExpanded) {
+                            stringResource(R.string.routines_show_less)
+                        } else {
+                            stringResource(
+                                R.string.routines_show_more,
+                                (steps.size - STEP_COLLAPSE_THRESHOLD).localizedDigits(lang),
+                            )
+                        },
+                        fontSize = 12.5.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colors.sage,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Icon(
+                        imageVector = if (stepsExpanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = colors.sage,
+                        modifier = Modifier.size(20.dp),
                     )
                 }
             }
@@ -678,6 +719,9 @@ private fun RoutineCard(
       }
     }
 }
+
+/** Routines with more than this many steps collapse the overflow behind a toggle. */
+private const val STEP_COLLAPSE_THRESHOLD = 7
 
 /** Thin top divider line for a routine step row. */
 private fun Modifier.drawBehindLine(color: Color): Modifier = drawBehind {

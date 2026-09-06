@@ -126,6 +126,8 @@
     <string name="routines_title">রুটিন</string>
     <string name="routines_new_short">+ নতুন</string>
     <string name="routines_step_count">%1$d টি ধাপ · %2$d টি গণনা</string>
+    <string name="routines_show_more">আরও %1$s টি</string>
+    <string name="routines_show_less">কম দেখান</string>
     <string name="routines_new">+ নতুন রুটিন</string>
     <string name="routines_search_placeholder">রুটিন খুঁজুন</string>
     <string name="routines_search_content_description">রুটিন খুঁজুন</string>
