@@ -80,7 +80,29 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // lifewithallah's Evening page, and expanded the "Evening Dhikr" preset
     // routine from the 3-step stub to the full 23-step page sequence. No
     // schema change; bump reseeds. fallbackToDestructiveMigration.
-    version = 19,
+    // v20: added the 14 before-sleep dhikr (sleep_*) from lifewithallah's
+    // Before Sleep page, and expanded the "Before Sleep" preset routine from
+    // the 2-step stub to the full 20-step page sequence. No schema change;
+    // bump reseeds. fallbackToDestructiveMigration.
+    // v21: added the 25 praise dhikr (praise_*) from lifewithallah's Praises
+    // of Allah page, plus a non-favorited 30-step "Praises of Allah" preset
+    // routine. No schema change; bump reseeds. fallbackToDestructiveMigration.
+    // v22: added the 27 Qur'anic-dua dhikr (qd_*) from lifewithallah's Quranic
+    // Duas page, plus a non-favorited 41-step "Qur'anic Duas" preset routine.
+    // No schema change; bump reseeds. fallbackToDestructiveMigration.
+    // v23: added the 9 salawat dhikr (salawat_1..9) from lifewithallah's
+    // Salawat page, plus a non-favorited 9-step "Salawat" preset routine. No
+    // schema change; bump reseeds. fallbackToDestructiveMigration.
+    // v24: added the 14 ruqyah/illness dhikr (ruq_*) from lifewithallah's
+    // Ruqyah & Illness page, plus a non-favorited 20-step "Ruqyah & Illness"
+    // preset routine. No schema change; bump reseeds. fallbackToDestructiveMigration.
+    // v25: added 4 dhikr (bd_*) from the pastebin rewarded-dhikr list, plus a
+    // non-favorited 14-step "Beneficial Dhikr" preset routine. No schema
+    // change; bump reseeds. fallbackToDestructiveMigration.
+    // v26: added Surah Al-Ikhlas / Al-Falaq / An-Nas as individual built-ins
+    // (surah_ikhlas, surah_falaq, surah_nas) with full text, and gave
+    // morn_3quls its full Arabic. No schema change; bump reseeds.
+    version = 26,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
