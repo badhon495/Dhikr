@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.ai.BenefitsLanguage
+import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.ai.SecureKeyStore
 import com.dhikr.app.core.ai.defaultBenefitsTemplate
 import com.dhikr.app.core.counter.AutoCounterSensorListener
@@ -30,7 +31,7 @@ data class SettingsUiState(
     val dynamicColorEnabled: Boolean = true,
     val dynamicColorSupported: Boolean = supportsDynamicColor(),
     val counterScript: CounterScript = CounterScript.PRONUNCIATION,
-    val appLanguage: AppLanguage = AppLanguage.SYSTEM,
+    val appLanguage: AppLanguage = AppLanguage.ENGLISH,
     val appVersion: String = "",
     val hasGeminiKey: Boolean = false,
     val autoCounterEnabled: Boolean = false,

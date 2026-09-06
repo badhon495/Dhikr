@@ -52,6 +52,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.ReminderSection
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
@@ -385,6 +387,7 @@ private fun NumberField(value: Int, onValueChange: (Int) -> Unit) {
 @Composable
 private fun DailyGoalPicker(selected: Int?, onSelect: (Int?) -> Unit) {
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     val presets = listOf(33, 100, 500)
     var customActive by rememberSaveable { mutableStateOf(false) }
     var customText by rememberSaveable { mutableStateOf("") }
@@ -399,7 +402,7 @@ private fun DailyGoalPicker(selected: Int?, onSelect: (Int?) -> Unit) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         presets.forEach { option ->
             val isSel = !customActive && selected == option
-            GoalPill(option.toString(), isSel) {
+            GoalPill(option.localizedDigits(lang), isSel) {
                 customActive = false
                 onSelect(if (isSel) null else option)
             }

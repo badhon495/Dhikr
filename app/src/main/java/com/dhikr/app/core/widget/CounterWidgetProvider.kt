@@ -7,6 +7,8 @@ import com.dhikr.app.DhikrApplication
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.SessionRepository
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -58,7 +60,7 @@ class CounterWidgetProvider : AppWidgetProvider() {
                 val resolvedName = if (session?.routineId != null && routineStepTarget == null) {
                     null
                 } else {
-                    tasbih?.name
+                    tasbih?.displayName(AppLanguage.current)
                 }
                 val views = WidgetRenders.buildCounter(
                     context = context,

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.database.entity.TasbihEntity
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,7 +54,7 @@ class RoutineEditorViewModel(
             update {
                 it.copy(
                     availableTasbih = all,
-                    tasbihNamesById = all.associate { t -> t.id to t.name },
+                    tasbihNamesById = all.associate { t -> t.id to t.displayName(AppLanguage.current) },
                 )
             }
             if (editingRoutineId != null) {

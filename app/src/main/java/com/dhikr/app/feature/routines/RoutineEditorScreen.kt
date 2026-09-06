@@ -49,6 +49,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.ReminderSection
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
@@ -237,7 +240,7 @@ fun RoutineEditorScreen(
                 LazyColumn {
                     itemsIndexed(state.availableTasbih, key = { _, t -> t.id }) { _, tasbih ->
                         Text(
-                            text = tasbih.name,
+                            text = tasbih.displayName(LocalAppLanguage.current),
                             fontSize = 14.5.sp,
                             color = colors.text,
                             modifier = Modifier
@@ -299,7 +302,7 @@ private fun StepCard(
             .padding(14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-            Text("$position", fontSize = 12.sp, color = colors.faint, modifier = Modifier.padding(end = 10.dp))
+            Text(position.localizedDigits(LocalAppLanguage.current), fontSize = 12.sp, color = colors.faint, modifier = Modifier.padding(end = 10.dp))
             Text(
                 text = name,
                 fontSize = 14.sp,

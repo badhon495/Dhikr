@@ -47,6 +47,9 @@ import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.ai.BenefitsLanguage
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.ui.headingSemantics
@@ -97,7 +100,6 @@ fun SettingsScreen(
             )
             ChoiceRow(
                 options = listOf(
-                    AppLanguage.SYSTEM to stringResource(R.string.settings_language_system),
                     AppLanguage.ENGLISH to stringResource(R.string.settings_language_english),
                     AppLanguage.BANGLA to stringResource(R.string.settings_language_bangla),
                 ),
@@ -362,6 +364,7 @@ private fun DailyGoalPicker(
     onSelect: (Int) -> Unit,
 ) {
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     // Seed straight from the first composition: the ViewModel provides the real
     // persisted target synchronously, so when it's a custom value the field is
     // present in frame one rather than being added a frame later by a
@@ -375,7 +378,7 @@ private fun DailyGoalPicker(
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         presets.forEach { option ->
             GoalPill(
-                label = option.toString(),
+                label = option.localizedDigits(lang),
                 selected = !customActive && target == option,
                 onClick = {
                     customActive = false

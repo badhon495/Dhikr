@@ -79,6 +79,11 @@ import com.dhikr.app.core.counter.AutoCounterSensorListener
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.haptics.rememberHaptics
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.localization.displayNote
+import com.dhikr.app.core.localization.displayPronunciation
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.COUNTER_TAP_AREA_TEST_TAG
 import com.dhikr.app.ui.ClampedFontScale
 import com.dhikr.app.ui.LocalReducedMotion
@@ -216,9 +221,11 @@ fun CounterScreen(
         }
     }
 
+    val lang = LocalAppLanguage.current
+
     // Only one script is shown, per the "Counter shows" setting.
     val showArabic = counterScript == CounterScript.ARABIC
-    val scriptText = if (showArabic) state.dhikr.arabic else state.dhikr.pronunciation
+    val scriptText = if (showArabic) state.dhikr.arabic else state.dhikr.displayPronunciation(lang)
     val isLongText = scriptText.length > LONG_TEXT_THRESHOLD
     val ringSize = if (isLongText) 178.dp else 252.dp
     val countStyle = if (isLongText) CounterCountLongTextStyle else CounterCountStyle
@@ -379,7 +386,7 @@ fun CounterScreen(
                     .padding(horizontal = 4.dp),
             ) {
                 Text(
-                    text = state.dhikr.name,
+                    text = state.dhikr.displayName(lang),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = colors.text,
@@ -417,7 +424,7 @@ fun CounterScreen(
                         imageVector = noteIcon(),
                         contentDescription = notesLabel,
                         tint = if (state.locked) colors.faint else {
-                            if (state.dhikr.note.isNotBlank()) colors.dim else colors.faint
+                            if (state.dhikr.displayNote(lang).isNotBlank()) colors.dim else colors.faint
                         },
                         modifier = Modifier.size(18.dp),
                     )
@@ -610,7 +617,7 @@ fun CounterScreen(
                                 else -> state.count
                             }
                             Text(
-                                text = shownCount.toString(),
+                                text = shownCount.localizedDigits(lang),
                                 style = countStyle,
                                 color = colors.text,
                             )
@@ -882,7 +889,7 @@ fun CounterScreen(
                     Text(
                         text = stringResource(
                             R.string.routine_complete_body,
-                            state.routineName ?: state.dhikr.name,
+                            state.routineName ?: state.dhikr.displayName(lang),
                             state.totalCount,
                             formatDuration(elapsedSeconds),
                         ),
@@ -945,7 +952,7 @@ fun CounterScreen(
             shape = DialogShape,
             text = {
                 Text(
-                    text = state.dhikr.note.ifBlank { stringResource(R.string.counter_notes_empty) },
+                    text = state.dhikr.displayNote(lang).ifBlank { stringResource(R.string.counter_notes_empty) },
                     fontSize = 14.sp,
                     color = colors.dim,
                 )

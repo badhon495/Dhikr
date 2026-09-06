@@ -25,9 +25,12 @@ interface TasbihDao {
         """
         SELECT * FROM tasbih
         WHERE name LIKE '%' || :query || '%'
+           OR nameBn LIKE '%' || :query || '%'
            OR arabic LIKE '%' || :query || '%'
            OR pronunciation LIKE '%' || :query || '%'
+           OR pronunciationBn LIKE '%' || :query || '%'
            OR translation LIKE '%' || :query || '%'
+           OR translationBn LIKE '%' || :query || '%'
         ORDER BY name ASC
         """
     )

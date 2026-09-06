@@ -10,6 +10,8 @@ import com.dhikr.app.core.database.dao.RoutineWithSteps
 import com.dhikr.app.core.database.entity.TasbihEntity
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.SessionRepository
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.model.CounterSessionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,12 +84,19 @@ class HomeViewModel(
                 Triple(inputs, dayProgress, tasbihProgress)
             }
             .combine(tasbihRepository.observeAll()) { (inputs, dayProgress, tasbihProgress), allTasbihs ->
-                HomeCombined(inputs, dayProgress, tasbihProgress, allTasbihs.associate { it.id to it.name })
+                HomeCombined(
+                    inputs, dayProgress, tasbihProgress,
+                    allTasbihs.associate { it.id to it.displayName(AppLanguage.current) },
+                )
             }
             .mapLatest { (inputs, dayProgress, tasbihProgress, tasbihNamesById) ->
                 val continueInfo = inputs.session?.let { s ->
                     tasbihRepository.getById(s.activeDhikrId)?.let { tasbih ->
-                        ContinueSessionInfo(tasbihName = tasbih.name, count = s.count, target = tasbih.lapTarget)
+                        ContinueSessionInfo(
+                            tasbihName = tasbih.displayName(AppLanguage.current),
+                            count = s.count,
+                            target = tasbih.lapTarget,
+                        )
                     }
                 }
                 HomeUiState(

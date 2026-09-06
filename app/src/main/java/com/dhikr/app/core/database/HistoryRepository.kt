@@ -2,6 +2,8 @@ package com.dhikr.app.core.database
 
 import com.dhikr.app.core.database.dao.SessionDao
 import com.dhikr.app.core.database.entity.SessionEntity
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.utilities.DayBounds
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
@@ -120,7 +122,7 @@ class HistoryRepository(
             monthSince = DayBounds.startOfMonthMillis(),
         )
         if (stats.isEmpty()) return emptyList()
-        val names = tasbihRepository.getAll().associate { it.id to it.name }
+        val names = tasbihRepository.getAll().associate { it.id to it.displayName(AppLanguage.current) }
         val dailyByTasbih = sessionDao.dailyTotalsSince(since, dayMillis, localOffsetMillis())
             .groupBy { it.tasbihId }
         return stats

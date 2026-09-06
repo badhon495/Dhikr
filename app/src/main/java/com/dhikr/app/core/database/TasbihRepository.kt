@@ -6,6 +6,7 @@ import com.dhikr.app.core.database.dao.TasbihDao
 import com.dhikr.app.core.database.dao.TasbihProgressDao
 import com.dhikr.app.core.database.entity.TasbihEntity
 import com.dhikr.app.core.database.entity.TasbihProgressEntity
+import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.utilities.DayBounds
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -52,9 +53,13 @@ class TasbihRepository(
         tasbihDao.updateBenefits(id, text, generatedAt)
 
     suspend fun delete(tasbih: TasbihEntity): DeleteResult {
-        val blockingRoutineNames = routineDao.routineNamesUsingTasbih(tasbih.id)
-        if (blockingRoutineNames.isNotEmpty()) {
-            return DeleteResult.BlockedByRoutines(blockingRoutineNames)
+        val blockingRoutines = routineDao.routineNamesUsingTasbih(tasbih.id)
+        if (blockingRoutines.isNotEmpty()) {
+            val bangla = AppLanguage.current == AppLanguage.BANGLA
+            val names = blockingRoutines.map { row ->
+                if (bangla) row.nameBn?.takeIf(String::isNotBlank) ?: row.name else row.name
+            }
+            return DeleteResult.BlockedByRoutines(names)
         }
         tasbihDao.delete(tasbih)
         return DeleteResult.Success

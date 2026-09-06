@@ -64,6 +64,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import com.dhikr.app.R
 import com.dhikr.app.core.database.dao.RoutineWithSteps
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
@@ -81,6 +84,7 @@ fun RoutinesScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     val context = LocalContext.current
 
     // Long-press action menu (Edit/Delete) target — which routine, if any, has
@@ -258,7 +262,7 @@ fun RoutinesScreen(
 
     actionMenuTarget?.let { routineWithSteps ->
         RoutineActionMenu(
-            name = routineWithSteps.routine.name,
+            name = routineWithSteps.routine.displayName(lang),
             onDismiss = { actionMenuTarget = null },
             onEdit = {
                 actionMenuTarget = null
@@ -555,6 +559,7 @@ private fun RoutineCard(
     onToggleFavorite: () -> Unit,
 ) {
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     val steps = routineWithSteps.steps.sortedBy { it.stepOrder }
     val totalCount = steps.sumOf { it.targetCount }
     val isFavorite = routineWithSteps.routine.isFavorite
@@ -595,7 +600,7 @@ private fun RoutineCard(
       Column(modifier = Modifier.padding(18.dp)) {
         Column {
             Text(
-                routineWithSteps.routine.name,
+                routineWithSteps.routine.displayName(lang),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = colors.text,
@@ -619,7 +624,7 @@ private fun RoutineCard(
                         .padding(vertical = 10.dp),
                 ) {
                     Text(
-                        "${index + 1}",
+                        (index + 1).localizedDigits(lang),
                         fontSize = 12.sp,
                         color = colors.faint,
                         modifier = Modifier.width(22.dp),
@@ -631,7 +636,7 @@ private fun RoutineCard(
                         modifier = Modifier.weight(1f),
                     )
                     Text(
-                        "${step.targetCount}",
+                        step.targetCount.localizedDigits(lang),
                         fontSize = 13.5.sp,
                         fontWeight = FontWeight.Bold,
                         color = colors.terra,

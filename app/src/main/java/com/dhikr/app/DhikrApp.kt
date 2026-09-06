@@ -54,6 +54,8 @@ import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.datastore.SessionRepository
 import com.dhikr.app.core.datastore.ThemeMode
@@ -236,7 +238,12 @@ fun DhikrApp(
         }
 
         Box(modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }) {
-        CompositionLocalProvider(LocalReducedMotion provides reducedMotion) {
+        CompositionLocalProvider(
+            LocalReducedMotion provides reducedMotion,
+            // Re-read on every composition: AppCompat recreates the Activity on
+            // a locale switch, so this reflects the current choice.
+            LocalAppLanguage provides AppLanguage.current,
+        ) {
         Scaffold(
             containerColor = DhikrTheme.colors.bg,
             bottomBar = {
@@ -452,6 +459,12 @@ fun DhikrApp(
             OnboardingScreen(
                 onFinished = {
                     coroutineScope.launch { preferencesRepository.setHasSeenOnboarding(true) }
+                },
+                language = AppLanguage.current,
+                onLanguageChange = { AppLanguage.apply(it) },
+                themeMode = themeMode,
+                onThemeChange = { mode ->
+                    coroutineScope.launch { preferencesRepository.setThemeMode(mode) }
                 },
             )
         }

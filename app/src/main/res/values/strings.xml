@@ -224,7 +224,6 @@
     <string name="settings_title">Settings</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_desc">Language used across the app</string>
-    <string name="settings_language_system">System</string>
     <string name="settings_language_english">English</string>
     <string name="settings_language_bangla">বাংলা</string>
     <string name="settings_appearance">Appearance</string>
@@ -338,6 +337,10 @@
     <!-- Onboarding (shown once, before Home, plan.md §25) -->
     <string name="onboarding_welcome_title">Dhikr</string>
     <string name="onboarding_welcome_body">Count Dhikr, simply. A calm, private counter — no account, no ads, nothing tracked.</string>
+    <string name="onboarding_setup_title">Make it yours</string>
+    <string name="onboarding_setup_body">Pick a language and a theme. You can change both later in Settings.</string>
+    <string name="onboarding_setup_language">Language</string>
+    <string name="onboarding_setup_theme">Theme</string>
     <string name="onboarding_tap_title">Tap to count</string>
     <string name="onboarding_tap_body">Tap anywhere on the counter screen. The count updates instantly, with a soft vibration to confirm.</string>
     <string name="onboarding_laps_title">Laps and goals</string>

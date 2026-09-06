@@ -221,7 +221,6 @@
     <string name="settings_title">সেটিংস</string>
     <string name="settings_language">ভাষা</string>
     <string name="settings_language_desc">অ্যাপ জুড়ে ব্যবহৃত ভাষা</string>
-    <string name="settings_language_system">সিস্টেম</string>
     <string name="settings_language_english">English</string>
     <string name="settings_language_bangla">বাংলা</string>
     <string name="settings_appearance">চেহারা</string>
@@ -334,6 +333,10 @@
     <!-- Onboarding (shown once, before Home, plan.md §25) -->
     <string name="onboarding_welcome_title">Dhikr</string>
     <string name="onboarding_welcome_body">সহজে যিকর গণনা করুন। একটি শান্ত, ব্যক্তিগত কাউন্টার — কোনো অ্যাকাউন্ট নেই, বিজ্ঞাপন নেই, কিছুই ট্র্যাক করা হয় না।</string>
+    <string name="onboarding_setup_title">নিজের মতো সাজান</string>
+    <string name="onboarding_setup_body">একটি ভাষা ও থিম বাছুন। পরে সেটিংস থেকে দুটোই বদলাতে পারবেন।</string>
+    <string name="onboarding_setup_language">ভাষা</string>
+    <string name="onboarding_setup_theme">থিম</string>
     <string name="onboarding_tap_title">গণনা করতে ট্যাপ করুন</string>
     <string name="onboarding_tap_body">কাউন্টার স্ক্রিনে যেকোনো জায়গায় ট্যাপ করুন। গণনা সাথে সাথে হালনাগাদ হয়, নিশ্চিত করতে একটি মৃদু কম্পন সহ।</string>
     <string name="onboarding_laps_title">ল্যাপ ও লক্ষ্য</string>

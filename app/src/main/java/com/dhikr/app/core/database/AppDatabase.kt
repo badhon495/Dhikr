@@ -68,7 +68,11 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // (asma_01..asma_99) plus a favorited 99-step "Asma-ul-Husna" preset
     // routine. No schema change; bump reseeds so existing installs pick them up.
     // No hand migration — fallbackToDestructiveMigration rebuilds + reseeds.
-    version = 16,
+    // v17: bilingual dhikr content. Added TasbihEntity.nameBn /
+    // pronunciationBn / translationBn / noteBn and RoutineEntity.nameBn; the
+    // non-Bn fields now hold the English side. SeedData fills both languages.
+    // No hand migration — fallbackToDestructiveMigration rebuilds + reseeds.
+    version = 17,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {

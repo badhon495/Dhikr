@@ -55,6 +55,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.database.entity.TasbihEntity
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.localization.displayNote
+import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.feature.counter.noteIcon
 import com.dhikr.app.ui.TASBIH_LIST_TEST_TAG
 import com.dhikr.app.ui.headingSemantics
@@ -74,6 +78,7 @@ fun TasbihLibraryScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     val listState = rememberLazyListState()
 
     LaunchedEffect(scrollToTopSignal) {
@@ -305,7 +310,7 @@ fun TasbihLibraryScreen(
             shape = DialogShape,
             text = {
                 Text(
-                    text = tasbih.note.ifBlank { stringResource(R.string.tasbih_library_notes_empty) },
+                    text = tasbih.displayNote(lang).ifBlank { stringResource(R.string.tasbih_library_notes_empty) },
                     fontSize = 14.sp,
                     color = colors.dim,
                 )
@@ -333,7 +338,7 @@ private fun TasbihActionMenu(
     val colors = DhikrTheme.colors
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.tasbih_library_actions_title, tasbih.name)) },
+        title = { Text(stringResource(R.string.tasbih_library_actions_title, tasbih.displayName(LocalAppLanguage.current))) },
         containerColor = colors.card,
         titleContentColor = colors.text,
         shape = DialogShape,
@@ -387,6 +392,7 @@ private fun TasbihRow(
     onLongPress: (() -> Unit)?,
 ) {
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     val favoriteDescription = stringResource(R.string.tasbih_library_favorite_content_description)
     val favoriteState = stringResource(
         if (tasbih.isFavorite) R.string.tasbih_library_favorite_state_on
@@ -431,7 +437,7 @@ private fun TasbihRow(
         ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = tasbih.name,
+                text = tasbih.displayName(lang),
                 fontSize = 14.5.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = colors.text,
@@ -447,7 +453,7 @@ private fun TasbihRow(
                 modifier = Modifier.padding(top = 2.dp),
             )
             Text(
-                text = tasbih.pronunciation,
+                text = tasbih.displayPronunciation(lang),
                 fontSize = 12.sp,
                 color = colors.faint,
                 maxLines = 2,
@@ -484,7 +490,7 @@ private fun TasbihRow(
                 Icon(
                     imageVector = noteIcon(),
                     contentDescription = null,
-                    tint = if (tasbih.note.isNotBlank()) colors.dim else colors.faint,
+                    tint = if (tasbih.displayNote(lang).isNotBlank()) colors.dim else colors.faint,
                     modifier = Modifier.size(18.dp),
                 )
             }

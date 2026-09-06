@@ -38,6 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
+import com.dhikr.app.core.datastore.ThemeMode
+import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.ui.NavCountIcon
 import com.dhikr.app.ui.NavInsightsIcon
 import com.dhikr.app.ui.minTapTarget
@@ -60,9 +62,18 @@ private data class OnboardingPage(
  * button; the caller is responsible for persisting the "seen" flag.
  */
 @Composable
-fun OnboardingScreen(onFinished: () -> Unit) {
+fun OnboardingScreen(
+    onFinished: () -> Unit,
+    language: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
+    themeMode: ThemeMode,
+    onThemeChange: (ThemeMode) -> Unit,
+) {
     val colors = DhikrTheme.colors
+    // Page 0 is the language + theme setup; its title/body come from the list,
+    // the selectors are rendered specially in the pager below.
     val pages = listOf(
+        OnboardingPage(null, stringResource(R.string.onboarding_setup_title), stringResource(R.string.onboarding_setup_body)),
         OnboardingPage(null, stringResource(R.string.onboarding_welcome_title), stringResource(R.string.onboarding_welcome_body)),
         OnboardingPage(NavCountIcon, stringResource(R.string.onboarding_tap_title), stringResource(R.string.onboarding_tap_body)),
         OnboardingPage(OnboardingLapsIcon, stringResource(R.string.onboarding_laps_title), stringResource(R.string.onboarding_laps_body)),
@@ -102,7 +113,17 @@ fun OnboardingScreen(onFinished: () -> Unit) {
                 .weight(1f)
                 .fillMaxWidth(),
         ) { page ->
-            OnboardingPageContent(pages[page])
+            if (page == 0) {
+                SetupPageContent(
+                    page = pages[0],
+                    language = language,
+                    onLanguageChange = onLanguageChange,
+                    themeMode = themeMode,
+                    onThemeChange = onThemeChange,
+                )
+            } else {
+                OnboardingPageContent(pages[page])
+            }
         }
 
         PageIndicator(
@@ -138,6 +159,96 @@ fun OnboardingScreen(onFinished: () -> Unit) {
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
             )
+        }
+    }
+}
+
+@Composable
+private fun SetupPageContent(
+    page: OnboardingPage,
+    language: AppLanguage,
+    onLanguageChange: (AppLanguage) -> Unit,
+    themeMode: ThemeMode,
+    onThemeChange: (ThemeMode) -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = page.title,
+            fontFamily = Caprasimo,
+            fontSize = 28.sp,
+            color = colors.text,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+        Text(
+            text = page.body,
+            fontSize = 15.sp,
+            lineHeight = 22.sp,
+            color = colors.dim,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(modifier = Modifier.height(28.dp))
+        SetupGroup(
+            label = stringResource(R.string.onboarding_setup_language),
+            options = listOf(
+                AppLanguage.ENGLISH to stringResource(R.string.settings_language_english),
+                AppLanguage.BANGLA to stringResource(R.string.settings_language_bangla),
+            ),
+            selected = language,
+            onSelect = onLanguageChange,
+        )
+        Spacer(modifier = Modifier.height(18.dp))
+        SetupGroup(
+            label = stringResource(R.string.onboarding_setup_theme),
+            options = listOf(
+                ThemeMode.SYSTEM to stringResource(R.string.settings_theme_system),
+                ThemeMode.LIGHT to stringResource(R.string.settings_theme_light),
+                ThemeMode.DARK to stringResource(R.string.settings_theme_dark),
+            ),
+            selected = themeMode,
+            onSelect = onThemeChange,
+        )
+    }
+}
+
+@Composable
+private fun <T> SetupGroup(
+    label: String,
+    options: List<Pair<T, String>>,
+    selected: T,
+    onSelect: (T) -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(label, fontSize = 12.sp, color = colors.faint, fontWeight = FontWeight.SemiBold)
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            options.forEach { (value, text) ->
+                val active = value == selected
+                Box(
+                    modifier = Modifier
+                        .clip(PillShape)
+                        .background(if (active) colors.sage else colors.card)
+                        .clickable(role = Role.Button) { onSelect(value) }
+                        .minTapTarget()
+                        .padding(horizontal = 16.dp, vertical = 10.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = text,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (active) colors.onSage else colors.dim,
+                    )
+                }
+            }
         }
     }
 }

@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.database.DeleteResult
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.database.entity.TasbihEntity
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.notifications.ReminderScheduler
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -95,7 +97,9 @@ class TasbihLibraryViewModel(
             when (val result = repository.delete(tasbih)) {
                 is DeleteResult.Success -> reminderScheduler.cancelTasbih(tasbih.id)
                 is DeleteResult.BlockedByRoutines -> {
-                    _deleteBlocked.tryEmit(TasbihDeleteBlocked(tasbih.name, result.routineNames))
+                    _deleteBlocked.tryEmit(
+                        TasbihDeleteBlocked(tasbih.displayName(AppLanguage.current), result.routineNames),
+                    )
                 }
             }
         }
