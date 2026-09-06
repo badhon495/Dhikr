@@ -2,6 +2,9 @@ package com.dhikr.app.core.localization
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import java.util.Locale
 
 /**
@@ -35,10 +38,23 @@ enum class AppLanguage(val tag: String) {
                 return entries.firstOrNull { it.tag == language } ?: ENGLISH
             }
 
+        private val _state = MutableStateFlow(current)
+
+        /**
+         * The active choice as a stream. [AppCompatDelegate.getApplicationLocales]
+         * is not observable, so DB-derived content (built-in dhikr names,
+         * routine names, history) would otherwise stay in the old language until
+         * something upstream re-emits. ViewModels combine this so their state
+         * recomputes the moment the language changes; composition reads it via
+         * `LocalAppLanguage`.
+         */
+        val state: StateFlow<AppLanguage> = _state.asStateFlow()
+
         fun apply(language: AppLanguage) {
             AppCompatDelegate.setApplicationLocales(
                 LocaleListCompat.forLanguageTags(language.tag),
             )
+            _state.value = language
         }
     }
 }

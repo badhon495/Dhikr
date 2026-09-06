@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.database.HistoryRepository
 import com.dhikr.app.core.database.MonthSummary
+import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.database.TasbihHistoryGroup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -55,7 +56,8 @@ class InsightsViewModel(private val repository: HistoryRepository) : ViewModel()
             repository.weekTotalFlow(),
             repository.monthTotalFlow(),
             repository.allTimeTotalFlow(),
-        ) { today, week, month, allTime -> InsightsTotals(today, week, month, allTime) }
+            AppLanguage.state,
+        ) { today, week, month, allTime, lang -> InsightsTotals(today, week, month, allTime, lang) }
             .distinctUntilChanged()
             .mapLatest { totals ->
                 _uiState.value = _uiState.value.copy(
@@ -86,7 +88,13 @@ class InsightsViewModel(private val repository: HistoryRepository) : ViewModel()
             .launchIn(viewModelScope)
     }
 
-    private data class InsightsTotals(val today: Int, val week: Int, val month: Int, val allTime: Int)
+    private data class InsightsTotals(
+        val today: Int,
+        val week: Int,
+        val month: Int,
+        val allTime: Int,
+        val lang: AppLanguage,
+    )
 
     class Factory(private val repository: HistoryRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")

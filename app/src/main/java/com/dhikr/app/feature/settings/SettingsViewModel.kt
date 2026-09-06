@@ -164,6 +164,9 @@ class SettingsViewModel(
     fun onAppLanguageChange(value: AppLanguage) {
         if (value == _uiState.value.appLanguage) return
         AppLanguage.apply(value)
+        // Reflect the choice right away so the pill updates even on devices/API
+        // levels where the locale switch doesn't recreate this activity.
+        _uiState.value = _uiState.value.copy(appLanguage = value)
     }
 
     fun onAutoCounterEnabledChange(enabled: Boolean) {

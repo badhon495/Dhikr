@@ -84,16 +84,18 @@ class HomeViewModel(
                 Triple(inputs, dayProgress, tasbihProgress)
             }
             .combine(tasbihRepository.observeAll()) { (inputs, dayProgress, tasbihProgress), allTasbihs ->
-                HomeCombined(
-                    inputs, dayProgress, tasbihProgress,
-                    allTasbihs.associate { it.id to it.displayName(AppLanguage.current) },
-                )
+                HomeCombined(inputs, dayProgress, tasbihProgress, allTasbihs)
             }
-            .mapLatest { (inputs, dayProgress, tasbihProgress, tasbihNamesById) ->
+            // Re-emit when the language changes so the DB-derived names below
+            // are rebuilt — nothing upstream fires on a locale switch.
+            .combine(AppLanguage.state) { combined, lang -> combined to lang }
+            .mapLatest { (combined, lang) ->
+                val (inputs, dayProgress, tasbihProgress, allTasbihs) = combined
+                val tasbihNamesById = allTasbihs.associate { it.id to it.displayName(lang) }
                 val continueInfo = inputs.session?.let { s ->
                     tasbihRepository.getById(s.activeDhikrId)?.let { tasbih ->
                         ContinueSessionInfo(
-                            tasbihName = tasbih.displayName(AppLanguage.current),
+                            tasbihName = tasbih.displayName(lang),
                             count = s.count,
                             target = tasbih.lapTarget,
                         )
@@ -123,7 +125,7 @@ class HomeViewModel(
         val inputs: HomeInputs,
         val dayProgress: com.dhikr.app.core.database.RoutineDayProgress,
         val tasbihProgress: Map<String, Float>,
-        val tasbihNamesById: Map<String, String>,
+        val allTasbih: List<TasbihEntity>,
     )
 
     private data class HomeInputs(

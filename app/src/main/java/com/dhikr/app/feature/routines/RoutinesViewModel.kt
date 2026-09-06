@@ -50,8 +50,8 @@ class RoutinesViewModel(
         repository.observeAllWithSteps(),
         tasbihRepository.observeAll(),
         repository.observeDayProgress(),
-    ) { q, routines, tasbihs, dayProgress ->
-        val lang = AppLanguage.current
+        AppLanguage.state,
+    ) { q, routines, tasbihs, dayProgress, lang ->
         val filtered = if (q.isBlank()) {
             routines
         } else {

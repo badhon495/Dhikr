@@ -167,6 +167,7 @@ fun DhikrApp(
         val reducedMotion by preferencesRepository.reducedMotion.collectAsState(initial = false)
         val counterScript by preferencesRepository.counterScript.collectAsState(initial = CounterScript.PRONUNCIATION)
         val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsState(initial = false)
+        val appLanguage by AppLanguage.state.collectAsState()
         // Unlike the preferences above, this one gates a full-screen overlay, so
         // an initial=false here flashes the onboarding screen on every Activity
         // recreation (e.g. rotation) until DataStore's real value loads. Start
@@ -240,9 +241,7 @@ fun DhikrApp(
         Box(modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }) {
         CompositionLocalProvider(
             LocalReducedMotion provides reducedMotion,
-            // Re-read on every composition: AppCompat recreates the Activity on
-            // a locale switch, so this reflects the current choice.
-            LocalAppLanguage provides AppLanguage.current,
+            LocalAppLanguage provides appLanguage,
         ) {
         Scaffold(
             containerColor = DhikrTheme.colors.bg,
@@ -460,7 +459,7 @@ fun DhikrApp(
                 onFinished = {
                     coroutineScope.launch { preferencesRepository.setHasSeenOnboarding(true) }
                 },
-                language = AppLanguage.current,
+                language = appLanguage,
                 onLanguageChange = { AppLanguage.apply(it) },
                 themeMode = themeMode,
                 onThemeChange = { mode ->
