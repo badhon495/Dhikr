@@ -27,6 +27,7 @@ data class SettingsUiState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val hapticMode: HapticMode = HapticMode.EVERY_TAP,
     val reducedMotion: Boolean = false,
+    val strongBorders: Boolean = false,
     val dailyGoalTarget: Int = 100,
     val dynamicColorEnabled: Boolean = true,
     val dynamicColorSupported: Boolean = supportsDynamicColor(),
@@ -83,6 +84,7 @@ class SettingsViewModel(
                 themeMode = p.themeMode,
                 hapticMode = p.hapticMode,
                 reducedMotion = p.reducedMotion,
+                strongBorders = p.strongBorders,
                 dailyGoalTarget = p.dailyGoalTarget,
                 dynamicColorEnabled = p.dynamicColorEnabled,
                 counterScript = p.counterScript,
@@ -117,6 +119,9 @@ class SettingsViewModel(
                 autoCounterSupported = autoCounterSupported,
             )
         }
+            .combine(preferencesRepository.strongBorders) { state, strongBorders ->
+                state.copy(strongBorders = strongBorders)
+            }
             .combine(preferencesRepository.counterScript) { state, counterScript ->
                 state.copy(counterScript = counterScript)
             }
@@ -145,6 +150,10 @@ class SettingsViewModel(
 
     fun onReducedMotionChange(enabled: Boolean) {
         viewModelScope.launch { preferencesRepository.setReducedMotion(enabled) }
+    }
+
+    fun onStrongBordersChange(enabled: Boolean) {
+        viewModelScope.launch { preferencesRepository.setStrongBorders(enabled) }
     }
 
     fun onDynamicColorChange(enabled: Boolean) {

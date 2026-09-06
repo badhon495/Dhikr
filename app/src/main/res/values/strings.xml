@@ -238,6 +238,8 @@
     <string name="settings_accessibility">Accessibility</string>
     <string name="settings_reduce_motion">Reduce motion</string>
     <string name="settings_reduce_motion_desc">Minimise animations across the app</string>
+    <string name="settings_strong_borders">Stronger borders</string>
+    <string name="settings_strong_borders_desc">Sharpen card edges, dividers and progress rings so sections stand apart</string>
 
     <string name="settings_auto_counter">Auto counter (experimental)</string>
     <string name="settings_auto_counter_toggle">Count on wrist flick</string>

@@ -158,6 +158,7 @@ data class BackupPreferences(
     @SerialName("themeMode") val themeMode: String? = null,
     @SerialName("hapticMode") val hapticMode: String? = null,
     @SerialName("reducedMotion") val reducedMotion: Boolean? = null,
+    @SerialName("strongBorders") val strongBorders: Boolean? = null,
     @SerialName("dynamicColor") val dynamicColor: Boolean? = null,
     @SerialName("counterScript") val counterScript: String? = null,
     @SerialName("benefitsLanguage") val benefitsLanguage: String? = null,

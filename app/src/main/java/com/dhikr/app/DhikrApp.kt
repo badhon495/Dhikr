@@ -115,6 +115,7 @@ private const val ROUTE_SETTINGS = "settings"
 fun DhikrApp(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
+    strongBorders: Boolean = false,
     pendingRoutineId: String? = null,
     onPendingRoutineConsumed: () -> Unit = {},
     pendingTasbihId: String? = null,
@@ -124,7 +125,7 @@ fun DhikrApp(
     pendingShareUri: Uri? = null,
     onPendingShareConsumed: () -> Unit = {},
 ) {
-    DhikrTheme(themeMode = themeMode, dynamicColor = dynamicColor) {
+    DhikrTheme(themeMode = themeMode, dynamicColor = dynamicColor, strongBorders = strongBorders) {
         val navController = rememberNavController()
         val context = LocalContext.current
         val app = context.applicationContext as DhikrApplication

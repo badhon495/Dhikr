@@ -130,6 +130,14 @@ fun SettingsScreen(
                     )
                 }
             }
+            Column(modifier = Modifier.padding(top = 14.dp)) {
+                SwitchRow(
+                    title = stringResource(R.string.settings_strong_borders),
+                    description = stringResource(R.string.settings_strong_borders_desc),
+                    checked = state.strongBorders,
+                    onCheckedChange = viewModel::onStrongBordersChange,
+                )
+            }
         }
 
         // ---- Counting ----

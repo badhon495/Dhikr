@@ -36,6 +36,19 @@ val LightDhikrColors = DhikrColorTokens(
     onSage = Color(0xFFF9F4ED),
 )
 
+/**
+ * Heavier [line] and [track] for the "Stronger borders" setting: the two
+ * hairline tokens carry a low alpha in every palette (static and Material You),
+ * which leaves adjacent cards and the ring's empty arc hard to tell apart on
+ * some screens. Scaling their alpha up — capped so it never turns into a hard
+ * black rule — keeps the same hue but makes the edge read. Applied centrally in
+ * [DhikrTheme], so every `colors.line` / `colors.track` consumer picks it up.
+ */
+fun DhikrColorTokens.withStrongBorders(): DhikrColorTokens = copy(
+    line = line.copy(alpha = (line.alpha * 2.6f).coerceAtMost(0.45f)),
+    track = track.copy(alpha = (track.alpha * 2.6f).coerceAtMost(0.40f)),
+)
+
 val DarkDhikrColors = DhikrColorTokens(
     bg = Color(0xFF1C1A17),
     surface = Color(0xFF2A261F),

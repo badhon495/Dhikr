@@ -34,6 +34,7 @@ class AppPreferencesRepository(private val context: Context) {
     private val hapticsEnabledKey = booleanPreferencesKey("haptics_enabled")
     private val hapticModeKey = stringPreferencesKey("haptic_mode")
     private val reducedMotionKey = booleanPreferencesKey("reduced_motion")
+    private val strongBordersKey = booleanPreferencesKey("strong_borders")
     private val dynamicColorKey = booleanPreferencesKey("dynamic_color")
     private val counterScriptKey = stringPreferencesKey("counter_script")
     private val autoCounterEnabledKey = booleanPreferencesKey("auto_counter_enabled")
@@ -84,6 +85,15 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setReducedMotion(value: Boolean) {
         context.preferencesDataStore.edit { it[reducedMotionKey] = value }
+    }
+
+    /** Heavier card borders, section dividers and ring track — a legibility aid
+     *  for when the soft default hairlines blur adjacent surfaces together.
+     *  Off by default; applied in [com.dhikr.app.ui.theme.DhikrTheme]. */
+    val strongBorders = context.preferencesDataStore.data.map { it[strongBordersKey] ?: false }
+
+    suspend fun setStrongBorders(value: Boolean) {
+        context.preferencesDataStore.edit { it[strongBordersKey] = value }
     }
 
     /** Material You: derive the app palette from the device wallpaper. Only
@@ -168,6 +178,7 @@ class AppPreferencesRepository(private val context: Context) {
             themeMode = themeMode.first(),
             hapticMode = hapticMode.first(),
             reducedMotion = reducedMotion.first(),
+            strongBorders = strongBorders.first(),
             dailyGoalTarget = dailyGoalTarget.first(),
             dynamicColorEnabled = dynamicColorEnabled.first(),
             counterScript = counterScript.first(),
@@ -183,6 +194,7 @@ class AppPreferencesRepository(private val context: Context) {
         themeMode = themeMode.first(),
         hapticMode = hapticMode.first(),
         reducedMotion = reducedMotion.first(),
+        strongBorders = strongBorders.first(),
         dynamicColorEnabled = dynamicColorEnabled.first(),
         counterScript = counterScript.first(),
         benefitsLanguage = benefitsLanguage.first(),
@@ -199,6 +211,7 @@ class AppPreferencesRepository(private val context: Context) {
         themeMode: ThemeMode?,
         hapticMode: HapticMode?,
         reducedMotion: Boolean?,
+        strongBorders: Boolean?,
         dynamicColorEnabled: Boolean?,
         counterScript: CounterScript?,
         benefitsLanguage: BenefitsLanguage?,
@@ -209,6 +222,7 @@ class AppPreferencesRepository(private val context: Context) {
             themeMode?.let { prefs[themeModeKey] = it.name }
             hapticMode?.let { prefs[hapticModeKey] = it.name }
             reducedMotion?.let { prefs[reducedMotionKey] = it }
+            strongBorders?.let { prefs[strongBordersKey] = it }
             dynamicColorEnabled?.let { prefs[dynamicColorKey] = it }
             counterScript?.let { prefs[counterScriptKey] = it.name }
             benefitsLanguage?.let { prefs[benefitsLanguageKey] = it.name }
@@ -223,6 +237,7 @@ data class SettingsInitialValues(
     val themeMode: ThemeMode,
     val hapticMode: HapticMode,
     val reducedMotion: Boolean,
+    val strongBorders: Boolean,
     val dailyGoalTarget: Int,
     val dynamicColorEnabled: Boolean,
     val counterScript: CounterScript,
@@ -236,6 +251,7 @@ data class PreferencesSnapshot(
     val themeMode: ThemeMode,
     val hapticMode: HapticMode,
     val reducedMotion: Boolean,
+    val strongBorders: Boolean,
     val dynamicColorEnabled: Boolean,
     val counterScript: CounterScript,
     val benefitsLanguage: BenefitsLanguage,
