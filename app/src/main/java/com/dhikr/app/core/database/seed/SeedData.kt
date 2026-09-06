@@ -526,6 +526,192 @@ object SeedData {
             source = "Quran 26:80",
         ),
 
+        // --- Istighfar collection (lifewithallah.com/dhikr-dua/main-adhkar/istighfar)
+        // 9 Qur'anic + 9 sunnah forms of seeking forgiveness. Sunnah #4 of that
+        // page (innaka afuwwun...) is already seeded above as `afuww`. All recite
+        // as supplications, so lapTarget = 3. The "Istighfar" preset routine walks
+        // every one of these in the page's order.
+        dhikr(
+            id = "istighfar_q_yunus",
+            name = "La ilaha illa Anta subhanaka inni kuntu minaz zalimin",
+            arabic = "لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+            pronunciation = "লা ইলাহা ইল্লা আনতা সুবহানাকা ইন্নি কুনতু মিনায যালিমীন",
+            translation = "আপনি ছাড়া কোনো উপাস্য নেই, আপনি পবিত্র, নিশ্চয়ই আমি সীমালঙ্ঘনকারীদের অন্তর্ভুক্ত ছিলাম — There is no god worthy of worship except You; You are free from all imperfection. Indeed, I have been of the wrongdoers",
+            lapTarget = 3,
+            note = "কুরআন ২১:৮৭ — মাছের পেটে ইউনুস (আঃ)-এর দুআ। নবি (সাঃ) বলেছেন কোনো মুসলিম এই দুআ দিয়ে প্রার্থনা করলে তা কবুল হয় — তিরমিযি ৩৫০৫।",
+            source = "Quran 21:87; Jami at-Tirmidhi 3505",
+        ),
+        dhikr(
+            id = "istighfar_q_musa",
+            name = "Rabbi inni zalamtu nafsi faghfir li",
+            arabic = "رَبِّ إِنِّي ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي",
+            pronunciation = "রব্বি ইন্নি যালামতু নাফসি ফাগফির লি",
+            translation = "হে আমার রব, আমি নিজের উপর জুলুম করেছি, তাই আমাকে ক্ষমা করুন — My Lord, I have certainly wronged myself, so forgive me",
+            lapTarget = 3,
+            note = "কুরআন ২৮:১৬ — কিবতিকে অনিচ্ছাকৃত হত্যার পর মুসা (আঃ)-এর দুআ।",
+            source = "Quran 28:16",
+        ),
+        dhikr(
+            id = "istighfar_q_adam",
+            name = "Rabbana zalamna anfusana wa il-lam taghfir lana",
+            arabic = "رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ",
+            pronunciation = "রব্বানা যালামনা আনফুসানা ওয়া ইল্লাম তাগফির লানা ওয়া তারহামনা লানাকুনান্না মিনাল খাসিরীন",
+            translation = "হে আমাদের রব, আমরা নিজেদের উপর জুলুম করেছি; আপনি যদি আমাদের ক্ষমা না করেন ও দয়া না করেন তবে আমরা অবশ্যই ক্ষতিগ্রস্তদের অন্তর্ভুক্ত হব — Our Lord, we have wronged ourselves. If You do not forgive us and have mercy upon us, we will surely be amongst the losers",
+            lapTarget = 3,
+            note = "কুরআন ৭:২৩ — গাছ থেকে খাওয়ার পর আদম (আঃ) ও হাওয়া (আঃ)-এর দুআ।",
+            source = "Quran 7:23",
+        ),
+        dhikr(
+            id = "istighfar_q_waliyy",
+            name = "Anta Waliyyuna faghfir lana warhamna",
+            arabic = "أَنْتَ وَلِيُّنَا فَاغْفِرْ لَنَا وَارْحَمْنَا وَأَنْتَ خَيْرُ الْغَافِرِينَ",
+            pronunciation = "আনতা ওয়ালিয়্যুনা ফাগফির লানা ওয়ারহামনা ওয়া আনতা খাইরুল গাফিরীন",
+            translation = "আপনিই আমাদের অভিভাবক, তাই আমাদের ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ ক্ষমাকারী — You are our Protector, so forgive us and have mercy upon us. You are the best of those who forgive",
+            lapTarget = 3,
+            note = "কুরআন ৭:১৫৫ — আল্লাহর নাম ‘আল-ওয়ালী’-র অসিলায় মুসা (আঃ)-এর দুআ।",
+            source = "Quran 7:155",
+        ),
+        dhikr(
+            id = "istighfar_q_amanna",
+            name = "Rabbana innana amanna faghfir lana dhunubana",
+            arabic = "رَبَّنَا إِنَّنَا آمَنَّا فَاغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ النَّارِ",
+            pronunciation = "রব্বানা ইন্নানা আমান্না ফাগফির লানা যুনুবানা ওয়া কিনা আযাবান নার",
+            translation = "হে আমাদের রব, আমরা ঈমান এনেছি, তাই আমাদের গুনাহ ক্ষমা করুন এবং জাহান্নামের আযাব থেকে রক্ষা করুন — Our Lord, indeed we have believed, so forgive us our sins and protect us from the punishment of the Fire",
+            lapTarget = 3,
+            note = "কুরআন ৩:১৬ — মুত্তাকিদের দুআ; ঈমানের অসিলায় তাওয়াসসুল।",
+            source = "Quran 3:16",
+        ),
+        dhikr(
+            id = "istighfar_q_irham",
+            name = "Rabbi-ghfir warham wa Anta khayrur rahimin",
+            arabic = "رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ",
+            pronunciation = "রব্বিগফির ওয়ারহাম ওয়া আনতা খাইরুর রাহিমীন",
+            translation = "হে আমার রব, ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ দয়ালু — My Lord, forgive and have mercy. You are the Best of those who are merciful",
+            lapTarget = 3,
+            note = "কুরআন ২৩:১১৮ — সূরা আল-মুমিনূনের শেষ আয়াত।",
+            source = "Quran 23:118",
+        ),
+        dhikr(
+            id = "istighfar_q_ilm",
+            name = "Rabbi inni a'udhu bika an as'alaka ma laysa li bihi ilm",
+            arabic = "رَبِّ إِنِّي أَعُوذُ بِكَ أَنْ أَسْأَلَكَ مَا لَيْسَ لِي بِهِ عِلْمٌ وَإِلَّا تَغْفِرْ لِي وَتَرْحَمْنِي أَكُنْ مِنَ الْخَاسِرِينَ",
+            pronunciation = "রব্বি ইন্নি আউযু বিকা আন আসআলাকা মা লাইসা লি বিহি ইলম, ওয়া ইল্লা তাগফির লি ওয়া তারহামনি আকুম মিনাল খাসিরীন",
+            translation = "হে আমার রব, যে বিষয়ে আমার জ্ঞান নেই তা আপনার কাছে চাওয়া থেকে আমি আপনার আশ্রয় চাই; আপনি যদি আমাকে ক্ষমা ও দয়া না করেন তবে আমি ক্ষতিগ্রস্তদের অন্তর্ভুক্ত হব — My Lord, I seek Your protection from asking You anything about which I have no knowledge. And unless You forgive me and have mercy upon me, I shall be amongst the losers",
+            lapTarget = 3,
+            note = "কুরআন ১১:৪৭ — নূহ (আঃ)-এর দুআ।",
+            source = "Quran 11:47",
+        ),
+        dhikr(
+            id = "istighfar_q_ikhwan",
+            name = "Rabbana-ghfir lana wa li-ikhwanina alladhina sabaquna bil-iman",
+            arabic = "رَبَّنَا اغْفِرْ لَنَا وَلِإِخْوَانِنَا الَّذِينَ سَبَقُونَا بِالْإِيمَانِ وَلَا تَجْعَلْ فِي قُلُوبِنَا غِلًّا لِلَّذِينَ آمَنُوا رَبَّنَا إِنَّكَ رَءُوفٌ رَحِيمٌ",
+            pronunciation = "রব্বানাগফির লানা ওয়া লিইখওয়ানিনাল্লাযিনা সাবাকুনা বিল ঈমান, ওয়া লা তাজআল ফি কুলুবিনা গিল্লাল লিল্লাযিনা আমানু রব্বানা ইন্নাকা রউফুর রাহীম",
+            translation = "হে আমাদের রব, আমাদের ও ঈমানে আমাদের অগ্রগামী ভাইদের ক্ষমা করুন এবং মুমিনদের প্রতি আমাদের অন্তরে বিদ্বেষ রাখবেন না; হে আমাদের রব, নিশ্চয়ই আপনি অতি স্নেহশীল, পরম দয়ালু — Our Lord, forgive us and our brothers who preceded us in faith. Do not put in our hearts any hatred toward those who have believed. Our Lord, indeed You are the Most Compassionate, the Ever-Merciful",
+            lapTarget = 3,
+            note = "কুরআন ৫৯:১০ — পরবর্তী প্রজন্মের মুমিনদের দুআ; জীবিত ও মৃত ভাই-বোনদের জন্য।",
+            source = "Quran 59:10",
+        ),
+        dhikr(
+            id = "istighfar_q_nur",
+            name = "Rabbana atmim lana nurana waghfir lana",
+            arabic = "رَبَّنَا أَتْمِمْ لَنَا نُورَنَا وَاغْفِرْ لَنَا إِنَّكَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+            pronunciation = "রব্বানা আতমিম লানা নূরানা ওয়াগফির লানা ইন্নাকা আলা কুল্লি শাইইন কাদীর",
+            translation = "হে আমাদের রব, আমাদের নূর পূর্ণ করুন ও আমাদের ক্ষমা করুন; নিশ্চয়ই আপনি সর্বশক্তিমান — Our Lord, perfect for us our light and forgive us. Indeed, You are All-Powerful over everything",
+            lapTarget = 3,
+            note = "কুরআন ৬৬:৮ — কিয়ামতের দিন মুমিনদের দুআ যখন মুনাফিকদের নূর নিভে যাবে।",
+            source = "Quran 66:8",
+        ),
+        dhikr(
+            id = "istighfar_sayyid",
+            name = "Sayyid al-Istighfar",
+            arabic = "اللّٰهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي، فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+            pronunciation = "আল্লাহুম্মা আনতা রব্বি লা ইলাহা ইল্লা আনতা, খালাকতানি ওয়া আনা আবদুকা, ওয়া আনা আলা আহদিকা ওয়া ওয়াদিকা মাসতাতাতু, আউযু বিকা মিন শাররি মা সানাতু, আবূউ লাকা বিনিমাতিকা আলাইয়া ওয়া আবূউ বিযামবি, ফাগফির লি ফাইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা",
+            translation = "হে আল্লাহ, আপনিই আমার রব, আপনি ছাড়া কোনো উপাস্য নেই; আপনি আমাকে সৃষ্টি করেছেন, আমি আপনার বান্দা; সাধ্যমতো আপনার অঙ্গীকার ও প্রতিশ্রুতির উপর আছি; আমি আমার কৃতকর্মের অনিষ্ট থেকে আপনার আশ্রয় চাই; আপনার নিয়ামত স্বীকার করছি এবং আমার গুনাহও স্বীকার করছি; আমাকে ক্ষমা করুন, কারণ আপনি ছাড়া গুনাহ কেউ ক্ষমা করতে পারে না — O Allah, You are my Lord. There is no god except You. You created me and I am Your slave, and I am upon Your covenant and pledge as much as I am able. I seek Your protection from the evil that I have done. I acknowledge Your favour upon me and I admit my sin. Forgive me, for none forgives sins but You",
+            lapTarget = 3,
+            note = "সর্বোত্তম ইস্তিগফার। দৃঢ় বিশ্বাসের সাথে দিনে পড়ে সন্ধ্যার আগে বা রাতে পড়ে সকালের আগে মারা গেলে জান্নাতি — সহীহ বুখারি ৬৩০৬।",
+            source = "Sahih al-Bukhari 6306",
+        ),
+        dhikr(
+            id = "istighfar_malik",
+            name = "Allahumma Antal-Maliku la ilaha illa Ant",
+            arabic = "اللّٰهُمَّ أَنْتَ الْمَلِكُ لَا إِلَٰهَ إِلَّا أَنْتَ، أَنْتَ رَبِّي وَأَنَا عَبْدُكَ، ظَلَمْتُ نَفْسِي وَاعْتَرَفْتُ بِذَنْبِي، فَاغْفِرْ لِي ذُنُوبِي جَمِيعًا، إِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ، وَاهْدِنِي لِأَحْسَنِ الْأَخْلَاقِ لَا يَهْدِي لِأَحْسَنِهَا إِلَّا أَنْتَ، وَاصْرِفْ عَنِّي سَيِّئَهَا لَا يَصْرِفُ عَنِّي سَيِّئَهَا إِلَّا أَنْتَ",
+            pronunciation = "আল্লাহুম্মা আনতাল মালিকু লা ইলাহা ইল্লা আনতা, আনতা রব্বি ওয়া আনা আবদুকা, যালামতু নাফসি ওয়াতারাফতু বিযামবি, ফাগফির লি যুনূবি জামীআন, ইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা, ওয়াহদিনি লিআহসানিল আখলাকি লা ইয়াহদি লিআহসানিহা ইল্লা আনতা, ওয়াসরিফ আন্নি সাইয়িআহা লা ইয়াসরিফু আন্নি সাইয়িআহা ইল্লা আনতা",
+            translation = "হে আল্লাহ, আপনিই বাদশাহ, আপনি ছাড়া কোনো উপাস্য নেই; আপনি আমার রব, আমি আপনার বান্দা; আমি নিজের উপর জুলুম করেছি ও গুনাহ স্বীকার করছি; আমার সব গুনাহ ক্ষমা করুন, আপনি ছাড়া গুনাহ কেউ ক্ষমা করে না; আমাকে উত্তম চরিত্রের পথ দেখান, আপনি ছাড়া কেউ তার পথ দেখাতে পারে না; মন্দ চরিত্র আমার থেকে দূর করুন, আপনি ছাড়া কেউ তা দূর করতে পারে না — O Allah, You are the King, there is no god worthy of worship except You. You are my Lord and I am Your slave. I have wronged myself and I confess my sin. Forgive all my sins; none forgives sins but You. Guide me to the best of character, for none guides to it but You; and turn its evil away from me, for none turns it away but You",
+            lapTarget = 3,
+            note = "নবি (সাঃ) সালাত শুরুর দুআয় পড়তেন — সহীহ মুসলিম ৭৭১। শেষাংশ (‘লাব্বাইকা ওয়া সাদাইক…’) সংক্ষেপে দেওয়া হলো।",
+            source = "Sahih Muslim 771",
+        ),
+        dhikr(
+            id = "istighfar_khatiati",
+            name = "Allahumma-ghfir li khati'ati wa jahli wa israfi fi amri",
+            arabic = "اللّٰهُمَّ اغْفِرْ لِي خَطِيئَتِي وَجَهْلِي وَإِسْرَافِي فِي أَمْرِي، وَمَا أَنْتَ أَعْلَمُ بِهِ مِنِّي، اللّٰهُمَّ اغْفِرْ لِي جِدِّي وَهَزْلِي وَخَطَئِي وَعَمْدِي وَكُلُّ ذَٰلِكَ عِنْدِي",
+            pronunciation = "আল্লাহুম্মাগফির লি খাতীআতি ওয়া জাহলি ওয়া ইসরাফি ফি আমরি, ওয়া মা আনতা আলামু বিহি মিন্নি, আল্লাহুম্মাগফির লি জিদ্দি ওয়া হাযলি ওয়া খাতাই ওয়া আমদি ওয়া কুল্লু যালিকা ইনদি",
+            translation = "হে আল্লাহ, আমার ভুল, অজ্ঞতা, কাজে সীমালঙ্ঘন এবং যা আপনি আমার চেয়ে বেশি জানেন তা ক্ষমা করুন; হে আল্লাহ, আমার সিরিয়াসভাবে ও ঠাট্টাচ্ছলে, অনিচ্ছাকৃত ও ইচ্ছাকৃত—সব গুনাহ ক্ষমা করুন, এসবই আমার মধ্যে আছে — O Allah, forgive my mistakes, my ignorance, my transgression in my affairs, and what You know better than me. O Allah, forgive me for what I did in earnest and in jest, unintentionally and intentionally; all of that is in me",
+            lapTarget = 3,
+            note = "নবি (সাঃ) এই দুআ করতেন — সহীহ মুসলিম ২৭১৯।",
+            source = "Sahih Muslim 2719",
+        ),
+        dhikr(
+            id = "istighfar_rabba_muhammad",
+            name = "Allahumma Rabba Muhammadin ighfir li dhambi",
+            arabic = "اللّٰهُمَّ رَبَّ مُحَمَّدٍ اغْفِرْ لِي ذَنْبِي، وَأَذْهِبْ غَيْظَ قَلْبِي، وَأَعِذْنِي مِنْ مُضِلَّاتِ الْفِتَنِ",
+            pronunciation = "আল্লাহুম্মা রব্বা মুহাম্মাদিন ইগফির লি যামবি, ওয়া আযহিব গাইযা কালবি, ওয়া আইযনি মিন মুদিল্লাতিল ফিতান",
+            translation = "হে আল্লাহ, মুহাম্মাদের রব, আমার গুনাহ ক্ষমা করুন, আমার অন্তরের ক্রোধ দূর করুন এবং বিভ্রান্তিকর ফিতনা থেকে আমাকে রক্ষা করুন — O Allah, Lord of Muhammad, forgive my sin, remove the anger of my heart and protect me from misleading trials",
+            lapTarget = 3,
+            note = "আয়েশা (রাঃ) রাগান্বিত হলে নবি (সাঃ) তাঁকে এটি পড়তে বলতেন — ইবনুস সুন্নি ৪৫৬।",
+            source = "Ibn as-Sunni 456",
+        ),
+        dhikr(
+            id = "istighfar_diqqahu",
+            name = "Allahumma-ghfir li dhambi kullah, diqqahu wa jillah",
+            arabic = "اللّٰهُمَّ اغْفِرْ لِي ذَنْبِي كُلَّهُ، دِقَّهُ وَجِلَّهُ، وَأَوَّلَهُ وَآخِرَهُ، وَعَلَانِيَتَهُ وَسِرَّهُ",
+            pronunciation = "আল্লাহুম্মাগফির লি যামবি কুল্লাহু, দিক্কাহু ওয়া জিল্লাহু, ওয়া আউওয়ালাহু ওয়া আখিরাহু, ওয়া আলানিয়াতাহু ওয়া সিররাহু",
+            translation = "হে আল্লাহ, আমার সব গুনাহ ক্ষমা করুন—ছোট ও বড়, প্রথম ও শেষ, প্রকাশ্য ও গোপন — O Allah, forgive me all my sins: the minor and the major, the first and the last, the public and the private",
+            lapTarget = 3,
+            note = "নবি (সাঃ) সিজদায় এই দুআ পড়তেন — সহীহ মুসলিম ৪৮৩।",
+            source = "Sahih Muslim 483",
+        ),
+        dhikr(
+            id = "istighfar_kathira",
+            name = "Allahumma inni zalamtu nafsi zulman kathira",
+            arabic = "اللّٰهُمَّ إِنِّي ظَلَمْتُ نَفْسِي ظُلْمًا كَثِيرًا، وَلَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ، فَاغْفِرْ لِي مَغْفِرَةً مِنْ عِنْدِكَ، وَارْحَمْنِي، إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ",
+            pronunciation = "আল্লাহুম্মা ইন্নি যালামতু নাফসি যুলমান কাছীরা, ওয়া লা ইয়াগফিরুয যুনূবা ইল্লা আনতা, ফাগফির লি মাগফিরাতান মিন ইনদিকা, ওয়ারহামনি, ইন্নাকা আনতাল গাফুরুর রাহীম",
+            translation = "হে আল্লাহ, আমি নিজের উপর অনেক বেশি জুলুম করেছি, আপনি ছাড়া গুনাহ কেউ ক্ষমা করে না; আপনার পক্ষ থেকে আমাকে ক্ষমা দান করুন ও দয়া করুন, নিশ্চয়ই আপনি ক্ষমাশীল, পরম দয়ালু — O Allah, I have wronged myself greatly and none forgives sins but You; so grant me forgiveness from You and have mercy on me. You are the Most Forgiving, the Most Merciful",
+            lapTarget = 3,
+            note = "নবি (সাঃ) আবু বকর (রাঃ)-কে সালাতে পড়ার জন্য এই দুআ শিখিয়েছেন — সহীহ বুখারি ৮৩৪।",
+            source = "Sahih al-Bukhari 834",
+        ),
+        dhikr(
+            id = "istighfar_afini",
+            name = "Allahumma-ghfir li warhamni wa afini wahdini warzuqni",
+            arabic = "اللّٰهُمَّ اغْفِرْ لِي، وَارْحَمْنِي، وَعَافِنِي، وَاهْدِنِي وَارْزُقْنِي",
+            pronunciation = "আল্লাহুম্মাগফির লি, ওয়ারহামনি, ওয়া আফিনি, ওয়াহদিনি ওয়ারযুকনি",
+            translation = "হে আল্লাহ, আমাকে ক্ষমা করুন, দয়া করুন, সুস্থতা দিন, হেদায়েত দিন ও রিযিক দিন — O Allah, forgive me, have mercy on me, grant me wellbeing, guide me and grant me sustenance",
+            lapTarget = 3,
+            note = "নবি (সাঃ) দুই সিজদার মাঝে এই দুআ পড়তেন — আবু দাউদ ৮৫০।",
+            source = "Sunan Abi Dawud 850",
+        ),
+        dhikr(
+            id = "istighfar_baaid",
+            name = "Allahumma baa'id bayni wa bayna khatayaya",
+            arabic = "اللّٰهُمَّ بَاعِدْ بَيْنِي وَبَيْنَ خَطَايَايَ كَمَا بَاعَدْتَ بَيْنَ الْمَشْرِقِ وَالْمَغْرِبِ، اللّٰهُمَّ نَقِّنِي مِنَ الْخَطَايَا كَمَا يُنَقَّى الثَّوْبُ الْأَبْيَضُ مِنَ الدَّنَسِ، اللّٰهُمَّ اغْسِلْ خَطَايَايَ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ",
+            pronunciation = "আল্লাহুম্মা বাইদ বাইনি ওয়া বাইনা খাতায়ায়া কামা বাআদতা বাইনাল মাশরিকি ওয়াল মাগরিব, আল্লাহুম্মা নাক্কিনি মিনাল খাতায়া কামা ইউনাক্কাস সাউবুল আবয়াদু মিনাদ দানাস, আল্লাহুম্মাগসিল খাতায়ায়া বিল মাই ওয়াস সালজি ওয়াল বারাদ",
+            translation = "হে আল্লাহ, আমার ও আমার গুনাহের মধ্যে দূরত্ব সৃষ্টি করুন যেমন পূর্ব ও পশ্চিমের মধ্যে দূরত্ব রেখেছেন; হে আল্লাহ, আমাকে গুনাহ থেকে পবিত্র করুন যেমন সাদা কাপড় ময়লা থেকে পরিষ্কার করা হয়; হে আল্লাহ, আমার গুনাহ পানি, বরফ ও শিলা দিয়ে ধুয়ে দিন — O Allah, distance me from my sins as You have distanced the East from the West. O Allah, purify me from my sins as a white cloth is purified from dirt. O Allah, wash away my sins with water, snow and hail",
+            lapTarget = 3,
+            note = "নবি (সাঃ) তাকবিরে তাহরিমা ও কিরাআতের মাঝে এই দুআ পড়তেন — সহীহ বুখারি ৭৪৪, সহীহ মুসলিম ৫৯৮।",
+            source = "Sahih al-Bukhari 744; Sahih Muslim 598",
+        ),
+        dhikr(
+            id = "istighfar_muminin",
+            name = "Allahumma-ghfir lil-mu'minina wal-mu'minat",
+            arabic = "اللّٰهُمَّ اغْفِرْ لِلْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ",
+            pronunciation = "আল্লাহুম্মাগফির লিল মুমিনীনা ওয়াল মুমিনাত",
+            translation = "হে আল্লাহ, মুমিন পুরুষ ও মুমিন নারীদের ক্ষমা করুন — O Allah, forgive the believing men and the believing women",
+            lapTarget = 3,
+            note = "যে প্রতিদিন এটি বলে, প্রত্যেক মুমিন পুরুষ ও নারীর বিনিময়ে তার জন্য একটি নেকি লেখা হয় — তাবারানি, মুজামুল কাবির ও মুসনাদুশ শামিয়্যিন ২১৫৫।",
+            source = "al-Mu'jam al-Kabir (Tabarani); Musnad ash-Shamiyyin 2155",
+        ),
+
         // --- Batch 2 (retained): the four non-situational praise/dua items
         // kept when the occasion-bound adhkar were retired (see retiredBuiltInIds).
         dhikr(
@@ -688,10 +874,26 @@ object SeedData {
         RoutineEntity(id = "after_salah", name = "After Salah", isPreset = true, isFavorite = true, createdAt = SEED_TIMESTAMP, updatedAt = SEED_TIMESTAMP),
         RoutineEntity(id = "before_sleep", name = "Before Sleep", isPreset = true, isFavorite = true, createdAt = SEED_TIMESTAMP, updatedAt = SEED_TIMESTAMP),
         RoutineEntity(id = "asma_ul_husna", name = "Asma-ul-Husna", isPreset = true, isFavorite = true, createdAt = SEED_TIMESTAMP, updatedAt = SEED_TIMESTAMP),
+        // Not favorited: lives on the Routines page only until the user stars it.
+        RoutineEntity(id = "istighfar", name = "Istighfar", isPreset = true, isFavorite = false, createdAt = SEED_TIMESTAMP, updatedAt = SEED_TIMESTAMP),
     )
 
     val presetRoutineSteps: List<RoutineStepEntity> by lazy {
-        coreRoutineSteps + asmaUlHusnaSteps
+        coreRoutineSteps + asmaUlHusnaSteps + istighfarSteps
+    }
+
+    // Istighfar: the 9 Qur'anic + 10 sunnah forms from
+    // lifewithallah.com/dhikr-dua/main-adhkar/istighfar, in the page's order.
+    // Step 13 is the pre-existing `afuww` tasbih (that page's sunnah #4).
+    private val istighfarSteps: List<RoutineStepEntity> = listOf(
+        "istighfar_q_yunus", "istighfar_q_musa", "istighfar_q_adam", "istighfar_q_waliyy",
+        "istighfar_q_amanna", "istighfar_q_irham", "istighfar_q_ilm", "istighfar_q_ikhwan",
+        "istighfar_q_nur",
+        "istighfar_sayyid", "istighfar_malik", "istighfar_khatiati", "afuww",
+        "istighfar_rabba_muhammad", "istighfar_diqqahu", "istighfar_kathira",
+        "istighfar_afini", "istighfar_baaid", "istighfar_muminin",
+    ).mapIndexed { i, id ->
+        RoutineStepEntity(routineId = "istighfar", tasbihId = id, stepOrder = i, targetCount = 3)
     }
 
     private val coreRoutineSteps: List<RoutineStepEntity> = listOf(

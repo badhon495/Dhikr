@@ -68,7 +68,11 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // (asma_01..asma_99) plus a favorited 99-step "Asma-ul-Husna" preset
     // routine. No schema change; bump reseeds so existing installs pick them up.
     // No hand migration — fallbackToDestructiveMigration rebuilds + reseeds.
-    version = 16,
+    // v17: added the 18 istighfar dhikr (istighfar_q_* Qur'anic + istighfar_*
+    // sunnah) from lifewithallah's Istighfar page, plus a non-favorited
+    // 19-step "Istighfar" preset routine. No schema change; bump reseeds.
+    // No hand migration — fallbackToDestructiveMigration rebuilds + reseeds.
+    version = 17,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
