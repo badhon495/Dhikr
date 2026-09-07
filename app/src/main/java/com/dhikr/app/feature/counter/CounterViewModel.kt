@@ -103,6 +103,14 @@ class CounterViewModel(
     private val _elapsedSeconds = MutableStateFlow(0)
     val elapsedSeconds: StateFlow<Int> = _elapsedSeconds.asStateFlow()
 
+    // True only while the counter screen is in the foreground. The session
+    // timer tick (startTimer()) gates on this so elapsed time counts only
+    // active foreground dhikr — backgrounding the app freezes it. Kept
+    // separate from engine.isRunning() so a background/foreground cycle never
+    // touches the user's manual pause state. Toggled by CounterScreen's
+    // ON_START / ON_STOP lifecycle observer.
+    private var foreground = true
+
     private val requestedStartingId = startingDhikrId
     private val requestedRoutineId = startingRoutineId
 
@@ -297,7 +305,7 @@ class CounterViewModel(
         viewModelScope.launch {
             while (true) {
                 delay(1000)
-                if (sessionReady && engine.isRunning()) {
+                if (sessionReady && engine.isRunning() && foreground) {
                     // B2: only the elapsed flow — no buildState()/_uiState
                     // emission, so the tick doesn't recompose the whole screen.
                     _elapsedSeconds.value += 1
@@ -589,6 +597,19 @@ class CounterViewModel(
      * session back (e.g. a widget refresh) must use it rather than assuming
      * flushSession() finished synchronously on return.
      */
+    /** Counter screen entered the foreground — resume the session timer tick. */
+    fun onEnterForeground() {
+        foreground = true
+    }
+
+    /** Counter screen left the foreground — freeze the session timer so elapsed
+     *  time counts only active foreground dhikr. The engine's running/pause
+     *  state is deliberately untouched, so returning resumes exactly where it
+     *  left off. */
+    fun onEnterBackground() {
+        foreground = false
+    }
+
     fun flushSession(onDone: () -> Unit = {}) {
         viewModelScope.launch {
             persist()
