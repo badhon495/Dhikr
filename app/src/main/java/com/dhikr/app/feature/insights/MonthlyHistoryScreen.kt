@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.database.MonthSummary
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.Caprasimo
@@ -123,7 +125,7 @@ private fun MonthCard(month: MonthSummary, title: String) {
         ) {
             Text(title, fontSize = 14.5.sp, color = colors.text)
             Text(
-                month.total.toString(),
+                month.total.localizedDigits(LocalAppLanguage.current),
                 fontSize = 20.sp,
                 fontFamily = Caprasimo,
                 color = colors.terra,

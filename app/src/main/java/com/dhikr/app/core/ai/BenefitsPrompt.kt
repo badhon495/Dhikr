@@ -1,6 +1,10 @@
 package com.dhikr.app.core.ai
 
 import com.dhikr.app.core.database.entity.TasbihEntity
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.localization.displayPronunciation
+import com.dhikr.app.core.localization.displayTranslation
 
 /**
  * Language the AI benefits write-up is generated in. Chosen once, app-wide, in
@@ -81,11 +85,16 @@ fun buildBenefitsPrompt(
     override: String?,
 ): String {
     val template = override?.takeIf { it.isNotBlank() } ?: defaultBenefitsTemplate(language)
+    // Feed the dhikr's text in the same language the write-up is generated in.
+    val contentLang = when (language) {
+        BenefitsLanguage.BANGLA -> AppLanguage.BANGLA
+        BenefitsLanguage.ENGLISH -> AppLanguage.ENGLISH
+    }
     val values = mapOf(
-        "name" to tasbih.name,
+        "name" to tasbih.displayName(contentLang),
         "arabic" to tasbih.arabic,
-        "pronunciation" to tasbih.pronunciation,
-        "translation" to tasbih.translation,
+        "pronunciation" to tasbih.displayPronunciation(contentLang),
+        "translation" to tasbih.displayTranslation(contentLang),
         "source" to tasbih.source.orEmpty(),
     )
 

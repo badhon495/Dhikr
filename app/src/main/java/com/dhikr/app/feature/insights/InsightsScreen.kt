@@ -36,7 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.database.TasbihHistoryGroup
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.INSIGHTS_SCREEN_TEST_TAG
+import com.dhikr.app.ui.CheckIcon
 import com.dhikr.app.ui.ScheduleIcon
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
@@ -169,7 +172,7 @@ fun InsightsScreen(
             state.last7Days.forEachIndexed { index, (label, value) ->
                 val isToday = index == state.last7Days.lastIndex
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-                    Text(value.toString(), fontSize = 10.5.sp, color = colors.dim)
+                    Text(value.localizedDigits(LocalAppLanguage.current), fontSize = 10.5.sp, color = colors.dim)
                     Box(
                         modifier = Modifier
                             .padding(top = 4.dp)
@@ -216,6 +219,7 @@ fun InsightsScreen(
                             count < 100 -> colors.sageMid
                             else -> colors.sage
                         }
+                        val goalMet = count > 0 && count >= state.dailyGoalTarget
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -225,7 +229,18 @@ fun InsightsScreen(
                                 .background(intensity),
                             contentAlignment = Alignment.Center,
                         ) {
-                            Text(day.toString(), fontSize = 12.sp, color = colors.text)
+                            Text(day.localizedDigits(LocalAppLanguage.current), fontSize = 12.sp, color = colors.text)
+                            if (goalMet) {
+                                Icon(
+                                    imageVector = CheckIcon,
+                                    contentDescription = stringResource(R.string.insights_goal_met),
+                                    tint = colors.terra,
+                                    modifier = Modifier
+                                        .align(Alignment.TopEnd)
+                                        .padding(2.dp)
+                                        .size(10.dp),
+                                )
+                            }
                         }
                     }
                     repeat(7 - week.size) { Box(modifier = Modifier.weight(1f)) }
@@ -270,7 +285,7 @@ fun InsightsScreen(
                 ) {
                     Text(prevMonthName, fontSize = 14.5.sp, color = colors.text)
                     Text(
-                        previousMonth.total.toString(),
+                        previousMonth.total.localizedDigits(LocalAppLanguage.current),
                         fontSize = 20.sp,
                         fontFamily = Caprasimo,
                         color = colors.terra,
@@ -361,7 +376,7 @@ fun DhikrHistoryCard(
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Text(group.tasbihName, fontSize = 14.5.sp, color = colors.text)
-            Text(group.lifetimeTotal.toString(), fontSize = 14.5.sp, color = colors.terra)
+            Text(group.lifetimeTotal.localizedDigits(LocalAppLanguage.current), fontSize = 14.5.sp, color = colors.terra)
         }
         if (showStats) {
             val speed = group.speedPerMin
@@ -402,7 +417,7 @@ fun DhikrHistoryCard(
                             .background(colors.sage),
                     )
                 }
-                Text(count.toString(), fontSize = 12.sp, color = colors.dim, modifier = Modifier.padding(start = 8.dp))
+                Text(count.localizedDigits(LocalAppLanguage.current), fontSize = 12.sp, color = colors.dim, modifier = Modifier.padding(start = 8.dp))
             }
         }
     }
@@ -434,7 +449,7 @@ private fun TotalTile(label: String, value: Int, modifier: Modifier = Modifier) 
     ) {
         Text(label.uppercase(), fontSize = 10.5.sp, color = colors.dim)
         Text(
-            value.toString(),
+            value.localizedDigits(LocalAppLanguage.current),
             fontSize = 24.sp,
             fontFamily = Caprasimo,
             color = colors.text,

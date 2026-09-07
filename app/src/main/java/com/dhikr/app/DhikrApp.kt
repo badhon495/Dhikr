@@ -54,6 +54,8 @@ import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.datastore.SessionRepository
 import com.dhikr.app.core.datastore.ThemeMode
@@ -113,6 +115,7 @@ private const val ROUTE_SETTINGS = "settings"
 fun DhikrApp(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
+    strongBorders: Boolean = false,
     pendingRoutineId: String? = null,
     onPendingRoutineConsumed: () -> Unit = {},
     pendingTasbihId: String? = null,
@@ -122,7 +125,7 @@ fun DhikrApp(
     pendingShareUri: Uri? = null,
     onPendingShareConsumed: () -> Unit = {},
 ) {
-    DhikrTheme(themeMode = themeMode, dynamicColor = dynamicColor) {
+    DhikrTheme(themeMode = themeMode, dynamicColor = dynamicColor, strongBorders = strongBorders) {
         val navController = rememberNavController()
         val context = LocalContext.current
         val app = context.applicationContext as DhikrApplication
@@ -165,6 +168,7 @@ fun DhikrApp(
         val reducedMotion by preferencesRepository.reducedMotion.collectAsState(initial = false)
         val counterScript by preferencesRepository.counterScript.collectAsState(initial = CounterScript.PRONUNCIATION)
         val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsState(initial = false)
+        val appLanguage by AppLanguage.state.collectAsState()
         // Unlike the preferences above, this one gates a full-screen overlay, so
         // an initial=false here flashes the onboarding screen on every Activity
         // recreation (e.g. rotation) until DataStore's real value loads. Start
@@ -236,7 +240,10 @@ fun DhikrApp(
         }
 
         Box(modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }) {
-        CompositionLocalProvider(LocalReducedMotion provides reducedMotion) {
+        CompositionLocalProvider(
+            LocalReducedMotion provides reducedMotion,
+            LocalAppLanguage provides appLanguage,
+        ) {
         Scaffold(
             containerColor = DhikrTheme.colors.bg,
             bottomBar = {
@@ -341,7 +348,7 @@ fun DhikrApp(
                 }
                 composable(ROUTE_INSIGHTS) {
                     val viewModel: InsightsViewModel = viewModel(
-                        factory = InsightsViewModel.Factory(historyRepository),
+                        factory = InsightsViewModel.Factory(historyRepository, preferencesRepository),
                     )
                     InsightsScreen(
                         viewModel = viewModel,
@@ -452,6 +459,12 @@ fun DhikrApp(
             OnboardingScreen(
                 onFinished = {
                     coroutineScope.launch { preferencesRepository.setHasSeenOnboarding(true) }
+                },
+                language = appLanguage,
+                onLanguageChange = { AppLanguage.apply(it) },
+                themeMode = themeMode,
+                onThemeChange = { mode ->
+                    coroutineScope.launch { preferencesRepository.setThemeMode(mode) }
                 },
             )
         }

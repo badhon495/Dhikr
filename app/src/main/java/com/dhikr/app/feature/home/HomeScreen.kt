@@ -44,6 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.database.dao.RoutineWithSteps
+import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.localization.displayPronunciation
+import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.HOME_SCREEN_TEST_TAG
 import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.Motion
@@ -65,6 +69,7 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     val scrollState = rememberScrollState()
 
     LaunchedEffect(scrollToTopSignal) {
@@ -150,7 +155,11 @@ fun HomeScreen(
                         modifier = Modifier.padding(top = 3.dp),
                     )
                 }
-                Text("${info.count}/${info.target}", fontSize = 14.5.sp, color = colors.dim)
+                Text(
+                    "${info.count.localizedDigits(lang)}/${info.target.localizedDigits(lang)}",
+                    fontSize = 14.5.sp,
+                    color = colors.dim,
+                )
             }
         }
 
@@ -222,8 +231,8 @@ fun HomeScreen(
                             .padding(14.dp),
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(tasbih.name, fontSize = 14.5.sp, color = colors.text)
-                            Text(tasbih.pronunciation, fontSize = 12.sp, color = colors.faint, maxLines = 1)
+                            Text(tasbih.displayName(lang), fontSize = 14.5.sp, color = colors.text)
+                            Text(tasbih.displayPronunciation(lang), fontSize = 12.sp, color = colors.faint, maxLines = 1)
                         }
                         Text(tasbih.arabic, fontSize = 14.sp, color = colors.dim)
                     }
@@ -248,6 +257,7 @@ private fun RoutineHomeCard(
     onStart: () -> Unit,
 ) {
     val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
     val steps = routine.steps.sortedBy { it.stepOrder }
     val totalCount = steps.sumOf { it.targetCount }
     val previewNames = steps.take(3).joinToString(" · ") { tasbihNamesById[it.tasbihId] ?: it.tasbihId }
@@ -288,7 +298,7 @@ private fun RoutineHomeCard(
                         .padding(horizontal = 9.dp, vertical = 3.dp),
                 )
                 Text(
-                    routine.routine.name,
+                    routine.routine.displayName(lang),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = colors.text,
@@ -389,6 +399,10 @@ private fun GoalRing(progress: Float, contentDescription: String) {
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
             )
         }
-        Text("${(animatedProgress * 100).toInt()}%", fontSize = 17.sp, color = colors.text)
+        Text(
+            "${(animatedProgress * 100).toInt().localizedDigits(LocalAppLanguage.current)}%",
+            fontSize = 17.sp,
+            color = colors.text,
+        )
     }
 }

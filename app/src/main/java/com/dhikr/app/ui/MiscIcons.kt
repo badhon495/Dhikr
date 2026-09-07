@@ -35,3 +35,8 @@ private fun miscIcon(name: String, pathData: String): ImageVector = ImageVector.
 val ScheduleIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
     miscIcon("Schedule", "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M12 7.5V12l3.4 2")
 }
+
+/** Plain checkmark — replaces `Icons.Filled.Check` (extended-only). */
+val CheckIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
+    miscIcon("Check", "M5 13l5 5 9-12")
+}

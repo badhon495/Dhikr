@@ -11,6 +11,8 @@ import com.dhikr.app.core.database.dao.RoutineWithSteps
 import com.dhikr.app.core.database.entity.RoutineStepEntity
 import com.dhikr.app.core.database.entity.TasbihEntity
 import com.dhikr.app.core.datastore.SessionRepository
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.model.CounterSessionState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -135,7 +137,7 @@ class CounterViewModel(
                 activeRoutine = routine
                 val sortedSteps = routine.steps.sortedBy { it.stepOrder }
                 routineStepNames = sortedSteps.map { step ->
-                    tasbihRepository.getById(step.tasbihId)?.name ?: step.tasbihId
+                    tasbihRepository.getById(step.tasbihId)?.displayName(AppLanguage.current) ?: step.tasbihId
                 }
                 sortedRoutineSteps = sortedSteps
                 cachedRoutineStepDisplays = sortedSteps.mapIndexed { i, step ->
@@ -569,7 +571,7 @@ class CounterViewModel(
             sessionStartedAtMillis = sessionStartedAtMillis,
             routineSteps = steps,
             currentRoutineStepIndex = routineStepIndex,
-            routineName = routine?.routine?.name,
+            routineName = routine?.routine?.displayName(AppLanguage.current),
             // buildState() is only ever called after sessionReady has been
             // set true (initializeSession()'s success path, or the handlers
             // above, all of which now guard on it first) — see finding #2.

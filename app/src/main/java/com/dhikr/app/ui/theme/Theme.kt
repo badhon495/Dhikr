@@ -29,6 +29,7 @@ fun ThemeMode.resolveIsDark(): Boolean = when (this) {
 fun DhikrTheme(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
+    strongBorders: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val darkTheme = themeMode.resolveIsDark()
@@ -38,7 +39,7 @@ fun DhikrTheme(
         useDynamic -> dynamicDhikrColors(context, darkTheme)
         darkTheme -> DarkDhikrColors
         else -> LightDhikrColors
-    }
+    }.let { if (strongBorders) it.withStrongBorders() else it }
     // Material3's default colorScheme (background ~white, surface ~white) is
     // otherwise left untouched by DhikrColorTokens — components that read it
     // directly instead of DhikrTheme.colors (Scaffold's containerColor,

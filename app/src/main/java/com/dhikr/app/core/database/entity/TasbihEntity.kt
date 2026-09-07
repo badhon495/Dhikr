@@ -15,11 +15,20 @@ import androidx.room.PrimaryKey
 )
 data class TasbihEntity(
     @PrimaryKey val id: String,
+    // The name/pronunciation/translation/note fields hold the ENGLISH side; the
+    // *Bn fields hold the Bangla side. Built-in dhikr fill both. Custom dhikr
+    // fill only the English side and the *Bn fields stay null — the resolver
+    // (see Localization.kt) falls back to the English field, so a custom dhikr
+    // shows whatever the user typed in both languages.
     val name: String,
+    val nameBn: String? = null,
     val arabic: String,
     val pronunciation: String,
+    val pronunciationBn: String? = null,
     val translation: String,
+    val translationBn: String? = null,
     val note: String = "",
+    val noteBn: String? = null,
     val source: String? = null,
     val lapTarget: Int,
     val lapCount: Int,

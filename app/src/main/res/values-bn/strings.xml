@@ -126,6 +126,8 @@
     <string name="routines_title">রুটিন</string>
     <string name="routines_new_short">+ নতুন</string>
     <string name="routines_step_count">%1$d টি ধাপ · %2$d টি গণনা</string>
+    <string name="routines_show_more">আরও %1$s টি</string>
+    <string name="routines_show_less">কম দেখান</string>
     <string name="routines_new">+ নতুন রুটিন</string>
     <string name="routines_search_placeholder">রুটিন খুঁজুন</string>
     <string name="routines_search_content_description">রুটিন খুঁজুন</string>
@@ -194,6 +196,7 @@
     <string name="insights_bar_chart_description">গত ৭ দিন: %1$s</string>
     <string name="insights_consistency">ধারাবাহিকতা</string>
     <string name="insights_consistency_meta">এই মাসে %1$d দিন</string>
+    <string name="insights_goal_met">দৈনিক লক্ষ্য পূর্ণ</string>
     <string name="insights_legend_less">কম</string>
     <string name="insights_legend_more">বেশি</string>
     <string name="insights_history_title">ইতিহাস</string>
@@ -221,7 +224,6 @@
     <string name="settings_title">সেটিংস</string>
     <string name="settings_language">ভাষা</string>
     <string name="settings_language_desc">অ্যাপ জুড়ে ব্যবহৃত ভাষা</string>
-    <string name="settings_language_system">সিস্টেম</string>
     <string name="settings_language_english">English</string>
     <string name="settings_language_bangla">বাংলা</string>
     <string name="settings_appearance">চেহারা</string>
@@ -234,6 +236,8 @@
     <string name="settings_accessibility">অ্যাক্সেসিবিলিটি</string>
     <string name="settings_reduce_motion">মোশন কমান</string>
     <string name="settings_reduce_motion_desc">অ্যাপ জুড়ে অ্যানিমেশন কমান</string>
+    <string name="settings_strong_borders">স্পষ্ট বর্ডার</string>
+    <string name="settings_strong_borders_desc">কার্ডের কিনারা, বিভাজক ও প্রোগ্রেস রিং আরও স্পষ্ট করুন যাতে অংশগুলো আলাদা বোঝা যায়</string>
 
     <string name="settings_auto_counter">অটো কাউন্টার (পরীক্ষামূলক)</string>
     <string name="settings_auto_counter_toggle">কব্জির ঝাঁকুনিতে গণনা</string>
@@ -334,6 +338,10 @@
     <!-- Onboarding (shown once, before Home, plan.md §25) -->
     <string name="onboarding_welcome_title">Dhikr</string>
     <string name="onboarding_welcome_body">সহজে যিকর গণনা করুন। একটি শান্ত, ব্যক্তিগত কাউন্টার — কোনো অ্যাকাউন্ট নেই, বিজ্ঞাপন নেই, কিছুই ট্র্যাক করা হয় না।</string>
+    <string name="onboarding_setup_title">নিজের মতো সাজান</string>
+    <string name="onboarding_setup_body">একটি ভাষা ও থিম বাছুন। পরে সেটিংস থেকে দুটোই বদলাতে পারবেন।</string>
+    <string name="onboarding_setup_language">ভাষা</string>
+    <string name="onboarding_setup_theme">থিম</string>
     <string name="onboarding_tap_title">গণনা করতে ট্যাপ করুন</string>
     <string name="onboarding_tap_body">কাউন্টার স্ক্রিনে যেকোনো জায়গায় ট্যাপ করুন। গণনা সাথে সাথে হালনাগাদ হয়, নিশ্চিত করতে একটি মৃদু কম্পন সহ।</string>
     <string name="onboarding_laps_title">ল্যাপ ও লক্ষ্য</string>

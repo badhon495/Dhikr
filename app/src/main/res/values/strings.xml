@@ -129,6 +129,8 @@
     <string name="routines_title">Routines</string>
     <string name="routines_new_short">+ New</string>
     <string name="routines_step_count">%1$d steps · %2$d counts</string>
+    <string name="routines_show_more">+%1$s more</string>
+    <string name="routines_show_less">Show less</string>
     <string name="routines_new">+ New routine</string>
     <string name="routines_search_placeholder">Search routines</string>
     <string name="routines_search_content_description">Search routines</string>
@@ -197,6 +199,7 @@
     <string name="insights_bar_chart_description">Last 7 days: %1$s</string>
     <string name="insights_consistency">Consistency</string>
     <string name="insights_consistency_meta">%1$d days this month</string>
+    <string name="insights_goal_met">Daily goal met</string>
     <string name="insights_legend_less">less</string>
     <string name="insights_legend_more">more</string>
     <string name="insights_history_title">History</string>
@@ -224,7 +227,6 @@
     <string name="settings_title">Settings</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_desc">Language used across the app</string>
-    <string name="settings_language_system">System</string>
     <string name="settings_language_english">English</string>
     <string name="settings_language_bangla">বাংলা</string>
     <string name="settings_appearance">Appearance</string>
@@ -237,6 +239,8 @@
     <string name="settings_accessibility">Accessibility</string>
     <string name="settings_reduce_motion">Reduce motion</string>
     <string name="settings_reduce_motion_desc">Minimise animations across the app</string>
+    <string name="settings_strong_borders">Stronger borders</string>
+    <string name="settings_strong_borders_desc">Sharpen card edges, dividers and progress rings so sections stand apart</string>
 
     <string name="settings_auto_counter">Auto counter (experimental)</string>
     <string name="settings_auto_counter_toggle">Count on wrist flick</string>
@@ -338,6 +342,10 @@
     <!-- Onboarding (shown once, before Home, plan.md §25) -->
     <string name="onboarding_welcome_title">Dhikr</string>
     <string name="onboarding_welcome_body">Count Dhikr, simply. A calm, private counter — no account, no ads, nothing tracked.</string>
+    <string name="onboarding_setup_title">Make it yours</string>
+    <string name="onboarding_setup_body">Pick a language and a theme. You can change both later in Settings.</string>
+    <string name="onboarding_setup_language">Language</string>
+    <string name="onboarding_setup_theme">Theme</string>
     <string name="onboarding_tap_title">Tap to count</string>
     <string name="onboarding_tap_body">Tap anywhere on the counter screen. The count updates instantly, with a soft vibration to confirm.</string>
     <string name="onboarding_laps_title">Laps and goals</string>

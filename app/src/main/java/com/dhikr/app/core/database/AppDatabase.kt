@@ -102,7 +102,11 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // v26: added Surah Al-Ikhlas / Al-Falaq / An-Nas as individual built-ins
     // (surah_ikhlas, surah_falaq, surah_nas) with full text, and gave
     // morn_3quls its full Arabic. No schema change; bump reseeds.
-    version = 26,
+    // v27: bilingual dhikr content. Added TasbihEntity.nameBn /
+    // pronunciationBn / translationBn / noteBn and RoutineEntity.nameBn; the
+    // non-Bn fields now hold the English side. SeedData fills both languages.
+    // No hand migration — fallbackToDestructiveMigration rebuilds + reseeds.
+    version = 27,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {

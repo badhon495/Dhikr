@@ -75,12 +75,12 @@ interface RoutineDao {
 
     @Query(
         """
-        SELECT DISTINCT r.name FROM routine r
+        SELECT DISTINCT r.name AS name, r.nameBn AS nameBn FROM routine r
         INNER JOIN routine_step s ON s.routineId = r.id
         WHERE s.tasbihId = :tasbihId
         """
     )
-    suspend fun routineNamesUsingTasbih(tasbihId: String): List<String>
+    suspend fun routineNamesUsingTasbih(tasbihId: String): List<RoutineNameRow>
 
     @Query("SELECT COUNT(*) FROM routine")
     suspend fun count(): Int
@@ -97,3 +97,7 @@ interface RoutineDao {
     @Query("SELECT * FROM routine WHERE id = :id LIMIT 1")
     suspend fun getRoutineRaw(id: String): RoutineEntity?
 }
+
+/** Projection for [RoutineDao.routineNamesUsingTasbih] — both name columns so
+ *  the caller can resolve the display name for the active language. */
+data class RoutineNameRow(val name: String, val nameBn: String?)

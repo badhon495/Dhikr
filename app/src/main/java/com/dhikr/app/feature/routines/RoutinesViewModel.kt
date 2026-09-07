@@ -7,6 +7,8 @@ import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.database.dao.RoutineWithSteps
 import com.dhikr.app.core.database.entity.RoutineEntity
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -48,11 +50,15 @@ class RoutinesViewModel(
         repository.observeAllWithSteps(),
         tasbihRepository.observeAll(),
         repository.observeDayProgress(),
-    ) { q, routines, tasbihs, dayProgress ->
+        AppLanguage.state,
+    ) { q, routines, tasbihs, dayProgress, lang ->
         val filtered = if (q.isBlank()) {
             routines
         } else {
-            routines.filter { it.routine.name.contains(q.trim(), ignoreCase = true) }
+            routines.filter {
+                it.routine.name.contains(q.trim(), ignoreCase = true) ||
+                    it.routine.displayName(lang).contains(q.trim(), ignoreCase = true)
+            }
         }
         RoutinesUiState(
             query = q,
@@ -60,7 +66,7 @@ class RoutinesViewModel(
             totalCount = routines.size,
             builtInCount = routines.count { it.routine.isPreset },
             customCount = routines.count { !it.routine.isPreset },
-            tasbihNamesById = tasbihs.associate { it.id to it.name },
+            tasbihNamesById = tasbihs.associate { it.id to it.displayName(lang) },
             completedTodayIds = dayProgress.completedRoutineIds,
             progressByRoutineId = dayProgress.fractionByRoutineId,
         )

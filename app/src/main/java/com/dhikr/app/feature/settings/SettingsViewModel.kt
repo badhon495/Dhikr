@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.ai.BenefitsLanguage
+import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.ai.SecureKeyStore
 import com.dhikr.app.core.ai.defaultBenefitsTemplate
 import com.dhikr.app.core.counter.AutoCounterSensorListener
@@ -26,11 +27,12 @@ data class SettingsUiState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val hapticMode: HapticMode = HapticMode.EVERY_TAP,
     val reducedMotion: Boolean = false,
-    val dailyGoalTarget: Int = 100,
+    val strongBorders: Boolean = false,
+    val dailyGoalTarget: Int = 500,
     val dynamicColorEnabled: Boolean = true,
     val dynamicColorSupported: Boolean = supportsDynamicColor(),
     val counterScript: CounterScript = CounterScript.PRONUNCIATION,
-    val appLanguage: AppLanguage = AppLanguage.SYSTEM,
+    val appLanguage: AppLanguage = AppLanguage.ENGLISH,
     val appVersion: String = "",
     val hasGeminiKey: Boolean = false,
     val autoCounterEnabled: Boolean = false,
@@ -82,6 +84,7 @@ class SettingsViewModel(
                 themeMode = p.themeMode,
                 hapticMode = p.hapticMode,
                 reducedMotion = p.reducedMotion,
+                strongBorders = p.strongBorders,
                 dailyGoalTarget = p.dailyGoalTarget,
                 dynamicColorEnabled = p.dynamicColorEnabled,
                 counterScript = p.counterScript,
@@ -116,6 +119,9 @@ class SettingsViewModel(
                 autoCounterSupported = autoCounterSupported,
             )
         }
+            .combine(preferencesRepository.strongBorders) { state, strongBorders ->
+                state.copy(strongBorders = strongBorders)
+            }
             .combine(preferencesRepository.counterScript) { state, counterScript ->
                 state.copy(counterScript = counterScript)
             }
@@ -146,6 +152,10 @@ class SettingsViewModel(
         viewModelScope.launch { preferencesRepository.setReducedMotion(enabled) }
     }
 
+    fun onStrongBordersChange(enabled: Boolean) {
+        viewModelScope.launch { preferencesRepository.setStrongBorders(enabled) }
+    }
+
     fun onDynamicColorChange(enabled: Boolean) {
         viewModelScope.launch { preferencesRepository.setDynamicColorEnabled(enabled) }
     }
@@ -163,6 +173,9 @@ class SettingsViewModel(
     fun onAppLanguageChange(value: AppLanguage) {
         if (value == _uiState.value.appLanguage) return
         AppLanguage.apply(value)
+        // Reflect the choice right away so the pill updates even on devices/API
+        // levels where the locale switch doesn't recreate this activity.
+        _uiState.value = _uiState.value.copy(appLanguage = value)
     }
 
     fun onAutoCounterEnabledChange(enabled: Boolean) {

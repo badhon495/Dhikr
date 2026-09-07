@@ -10,7 +10,11 @@ import androidx.room.PrimaryKey
 )
 data class RoutineEntity(
     @PrimaryKey val id: String,
+    /** English name. Custom routines fill only this; [nameBn] stays null. */
     val name: String,
+    /** Bangla name for built-in presets; null for custom routines (they show
+     *  [name] in both languages). */
+    val nameBn: String? = null,
     val isPreset: Boolean,
     val isFavorite: Boolean = false,
     val createdAt: Long,
