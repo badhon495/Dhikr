@@ -104,8 +104,13 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // morn_3quls its full Arabic. No schema change; bump reseeds.
     // v27: bilingual dhikr content. Added TasbihEntity.nameBn /
     // pronunciationBn / translationBn / noteBn and RoutineEntity.nameBn; the
-    // non-Bn fields now hold the English side. SeedData fills both languages.
-    // No hand migration — fallbackToDestructiveMigration rebuilds + reseeds.
+    // non-Bn fields now hold the English side. SeedData fills both languages
+    // for the core Tasbih and the 99 names; the situational-dhikr batches
+    // (istighfar / morning / evening / sleep / praise / Qur'anic-dua / salawat /
+    // ruqyah / beneficial / surah) carry a Bangla name + Bangla-script
+    // recitation + split translation, with a Roman-script pronunciation still
+    // pending (see SeedData.pendingRomanTransliterationIds). No hand migration
+    // — fallbackToDestructiveMigration rebuilds + reseeds.
     version = 27,
     exportSchema = false,
 )

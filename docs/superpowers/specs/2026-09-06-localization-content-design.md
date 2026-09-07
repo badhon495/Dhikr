@@ -139,3 +139,24 @@ defaults.
 Full onboarding redesign · Arabic (`ar`) locale · localizing AI
 `benefitsText` (own language setting) · localizing shared-routine text ·
 RTL (Bangla is LTR).
+
+## Known gap — Roman transliteration of the situational-dhikr batches
+
+When this branch merged into `main`, `main` had added ~136 situational
+dhikr (istighfar / morning / evening / before-sleep / praise /
+Qur'anic-dua / salawat / ruqyah / beneficial / surah) that predate the
+bilingual split. They were brought up to the contract as follows:
+
+- **Done:** authentic vowelled Arabic, Bangla-script `pronunciationBn`,
+  `translationBn` + English `translation` (split from the old merged
+  string), Bangla `noteBn`, `source`, and a Bangla-script `nameBn`
+  (the defining Arabic phrase transliterated into Bangla, cross-checked
+  against sunnah.com / quran.com and each entry's cited `source`).
+- **Pending:** the English-side `pronunciation` still holds the Bangla
+  rendering for these entries. A faithful Roman-script transliteration
+  is follow-up work. The ids are listed in
+  `SeedData.pendingRomanTransliterationIds`;
+  `SeedDataLocalizationTest.english_pronunciation_is_roman_script_except_pending`
+  exempts exactly that set and nothing else. Clearing the gap means
+  transliterating each entry (source: sunnah.com / quran.com Roman
+  transliteration, matched by Arabic) and emptying that set.

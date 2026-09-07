@@ -1,34 +1,30 @@
 package com.dhikr.app.core.database.seed
 
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /** Localization contract for shipped seed content.
  *
- *  The core Tasbih library and the 99 names (Asma-ul-Husna) are *fully*
- *  bilingual: a distinct Bangla name, Roman-script pronunciation in the English
- *  field, Bangla script in the `*Bn` field, and a clean English/Bangla split of
- *  the translation.
+ *  Every built-in dhikr and preset routine carries both language sides: a
+ *  Bangla name, a Bangla-script recitation guide, and a clean English/Bangla
+ *  split of the translation and note.
  *
  *  The situational-dhikr batches (istighfar / morning / evening / before-sleep /
- *  praise / Qur'anic-dua / salawat / ruqyah / beneficial / surah) were authored
- *  before the bilingual split and only carry the Bangla side. They are allowed
- *  an English fallback for now (nameBn == name, Bangla script in `pronunciation`)
- *  and full localization of those entries is tracked follow-up work. Such an
- *  entry is identified by `nameBn == name`.
+ *  praise / Qur'anic-dua / salawat / ruqyah / beneficial / surah) are fully
+ *  localized on the Bangla side but their English-side `pronunciation` still
+ *  holds the Bangla rendering — a faithful Roman transliteration is tracked
+ *  follow-up work. Those ids live in [SeedData.pendingRomanTransliterationIds]
+ *  and are exempt only from the "English pronunciation is Roman script" check.
  */
 class SeedDataLocalizationTest {
 
-    private val fullyLocalized get() =
-        SeedData.builtInTasbih.filter { it.nameBn != it.name }
-
-    private val fallbackAllowed get() =
-        SeedData.builtInTasbih.filter { it.nameBn == it.name }
+    private val bengali = 'ঀ'..'৿'
 
     @Test
-    fun fully_localized_tasbih_have_both_language_sides() {
-        fullyLocalized.forEach { t ->
+    fun every_builtin_tasbih_has_both_language_sides() {
+        SeedData.builtInTasbih.forEach { t ->
             assertTrue("${t.id} name blank", t.name.isNotBlank())
             assertTrue("${t.id} nameBn missing", !t.nameBn.isNullOrBlank())
             assertTrue("${t.id} pronunciation blank", t.pronunciation.isNotBlank())
@@ -39,38 +35,52 @@ class SeedDataLocalizationTest {
     }
 
     @Test
-    fun fully_localized_translation_split_left_no_bilingual_residue() {
-        // The old seed packed "Bangla — English" into one field. After the split
-        // neither side should still contain the " — " separator.
-        fullyLocalized.forEach { t ->
-            assertFalse("${t.id} translation still merged", t.translation.contains(" — "))
-            assertFalse("${t.id} translationBn still merged", t.translationBn!!.contains(" — "))
+    fun translation_split_left_no_bilingual_residue() {
+        // The pre-split seed packed "Bangla — English" into one field. After the
+        // builder's split neither side should still open with that separator.
+        SeedData.builtInTasbih.forEach { t ->
+            assertFalse("${t.id} translation still merged", t.translation.startsWith(" — "))
+            assertFalse("${t.id} translationBn still merged", t.translationBn!!.endsWith(" — "))
         }
     }
 
     @Test
-    fun fully_localized_english_pronunciation_is_not_bangla_script() {
-        // Roman-script pronunciations only in the English field.
-        fullyLocalized.forEach { t ->
-            assertFalse(
-                "${t.id} pronunciation has Bangla characters",
-                t.pronunciation.any { it in 'ঀ'..'৿' },
+    fun nameBn_is_bangla_script() {
+        SeedData.builtInTasbih.forEach { t ->
+            assertTrue(
+                "${t.id} nameBn has no Bangla characters: ${t.nameBn}",
+                t.nameBn!!.any { it in bengali },
             )
         }
     }
 
     @Test
-    fun fallback_entries_still_carry_non_blank_content() {
-        // Even a fallback entry must render: a name, a recitation guide and a
-        // meaning on both sides (the Bangla side may equal the English side).
-        fallbackAllowed.forEach { t ->
-            assertTrue("${t.id} name blank", t.name.isNotBlank())
-            assertTrue("${t.id} nameBn blank", !t.nameBn.isNullOrBlank())
-            assertTrue("${t.id} pronunciation blank", t.pronunciation.isNotBlank())
-            assertTrue("${t.id} pronunciationBn blank", !t.pronunciationBn.isNullOrBlank())
-            assertTrue("${t.id} translation blank", t.translation.isNotBlank())
-            assertTrue("${t.id} translationBn blank", !t.translationBn.isNullOrBlank())
+    fun pronunciationBn_is_bangla_script() {
+        SeedData.builtInTasbih.forEach { t ->
+            assertTrue(
+                "${t.id} pronunciationBn has no Bangla characters",
+                t.pronunciationBn!!.any { it in bengali },
+            )
         }
+    }
+
+    @Test
+    fun english_pronunciation_is_roman_script_except_pending() {
+        SeedData.builtInTasbih
+            .filter { it.id !in SeedData.pendingRomanTransliterationIds }
+            .forEach { t ->
+                assertFalse(
+                    "${t.id} pronunciation has Bangla characters",
+                    t.pronunciation.any { it in bengali },
+                )
+            }
+    }
+
+    @Test
+    fun pending_transliteration_ids_all_exist() {
+        val builtInIds = SeedData.builtInTasbih.map { it.id }.toSet()
+        val unknown = SeedData.pendingRomanTransliterationIds - builtInIds
+        assertEquals("pendingRomanTransliterationIds names dhikr that do not exist: $unknown", emptySet<String>(), unknown)
     }
 
     @Test
@@ -78,10 +88,10 @@ class SeedDataLocalizationTest {
         // The five preset routines surfaced on Home carry a Bangla name; the
         // situational presets fall back to the English name for now.
         val localizedPresets = setOf("morning", "evening", "after_salah", "before_sleep", "asma_ul_husna")
-        SeedData.presetRoutines.forEach { r ->
-            if (r.id in localizedPresets) {
+        SeedData.presetRoutines
+            .filter { it.id in localizedPresets }
+            .forEach { r ->
                 assertTrue("${r.id} nameBn missing", !r.nameBn.isNullOrBlank())
             }
-        }
     }
 }

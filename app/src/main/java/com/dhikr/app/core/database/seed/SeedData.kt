@@ -26,9 +26,11 @@ object SeedData {
         // Bilingual fields. The fully-localized entries pass all four explicitly.
         // The situational-dhikr batches (istighfar / morning / evening / sleep /
         // praise / quranic-dua / salawat / ruqyah / beneficial / surah) were
-        // authored before the split: `pronunciation` holds Bangla script and
-        // `translation` is "<Bangla> — <English>". For those, leave the *Bn
-        // params null and the builder derives both sides.
+        // authored before the split: they pass `nameBn` but still carry the
+        // Bangla side in `pronunciation` and a "<Bangla> — <English>"
+        // `translation`. For those the builder derives the split and mirrors the
+        // Bangla recitation. A Roman-script `pronunciation` for that batch is
+        // tracked follow-up — see [pendingRomanTransliterationIds].
         nameBn: String? = null,
         pronunciationBn: String? = null,
         translationBn: String? = null,
@@ -157,6 +159,52 @@ object SeedData {
         "grave_lowering", "after_burial", "grave_visit",
         // Hajj / Umrah / Qurbani
         "safa_marwah", "hajar_aswad", "maqam_ibrahim", "qurbani",
+    )
+
+    /**
+     * Built-in dhikr whose Bangla localization is complete (name, Bangla-script
+     * recitation, both-language meaning, note, source) but whose Roman-script
+     * `pronunciation` is still the Bangla rendering — a faithful Roman
+     * transliteration of these situational duas is tracked follow-up work.
+     * [SeedDataLocalizationTest] exempts these ids from the "English
+     * pronunciation is Roman script" check; every other bilingual assertion
+     * still applies to them.
+     */
+    val pendingRomanTransliterationIds: Set<String> = setOf(
+        "bd_bedouin", "bd_beloved_words", "bd_ghfirli_4", "bd_salli_muhammad",
+        "eve_bika_amsayna", "eve_fitrah", "eve_kalimat_tammat", "eve_mulk_alamin",
+        "eve_mulk_shar", "eve_nimah", "eve_ushhiduka", "eve_uthni",
+        "istighfar_afini", "istighfar_baaid", "istighfar_diqqahu", "istighfar_kathira",
+        "istighfar_khatiati", "istighfar_malik", "istighfar_muminin", "istighfar_q_adam",
+        "istighfar_q_amanna", "istighfar_q_ikhwan", "istighfar_q_ilm", "istighfar_q_irham",
+        "istighfar_q_musa", "istighfar_q_nur", "istighfar_q_waliyy", "istighfar_q_yunus",
+        "istighfar_rabba_muhammad", "istighfar_sayyid", "morn_3quls", "morn_afini_badani",
+        "morn_afiyah", "morn_bika_asbahna", "morn_fatir", "morn_fitrah",
+        "morn_la_yadurru", "morn_mulk_alamin", "morn_mulk_shar", "morn_nimah",
+        "morn_raditu", "morn_tasbih100", "morn_ushhiduka", "morn_uthni",
+        "praise_adada_ma_khalaq", "praise_akbaru_kabira", "praise_bring_ease", "praise_comprehensive",
+        "praise_faqr", "praise_forgiveness", "praise_greatest_name2", "praise_jabarut",
+        "praise_kathira_tayyiba", "praise_kathira_yuhmad", "praise_la_uhsi", "praise_malikal_mulk",
+        "praise_q_akhirah", "praise_q_fatir", "praise_q_khalaq", "praise_q_kitab",
+        "praise_q_walad", "praise_subbuh_quddus_ra", "praise_subhanaka_hamdik", "praise_tahajjud",
+        "praise_thana_majd", "praise_uhud", "praise_ushhiduka_free", "praise_wahidul_qahhar",
+        "praise_yut_imu", "qd_afrigh_sabra", "qd_angels", "qd_asiya",
+        "qd_asrif_jahannam", "qd_awzini_dhurriyyah", "qd_ayyub", "qd_cave_mercy",
+        "qd_fatihah", "qd_firmness_heart", "qd_fitnah_zalimin", "qd_ghfir_israfana",
+        "qd_hamazat", "qd_ibrahim_hukm", "qd_ibrahim_muqim_salah", "qd_ibrahim_salihin",
+        "qd_lut_mufsidin", "qd_persecution", "qd_qurrata_ayun", "qd_rahimin_109",
+        "qd_sulayman_shukr", "qd_tafakkur", "qd_taqabbal_minna", "qd_yusuf",
+        "qd_zakariyya_fardan", "qd_zakariyya_tayyibah", "qd_zalimin_47", "qd_zidni_ilma",
+        "ruq_adhhibil_bas", "ruq_as_alullah", "ruq_baqarah", "ruq_baras",
+        "ruq_ghadabih", "ruq_jibril", "ruq_la_bas", "ruq_pain_body",
+        "ruq_remedy_pain", "ruq_tammat_crafty", "ruq_turbah", "ruq_uidhukuma",
+        "ruq_unwell", "ruq_wajhillah", "salawat_1", "salawat_2",
+        "salawat_3", "salawat_4", "salawat_5", "salawat_6",
+        "salawat_7", "salawat_8", "salawat_9", "sleep_amutu_ahya",
+        "sleep_aslamtu_nafsi", "sleep_at_amana", "sleep_baqarah_end", "sleep_bismika_janbi",
+        "sleep_forgiven", "sleep_ghfir_dhambi", "sleep_kafani", "sleep_kafirun",
+        "sleep_khalaqta_nafsi", "sleep_qini", "sleep_rabbas_samawat", "sleep_sajdah_mulk",
+        "sleep_wajhikal_karim", "surah_falaq", "surah_ikhlas", "surah_nas",
     )
 
     private val coreTasbih: List<TasbihEntity> = listOf(
@@ -734,6 +782,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_yunus",
             name = "La ilaha illa Anta subhanaka inni kuntu minaz zalimin",
+            nameBn = "লা ইলাহা ইল্লা আনতা সুবহানাকা ইন্নি কুনতু মিনায যালিমীন",
             arabic = "لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
             pronunciation = "লা ইলাহা ইল্লা আনতা সুবহানাকা ইন্নি কুনতু মিনায যালিমীন",
             translation = "আপনি ছাড়া কোনো উপাস্য নেই, আপনি পবিত্র, নিশ্চয়ই আমি সীমালঙ্ঘনকারীদের অন্তর্ভুক্ত ছিলাম — There is no god worthy of worship except You; You are free from all imperfection. Indeed, I have been of the wrongdoers",
@@ -744,6 +793,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_musa",
             name = "Rabbi inni zalamtu nafsi faghfir li",
+            nameBn = "রব্বি ইন্নি যালামতু নাফসি ফাগফির লি",
             arabic = "رَبِّ إِنِّي ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي",
             pronunciation = "রব্বি ইন্নি যালামতু নাফসি ফাগফির লি",
             translation = "হে আমার রব, আমি নিজের উপর জুলুম করেছি, তাই আমাকে ক্ষমা করুন — My Lord, I have certainly wronged myself, so forgive me",
@@ -754,6 +804,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_adam",
             name = "Rabbana zalamna anfusana wa il-lam taghfir lana",
+            nameBn = "রব্বানা যালামনা আনফুসানা",
             arabic = "رَبَّنَا ظَلَمْنَا أَنْفُسَنَا وَإِنْ لَمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ",
             pronunciation = "রব্বানা যালামনা আনফুসানা ওয়া ইল্লাম তাগফির লানা ওয়া তারহামনা লানাকুনান্না মিনাল খাসিরীন",
             translation = "হে আমাদের রব, আমরা নিজেদের উপর জুলুম করেছি; আপনি যদি আমাদের ক্ষমা না করেন ও দয়া না করেন তবে আমরা অবশ্যই ক্ষতিগ্রস্তদের অন্তর্ভুক্ত হব — Our Lord, we have wronged ourselves. If You do not forgive us and have mercy upon us, we will surely be amongst the losers",
@@ -764,6 +815,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_waliyy",
             name = "Anta Waliyyuna faghfir lana warhamna",
+            nameBn = "আনতা ওয়ালিয়্যুনা ফাগফির লানা ওয়ারহামনা",
             arabic = "أَنْتَ وَلِيُّنَا فَاغْفِرْ لَنَا وَارْحَمْنَا وَأَنْتَ خَيْرُ الْغَافِرِينَ",
             pronunciation = "আনতা ওয়ালিয়্যুনা ফাগফির লানা ওয়ারহামনা ওয়া আনতা খাইরুল গাফিরীন",
             translation = "আপনিই আমাদের অভিভাবক, তাই আমাদের ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ ক্ষমাকারী — You are our Protector, so forgive us and have mercy upon us. You are the best of those who forgive",
@@ -774,6 +826,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_amanna",
             name = "Rabbana innana amanna faghfir lana dhunubana",
+            nameBn = "রব্বানা ইন্নানা আমান্না ফাগফির লানা যুনূবানা",
             arabic = "رَبَّنَا إِنَّنَا آمَنَّا فَاغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ النَّارِ",
             pronunciation = "রব্বানা ইন্নানা আমান্না ফাগফির লানা যুনুবানা ওয়া কিনা আযাবান নার",
             translation = "হে আমাদের রব, আমরা ঈমান এনেছি, তাই আমাদের গুনাহ ক্ষমা করুন এবং জাহান্নামের আযাব থেকে রক্ষা করুন — Our Lord, indeed we have believed, so forgive us our sins and protect us from the punishment of the Fire",
@@ -784,6 +837,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_irham",
             name = "Rabbi-ghfir warham wa Anta khayrur rahimin",
+            nameBn = "রব্বিগফির ওয়ারহাম ওয়া আনতা খাইরুর রাহিমীন",
             arabic = "رَبِّ اغْفِرْ وَارْحَمْ وَأَنْتَ خَيْرُ الرَّاحِمِينَ",
             pronunciation = "রব্বিগফির ওয়ারহাম ওয়া আনতা খাইরুর রাহিমীন",
             translation = "হে আমার রব, ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ দয়ালু — My Lord, forgive and have mercy. You are the Best of those who are merciful",
@@ -794,6 +848,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_ilm",
             name = "Rabbi inni a'udhu bika an as'alaka ma laysa li bihi ilm",
+            nameBn = "রব্বি ইন্নি আউযু বিকা আন আসআলাকা মা লাইসা লি বিহি ইলম",
             arabic = "رَبِّ إِنِّي أَعُوذُ بِكَ أَنْ أَسْأَلَكَ مَا لَيْسَ لِي بِهِ عِلْمٌ وَإِلَّا تَغْفِرْ لِي وَتَرْحَمْنِي أَكُنْ مِنَ الْخَاسِرِينَ",
             pronunciation = "রব্বি ইন্নি আউযু বিকা আন আসআলাকা মা লাইসা লি বিহি ইলম, ওয়া ইল্লা তাগফির লি ওয়া তারহামনি আকুম মিনাল খাসিরীন",
             translation = "হে আমার রব, যে বিষয়ে আমার জ্ঞান নেই তা আপনার কাছে চাওয়া থেকে আমি আপনার আশ্রয় চাই; আপনি যদি আমাকে ক্ষমা ও দয়া না করেন তবে আমি ক্ষতিগ্রস্তদের অন্তর্ভুক্ত হব — My Lord, I seek Your protection from asking You anything about which I have no knowledge. And unless You forgive me and have mercy upon me, I shall be amongst the losers",
@@ -804,6 +859,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_ikhwan",
             name = "Rabbana-ghfir lana wa li-ikhwanina alladhina sabaquna bil-iman",
+            nameBn = "রব্বানাগফির লানা ওয়া লিইখওয়ানিনাল্লাযীনা সাবাকূনা বিল ঈমান",
             arabic = "رَبَّنَا اغْفِرْ لَنَا وَلِإِخْوَانِنَا الَّذِينَ سَبَقُونَا بِالْإِيمَانِ وَلَا تَجْعَلْ فِي قُلُوبِنَا غِلًّا لِلَّذِينَ آمَنُوا رَبَّنَا إِنَّكَ رَءُوفٌ رَحِيمٌ",
             pronunciation = "রব্বানাগফির লানা ওয়া লিইখওয়ানিনাল্লাযিনা সাবাকুনা বিল ঈমান, ওয়া লা তাজআল ফি কুলুবিনা গিল্লাল লিল্লাযিনা আমানু রব্বানা ইন্নাকা রউফুর রাহীম",
             translation = "হে আমাদের রব, আমাদের ও ঈমানে আমাদের অগ্রগামী ভাইদের ক্ষমা করুন এবং মুমিনদের প্রতি আমাদের অন্তরে বিদ্বেষ রাখবেন না; হে আমাদের রব, নিশ্চয়ই আপনি অতি স্নেহশীল, পরম দয়ালু — Our Lord, forgive us and our brothers who preceded us in faith. Do not put in our hearts any hatred toward those who have believed. Our Lord, indeed You are the Most Compassionate, the Ever-Merciful",
@@ -814,6 +870,7 @@ object SeedData {
         dhikr(
             id = "istighfar_q_nur",
             name = "Rabbana atmim lana nurana waghfir lana",
+            nameBn = "রব্বানা আতমিম লানা নূরানা ওয়াগফির লানা",
             arabic = "رَبَّنَا أَتْمِمْ لَنَا نُورَنَا وَاغْفِرْ لَنَا إِنَّكَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
             pronunciation = "রব্বানা আতমিম লানা নূরানা ওয়াগফির লানা ইন্নাকা আলা কুল্লি শাইইন কাদীর",
             translation = "হে আমাদের রব, আমাদের নূর পূর্ণ করুন ও আমাদের ক্ষমা করুন; নিশ্চয়ই আপনি সর্বশক্তিমান — Our Lord, perfect for us our light and forgive us. Indeed, You are All-Powerful over everything",
@@ -824,6 +881,7 @@ object SeedData {
         dhikr(
             id = "istighfar_sayyid",
             name = "Sayyid al-Istighfar",
+            nameBn = "সাইয়িদুল ইসতিগফার",
             arabic = "اللّٰهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ بِذَنْبِي، فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
             pronunciation = "আল্লাহুম্মা আনতা রব্বি লা ইলাহা ইল্লা আনতা, খালাকতানি ওয়া আনা আবদুকা, ওয়া আনা আলা আহদিকা ওয়া ওয়াদিকা মাসতাতাতু, আউযু বিকা মিন শাররি মা সানাতু, আবূউ লাকা বিনিমাতিকা আলাইয়া ওয়া আবূউ বিযামবি, ফাগফির লি ফাইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা",
             translation = "হে আল্লাহ, আপনিই আমার রব, আপনি ছাড়া কোনো উপাস্য নেই; আপনি আমাকে সৃষ্টি করেছেন, আমি আপনার বান্দা; সাধ্যমতো আপনার অঙ্গীকার ও প্রতিশ্রুতির উপর আছি; আমি আমার কৃতকর্মের অনিষ্ট থেকে আপনার আশ্রয় চাই; আপনার নিয়ামত স্বীকার করছি এবং আমার গুনাহও স্বীকার করছি; আমাকে ক্ষমা করুন, কারণ আপনি ছাড়া গুনাহ কেউ ক্ষমা করতে পারে না — O Allah, You are my Lord. There is no god except You. You created me and I am Your slave, and I am upon Your covenant and pledge as much as I am able. I seek Your protection from the evil that I have done. I acknowledge Your favour upon me and I admit my sin. Forgive me, for none forgives sins but You",
@@ -834,6 +892,7 @@ object SeedData {
         dhikr(
             id = "istighfar_malik",
             name = "Allahumma Antal-Maliku la ilaha illa Ant",
+            nameBn = "আল্লাহুম্মা আনতাল মালিকু লা ইলাহা ইল্লা আনতা",
             arabic = "اللّٰهُمَّ أَنْتَ الْمَلِكُ لَا إِلَٰهَ إِلَّا أَنْتَ، أَنْتَ رَبِّي وَأَنَا عَبْدُكَ، ظَلَمْتُ نَفْسِي وَاعْتَرَفْتُ بِذَنْبِي، فَاغْفِرْ لِي ذُنُوبِي جَمِيعًا، إِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ، وَاهْدِنِي لِأَحْسَنِ الْأَخْلَاقِ لَا يَهْدِي لِأَحْسَنِهَا إِلَّا أَنْتَ، وَاصْرِفْ عَنِّي سَيِّئَهَا لَا يَصْرِفُ عَنِّي سَيِّئَهَا إِلَّا أَنْتَ",
             pronunciation = "আল্লাহুম্মা আনতাল মালিকু লা ইলাহা ইল্লা আনতা, আনতা রব্বি ওয়া আনা আবদুকা, যালামতু নাফসি ওয়াতারাফতু বিযামবি, ফাগফির লি যুনূবি জামীআন, ইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা, ওয়াহদিনি লিআহসানিল আখলাকি লা ইয়াহদি লিআহসানিহা ইল্লা আনতা, ওয়াসরিফ আন্নি সাইয়িআহা লা ইয়াসরিফু আন্নি সাইয়িআহা ইল্লা আনতা",
             translation = "হে আল্লাহ, আপনিই বাদশাহ, আপনি ছাড়া কোনো উপাস্য নেই; আপনি আমার রব, আমি আপনার বান্দা; আমি নিজের উপর জুলুম করেছি ও গুনাহ স্বীকার করছি; আমার সব গুনাহ ক্ষমা করুন, আপনি ছাড়া গুনাহ কেউ ক্ষমা করে না; আমাকে উত্তম চরিত্রের পথ দেখান, আপনি ছাড়া কেউ তার পথ দেখাতে পারে না; মন্দ চরিত্র আমার থেকে দূর করুন, আপনি ছাড়া কেউ তা দূর করতে পারে না — O Allah, You are the King, there is no god worthy of worship except You. You are my Lord and I am Your slave. I have wronged myself and I confess my sin. Forgive all my sins; none forgives sins but You. Guide me to the best of character, for none guides to it but You; and turn its evil away from me, for none turns it away but You",
@@ -844,6 +903,7 @@ object SeedData {
         dhikr(
             id = "istighfar_khatiati",
             name = "Allahumma-ghfir li khati'ati wa jahli wa israfi fi amri",
+            nameBn = "আল্লাহুম্মাগফির লি খাতীআতি ওয়া জাহলি",
             arabic = "اللّٰهُمَّ اغْفِرْ لِي خَطِيئَتِي وَجَهْلِي وَإِسْرَافِي فِي أَمْرِي، وَمَا أَنْتَ أَعْلَمُ بِهِ مِنِّي، اللّٰهُمَّ اغْفِرْ لِي جِدِّي وَهَزْلِي وَخَطَئِي وَعَمْدِي وَكُلُّ ذَٰلِكَ عِنْدِي",
             pronunciation = "আল্লাহুম্মাগফির লি খাতীআতি ওয়া জাহলি ওয়া ইসরাফি ফি আমরি, ওয়া মা আনতা আলামু বিহি মিন্নি, আল্লাহুম্মাগফির লি জিদ্দি ওয়া হাযলি ওয়া খাতাই ওয়া আমদি ওয়া কুল্লু যালিকা ইনদি",
             translation = "হে আল্লাহ, আমার ভুল, অজ্ঞতা, কাজে সীমালঙ্ঘন এবং যা আপনি আমার চেয়ে বেশি জানেন তা ক্ষমা করুন; হে আল্লাহ, আমার সিরিয়াসভাবে ও ঠাট্টাচ্ছলে, অনিচ্ছাকৃত ও ইচ্ছাকৃত—সব গুনাহ ক্ষমা করুন, এসবই আমার মধ্যে আছে — O Allah, forgive my mistakes, my ignorance, my transgression in my affairs, and what You know better than me. O Allah, forgive me for what I did in earnest and in jest, unintentionally and intentionally; all of that is in me",
@@ -854,6 +914,7 @@ object SeedData {
         dhikr(
             id = "istighfar_rabba_muhammad",
             name = "Allahumma Rabba Muhammadin ighfir li dhambi",
+            nameBn = "আল্লাহুম্মা রব্বা মুহাম্মাদিন ইগফির লি যামবি",
             arabic = "اللّٰهُمَّ رَبَّ مُحَمَّدٍ اغْفِرْ لِي ذَنْبِي، وَأَذْهِبْ غَيْظَ قَلْبِي، وَأَعِذْنِي مِنْ مُضِلَّاتِ الْفِتَنِ",
             pronunciation = "আল্লাহুম্মা রব্বা মুহাম্মাদিন ইগফির লি যামবি, ওয়া আযহিব গাইযা কালবি, ওয়া আইযনি মিন মুদিল্লাতিল ফিতান",
             translation = "হে আল্লাহ, মুহাম্মাদের রব, আমার গুনাহ ক্ষমা করুন, আমার অন্তরের ক্রোধ দূর করুন এবং বিভ্রান্তিকর ফিতনা থেকে আমাকে রক্ষা করুন — O Allah, Lord of Muhammad, forgive my sin, remove the anger of my heart and protect me from misleading trials",
@@ -864,6 +925,7 @@ object SeedData {
         dhikr(
             id = "istighfar_diqqahu",
             name = "Allahumma-ghfir li dhambi kullah, diqqahu wa jillah",
+            nameBn = "আল্লাহুম্মাগফির লি যামবি কুল্লাহু দিক্কাহু ওয়া জিল্লাহু",
             arabic = "اللّٰهُمَّ اغْفِرْ لِي ذَنْبِي كُلَّهُ، دِقَّهُ وَجِلَّهُ، وَأَوَّلَهُ وَآخِرَهُ، وَعَلَانِيَتَهُ وَسِرَّهُ",
             pronunciation = "আল্লাহুম্মাগফির লি যামবি কুল্লাহু, দিক্কাহু ওয়া জিল্লাহু, ওয়া আউওয়ালাহু ওয়া আখিরাহু, ওয়া আলানিয়াতাহু ওয়া সিররাহু",
             translation = "হে আল্লাহ, আমার সব গুনাহ ক্ষমা করুন—ছোট ও বড়, প্রথম ও শেষ, প্রকাশ্য ও গোপন — O Allah, forgive me all my sins: the minor and the major, the first and the last, the public and the private",
@@ -874,6 +936,7 @@ object SeedData {
         dhikr(
             id = "istighfar_kathira",
             name = "Allahumma inni zalamtu nafsi zulman kathira",
+            nameBn = "আল্লাহুম্মা ইন্নি যালামতু নাফসি যুলমান কাছীরা",
             arabic = "اللّٰهُمَّ إِنِّي ظَلَمْتُ نَفْسِي ظُلْمًا كَثِيرًا، وَلَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ، فَاغْفِرْ لِي مَغْفِرَةً مِنْ عِنْدِكَ، وَارْحَمْنِي، إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ",
             pronunciation = "আল্লাহুম্মা ইন্নি যালামতু নাফসি যুলমান কাছীরা, ওয়া লা ইয়াগফিরুয যুনূবা ইল্লা আনতা, ফাগফির লি মাগফিরাতান মিন ইনদিকা, ওয়ারহামনি, ইন্নাকা আনতাল গাফুরুর রাহীম",
             translation = "হে আল্লাহ, আমি নিজের উপর অনেক বেশি জুলুম করেছি, আপনি ছাড়া গুনাহ কেউ ক্ষমা করে না; আপনার পক্ষ থেকে আমাকে ক্ষমা দান করুন ও দয়া করুন, নিশ্চয়ই আপনি ক্ষমাশীল, পরম দয়ালু — O Allah, I have wronged myself greatly and none forgives sins but You; so grant me forgiveness from You and have mercy on me. You are the Most Forgiving, the Most Merciful",
@@ -884,6 +947,7 @@ object SeedData {
         dhikr(
             id = "istighfar_afini",
             name = "Allahumma-ghfir li warhamni wa afini wahdini warzuqni",
+            nameBn = "আল্লাহুম্মাগফির লি ওয়ারহামনি ওয়া আফিনি ওয়াহদিনি ওয়ারযুকনি",
             arabic = "اللّٰهُمَّ اغْفِرْ لِي، وَارْحَمْنِي، وَعَافِنِي، وَاهْدِنِي وَارْزُقْنِي",
             pronunciation = "আল্লাহুম্মাগফির লি, ওয়ারহামনি, ওয়া আফিনি, ওয়াহদিনি ওয়ারযুকনি",
             translation = "হে আল্লাহ, আমাকে ক্ষমা করুন, দয়া করুন, সুস্থতা দিন, হেদায়েত দিন ও রিযিক দিন — O Allah, forgive me, have mercy on me, grant me wellbeing, guide me and grant me sustenance",
@@ -894,6 +958,7 @@ object SeedData {
         dhikr(
             id = "istighfar_baaid",
             name = "Allahumma baa'id bayni wa bayna khatayaya",
+            nameBn = "আল্লাহুম্মা বাইদ বাইনি ওয়া বাইনা খাতায়ায়া",
             arabic = "اللّٰهُمَّ بَاعِدْ بَيْنِي وَبَيْنَ خَطَايَايَ كَمَا بَاعَدْتَ بَيْنَ الْمَشْرِقِ وَالْمَغْرِبِ، اللّٰهُمَّ نَقِّنِي مِنَ الْخَطَايَا كَمَا يُنَقَّى الثَّوْبُ الْأَبْيَضُ مِنَ الدَّنَسِ، اللّٰهُمَّ اغْسِلْ خَطَايَايَ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ",
             pronunciation = "আল্লাহুম্মা বাইদ বাইনি ওয়া বাইনা খাতায়ায়া কামা বাআদতা বাইনাল মাশরিকি ওয়াল মাগরিব, আল্লাহুম্মা নাক্কিনি মিনাল খাতায়া কামা ইউনাক্কাস সাউবুল আবয়াদু মিনাদ দানাস, আল্লাহুম্মাগসিল খাতায়ায়া বিল মাই ওয়াস সালজি ওয়াল বারাদ",
             translation = "হে আল্লাহ, আমার ও আমার গুনাহের মধ্যে দূরত্ব সৃষ্টি করুন যেমন পূর্ব ও পশ্চিমের মধ্যে দূরত্ব রেখেছেন; হে আল্লাহ, আমাকে গুনাহ থেকে পবিত্র করুন যেমন সাদা কাপড় ময়লা থেকে পরিষ্কার করা হয়; হে আল্লাহ, আমার গুনাহ পানি, বরফ ও শিলা দিয়ে ধুয়ে দিন — O Allah, distance me from my sins as You have distanced the East from the West. O Allah, purify me from my sins as a white cloth is purified from dirt. O Allah, wash away my sins with water, snow and hail",
@@ -904,6 +969,7 @@ object SeedData {
         dhikr(
             id = "istighfar_muminin",
             name = "Allahumma-ghfir lil-mu'minina wal-mu'minat",
+            nameBn = "আল্লাহুম্মাগফির লিল মুমিনীনা ওয়াল মুমিনাত",
             arabic = "اللّٰهُمَّ اغْفِرْ لِلْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ",
             pronunciation = "আল্লাহুম্মাগফির লিল মুমিনীনা ওয়াল মুমিনাত",
             translation = "হে আল্লাহ, মুমিন পুরুষ ও মুমিন নারীদের ক্ষমা করুন — O Allah, forgive the believing men and the believing women",
@@ -925,6 +991,7 @@ object SeedData {
         dhikr(
             id = "morn_3quls",
             name = "Al-Ikhlas, Al-Falaq, An-Nas (3 Quls)",
+            nameBn = "তিন কুল (ইখলাস, ফালাক, নাস)",
             arabic = "قُلْ هُوَ اللّٰهُ أَحَدٌ، اللّٰهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ ۞ " +
                 "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ، مِنْ شَرِّ مَا خَلَقَ، وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ، وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ، وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ ۞ " +
                 "قُلْ أَعُوذُ بِرَبِّ النَّاسِ، مَلِكِ النَّاسِ، إِلَٰهِ النَّاسِ، مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ، الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ، مِنَ الْجِنَّةِ وَالنَّاسِ",
@@ -939,6 +1006,7 @@ object SeedData {
         dhikr(
             id = "surah_ikhlas",
             name = "Surah Al-Ikhlas (112)",
+            nameBn = "সূরা আল-ইখলাস",
             arabic = "قُلْ هُوَ اللّٰهُ أَحَدٌ، اللّٰهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ",
             pronunciation = "কুল হুওয়াল্লাহু আহাদ, আল্লাহুস সামাদ, লাম ইয়ালিদ ওয়া লাম ইউলাদ, ওয়া লাম ইয়াকুল লাহু কুফুওয়ান আহাদ",
             translation = "বলো, তিনিই আল্লাহ, এক; আল্লাহ অমুখাপেক্ষী; তিনি জন্ম দেননি ও জন্মগ্রহণ করেননি; তাঁর সমকক্ষ কেউ নেই — Say: He is Allah, the One; Allah, the Eternal Refuge; He neither begets nor is born; nor is there to Him any equivalent",
@@ -949,6 +1017,7 @@ object SeedData {
         dhikr(
             id = "surah_falaq",
             name = "Surah Al-Falaq (113)",
+            nameBn = "সূরা আল-ফালাক",
             arabic = "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ، مِنْ شَرِّ مَا خَلَقَ، وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ، وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ، وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ",
             pronunciation = "কুল আউযু বিরব্বিল ফালাক, মিন শাররি মা খালাক, ওয়া মিন শাররি গাসিকিন ইযা ওয়াকাব, ওয়া মিন শাররিন নাফফাছাতি ফিল উকাদ, ওয়া মিন শাররি হাসিদিন ইযা হাসাদ",
             translation = "বলো, আমি আশ্রয় চাই ভোরের রবের, তিনি যা সৃষ্টি করেছেন তার অনিষ্ট থেকে, অন্ধকার যখন ঘনিয়ে আসে তার অনিষ্ট থেকে, গিরায় ফুঁ-দানকারীদের অনিষ্ট থেকে, এবং হিংসুক যখন হিংসা করে তার অনিষ্ট থেকে — Say: I seek refuge in the Lord of daybreak, from the evil of what He created, from the evil of darkness when it settles, from the evil of the blowers in knots, and from the evil of an envier when he envies",
@@ -959,6 +1028,7 @@ object SeedData {
         dhikr(
             id = "surah_nas",
             name = "Surah An-Nas (114)",
+            nameBn = "সূরা আন-নাস",
             arabic = "قُلْ أَعُوذُ بِرَبِّ النَّاسِ، مَلِكِ النَّاسِ، إِلَٰهِ النَّاسِ، مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ، الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ، مِنَ الْجِنَّةِ وَالنَّاسِ",
             pronunciation = "কুল আউযু বিরব্বিন নাস, মালিকিন নাস, ইলাহিন নাস, মিন শাররিল ওয়াসওয়াসিল খান্নাস, আল্লাযি ইউওয়াসউইসু ফি সুদূরিন নাস, মিনাল জিন্নাতি ওয়ান নাস",
             translation = "বলো, আমি আশ্রয় চাই মানুষের রবের, মানুষের অধিপতির, মানুষের উপাস্যের—আত্মগোপনকারী কুমন্ত্রণাদাতার অনিষ্ট থেকে, যে মানুষের অন্তরে কুমন্ত্রণা দেয়, জিন ও মানুষের মধ্য থেকে — Say: I seek refuge in the Lord of mankind, the King of mankind, the God of mankind, from the evil of the retreating whisperer who whispers in the breasts of mankind, from among the jinn and mankind",
@@ -969,6 +1039,7 @@ object SeedData {
         dhikr(
             id = "morn_afiyah",
             name = "Allahumma inni as'alukal afiyata fid dunya wal akhirah",
+            nameBn = "আল্লাহুম্মা ইন্নি আসআলুকাল আফিয়াতা ফিদ দুনইয়া ওয়াল আখিরাহ",
             arabic = "اللّٰهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللّٰهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللّٰهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللّٰهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
             pronunciation = "আল্লাহুম্মা ইন্নি আসআলুকাল আফিয়াতা ফিদ দুনইয়া ওয়াল আখিরাহ, আল্লাহুম্মা ইন্নি আসআলুকাল আফওয়া ওয়াল আফিয়াতা ফি দিনি ওয়া দুনইয়ায়া ওয়া আহলি ওয়া মালি, আল্লাহুম্মাসতুর আওরাতি ওয়া আমিন রাওআতি, আল্লাহুম্মাহফাযনি মিন বাইনি ইয়াদাইয়া ওয়া মিন খালফি ওয়া আন ইয়ামিনি ওয়া আন শিমালি ওয়া মিন ফাওকি, ওয়া আউযু বিআযামাতিকা আন উগতালা মিন তাহতি",
             translation = "হে আল্লাহ, দুনিয়া ও আখিরাতে সুস্থতা চাই; হে আল্লাহ, আমার দ্বীন, দুনিয়া, পরিবার ও সম্পদে ক্ষমা ও সুস্থতা চাই; হে আল্লাহ, আমার দোষ ঢেকে দিন ও ভয় দূর করুন; হে আল্লাহ, আমার সামনে-পিছনে, ডানে-বামে ও উপর থেকে রক্ষা করুন, এবং নিচ থেকে অতর্কিতে ধ্বংস হওয়া থেকে আপনার মহত্ত্বের অসিলায় আশ্রয় চাই — O Allah, I ask You for wellbeing in this world and the next. O Allah, I ask You for pardon and wellbeing in my religion, my worldly affairs, my family and my wealth. O Allah, conceal my faults and calm my fears. O Allah, guard me from before me and behind me, from my right and my left and from above me, and I seek refuge in Your Greatness from being destroyed from beneath me",
@@ -979,6 +1050,7 @@ object SeedData {
         dhikr(
             id = "morn_fatir",
             name = "Allahumma Fatiras samawati wal ard, alimal ghaybi wash shahadah",
+            nameBn = "আল্লাহুম্মা ফাতিরাস সামাওয়াতি ওয়াল আরদ",
             arabic = "اللّٰهُمَّ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، عَالِمَ الْغَيْبِ وَالشَّهَادَةِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي، وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَىٰ نَفْسِي سُوءًا أَوْ أَجُرَّهُ إِلَىٰ مُسْلِمٍ",
             pronunciation = "আল্লাহুম্মা ফাতিরাস সামাওয়াতি ওয়াল আরদ, আলিমাল গাইবি ওয়াশ শাহাদাহ, রব্বা কুল্লি শাইইন ওয়া মালিকাহু, আশহাদু আন লা ইলাহা ইল্লা আনতা, আউযু বিকা মিন শাররি নাফসি, ওয়া মিন শাররিশ শাইতানি ওয়া শিরকিহি, ওয়া আন আকতারিফা আলা নাফসি সূআন আও আজুররাহু ইলা মুসলিম",
             translation = "হে আল্লাহ, আসমান-জমিনের স্রষ্টা, দৃশ্য-অদৃশ্যের জ্ঞানী, সবকিছুর রব ও মালিক; আমি সাক্ষ্য দিই আপনি ছাড়া কোনো উপাস্য নেই; আমার নফসের অনিষ্ট থেকে, শয়তান ও তার শিরক থেকে, এবং নিজের বা কোনো মুসলিমের উপর অনিষ্ট ডেকে আনা থেকে আপনার আশ্রয় চাই — O Allah, Creator of the heavens and the earth, Knower of the unseen and the seen, Lord and Sovereign of all things; I bear witness there is no god but You. I seek refuge in You from the evil of my self, from the evil of Shaytan and his shirk, and from bringing evil upon myself or upon a Muslim",
@@ -989,6 +1061,7 @@ object SeedData {
         dhikr(
             id = "morn_nimah",
             name = "Allahumma ma asbaha bi min ni'matin",
+            nameBn = "আল্লাহুম্মা মা আসবাহা বি মিন নিমাতিন",
             arabic = "اللّٰهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
             pronunciation = "আল্লাহুম্মা মা আসবাহা বি মিন নিমাতিন আও বিআহাদিন মিন খালকিকা ফামিনকা ওয়াহদাকা লা শারিকা লাকা, ফালাকাল হামদু ওয়া লাকাশ শুকর",
             translation = "হে আল্লাহ, সকালে আমার বা আপনার কোনো সৃষ্টির কাছে যে নিয়ামত পৌঁছেছে তা কেবল আপনার কাছ থেকে, আপনার কোনো শরিক নেই; সকল প্রশংসা ও কৃতজ্ঞতা আপনারই — O Allah, whatever blessing has come to me or to any of Your creation this morning is from You alone, no partner have You; to You is all praise and all thanks",
@@ -999,6 +1072,7 @@ object SeedData {
         dhikr(
             id = "morn_fitrah",
             name = "Asbahna ala fitratil islam",
+            nameBn = "আসবাহনা আলা ফিতরাতিল ইসলাম",
             arabic = "أَصْبَحْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
             pronunciation = "আসবাহনা আলা ফিতরাতিল ইসলাম, ওয়া আলা কালিমাতিল ইখলাস, ওয়া আলা দিনি নাবিয়্যিনা মুহাম্মাদ, ওয়া আলা মিল্লাতি আবিনা ইবরাহিমা হানিফাম মুসলিমাও ওয়া মা কানা মিনাল মুশরিকিন",
             translation = "আমরা সকালে উপনীত হলাম ইসলামের ফিতরাত, ইখলাসের কালিমা, আমাদের নবি মুহাম্মাদের দ্বীন ও আমাদের পিতা ইবরাহিমের মিল্লাতের উপর—যিনি একনিষ্ঠ মুসলিম ছিলেন, মুশরিকদের অন্তর্ভুক্ত ছিলেন না — We have entered the morning upon the natural way of Islam, the word of sincerity, the religion of our Prophet Muhammad, and the way of our father Ibrahim, upright and Muslim, and he was not of the polytheists",
@@ -1009,6 +1083,7 @@ object SeedData {
         dhikr(
             id = "morn_uthni",
             name = "Asbahtu uthni alayka hamda",
+            nameBn = "আসবাহতু উছনি আলাইকা হামদা",
             arabic = "أَصْبَحْتُ أُثْنِي عَلَيْكَ حَمْدًا، وَأَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللّٰهُ",
             pronunciation = "আসবাহতু উছনি আলাইকা হামদা, ওয়া আশহাদু আন লা ইলাহা ইল্লাল্লাহ",
             translation = "আমি সকালে উপনীত হলাম আপনার প্রশংসা করতে করতে, এবং সাক্ষ্য দিই আল্লাহ ছাড়া কোনো উপাস্য নেই — I have entered the morning praising You, and I bear witness that there is no god but Allah",
@@ -1019,6 +1094,7 @@ object SeedData {
         dhikr(
             id = "morn_mulk_shar",
             name = "Asbahna wa asbahal mulku lillah, Rabbi as'aluka khayra ma fi hadhal yawm",
+            nameBn = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহ",
             arabic = "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلّٰهِ وَالْحَمْدُ لِلّٰهِ، لَا إِلَٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
             pronunciation = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহি ওয়াল হামদু লিল্লাহ, লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, রব্বি আসআলুকা খাইরা মা ফি হাযাল ইয়াওমি ওয়া খাইরা মা বাদাহু, ওয়া আউযু বিকা মিন শাররি মা ফি হাযাল ইয়াওমি ওয়া শাররি মা বাদাহু, রব্বি আউযু বিকা মিনাল কাসালি ওয়া সূইল কিবার, রব্বি আউযু বিকা মিন আযাবিন ফিন নারি ওয়া আযাবিন ফিল কাবর",
             translation = "আমরা সকালে উপনীত হলাম আর রাজত্ব আল্লাহরই, সকল প্রশংসা আল্লাহর; আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; হে রব, আজকের ও পরবর্তী কল্যাণ চাই, আজকের ও পরবর্তী অনিষ্ট থেকে আশ্রয় চাই; হে রব, অলসতা ও বার্ধক্যের মন্দ থেকে আশ্রয় চাই; হে রব, জাহান্নাম ও কবরের আযাব থেকে আশ্রয় চাই — We have entered the morning and the dominion belongs to Allah… My Lord, I ask You for the good of this day and what follows it, and I seek refuge in You from the evil of this day and what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from the punishment of the Fire and the punishment of the grave",
@@ -1029,6 +1105,7 @@ object SeedData {
         dhikr(
             id = "morn_mulk_alamin",
             name = "Asbahna wa asbahal mulku lillahi Rabbil alamin",
+            nameBn = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহি রব্বিল আলামীন",
             arabic = "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلّٰهِ رَبِّ الْعَالَمِينَ، اللّٰهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَٰذَا الْيَوْمِ، فَتْحَهُ وَنَصْرَهُ وَنُورَهُ وَبَرَكَتَهُ وَهُدَاهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهِ وَشَرِّ مَا بَعْدَهُ",
             pronunciation = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহি রব্বিল আলামিন, আল্লাহুম্মা ইন্নি আসআলুকা খাইরা হাযাল ইয়াওম, ফাতহাহু ওয়া নাসরাহু ওয়া নূরাহু ওয়া বারাকাতাহু ওয়া হুদাহু, ওয়া আউযু বিকা মিন শাররি মা ফিহি ওয়া শাররি মা বাদাহু",
             translation = "আমরা সকালে উপনীত হলাম আর রাজত্ব বিশ্বজগতের রব আল্লাহরই; হে আল্লাহ, আমি এই দিনের কল্যাণ চাই—এর বিজয়, সাহায্য, নূর, বরকত ও হেদায়েত; আর এর ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই — We have entered the morning and the dominion belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this day: its victory, its help, its light, its blessing and its guidance; and I seek refuge in You from the evil in it and the evil after it",
@@ -1039,6 +1116,7 @@ object SeedData {
         dhikr(
             id = "morn_ushhiduka",
             name = "Allahumma inni asbahtu ush-hiduka wa ush-hidu hamalata arshik",
+            nameBn = "আল্লাহুম্মা ইন্নি আসবাহতু উশহিদুকা",
             arabic = "اللّٰهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ وَمَلَائِكَتَكَ وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللّٰهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
             pronunciation = "আল্লাহুম্মা ইন্নি আসবাহতু উশহিদুকা, ওয়া উশহিদু হামালাতা আরশিকা ওয়া মালাইকাতাকা ওয়া জামিআ খালকিকা, আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
             translation = "হে আল্লাহ, আমি সকালে উপনীত হয়ে আপনাকে, আপনার আরশ বহনকারীদের, ফেরেশতাদের ও সকল সৃষ্টিকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন, এবং মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I have entered the morning calling You to witness, and calling the bearers of Your Throne, Your angels and all Your creation to witness, that You are Allah, none is worthy of worship but You alone, no partner have You, and that Muhammad is Your slave and Messenger",
@@ -1049,6 +1127,7 @@ object SeedData {
         dhikr(
             id = "morn_bika_asbahna",
             name = "Allahumma bika asbahna wa bika amsayna",
+            nameBn = "আল্লাহুম্মা বিকা আসবাহনা ওয়া বিকা আমসাইনা",
             arabic = "اللّٰهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ",
             pronunciation = "আল্লাহুম্মা বিকা আসবাহনা ওয়া বিকা আমসাইনা ওয়া বিকা নাহইয়া ওয়া বিকা নামুতু ওয়া ইলাইকান নুশূর",
             translation = "হে আল্লাহ, আপনার অনুগ্রহে আমরা সকালে উপনীত হলাম, আপনার অনুগ্রহে সন্ধ্যায়, আপনার অনুগ্রহে বাঁচি ও মরি, এবং আপনার কাছেই পুনরুত্থান — O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the resurrection",
@@ -1059,6 +1138,7 @@ object SeedData {
         dhikr(
             id = "morn_afini_badani",
             name = "Allahumma afini fi badani",
+            nameBn = "আল্লাহুম্মা আফিনি ফি বাদানি",
             arabic = "اللّٰهُمَّ عَافِنِي فِي بَدَنِي، اللّٰهُمَّ عَافِنِي فِي سَمْعِي، اللّٰهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ، اللّٰهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ",
             pronunciation = "আল্লাহুম্মা আফিনি ফি বাদানি, আল্লাহুম্মা আফিনি ফি সামই, আল্লাহুম্মা আফিনি ফি বাসারি, লা ইলাহা ইল্লা আনতা, আল্লাহুম্মা ইন্নি আউযু বিকা মিনাল কুফরি ওয়াল ফাকর, ওয়া আউযু বিকা মিন আযাবিল কাবর, লা ইলাহা ইল্লা আনতা",
             translation = "হে আল্লাহ, আমার শরীরে সুস্থতা দিন, আমার শ্রবণে সুস্থতা দিন, আমার দৃষ্টিতে সুস্থতা দিন; আপনি ছাড়া কোনো উপাস্য নেই; হে আল্লাহ, কুফর ও দারিদ্র্য থেকে আপনার আশ্রয় চাই, কবরের আযাব থেকে আশ্রয় চাই; আপনি ছাড়া কোনো উপাস্য নেই — O Allah, grant me health in my body. O Allah, grant me health in my hearing. O Allah, grant me health in my sight. There is no god but You. O Allah, I seek refuge in You from disbelief and poverty, and I seek refuge in You from the punishment of the grave. There is no god but You",
@@ -1069,6 +1149,7 @@ object SeedData {
         dhikr(
             id = "morn_raditu",
             name = "Raditu billahi Rabba wa bil-islami dina",
+            nameBn = "রাদীতু বিল্লাহি রব্বা ওয়া বিল ইসলামি দীনা",
             arabic = "رَضِيتُ بِاللّٰهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ صَلَّى اللّٰهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
             pronunciation = "রাদিতু বিল্লাহি রব্বা, ওয়া বিল ইসলামি দিনা, ওয়া বিমুহাম্মাদিন সাল্লাল্লাহু আলাইহি ওয়া সাল্লামা নাবিয়্যা",
             translation = "আমি আল্লাহকে রব হিসেবে, ইসলামকে দ্বীন হিসেবে ও মুহাম্মাদ (সাঃ)-কে নবি হিসেবে পেয়ে সন্তুষ্ট — I am pleased with Allah as Lord, with Islam as religion and with Muhammad (peace be upon him) as Prophet",
@@ -1079,6 +1160,7 @@ object SeedData {
         dhikr(
             id = "morn_la_yadurru",
             name = "Bismillahilladhi la yadurru ma'asmihi shay'",
+            nameBn = "বিসমিল্লাহিল্লাযি লা ইয়াদুররু মাআসমিহি শাইউন",
             arabic = "بِسْمِ اللّٰهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ",
             pronunciation = "বিসমিল্লাহিল্লাযি লা ইয়াদুররু মাআসমিহি শাইউন ফিল আরদি ওয়া লা ফিস সামা, ওয়া হুয়াস সামিউল আলিম",
             translation = "সেই আল্লাহর নামে, যাঁর নামের সাথে আসমান-জমিনের কোনো কিছুই ক্ষতি করতে পারে না; তিনি সর্বশ্রোতা, সর্বজ্ঞ — In the name of Allah, with whose name nothing on earth or in the heaven can cause harm, and He is the All-Hearing, the All-Knowing",
@@ -1089,6 +1171,7 @@ object SeedData {
         dhikr(
             id = "morn_tasbih100",
             name = "Subhanallah, Alhamdulillah, Allahu Akbar",
+            nameBn = "সুবহানাল্লাহি ওয়া বিহামদিহি (১০০ বার)",
             arabic = "سُبْحَانَ اللّٰهِ، وَالْحَمْدُ لِلّٰهِ، وَاللّٰهُ أَكْبَرُ",
             pronunciation = "সুবহানাল্লাহ, ওয়াল হামদু লিল্লাহ, ওয়াল্লাহু আকবার",
             translation = "আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ সর্বমহান — Glory be to Allah, all praise is due to Allah, and Allah is the Greatest",
@@ -1108,6 +1191,7 @@ object SeedData {
         dhikr(
             id = "eve_nimah",
             name = "Allahumma ma amsa bi min ni'matin",
+            nameBn = "আল্লাহুম্মা মা আমসা বি মিন নিমাতিন",
             arabic = "اللّٰهُمَّ مَا أَمْسَىٰ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
             pronunciation = "আল্লাহুম্মা মা আমসা বি মিন নিমাতিন আও বিআহাদিন মিন খালকিকা ফামিনকা ওয়াহদাকা লা শারিকা লাকা, ফালাকাল হামদু ওয়া লাকাশ শুকর",
             translation = "হে আল্লাহ, সন্ধ্যায় আমার বা আপনার কোনো সৃষ্টির কাছে যে নিয়ামত পৌঁছেছে তা কেবল আপনার কাছ থেকে, আপনার কোনো শরিক নেই; সকল প্রশংসা ও কৃতজ্ঞতা আপনারই — O Allah, whatever blessing has come to me or to any of Your creation this evening is from You alone, no partner have You; to You is all praise and all thanks",
@@ -1118,6 +1202,7 @@ object SeedData {
         dhikr(
             id = "eve_fitrah",
             name = "Amsayna ala fitratil islam",
+            nameBn = "আমসাইনা আলা ফিতরাতিল ইসলাম",
             arabic = "أَمْسَيْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
             pronunciation = "আমসাইনা আলা ফিতরাতিল ইসলাম, ওয়া আলা কালিমাতিল ইখলাস, ওয়া আলা দিনি নাবিয়্যিনা মুহাম্মাদ, ওয়া আলা মিল্লাতি আবিনা ইবরাহিমা হানিফাম মুসলিমাও ওয়া মা কানা মিনাল মুশরিকিন",
             translation = "আমরা সন্ধ্যায় উপনীত হলাম ইসলামের ফিতরাত, ইখলাসের কালিমা, আমাদের নবি মুহাম্মাদের দ্বীন ও আমাদের পিতা ইবরাহিমের মিল্লাতের উপর—যিনি একনিষ্ঠ মুসলিম ছিলেন, মুশরিকদের অন্তর্ভুক্ত ছিলেন না — We have entered the evening upon the natural way of Islam, the word of sincerity, the religion of our Prophet Muhammad, and the way of our father Ibrahim, upright and Muslim, and he was not of the polytheists",
@@ -1128,6 +1213,7 @@ object SeedData {
         dhikr(
             id = "eve_uthni",
             name = "Amsaytu uthni alayka hamda",
+            nameBn = "আমসাইতু উছনি আলাইকা হামদা",
             arabic = "أَمْسَيْتُ أُثْنِي عَلَيْكَ حَمْدًا، وَأَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللّٰهُ",
             pronunciation = "আমসাইতু উছনি আলাইকা হামদা, ওয়া আশহাদু আন লা ইলাহা ইল্লাল্লাহ",
             translation = "আমি সন্ধ্যায় উপনীত হলাম আপনার প্রশংসা করতে করতে, এবং সাক্ষ্য দিই আল্লাহ ছাড়া কোনো উপাস্য নেই — I have entered the evening praising You, and I bear witness that there is no god but Allah",
@@ -1138,6 +1224,7 @@ object SeedData {
         dhikr(
             id = "eve_mulk_shar",
             name = "Amsayna wa amsal mulku lillah, Rabbi as'aluka khayra ma fi hadhihil laylah",
+            nameBn = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহ",
             arabic = "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلّٰهِ وَالْحَمْدُ لِلّٰهِ، لَا إِلَٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
             pronunciation = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহি ওয়াল হামদু লিল্লাহ, লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, রব্বি আসআলুকা খাইরা মা ফি হাযিহিল লাইলাতি ওয়া খাইরা মা বাদাহা, ওয়া আউযু বিকা মিন শাররি মা ফি হাযিহিল লাইলাতি ওয়া শাররি মা বাদাহা, রব্বি আউযু বিকা মিনাল কাসালি ওয়া সূইল কিবার, রব্বি আউযু বিকা মিন আযাবিন ফিন নারি ওয়া আযাবিন ফিল কাবর",
             translation = "আমরা সন্ধ্যায় উপনীত হলাম আর রাজত্ব আল্লাহরই, সকল প্রশংসা আল্লাহর; আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; হে রব, এই রাত ও পরবর্তীর কল্যাণ চাই, এই রাত ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই; হে রব, অলসতা ও বার্ধক্যের মন্দ থেকে আশ্রয় চাই; হে রব, জাহান্নাম ও কবরের আযাব থেকে আশ্রয় চাই — We have entered the evening and the dominion belongs to Allah… My Lord, I ask You for the good of this night and what follows it, and I seek refuge in You from the evil of this night and what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from the punishment of the Fire and the punishment of the grave",
@@ -1148,6 +1235,7 @@ object SeedData {
         dhikr(
             id = "eve_mulk_alamin",
             name = "Amsayna wa amsal mulku lillahi Rabbil alamin",
+            nameBn = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহি রব্বিল আলামীন",
             arabic = "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلّٰهِ رَبِّ الْعَالَمِينَ، اللّٰهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَٰذِهِ اللَّيْلَةِ، فَتْحَهَا وَنَصْرَهَا وَنُورَهَا وَبَرَكَتَهَا وَهُدَاهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهَا وَشَرِّ مَا بَعْدَهَا",
             pronunciation = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহি রব্বিল আলামিন, আল্লাহুম্মা ইন্নি আসআলুকা খাইরা হাযিহিল লাইলাহ, ফাতহাহা ওয়া নাসরাহা ওয়া নূরাহা ওয়া বারাকাতাহা ওয়া হুদাহা, ওয়া আউযু বিকা মিন শাররি মা ফিহা ওয়া শাররি মা বাদাহা",
             translation = "আমরা সন্ধ্যায় উপনীত হলাম আর রাজত্ব বিশ্বজগতের রব আল্লাহরই; হে আল্লাহ, আমি এই রাতের কল্যাণ চাই—এর বিজয়, সাহায্য, নূর, বরকত ও হেদায়েত; আর এর ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই — We have entered the evening and the dominion belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this night: its victory, its help, its light, its blessing and its guidance; and I seek refuge in You from the evil in it and the evil after it",
@@ -1158,6 +1246,7 @@ object SeedData {
         dhikr(
             id = "eve_ushhiduka",
             name = "Allahumma inni amsaytu ush-hiduka wa ush-hidu hamalata arshik",
+            nameBn = "আল্লাহুম্মা ইন্নি আমসাইতু উশহিদুকা",
             arabic = "اللّٰهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ وَمَلَائِكَتَكَ وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللّٰهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
             pronunciation = "আল্লাহুম্মা ইন্নি আমসাইতু উশহিদুকা, ওয়া উশহিদু হামালাতা আরশিকা ওয়া মালাইকাতাকা ওয়া জামিআ খালকিকা, আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
             translation = "হে আল্লাহ, আমি সন্ধ্যায় উপনীত হয়ে আপনাকে, আপনার আরশ বহনকারীদের, ফেরেশতাদের ও সকল সৃষ্টিকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন, এবং মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I have entered the evening calling You to witness, and calling the bearers of Your Throne, Your angels and all Your creation to witness, that You are Allah, none is worthy of worship but You alone, no partner have You, and that Muhammad is Your slave and Messenger",
@@ -1168,6 +1257,7 @@ object SeedData {
         dhikr(
             id = "eve_bika_amsayna",
             name = "Allahumma bika amsayna wa bika asbahna",
+            nameBn = "আল্লাহুম্মা বিকা আমসাইনা ওয়া বিকা আসবাহনা",
             arabic = "اللّٰهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ",
             pronunciation = "আল্লাহুম্মা বিকা আমসাইনা ওয়া বিকা আসবাহনা ওয়া বিকা নাহইয়া ওয়া বিকা নামুতু ওয়া ইলাইকাল মাসীর",
             translation = "হে আল্লাহ, আপনার অনুগ্রহে আমরা সন্ধ্যায় উপনীত হলাম, আপনার অনুগ্রহে সকালে, আপনার অনুগ্রহে বাঁচি ও মরি, এবং আপনার কাছেই প্রত্যাবর্তন — O Allah, by You we enter the evening and by You we enter the morning, by You we live and by You we die, and to You is the return",
@@ -1178,6 +1268,7 @@ object SeedData {
         dhikr(
             id = "eve_kalimat_tammat",
             name = "A'udhu bi kalimatillahit tammati min sharri ma khalaq",
+            nameBn = "আউযু বিকালিমাতিল্লাহিত তাম্মাতি মিন শাররি মা খালাক",
             arabic = "أَعُوذُ بِكَلِمَاتِ اللّٰهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
             pronunciation = "আউযু বিকালিমাতিল্লাহিত তাম্মাতি মিন শাররি মা খালাক",
             translation = "আমি আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় তাঁর সৃষ্টির অনিষ্ট থেকে আশ্রয় চাই — I seek refuge in Allah's perfect words from the evil of what He has created",
@@ -1195,6 +1286,7 @@ object SeedData {
         dhikr(
             id = "sleep_sajdah_mulk",
             name = "Surah as-Sajdah & Surah al-Mulk",
+            nameBn = "সূরা আস-সাজদাহ ও সূরা আল-মুলক",
             arabic = "الٓمٓ تَنْزِيلُ… (السجدة) ۞ تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ… (الملك)",
             pronunciation = "সূরা আস-সাজদাহ ও সূরা আল-মুলক তিলাওয়াত",
             translation = "শোয়ার আগে সূরা আস-সাজদাহ (৩২) ও সূরা আল-মুলক (৬৭) তিলাওয়াত — Recite Surah as-Sajdah and Surah al-Mulk before sleeping",
@@ -1205,6 +1297,7 @@ object SeedData {
         dhikr(
             id = "sleep_baqarah_end",
             name = "Last two ayahs of Surah al-Baqarah (Amanar-rasul)",
+            nameBn = "সূরা আল-বাকারার শেষ দুই আয়াত",
             arabic = "آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ مِنْ رَبِّهِ وَالْمُؤْمِنُونَ… لَا يُكَلِّفُ اللّٰهُ نَفْسًا إِلَّا وُسْعَهَا… فَانْصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ",
             pronunciation = "আমানার রাসূলু বিমা উনযিলা ইলাইহি মিন রব্বিহি ওয়াল মুমিনূন… লা ইউকাল্লিফুল্লাহু নাফসান ইল্লা উসআহা… ফানসুরনা আলাল কাওমিল কাফিরীন",
             translation = "সূরা আল-বাকারার শেষ দুই আয়াত (২৮৫-২৮৬) — The Messenger has believed in what was revealed to him from his Lord… Allah does not burden a soul beyond its capacity… so give us victory over the disbelieving people",
@@ -1215,6 +1308,7 @@ object SeedData {
         dhikr(
             id = "sleep_kafirun",
             name = "Surah al-Kafirun",
+            nameBn = "সূরা আল-কাফিরূন",
             arabic = "قُلْ يَا أَيُّهَا الْكَافِرُونَ، لَا أَعْبُدُ مَا تَعْبُدُونَ، وَلَا أَنْتُمْ عَابِدُونَ مَا أَعْبُدُ، وَلَا أَنَا عَابِدٌ مَا عَبَدْتُمْ، وَلَا أَنْتُمْ عَابِدُونَ مَا أَعْبُدُ، لَكُمْ دِينُكُمْ وَلِيَ دِينِ",
             pronunciation = "কুল ইয়া আইয়ুহাল কাফিরূন, লা আবুদু মা তাবুদূন, ওয়া লা আনতুম আবিদূনা মা আবুদ, ওয়া লা আনা আবিদুম মা আবাত্তুম, ওয়া লা আনতুম আবিদূনা মা আবুদ, লাকুম দিনুকুম ওয়া লিয়া দীন",
             translation = "বলো, হে কাফিরগণ, আমি তা ইবাদত করি না যা তোমরা ইবাদত করো… তোমাদের দ্বীন তোমাদের, আমার দ্বীন আমার — Say: O disbelievers, I do not worship what you worship… To you your religion, and to me mine",
@@ -1225,6 +1319,7 @@ object SeedData {
         dhikr(
             id = "sleep_bismika_janbi",
             name = "Bismika Rabbi wada'tu janbi",
+            nameBn = "বিসমিকা রব্বি ওয়াদাতু জামবি",
             arabic = "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، إِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ",
             pronunciation = "বিসমিকা রব্বি ওয়াদাতু জামবি, ওয়া বিকা আরফাউহু, ইন আমসাকতা নাফসি ফারহামহা, ওয়া ইন আরসালতাহা ফাহফাযহা বিমা তাহফাযু বিহি ইবাদাকাস সালিহীন",
             translation = "হে আমার রব, আপনার নামে আমি পাশ রাখলাম, আপনার নামেই তা তুলব; আমার প্রাণ যদি আটকে রাখেন তবে দয়া করুন, ছেড়ে দিলে যেভাবে সৎ বান্দাদের রক্ষা করেন সেভাবে রক্ষা করুন — In Your name, my Lord, I lay down my side, and by You I raise it. If You take my soul, have mercy on it; if You release it, protect it as You protect Your righteous servants",
@@ -1235,6 +1330,7 @@ object SeedData {
         dhikr(
             id = "sleep_qini",
             name = "Allahumma qini adhabaka yawma tab'athu ibadak",
+            nameBn = "আল্লাহুম্মা কিনি আযাবাকা ইয়াওমা তাবআছু ইবাদাক",
             arabic = "اللّٰهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",
             pronunciation = "আল্লাহুম্মা কিনি আযাবাকা ইয়াওমা তাবআছু ইবাদাকা",
             translation = "হে আল্লাহ, যেদিন আপনি আপনার বান্দাদের পুনরুত্থিত করবেন সেদিন আপনার শাস্তি থেকে আমাকে রক্ষা করুন — O Allah, protect me from Your punishment on the Day You resurrect Your servants",
@@ -1245,6 +1341,7 @@ object SeedData {
         dhikr(
             id = "sleep_at_amana",
             name = "Alhamdulillahilladhi at'amana wa saqana wa kafana wa awana",
+            nameBn = "আলহামদু লিল্লাহিল্লাযি আতআমানা ওয়া সাকানা",
             arabic = "الْحَمْدُ لِلّٰهِ الَّذِي أَطْعَمَنَا وَسَقَانَا، وَكَفَانَا، وَآوَانَا، فَكَمْ مِمَّنْ لَا كَافِيَ لَهُ وَلَا مُؤْوِيَ",
             pronunciation = "আলহামদু লিল্লাহিল্লাযি আতআমানা ওয়া সাকানা, ওয়া কাফানা, ওয়া আওয়ানা, ফাকাম মিম্মান লা কাফিয়া লাহু ওয়া লা মুওয়িয়া",
             translation = "সকল প্রশংসা আল্লাহর, যিনি আমাদের খাওয়ালেন, পান করালেন, যথেষ্ট হলেন ও আশ্রয় দিলেন; অথচ কত মানুষের যথেষ্টকারী ও আশ্রয়দাতা কেউ নেই — All praise is for Allah who fed us and gave us drink, sufficed us and sheltered us; how many are there with none to suffice or shelter them",
@@ -1255,6 +1352,7 @@ object SeedData {
         dhikr(
             id = "sleep_rabbas_samawat",
             name = "Allahumma Rabbas samawati wa Rabbal ard... iqdi annad dayn",
+            nameBn = "আল্লাহুম্মা রব্বাস সামাওয়াতি ওয়া রব্বাল আরদ",
             arabic = "اللّٰهُمَّ رَبَّ السَّمَاوَاتِ وَرَبَّ الْأَرْضِ وَرَبَّ الْعَرْشِ الْعَظِيمِ، رَبَّنَا وَرَبَّ كُلِّ شَيْءٍ، فَالِقَ الْحَبِّ وَالنَّوَىٰ، وَمُنْزِلَ التَّوْرَاةِ وَالْإِنْجِيلِ وَالْفُرْقَانِ، أَعُوذُ بِكَ مِنْ شَرِّ كُلِّ شَيْءٍ أَنْتَ آخِذٌ بِنَاصِيَتِهِ، اللّٰهُمَّ أَنْتَ الْأَوَّلُ فَلَيْسَ قَبْلَكَ شَيْءٌ، وَأَنْتَ الْآخِرُ فَلَيْسَ بَعْدَكَ شَيْءٌ، وَأَنْتَ الظَّاهِرُ فَلَيْسَ فَوْقَكَ شَيْءٌ، وَأَنْتَ الْبَاطِنُ فَلَيْسَ دُونَكَ شَيْءٌ، اقْضِ عَنَّا الدَّيْنَ وَأَغْنِنَا مِنَ الْفَقْرِ",
             pronunciation = "আল্লাহুম্মা রব্বাস সামাওয়াতি ওয়া রব্বাল আরদি ওয়া রব্বাল আরশিল আযীম, রব্বানা ওয়া রব্বা কুল্লি শাইইন, ফালিকাল হাব্বি ওয়ান নাওয়া, ওয়া মুনযিলাত তাওরাতি ওয়াল ইনজিলি ওয়াল ফুরকান, আউযু বিকা মিন শাররি কুল্লি শাইইন আনতা আখিযুম বিনাসিয়াতিহি, আল্লাহুম্মা আনতাল আউওয়ালু ফালাইসা কাবলাকা শাই, ওয়া আনতাল আখিরু ফালাইসা বাদাকা শাই, ওয়া আনতায যাহিরু ফালাইসা ফাওকাকা শাই, ওয়া আনতাল বাতিনু ফালাইসা দূনাকা শাই, ইকদি আন্নাদ দাইনা ওয়া আগনিনা মিনাল ফাকর",
             translation = "হে আল্লাহ, আসমান-জমিন ও মহান আরশের রব, আমাদের রব ও সবকিছুর রব, বীজ ও আঁটি বিদারণকারী, তাওরাত-ইনজিল-ফুরকান অবতীর্ণকারী; আপনি যার কপাল ধরে আছেন তার অনিষ্ট থেকে আশ্রয় চাই; আপনি প্রথম, আপনার আগে কিছু নেই; আপনি শেষ, আপনার পরে কিছু নেই; আপনি প্রকাশ্য, আপনার ওপরে কিছু নেই; আপনি গোপন, আপনার চেয়ে নিকটবর্তী কিছু নেই; আমাদের ঋণ পরিশোধ করে দিন ও দারিদ্র্য থেকে অভাবমুক্ত করুন — O Allah, Lord of the heavens and the earth and the Mighty Throne… I seek refuge in You from the evil of everything You seize by the forelock… settle our debt for us and free us from poverty",
@@ -1265,6 +1363,7 @@ object SeedData {
         dhikr(
             id = "sleep_wajhikal_karim",
             name = "Allahumma inni a'udhu bi wajhikal karim wa kalimatikat tammah",
+            nameBn = "আল্লাহুম্মা ইন্নি আউযু বিওয়াজহিকাল কারীম",
             arabic = "اللّٰهُمَّ إِنِّي أَعُوذُ بِوَجْهِكَ الْكَرِيمِ، وَكَلِمَاتِكَ التَّامَّةِ مِنْ شَرِّ مَا أَنْتَ آخِذٌ بِنَاصِيَتِهِ، اللّٰهُمَّ أَنْتَ تَكْشِفُ الْمَغْرَمَ وَالْمَأْثَمَ، اللّٰهُمَّ لَا يُهْزَمُ جُنْدُكَ، وَلَا يُخْلَفُ وَعْدُكَ، وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ، سُبْحَانَكَ وَبِحَمْدِكَ",
             pronunciation = "আল্লাহুম্মা ইন্নি আউযু বিওয়াজহিকাল কারীম, ওয়া কালিমাতিকাত তাম্মাতি মিন শাররি মা আনতা আখিযুম বিনাসিয়াতিহি, আল্লাহুম্মা আনতা তাকশিফুল মাগরামা ওয়াল মাছাম, আল্লাহুম্মা লা ইউহযামু জুনদুকা, ওয়া লা ইউখলাফু ওয়াদুকা, ওয়া লা ইয়ানফাউ যাল জাদ্দি মিনকাল জাদ্দু, সুবহানাকা ওয়া বিহামদিকা",
             translation = "হে আল্লাহ, আপনার সম্মানিত সত্তা ও পূর্ণাঙ্গ বাণীসমূহের অসিলায় আপনি যার কপাল ধরে আছেন তার অনিষ্ট থেকে আশ্রয় চাই; হে আল্লাহ, আপনিই ঋণ ও পাপ দূর করেন; হে আল্লাহ, আপনার বাহিনী পরাজিত হয় না, আপনার প্রতিশ্রুতি ভঙ্গ হয় না, সম্পদশালীর সম্পদ আপনার কাছে কাজে আসে না; আপনি পবিত্র ও প্রশংসিত — O Allah, I seek refuge in Your Noble Face and Your perfect words from the evil of what You seize by the forelock… Your host is not defeated, Your promise is not broken… Glory and praise be to You",
@@ -1275,6 +1374,7 @@ object SeedData {
         dhikr(
             id = "sleep_khalaqta_nafsi",
             name = "Allahumma innaka khalaqta nafsi wa Anta tawaffaha",
+            nameBn = "আল্লাহুম্মা ইন্নাকা খালাকতা নাফসি ওয়া আনতা তাওয়াফফাহা",
             arabic = "اللّٰهُمَّ إِنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا، لَكَ مَمَاتُهَا وَمَحْيَاهَا، إِنْ أَحْيَيْتَهَا فَاحْفَظْهَا، وَإِنْ أَمَتَّهَا فَاغْفِرْ لَهَا، اللّٰهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ",
             pronunciation = "আল্লাহুম্মা ইন্নাকা খালাকতা নাফসি ওয়া আনতা তাওয়াফফাহা, লাকা মামাতুহা ওয়া মাহইয়াহা, ইন আহইয়াইতাহা ফাহফাযহা, ওয়া ইন আমাত্তাহা ফাগফির লাহা, আল্লাহুম্মা ইন্নি আসআলুকাল আফিয়াহ",
             translation = "হে আল্লাহ, আপনি আমার প্রাণ সৃষ্টি করেছেন, আপনিই তা কবজ করবেন; এর মৃত্যু ও জীবন আপনারই; একে জীবিত রাখলে রক্ষা করুন, মৃত্যু দিলে ক্ষমা করুন; হে আল্লাহ, আমি আপনার কাছে সুস্থতা চাই — O Allah, You created my soul and You take it back; to You is its death and its life. If You keep it alive, protect it; if You cause it to die, forgive it. O Allah, I ask You for wellbeing",
@@ -1285,6 +1385,7 @@ object SeedData {
         dhikr(
             id = "sleep_ghfir_dhambi",
             name = "Bismillahi wada'tu janbi, Allahummaghfir li dhambi",
+            nameBn = "বিসমিল্লাহি ওয়াদাতু জামবি আল্লাহুম্মাগফির লি যামবি",
             arabic = "بِسْمِ اللّٰهِ وَضَعْتُ جَنْبِي، اللّٰهُمَّ اغْفِرْ لِي ذَنْبِي، وَأَخْسِئْ شَيْطَانِي، وَفُكَّ رِهَانِي، وَاجْعَلْنِي فِي النَّدِيِّ الْأَعْلَىٰ",
             pronunciation = "বিসমিল্লাহি ওয়াদাতু জামবি, আল্লাহুম্মাগফির লি যামবি, ওয়া আখসি শাইতানি, ওয়া ফুক্কা রিহানি, ওয়াজআলনি ফিন নাদিয়্যিল আলা",
             translation = "আল্লাহর নামে পাশ রাখলাম; হে আল্লাহ, আমার গুনাহ ক্ষমা করুন, আমার শয়তানকে বিতাড়িত করুন, আমার দায় মুক্ত করুন এবং আমাকে ঊর্ধ্বলোকের মজলিসে স্থান দিন — In the name of Allah I lay down my side. O Allah, forgive my sin, drive away my devil, release my pledge, and place me in the highest assembly",
@@ -1295,6 +1396,7 @@ object SeedData {
         dhikr(
             id = "sleep_kafani",
             name = "Alhamdulillahilladhi kafani wa awani",
+            nameBn = "আলহামদু লিল্লাহিল্লাযি কাফানি ওয়া আওয়ানি",
             arabic = "الْحَمْدُ لِلّٰهِ الَّذِي كَفَانِي وَآوَانِي، وَالْحَمْدُ لِلّٰهِ الَّذِي أَطْعَمَنِي وَسَقَانِي، وَالْحَمْدُ لِلّٰهِ الَّذِي مَنَّ عَلَيَّ فَأَفْضَلَ، اللّٰهُمَّ إِنِّي أَسْأَلُكَ بِعِزَّتِكَ أَنْ تُنَجِّيَنِي مِنَ النَّارِ",
             pronunciation = "আলহামদু লিল্লাহিল্লাযি কাফানি ওয়া আওয়ানি, ওয়াল হামদু লিল্লাহিল্লাযি আতআমানি ওয়া সাকানি, ওয়াল হামদু লিল্লাহিল্লাযি মান্না আলাইয়া ফাআফদালা, আল্লাহুম্মা ইন্নি আসআলুকা বিইযযাতিকা আন তুনাজ্জিয়ানি মিনান নার",
             translation = "সকল প্রশংসা আল্লাহর, যিনি আমাকে যথেষ্ট হলেন ও আশ্রয় দিলেন; সকল প্রশংসা আল্লাহর, যিনি খাওয়ালেন ও পান করালেন; সকল প্রশংসা আল্লাহর, যিনি অনুগ্রহ করে বেশি বেশি দিলেন; হে আল্লাহ, আপনার মর্যাদার অসিলায় আমাকে জাহান্নাম থেকে রক্ষা করুন — All praise is for Allah who sufficed me and sheltered me… O Allah, I ask You by Your Might to save me from the Fire",
@@ -1305,6 +1407,7 @@ object SeedData {
         dhikr(
             id = "sleep_amutu_ahya",
             name = "Allahumma bismika amutu wa ahya",
+            nameBn = "আল্লাহুম্মা বিসমিকা আমূতু ওয়া আহইয়া",
             arabic = "اللّٰهُمَّ بِاسْمِكَ أَمُوتُ وَأَحْيَا",
             pronunciation = "আল্লাহুম্মা বিসমিকা আমুতু ওয়া আহইয়া",
             translation = "হে আল্লাহ, আপনার নামেই আমি মরি ও বাঁচি — O Allah, in Your name I die and I live",
@@ -1315,6 +1418,7 @@ object SeedData {
         dhikr(
             id = "sleep_forgiven",
             name = "La ilaha illallahu wahdahu... wa la hawla wa la quwwata illa billah",
+            nameBn = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারীকা লাহু",
             arabic = "لَا إِلَٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ، سُبْحَانَ اللّٰهِ وَالْحَمْدُ لِلّٰهِ وَلَا إِلَٰهَ إِلَّا اللّٰهُ وَاللّٰهُ أَكْبَرُ",
             pronunciation = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, ওয়া লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহ, সুবহানাল্লাহি ওয়াল হামদু লিল্লাহি ওয়া লা ইলাহা ইল্লাল্লাহু ওয়াল্লাহু আকবার",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; আল্লাহ ছাড়া কোনো শক্তি-সামর্থ্য নেই; আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ ছাড়া কোনো উপাস্য নেই, আল্লাহ সর্বমহান — There is no god but Allah alone… and there is no power nor strength except by Allah; glory be to Allah, praise be to Allah, there is no god but Allah, and Allah is the Greatest",
@@ -1325,6 +1429,7 @@ object SeedData {
         dhikr(
             id = "sleep_aslamtu_nafsi",
             name = "Allahumma aslamtu nafsi ilayk wa fawwadtu amri ilayk",
+            nameBn = "আল্লাহুম্মা আসলামতু নাফসি ইলাইকা",
             arabic = "اللّٰهُمَّ أَسْلَمْتُ نَفْسِي إِلَيْكَ، وَفَوَّضْتُ أَمْرِي إِلَيْكَ، وَوَجَّهْتُ وَجْهِي إِلَيْكَ، وَأَلْجَأْتُ ظَهْرِي إِلَيْكَ، رَغْبَةً وَرَهْبَةً إِلَيْكَ، لَا مَلْجَأَ وَلَا مَنْجَا مِنْكَ إِلَّا إِلَيْكَ، آمَنْتُ بِكِتَابِكَ الَّذِي أَنْزَلْتَ وَبِنَبِيِّكَ الَّذِي أَرْسَلْتَ",
             pronunciation = "আল্লাহুম্মা আসলামতু নাফসি ইলাইকা, ওয়া ফাওয়াদতু আমরি ইলাইকা, ওয়া ওয়াজজাহতু ওয়াজহি ইলাইকা, ওয়া আলজাতু যাহরি ইলাইকা, রাগবাতান ওয়া রাহবাতান ইলাইকা, লা মালজাআ ওয়া লা মানজা মিনকা ইল্লা ইলাইকা, আমানতু বিকিতাবিকাল্লাযি আনযালতা ওয়া বিনাবিয়্যিকাল্লাযি আরসালতা",
             translation = "হে আল্লাহ, আমি আমার প্রাণ আপনার কাছে সঁপে দিলাম, আমার কাজ আপনার কাছে সোপর্দ করলাম, আমার মুখ আপনার দিকে ফেরালাম, আমার পিঠ আপনার আশ্রয়ে দিলাম—আপনার প্রতি আগ্রহ ও ভয়ে; আপনার কাছ থেকে আপনি ছাড়া কোনো আশ্রয় বা মুক্তি নেই; আপনার অবতীর্ণ কিতাব ও প্রেরিত নবিতে ঈমান আনলাম — O Allah, I submit myself to You, entrust my affair to You, turn my face to You and lay myself down relying on You, out of hope and fear of You. There is no refuge or escape from You except to You. I believe in Your Book which You revealed and Your Prophet whom You sent",
@@ -1343,6 +1448,7 @@ object SeedData {
         dhikr(
             id = "praise_q_walad",
             name = "Alhamdulillahilladhi lam yattakhidh walada",
+            nameBn = "আলহামদু লিল্লাহিল্লাযি লাম ইয়াত্তাখিয ওয়ালাদা",
             arabic = "الْحَمْدُ لِلّٰهِ الَّذِي لَمْ يَتَّخِذْ وَلَدًا وَلَمْ يَكُنْ لَهُ شَرِيكٌ فِي الْمُلْكِ وَلَمْ يَكُنْ لَهُ وَلِيٌّ مِنَ الذُّلِّ وَكَبِّرْهُ تَكْبِيرًا",
             pronunciation = "আলহামদু লিল্লাহিল্লাযি লাম ইয়াত্তাখিয ওয়ালাদাও ওয়া লাম ইয়াকুল্লাহু শারিকুন ফিল মুলকি ওয়া লাম ইয়াকুল্লাহু ওয়ালিয়্যুম মিনায যুল্লি ওয়া কাব্বিরহু তাকবীরা",
             translation = "সকল প্রশংসা আল্লাহর, যিনি সন্তান গ্রহণ করেননি, রাজত্বে তাঁর কোনো শরিক নেই, এবং দুর্বলতাবশত তাঁর কোনো অভিভাবকের প্রয়োজন নেই — All praise is for Allah who has not taken a son, has no partner in His dominion, and needs no protector out of weakness",
@@ -1353,6 +1459,7 @@ object SeedData {
         dhikr(
             id = "praise_q_khalaq",
             name = "Alhamdulillahilladhi khalaqas samawati wal ard",
+            nameBn = "আলহামদু লিল্লাহিল্লাযি খালাকাস সামাওয়াতি ওয়াল আরদ",
             arabic = "الْحَمْدُ لِلّٰهِ الَّذِي خَلَقَ السَّمَاوَاتِ وَالْأَرْضَ وَجَعَلَ الظُّلُمَاتِ وَالنُّورَ",
             pronunciation = "আলহামদু লিল্লাহিল্লাযি খালাকাস সামাওয়াতি ওয়াল আরদা ওয়া জাআলায যুলুমাতি ওয়ান নূর",
             translation = "সকল প্রশংসা আল্লাহর, যিনি আসমান ও জমিন সৃষ্টি করেছেন এবং অন্ধকার ও আলো সৃষ্টি করেছেন — All praise is for Allah who created the heavens and the earth and made the darkness and the light",
@@ -1363,6 +1470,7 @@ object SeedData {
         dhikr(
             id = "praise_q_kitab",
             name = "Alhamdulillahilladhi anzala ala abdihil kitab",
+            nameBn = "আলহামদু লিল্লাহিল্লাযি আনযালা আলা আবদিহিল কিতাব",
             arabic = "الْحَمْدُ لِلّٰهِ الَّذِي أَنْزَلَ عَلَىٰ عَبْدِهِ الْكِتَابَ وَلَمْ يَجْعَلْ لَهُ عِوَجًا",
             pronunciation = "আলহামদু লিল্লাহিল্লাযি আনযালা আলা আবদিহিল কিতাবা ওয়া লাম ইয়াজআল লাহু ইওয়াজা",
             translation = "সকল প্রশংসা আল্লাহর, যিনি তাঁর বান্দার প্রতি কিতাব নাযিল করেছেন এবং তাতে কোনো বক্রতা রাখেননি — All praise is for Allah who sent down the Book to His servant and placed no crookedness in it",
@@ -1373,6 +1481,7 @@ object SeedData {
         dhikr(
             id = "praise_q_akhirah",
             name = "Alhamdulillahilladhi lahu ma fis samawati wa ma fil ard",
+            nameBn = "আলহামদু লিল্লাহিল্লাযি লাহু মা ফিস সামাওয়াতি ওয়া মা ফিল আরদ",
             arabic = "الْحَمْدُ لِلّٰهِ الَّذِي لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ وَلَهُ الْحَمْدُ فِي الْآخِرَةِ وَهُوَ الْحَكِيمُ الْخَبِيرُ",
             pronunciation = "আলহামদু লিল্লাহিল্লাযি লাহু মা ফিস সামাওয়াতি ওয়া মা ফিল আরদি ওয়া লাহুল হামদু ফিল আখিরাতি ওয়া হুয়াল হাকীমুল খাবীর",
             translation = "সকল প্রশংসা আল্লাহর, আসমান ও জমিনে যা কিছু আছে সব তাঁরই, আখিরাতেও সকল প্রশংসা তাঁরই; তিনি প্রজ্ঞাময়, সম্যক অবগত — All praise is for Allah, to whom belongs whatever is in the heavens and the earth, and for Him is all praise in the Hereafter; He is the All-Wise, the All-Aware",
@@ -1383,6 +1492,7 @@ object SeedData {
         dhikr(
             id = "praise_q_fatir",
             name = "Alhamdulillahi Fatiris samawati wal ard",
+            nameBn = "আলহামদু লিল্লাহি ফাতিরিস সামাওয়াতি ওয়াল আরদ",
             arabic = "الْحَمْدُ لِلّٰهِ فَاطِرِ السَّمَاوَاتِ وَالْأَرْضِ جَاعِلِ الْمَلَائِكَةِ رُسُلًا أُولِي أَجْنِحَةٍ مَثْنَىٰ وَثُلَاثَ وَرُبَاعَ يَزِيدُ فِي الْخَلْقِ مَا يَشَاءُ إِنَّ اللّٰهَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
             pronunciation = "আলহামদু লিল্লাহি ফাতিরিস সামাওয়াতি ওয়াল আরদি জাইলিল মালাইকাতি রুসুলান উলি আজনিহাতিম মাছনা ওয়া ছুলাছা ওয়া রুবাআ, ইয়াযীদু ফিল খালকি মা ইয়াশা, ইন্নাল্লাহা আলা কুল্লি শাইইন কাদীর",
             translation = "সকল প্রশংসা আল্লাহর, আসমান-জমিনের স্রষ্টা, যিনি ফেরেশতাদের দুই-তিন-চার ডানাবিশিষ্ট বার্তাবাহক বানিয়েছেন; তিনি সৃষ্টিতে যা ইচ্ছা বৃদ্ধি করেন; নিশ্চয়ই আল্লাহ সর্বশক্তিমান — All praise is for Allah, Originator of the heavens and the earth, who made the angels messengers with wings, in twos, threes and fours; He adds to creation what He wills; indeed Allah is All-Powerful over everything",
@@ -1393,6 +1503,7 @@ object SeedData {
         dhikr(
             id = "praise_tahajjud",
             name = "Allahumma lakal hamdu Anta Nurus samawati wal ard",
+            nameBn = "আল্লাহুম্মা লাকাল হামদু আনতা নূরুস সামাওয়াতি ওয়াল আরদ",
             arabic = "اللّٰهُمَّ لَكَ الْحَمْدُ أَنْتَ نُورُ السَّمَاوَاتِ وَالْأَرْضِ وَمَنْ فِيهِنَّ، وَلَكَ الْحَمْدُ أَنْتَ قَيِّمُ السَّمَاوَاتِ وَالْأَرْضِ وَمَنْ فِيهِنَّ، وَلَكَ الْحَمْدُ أَنْتَ الْحَقُّ، وَوَعْدُكَ الْحَقُّ، وَقَوْلُكَ الْحَقُّ، وَلِقَاؤُكَ الْحَقُّ، وَالْجَنَّةُ حَقٌّ، وَالنَّارُ حَقٌّ، وَالسَّاعَةُ حَقٌّ، وَالنَّبِيُّونَ حَقٌّ، وَمُحَمَّدٌ حَقٌّ، اللّٰهُمَّ لَكَ أَسْلَمْتُ، وَعَلَيْكَ تَوَكَّلْتُ، وَبِكَ آمَنْتُ، وَإِلَيْكَ أَنَبْتُ، وَبِكَ خَاصَمْتُ، وَإِلَيْكَ حَاكَمْتُ",
             pronunciation = "আল্লাহুম্মা লাকাল হামদু আনতা নূরুস সামাওয়াতি ওয়াল আরদি ওয়া মান ফিহিন্না, ওয়া লাকাল হামদু আনতা কাইয়িমুস সামাওয়াতি ওয়াল আরদি ওয়া মান ফিহিন্না, ওয়া লাকাল হামদু আনতাল হাক্কু, ওয়া ওয়াদুকাল হাক্কু, ওয়া কাওলুকাল হাক্কু, ওয়া লিকাউকাল হাক্কু, ওয়াল জান্নাতু হাক্কু, ওয়ান নারু হাক্কু, ওয়াস সাআতু হাক্কু, ওয়ান নাবিয়্যূনা হাক্কু, ওয়া মুহাম্মাদুন হাক্কু, আল্লাহুম্মা লাকা আসলামতু, ওয়া আলাইকা তাওয়াক্কালতু, ওয়া বিকা আমানতু, ওয়া ইলাইকা আনাবতু, ওয়া বিকা খাসামতু, ওয়া ইলাইকা হাকামতু",
             translation = "হে আল্লাহ, সকল প্রশংসা আপনার; আপনি আসমান-জমিন ও এর মধ্যকার সবকিছুর নূর; সকল প্রশংসা আপনার; আপনি এদের ধারক; সকল প্রশংসা আপনার; আপনিই সত্য, আপনার প্রতিশ্রুতি সত্য, আপনার বাণী সত্য, আপনার সাক্ষাৎ সত্য, জান্নাত সত্য, জাহান্নাম সত্য, কিয়ামত সত্য, নবিগণ সত্য, মুহাম্মাদ (সাঃ) সত্য; হে আল্লাহ, আপনার কাছে আত্মসমর্পণ করলাম, আপনার ওপর ভরসা করলাম, আপনাতে ঈমান আনলাম, আপনার দিকে প্রত্যাবর্তন করলাম, আপনার সাহায্যে বিতর্ক করলাম, আপনার কাছে বিচার চাইলাম — O Allah, to You is all praise; You are the Light of the heavens and the earth and all therein… You are the Truth, Your promise is true… Paradise is true, the Fire is true, the Hour is true, the Prophets are true and Muhammad is true. O Allah, to You I submit, in You I trust, in You I believe, to You I turn, by You I contend, and to You I refer judgement",
@@ -1403,6 +1514,7 @@ object SeedData {
         dhikr(
             id = "praise_uhud",
             name = "Allahumma lakal hamdu kulluh, la qabida lima basatta",
+            nameBn = "আল্লাহুম্মা লাকাল হামদু কুল্লুহু",
             arabic = "اللّٰهُمَّ لَكَ الْحَمْدُ كُلُّهُ، اللّٰهُمَّ لَا قَابِضَ لِمَا بَسَطْتَ، وَلَا بَاسِطَ لِمَا قَبَضْتَ، وَلَا هَادِيَ لِمَنْ أَضْلَلْتَ، وَلَا مُضِلَّ لِمَنْ هَدَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُقَرِّبَ لِمَا بَاعَدْتَ، وَلَا مُبَاعِدَ لِمَا قَرَّبْتَ",
             pronunciation = "আল্লাহুম্মা লাকাল হামদু কুল্লুহু, আল্লাহুম্মা লা কাবিদা লিমা বাসাত্তা, ওয়া লা বাসিতা লিমা কাবাদতা, ওয়া লা হাদিয়া লিমান আদলালতা, ওয়া লা মুদিল্লা লিমান হাদাইতা, ওয়া লা মুতিয়া লিমা মানাতা, ওয়া লা মানিআ লিমা আতাইতা, ওয়া লা মুকাররিবা লিমা বাআদতা, ওয়া লা মুবাইদা লিমা কাররাবতা",
             translation = "হে আল্লাহ, সকল প্রশংসা আপনার; আপনি যা প্রসারিত করেন তা কেউ সংকুচিত করতে পারে না, আপনি যা সংকুচিত করেন তা কেউ প্রসারিত করতে পারে না; আপনি যাকে পথভ্রষ্ট করেন তাকে কেউ পথ দেখাতে পারে না, আপনি যাকে হেদায়েত দেন তাকে কেউ বিভ্রান্ত করতে পারে না; আপনি যা আটকে রাখেন তা কেউ দিতে পারে না, আপনি যা দেন তা কেউ আটকাতে পারে না; আপনি যা দূরে রাখেন তা কেউ নিকটবর্তী করতে পারে না, আপনি যা নিকটবর্তী করেন তা কেউ দূরে রাখতে পারে না — O Allah, to You is all praise. None can withhold what You extend, none can extend what You withhold; none can guide whom You leave astray, none can misguide whom You guide; none can give what You withhold, none can withhold what You give; none can bring near what You put far, none can put far what You bring near",
@@ -1413,6 +1525,7 @@ object SeedData {
         dhikr(
             id = "praise_thana_majd",
             name = "Allahumma Rabbana lakal hamdu mil'as samawati wa mil'al ard",
+            nameBn = "আল্লাহুম্মা রব্বানা লাকাল হামদু মিলআস সামাওয়াতি",
             arabic = "اللّٰهُمَّ رَبَّنَا لَكَ الْحَمْدُ مِلْءَ السَّمَاوَاتِ وَمِلْءَ الْأَرْضِ وَمِلْءَ مَا شِئْتَ مِنْ شَيْءٍ بَعْدُ، أَهْلَ الثَّنَاءِ وَالْمَجْدِ، أَحَقُّ مَا قَالَ الْعَبْدُ وَكُلُّنَا لَكَ عَبْدٌ، لَا مَانِعَ لِمَا أَعْطَيْتَ وَلَا مُعْطِيَ لِمَا مَنَعْتَ وَلَا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ",
             pronunciation = "আল্লাহুম্মা রব্বানা লাকাল হামদু মিলআস সামাওয়াতি ওয়া মিলআল আরদি ওয়া মিলআ মা শিতা মিন শাইইন বাদু, আহলাছ ছানাই ওয়াল মাজদি, আহাক্কু মা কালাল আবদু ওয়া কুল্লুনা লাকা আবদুন, লা মানিআ লিমা আতাইতা ওয়া লা মুতিয়া লিমা মানাতা ওয়া লা ইয়ানফাউ যাল জাদ্দি মিনকাল জাদ্দু",
             translation = "হে আল্লাহ, হে আমাদের রব, সকল প্রশংসা আপনার—আসমান-জমিন ভরে এবং এরপর আপনি যা চান তা ভরে; আপনি প্রশংসা ও মহিমার যোগ্য; বান্দা যা বলে তার মধ্যে সবচেয়ে সত্য—আর আমরা সবাই আপনার বান্দা—আপনি যা দেন তা কেউ আটকাতে পারে না, আপনি যা আটকান তা কেউ দিতে পারে না, সম্পদশালীর সম্পদ আপনার কাছে কাজে আসে না — O Allah, our Lord, to You is all praise, filling the heavens and the earth and filling whatever You wish beyond. You are worthy of praise and glory. The truest thing the servant has said — and we are all Your servants — none can withhold what You give and none can give what You withhold, and the wealth of the wealthy avails not against You",
@@ -1423,6 +1536,7 @@ object SeedData {
         dhikr(
             id = "praise_faqr",
             name = "Alhamdulillahi Rabbil alamin... Antal Ghaniyyu wa nahnul fuqara",
+            nameBn = "আলহামদু লিল্লাহি রব্বিল আলামীন (আনতাল গানিয়্যু ওয়া নাহনুল ফুকারা)",
             arabic = "الْحَمْدُ لِلّٰهِ رَبِّ الْعَالَمِينَ، الرَّحْمَٰنِ الرَّحِيمِ، مَالِكِ يَوْمِ الدِّينِ، لَا إِلَٰهَ إِلَّا أَنْتَ تَفْعَلُ مَا تُرِيدُ، اللّٰهُمَّ أَنْتَ اللّٰهُ لَا إِلَٰهَ إِلَّا أَنْتَ، أَنْتَ الْغَنِيُّ وَنَحْنُ الْفُقَرَاءُ",
             pronunciation = "আলহামদু লিল্লাহি রব্বিল আলামিন, আর রাহমানির রাহীম, মালিকি ইয়াওমিদ দীন, লা ইলাহা ইল্লা আনতা তাফআলু মা তুরীদ, আল্লাহুম্মা আনতাল্লাহু লা ইলাহা ইল্লা আনতা, আনতাল গানিয়্যু ওয়া নাহনুল ফুকারা",
             translation = "সকল প্রশংসা আল্লাহর, বিশ্বজগতের রব, পরম করুণাময়, পরম দয়ালু, বিচার দিনের মালিক; আপনি ছাড়া কোনো উপাস্য নেই, আপনি যা চান তা করেন; হে আল্লাহ, আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই; আপনি অভাবমুক্ত, আমরা অভাবী — All praise is for Allah, Lord of the worlds, the Most Compassionate, the Most Merciful, Master of the Day of Judgement; there is no god but You, You do what You will. O Allah, You are Allah, there is no god but You; You are the Rich, and we are the poor",
@@ -1433,6 +1547,7 @@ object SeedData {
         dhikr(
             id = "praise_yut_imu",
             name = "Alhamdulillahilladhi yut'imu wa la yut'am",
+            nameBn = "আলহামদু লিল্লাহিল্লাযি ইউতইমু ওয়া লা ইউতআম",
             arabic = "الْحَمْدُ لِلّٰهِ الَّذِي يُطْعِمُ وَلَا يُطْعَمُ، مَنَّ عَلَيْنَا فَهَدَانَا وَأَطْعَمَنَا وَسَقَانَا، وَكُلَّ بَلَاءٍ حَسَنٍ أَبْلَانَا، الْحَمْدُ لِلّٰهِ غَيْرَ مُوَدَّعٍ وَلَا مُكَافَأٍ وَلَا مَكْفُورٍ وَلَا مُسْتَغْنًى عَنْهُ، الْحَمْدُ لِلّٰهِ رَبِّ الْعَالَمِينَ",
             pronunciation = "আলহামদু লিল্লাহিল্লাযি ইউতিমু ওয়া লা ইউতআম, মান্না আলাইনা ফাহাদানা ওয়া আতআমানা ওয়া সাকানা, ওয়া কুল্লা বালাইন হাসানিন আবলানা, আলহামদু লিল্লাহি গাইরা মুওয়াদ্দাইন ওয়া লা মুকাফাইন ওয়া লা মাকফুরিন ওয়া লা মুসতাগনান আনহু, আলহামদু লিল্লাহি রব্বিল আলামিন",
             translation = "সকল প্রশংসা আল্লাহর, যিনি খাওয়ান কিন্তু তাঁকে খাওয়ানো হয় না; তিনি আমাদের প্রতি অনুগ্রহ করেছেন—হেদায়েত দিয়েছেন, খাইয়েছেন, পান করিয়েছেন এবং প্রতিটি উত্তম পরীক্ষায় পরীক্ষা করেছেন; সকল প্রশংসা আল্লাহর—যে প্রশংসা কখনো শেষ হবে না, যার প্রতিদান দেওয়া যায় না, যা অস্বীকার করা যায় না, যা থেকে অমুখাপেক্ষী হওয়া যায় না — All praise is for Allah who feeds and is not fed; He favoured us, guided us, fed us and gave us drink, and tested us with every good trial. All praise is for Allah — a praise never bidden farewell, never repaid, never denied, never dispensed with. All praise is for Allah, Lord of the worlds",
@@ -1443,6 +1558,7 @@ object SeedData {
         dhikr(
             id = "praise_kathira_tayyiba",
             name = "Alhamdulillahi hamdan kathiran tayyiban mubarakan fih",
+            nameBn = "আলহামদু লিল্লাহি হামদান কাছীরান তাইয়িবান মুবারাকান ফীহ",
             arabic = "الْحَمْدُ لِلّٰهِ حَمْدًا كَثِيرًا طَيِّبًا مُبَارَكًا فِيهِ مُبَارَكًا عَلَيْهِ، كَمَا يُحِبُّ رَبُّنَا وَيَرْضَىٰ",
             pronunciation = "আলহামদু লিল্লাহি হামদান কাছীরান তাইয়্যিবান মুবারাকান ফিহি মুবারাকান আলাইহি, কামা ইউহিব্বু রব্বুনা ওয়া ইয়ারদা",
             translation = "সকল প্রশংসা আল্লাহর—প্রচুর, পবিত্র, বরকতময় প্রশংসা, যেভাবে আমাদের রব ভালোবাসেন ও সন্তুষ্ট হন — All praise is for Allah, praise abundant, pure and blessed, as our Lord loves and is pleased with",
@@ -1453,6 +1569,7 @@ object SeedData {
         dhikr(
             id = "praise_kathira_yuhmad",
             name = "Alhamdulillahi hamdan kathiran... kama yuhibbu Rabbuna an yuhmada",
+            nameBn = "আলহামদু লিল্লাহি হামদান কাছীরা কামা ইউহিব্বু রব্বুনা আন ইউহমাদ",
             arabic = "الْحَمْدُ لِلّٰهِ حَمْدًا كَثِيرًا طَيِّبًا مُبَارَكًا فِيهِ، كَمَا يُحِبُّ رَبُّنَا أَنْ يُحْمَدَ وَيَنْبَغِي لَهُ",
             pronunciation = "আলহামদু লিল্লাহি হামদান কাছীরান তাইয়্যিবান মুবারাকান ফিহি, কামা ইউহিব্বু রব্বুনা আন ইউহমাদা ওয়া ইয়ামবাগি লাহু",
             translation = "সকল প্রশংসা আল্লাহর—প্রচুর, পবিত্র, বরকতময় প্রশংসা, যেভাবে আমাদের রব প্রশংসিত হতে ভালোবাসেন এবং যা তাঁর জন্য উপযুক্ত — All praise is for Allah, praise abundant, pure and blessed, as our Lord loves to be praised and as befits Him",
@@ -1463,6 +1580,7 @@ object SeedData {
         dhikr(
             id = "praise_adada_ma_khalaq",
             name = "Subhanallahi adada ma khalaq wa mil'a ma khalaq",
+            nameBn = "সুবহানাল্লাহি আদাদা মা খালাক",
             arabic = "سُبْحَانَ اللّٰهِ عَدَدَ مَا خَلَقَ، وَسُبْحَانَ اللّٰهِ مِلْءَ مَا خَلَقَ، وَسُبْحَانَ اللّٰهِ عَدَدَ مَا فِي الْأَرْضِ وَالسَّمَاءِ، وَسُبْحَانَ اللّٰهِ مِلْءَ مَا فِي الْأَرْضِ وَالسَّمَاءِ، وَسُبْحَانَ اللّٰهِ عَدَدَ مَا أَحْصَىٰ كِتَابُهُ، وَسُبْحَانَ اللّٰهِ مِلْءَ مَا أَحْصَىٰ كِتَابُهُ، وَسُبْحَانَ اللّٰهِ عَدَدَ كُلِّ شَيْءٍ، وَسُبْحَانَ اللّٰهِ مِلْءَ كُلِّ شَيْءٍ، وَالْحَمْدُ لِلّٰهِ عَدَدَ مَا خَلَقَ، وَالْحَمْدُ لِلّٰهِ مِلْءَ مَا خَلَقَ، وَالْحَمْدُ لِلّٰهِ عَدَدَ مَا فِي الْأَرْضِ وَالسَّمَاءِ، وَالْحَمْدُ لِلّٰهِ مِلْءَ مَا فِي الْأَرْضِ وَالسَّمَاءِ، وَالْحَمْدُ لِلّٰهِ عَدَدَ مَا أَحْصَىٰ كِتَابُهُ، وَالْحَمْدُ لِلّٰهِ مِلْءَ مَا أَحْصَىٰ كِتَابُهُ، وَالْحَمْدُ لِلّٰهِ عَدَدَ كُلِّ شَيْءٍ، وَالْحَمْدُ لِلّٰهِ مِلْءَ كُلِّ شَيْءٍ",
             pronunciation = "সুবহানাল্লাহি আদাদা মা খালাক, ওয়া সুবহানাল্লাহি মিলআ মা খালাক, ওয়া সুবহানাল্লাহি আদাদা মা ফিল আরদি ওয়াস সামা, ওয়া সুবহানাল্লাহি মিলআ মা ফিল আরদি ওয়াস সামা, ওয়া সুবহানাল্লাহি আদাদা মা আহসা কিতাবুহু, ওয়া সুবহানাল্লাহি মিলআ মা আহসা কিতাবুহু, ওয়া সুবহানাল্লাহি আদাদা কুল্লি শাই, ওয়া সুবহানাল্লাহি মিলআ কুল্লি শাই; ওয়াল হামদু লিল্লাহি (একইভাবে আটটি বাক্য)",
             translation = "আল্লাহ পবিত্র—তাঁর সৃষ্টির সংখ্যা, তাঁর সৃষ্টির পূর্ণতা, আসমান-জমিনে যা আছে তার সংখ্যা ও পূর্ণতা, তাঁর কিতাব যা গণনা করেছে তার সংখ্যা ও পূর্ণতা, প্রতিটি জিনিসের সংখ্যা ও পূর্ণতা পরিমাণ; এবং সকল প্রশংসা আল্লাহর—একইভাবে — Glory be to Allah as much as His creation, as fills His creation, as what is in the earth and sky, as fills them, as His Book has recorded, as fills His Book, as everything, as fills everything; and all praise is for Allah — likewise",
@@ -1473,6 +1591,7 @@ object SeedData {
         dhikr(
             id = "praise_subhanaka_hamdik",
             name = "Subhanaka-llahumma wa bihamdik wa tabarakasmuk",
+            nameBn = "সুবহানাকাল্লাহুম্মা ওয়া বিহামদিকা ওয়া তাবারাকাসমুক",
             arabic = "سُبْحَانَكَ اللّٰهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَىٰ جَدُّكَ، وَلَا إِلَٰهَ غَيْرُكَ",
             pronunciation = "সুবহানাকাল্লাহুম্মা ওয়া বিহামদিকা, ওয়া তাবারাকাসমুকা, ওয়া তাআলা জাদ্দুকা, ওয়া লা ইলাহা গাইরুকা",
             translation = "হে আল্লাহ, আপনি কতই না পবিত্র, সকল প্রশংসা আপনার; আপনার নাম বরকতময়, আপনার মর্যাদা সুউচ্চ, আপনি ছাড়া কোনো উপাস্য নেই — How perfect are You O Allah, and all praise is Yours; blessed is Your name, exalted is Your majesty, and there is no god but You",
@@ -1483,6 +1602,7 @@ object SeedData {
         dhikr(
             id = "praise_jabarut",
             name = "Subhana Dhil jabaruti wal malakuti wal kibriya'i wal azamah",
+            nameBn = "সুবহানা যিল জাবারূতি ওয়াল মালাকূতি ওয়াল কিবরিয়াই ওয়াল আযামাহ",
             arabic = "سُبْحَانَ ذِي الْجَبَرُوتِ وَالْمَلَكُوتِ وَالْكِبْرِيَاءِ وَالْعَظَمَةِ",
             pronunciation = "সুবহানা যিল জাবারুতি ওয়াল মালাকুতি ওয়াল কিবরিয়াই ওয়াল আযামাহ",
             translation = "পবিত্র সেই সত্তা, যিনি পরাক্রম, রাজত্ব, গর্ব ও মহত্ত্বের অধিকারী — Glory be to the Owner of might, dominion, majesty and greatness",
@@ -1493,6 +1613,7 @@ object SeedData {
         dhikr(
             id = "praise_subbuh_quddus_ra",
             name = "Subbuhun Quddusun Rabbul malaikati war ruh",
+            nameBn = "সুব্বূহুন কুদ্দূসুন রব্বুল মালাইকাতি ওয়ার রূহ",
             arabic = "سُبُّوحٌ قُدُّوسٌ رَبُّ الْمَلَائِكَةِ وَالرُّوحِ",
             pronunciation = "সুব্বূহুন কুদ্দূসুন রব্বুল মালাইকাতি ওয়ার রূহ",
             translation = "পরম পবিত্র, পরম বরকতময়, ফেরেশতা ও রূহের (জিবরিলের) রব — Supremely Perfect, Most Pure, Lord of the angels and the Spirit",
@@ -1503,6 +1624,7 @@ object SeedData {
         dhikr(
             id = "praise_akbaru_kabira",
             name = "Allahu akbaru kabira, wal hamdu lillahi kathira",
+            nameBn = "আল্লাহু আকবারু কাবীরা ওয়াল হামদু লিল্লাহি কাছীরা",
             arabic = "اللّٰهُ أَكْبَرُ كَبِيرًا، وَالْحَمْدُ لِلّٰهِ كَثِيرًا، وَسُبْحَانَ اللّٰهِ بُكْرَةً وَأَصِيلًا",
             pronunciation = "আল্লাহু আকবারু কাবীরা, ওয়াল হামদু লিল্লাহি কাছীরা, ওয়া সুবহানাল্লাহি বুকরাতাও ওয়া আসীলা",
             translation = "আল্লাহ প্রকৃতই সর্বমহান; সকল প্রশংসা আল্লাহর প্রচুর পরিমাণে; আল্লাহ পবিত্র সকাল-সন্ধ্যায় — Allah is truly the Greatest; abundant praise is for Allah; glory be to Allah morning and evening",
@@ -1513,6 +1635,7 @@ object SeedData {
         dhikr(
             id = "praise_wahidul_qahhar",
             name = "La ilaha illallahul Wahidul Qahhar",
+            nameBn = "লা ইলাহা ইল্লাল্লাহুল ওয়াহিদুল কাহহার",
             arabic = "لَا إِلَٰهَ إِلَّا اللّٰهُ الْوَاحِدُ الْقَهَّارُ، رَبُّ السَّمَاوَاتِ وَالْأَرْضِ وَمَا بَيْنَهُمَا الْعَزِيزُ الْغَفَّارُ",
             pronunciation = "লা ইলাহা ইল্লাল্লাহুল ওয়াহিদুল কাহহার, রব্বুস সামাওয়াতি ওয়াল আরদি ওয়া মা বাইনাহুমাল আযীযুল গাফফার",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি এক, মহাপ্রতাপশালী; আসমান-জমিন ও এর মধ্যকার সবকিছুর রব, পরাক্রমশালী, পরম ক্ষমাশীল — There is no god but Allah, the One, the All-Prevailing, Lord of the heavens and the earth and what is between them, the Almighty, the Most Forgiving",
@@ -1523,6 +1646,7 @@ object SeedData {
         dhikr(
             id = "praise_comprehensive",
             name = "La ilaha illallahu wahdahu... wa la hawla wa la quwwata illa billahil Aliyyil Azim",
+            nameBn = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারীকা লাহু (পূর্ণ)",
             arabic = "لَا إِلَٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللّٰهِ وَالْحَمْدُ لِلّٰهِ وَلَا إِلَٰهَ إِلَّا اللّٰهُ وَاللّٰهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ الْعَلِيِّ الْعَظِيمِ",
             pronunciation = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু, ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, সুবহানাল্লাহি ওয়াল হামদু লিল্লাহি ওয়া লা ইলাহা ইল্লাল্লাহু ওয়াল্লাহু আকবার, ওয়া লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহিল আলিয়্যিল আযীম",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ ছাড়া কোনো উপাস্য নেই, আল্লাহ সর্বমহান; সুউচ্চ মহান আল্লাহ ছাড়া কোনো শক্তি-সামর্থ্য নেই — There is no god but Allah alone… glory be to Allah, praise be to Allah, there is no god but Allah, Allah is the Greatest, and there is no power nor strength except by Allah, the Most High, the Magnificent",
@@ -1533,6 +1657,7 @@ object SeedData {
         dhikr(
             id = "praise_bring_ease",
             name = "La ilaha illallahul Azimul Halim, La ilaha illallahu Rabbul arshil azim",
+            nameBn = "লা ইলাহা ইল্লাল্লাহুল আযীমুল হালীম",
             arabic = "لَا إِلَٰهَ إِلَّا اللّٰهُ الْعَظِيمُ الْحَلِيمُ، لَا إِلَٰهَ إِلَّا اللّٰهُ رَبُّ الْعَرْشِ الْعَظِيمِ، لَا إِلَٰهَ إِلَّا اللّٰهُ رَبُّ السَّمَاوَاتِ وَرَبُّ الْأَرْضِ وَرَبُّ الْعَرْشِ الْكَرِيمِ",
             pronunciation = "লা ইলাহা ইল্লাল্লাহুল আযীমুল হালীম, লা ইলাহা ইল্লাল্লাহু রব্বুল আরশিল আযীম, লা ইলাহা ইল্লাল্লাহু রব্বুস সামাওয়াতি ওয়া রব্বুল আরদি ওয়া রব্বুল আরশিল কারীম",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, মহান, পরম সহনশীল; আল্লাহ ছাড়া কোনো উপাস্য নেই, মহান আরশের রব; আল্লাহ ছাড়া কোনো উপাস্য নেই, আসমানের রব, জমিনের রব ও সম্মানিত আরশের রব — There is no god but Allah, the Magnificent, the Forbearing; there is no god but Allah, Lord of the Mighty Throne; there is no god but Allah, Lord of the heavens, Lord of the earth and Lord of the Noble Throne",
@@ -1543,6 +1668,7 @@ object SeedData {
         dhikr(
             id = "praise_forgiveness",
             name = "La ilaha illallahul Halimul Karim, subhanallahi Rabbil arshil azim",
+            nameBn = "লা ইলাহা ইল্লাল্লাহুল হালীমুল কারীম",
             arabic = "لَا إِلَٰهَ إِلَّا اللّٰهُ الْحَلِيمُ الْكَرِيمُ، لَا إِلَٰهَ إِلَّا اللّٰهُ الْعَلِيُّ الْعَظِيمُ، سُبْحَانَ اللّٰهِ رَبِّ السَّمَاوَاتِ السَّبْعِ وَرَبِّ الْعَرْشِ الْعَظِيمِ، الْحَمْدُ لِلّٰهِ رَبِّ الْعَالَمِينَ",
             pronunciation = "লা ইলাহা ইল্লাল্লাহুল হালীমুল কারীম, লা ইলাহা ইল্লাল্লাহুল আলিয়্যুল আযীম, সুবহানাল্লাহি রব্বিস সামাওয়াতিস সাবই ওয়া রব্বিল আরশিল আযীম, আলহামদু লিল্লাহি রব্বিল আলামিন",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, পরম সহনশীল, মহানুভব; আল্লাহ ছাড়া কোনো উপাস্য নেই, সুউচ্চ, মহান; পবিত্র আল্লাহ, সাত আসমানের রব ও মহান আরশের রব; সকল প্রশংসা আল্লাহর, বিশ্বজগতের রব — There is no god but Allah, the Forbearing, the Most Generous; there is no god but Allah, the Most High, the Magnificent; glory be to Allah, Lord of the seven heavens and Lord of the Mighty Throne; all praise is for Allah, Lord of the worlds",
@@ -1553,6 +1679,7 @@ object SeedData {
         dhikr(
             id = "praise_ushhiduka_free",
             name = "Allahumma inni ush-hiduka wa ush-hidu malaikataka wa hamalata arshik",
+            nameBn = "আল্লাহুম্মা ইন্নি উশহিদুকা ওয়া উশহিদু মালাইকাতাকা",
             arabic = "اللّٰهُمَّ إِنِّي أُشْهِدُكَ، وَأُشْهِدُ مَلَائِكَتَكَ وَحَمَلَةَ عَرْشِكَ، وَأُشْهِدُ مَنْ فِي السَّمَاوَاتِ وَمَنْ فِي الْأَرْضِ أَنَّكَ أَنْتَ اللّٰهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
             pronunciation = "আল্লাহুম্মা ইন্নি উশহিদুকা, ওয়া উশহিদু মালাইকাতাকা ওয়া হামালাতা আরশিকা, ওয়া উশহিদু মান ফিস সামাওয়াতি ওয়া মান ফিল আরদি আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আশহাদু আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
             translation = "হে আল্লাহ, আমি আপনাকে, আপনার ফেরেশতাদের, আপনার আরশ বহনকারীদের এবং আসমান-জমিনের সকলকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন; আর সাক্ষ্য দিই মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I call You to witness, and Your angels and the bearers of Your Throne, and all in the heavens and the earth, that You are Allah, there is no god but You alone, no partner have You; and I bear witness that Muhammad is Your slave and Messenger",
@@ -1563,6 +1690,7 @@ object SeedData {
         dhikr(
             id = "praise_la_uhsi",
             name = "Allahumma inni a'udhu bi ridaka min sakhatik... la uhsi thana'an alayk",
+            nameBn = "আল্লাহুম্মা ইন্নি আউযু বিরিদাকা মিন সাখাতিক",
             arabic = "اللّٰهُمَّ إِنِّي أَعُوذُ بِرِضَاكَ مِنْ سَخَطِكَ، وَبِمُعَافَاتِكَ مِنْ عُقُوبَتِكَ، وَأَعُوذُ بِكَ مِنْكَ، لَا أُحْصِي ثَنَاءً عَلَيْكَ، أَنْتَ كَمَا أَثْنَيْتَ عَلَىٰ نَفْسِكَ",
             pronunciation = "আল্লাহুম্মা ইন্নি আউযু বিরিদাকা মিন সাখাতিকা, ওয়া বিমুআফাতিকা মিন উকুবাতিকা, ওয়া আউযু বিকা মিনকা, লা উহসি ছানাআন আলাইকা, আনতা কামা আছনাইতা আলা নাফসিকা",
             translation = "হে আল্লাহ, আপনার ক্রোধ থেকে আপনার সন্তুষ্টির আশ্রয় চাই, আপনার শাস্তি থেকে আপনার ক্ষমার আশ্রয় চাই, আপনার কাছ থেকে আপনারই আশ্রয় চাই; আমি আপনার প্রশংসা গুনে শেষ করতে পারি না, আপনি তেমনই যেমন আপনি নিজের প্রশংসা করেছেন — O Allah, I seek refuge in Your pleasure from Your anger, in Your pardon from Your punishment, and I seek refuge in You from You. I cannot enumerate Your praise; You are as You have praised Yourself",
@@ -1573,6 +1701,7 @@ object SeedData {
         dhikr(
             id = "praise_malikal_mulk",
             name = "Allahumma Malikal mulk, tu'til mulka man tasha",
+            nameBn = "আল্লাহুম্মা মালিকাল মুলকি তুতিল মুলকা মান তাশা",
             arabic = "اللّٰهُمَّ مَالِكَ الْمُلْكِ تُؤْتِي الْمُلْكَ مَنْ تَشَاءُ وَتَنْزِعُ الْمُلْكَ مِمَّنْ تَشَاءُ، وَتُعِزُّ مَنْ تَشَاءُ وَتُذِلُّ مَنْ تَشَاءُ، بِيَدِكَ الْخَيْرُ إِنَّكَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَحْمَٰنَ الدُّنْيَا وَالْآخِرَةِ وَرَحِيمَهُمَا، تُعْطِيهِمَا مَنْ تَشَاءُ وَتَمْنَعُ مِنْهُمَا مَنْ تَشَاءُ، ارْحَمْنِي رَحْمَةً تُغْنِينِي بِهَا عَنْ رَحْمَةِ مَنْ سِوَاكَ",
             pronunciation = "আল্লাহুম্মা মালিকাল মুলকি তুতিল মুলকা মান তাশাউ ওয়া তানযিউল মুলকা মিম্মান তাশাউ, ওয়া তুইযযু মান তাশাউ ওয়া তুযিল্লু মান তাশাউ, বিয়াদিকাল খাইর, ইন্নাকা আলা কুল্লি শাইইন কাদীর, রাহমানাদ দুনইয়া ওয়াল আখিরাতি ওয়া রাহীমাহুমা, তুতিহিমা মান তাশাউ ওয়া তামনাউ মিনহুমা মান তাশাউ, ইরহামনি রাহমাতান তুগনিনি বিহা আন রাহমাতি মান সিওয়াক",
             translation = "হে আল্লাহ, রাজত্বের মালিক, আপনি যাকে চান রাজত্ব দেন, যার কাছ থেকে চান কেড়ে নেন; যাকে চান সম্মান দেন, যাকে চান অপমান করেন; সকল কল্যাণ আপনার হাতে; আপনি সর্বশক্তিমান; হে দুনিয়া-আখিরাতের পরম করুণাময় ও পরম দয়ালু, আপনি এ দুটি থেকে যাকে চান দেন, যাকে চান বঞ্চিত করেন; আমাকে এমন রহমত দিন যা আমাকে আপনি ছাড়া অন্য কারও রহমত থেকে অমুখাপেক্ষী করে দেয় — O Allah, Owner of sovereignty, You give sovereignty to whom You will and take it from whom You will… have mercy on me with a mercy that frees me from need of anyone else's mercy",
@@ -1583,6 +1712,7 @@ object SeedData {
         dhikr(
             id = "praise_greatest_name2",
             name = "Allahumma inni as'aluka bi anna lakal hamd, la ilaha illa Antal Mannan",
+            nameBn = "আল্লাহুম্মা ইন্নি আসআলুকা বিআন্না লাকাল হামদ",
             arabic = "اللّٰهُمَّ إِنِّي أَسْأَلُكَ بِأَنَّ لَكَ الْحَمْدَ، لَا إِلَٰهَ إِلَّا أَنْتَ الْمَنَّانُ، بَدِيعُ السَّمَاوَاتِ وَالْأَرْضِ، يَا ذَا الْجَلَالِ وَالْإِكْرَامِ، يَا حَيُّ يَا قَيُّومُ",
             pronunciation = "আল্লাহুম্মা ইন্নি আসআলুকা বিআন্না লাকাল হামদা, লা ইলাহা ইল্লা আনতাল মান্নান, বাদীউস সামাওয়াতি ওয়াল আরদি, ইয়া যাল জালালি ওয়াল ইকরাম, ইয়া হাইয়্যু ইয়া কাইয়্যূম",
             translation = "হে আল্লাহ, আমি আপনার কাছে চাই এই কারণে যে সকল প্রশংসা আপনার; আপনি ছাড়া কোনো উপাস্য নেই, আপনি মহাদাতা, আসমান-জমিনের অভিনব স্রষ্টা; হে মহিমা ও সম্মানের অধিকারী, হে চিরঞ্জীব, হে সর্বসত্তার ধারক — O Allah, I ask You, as all praise belongs to You, there is no god but You, the Bestower of good, the Originator of the heavens and the earth. O Owner of Majesty and Honour, O Ever-Living, O Sustainer",
@@ -1603,6 +1733,7 @@ object SeedData {
         dhikr(
             id = "qd_fatihah",
             name = "Surah al-Fatihah",
+            nameBn = "সূরা আল-ফাতিহা",
             arabic = "بِسْمِ اللّٰهِ الرَّحْمَٰنِ الرَّحِيمِ، الْحَمْدُ لِلّٰهِ رَبِّ الْعَالَمِينَ، الرَّحْمَٰنِ الرَّحِيمِ، مَالِكِ يَوْمِ الدِّينِ، إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ، اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ، صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
             pronunciation = "বিসমিল্লাহির রাহমানির রাহীম, আলহামদু লিল্লাহি রব্বিল আলামিন, আর রাহমানির রাহীম, মালিকি ইয়াওমিদ দীন, ইয়্যাকা নাবুদু ওয়া ইয়্যাকা নাসতাইন, ইহদিনাস সিরাতাল মুসতাকীম, সিরাতাল্লাযিনা আনআমতা আলাইহিম গাইরিল মাগদূবি আলাইহিম ওয়া লাদ দাল্লীন",
             translation = "পরম করুণাময় পরম দয়ালু আল্লাহর নামে। সকল প্রশংসা আল্লাহর, বিশ্বজগতের রব; পরম করুণাময়, পরম দয়ালু; বিচার দিনের মালিক; আপনারই ইবাদত করি ও আপনারই সাহায্য চাই; আমাদের সরল পথ দেখান—তাদের পথ যাদের প্রতি অনুগ্রহ করেছেন, যাদের প্রতি ক্রোধ নেমে আসেনি ও যারা পথভ্রষ্ট নয় — In the name of Allah, the Most Compassionate, the Most Merciful. All praise is for Allah, Lord of the worlds… Guide us to the Straight Path, the path of those You have blessed, not of those who earned Your anger nor of those who went astray",
@@ -1613,6 +1744,7 @@ object SeedData {
         dhikr(
             id = "qd_rahimin_109",
             name = "Rabbana amanna faghfir lana warhamna wa Anta khayrur rahimin",
+            nameBn = "রব্বানা আমান্না ফাগফির লানা ওয়ারহামনা ওয়া আনতা খাইরুর রাহিমীন",
             arabic = "رَبَّنَا آمَنَّا فَاغْفِرْ لَنَا وَارْحَمْنَا وَأَنْتَ خَيْرُ الرَّاحِمِينَ",
             pronunciation = "রব্বানা আমান্না ফাগফির লানা ওয়ারহামনা ওয়া আনতা খাইরুর রাহিমীন",
             translation = "হে আমাদের রব, আমরা ঈমান এনেছি, তাই আমাদের ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ দয়ালু — Our Lord, we have believed, so forgive us and have mercy upon us; You are the Best of those who are merciful",
@@ -1623,6 +1755,7 @@ object SeedData {
         dhikr(
             id = "qd_asiya",
             name = "Rabbi-bni li indaka baytan fil Jannah",
+            nameBn = "রব্বিবনি লি ইনদাকা বাইতান ফিল জান্নাহ",
             arabic = "رَبِّ ابْنِ لِي عِنْدَكَ بَيْتًا فِي الْجَنَّةِ",
             pronunciation = "রব্বিবনি লি ইনদাকা বাইতান ফিল জান্নাহ",
             translation = "হে আমার রব, আপনার কাছে জান্নাতে আমার জন্য একটি ঘর নির্মাণ করুন — My Lord, build for me a house near You in Paradise",
@@ -1633,6 +1766,7 @@ object SeedData {
         dhikr(
             id = "qd_asrif_jahannam",
             name = "Rabbana-srif anna adhaba Jahannam",
+            nameBn = "রব্বানাসরিফ আন্না আযাবা জাহান্নাম",
             arabic = "رَبَّنَا اصْرِفْ عَنَّا عَذَابَ جَهَنَّمَ إِنَّ عَذَابَهَا كَانَ غَرَامًا، إِنَّهَا سَاءَتْ مُسْتَقَرًّا وَمُقَامًا",
             pronunciation = "রব্বানাসরিফ আন্না আযাবা জাহান্নামা ইন্না আযাবাহা কানা গারামা, ইন্নাহা সাআত মুসতাকাররাও ওয়া মুকামা",
             translation = "হে আমাদের রব, আমাদের থেকে জাহান্নামের শাস্তি ফিরিয়ে দিন; নিশ্চয়ই এর শাস্তি অবিচ্ছিন্ন; নিশ্চয়ই তা নিকৃষ্ট আবাস ও অবস্থান — Our Lord, turn away from us the punishment of Hell; its punishment is unrelenting; it is an evil abode and dwelling",
@@ -1643,6 +1777,7 @@ object SeedData {
         dhikr(
             id = "qd_tafakkur",
             name = "Rabbana ma khalaqta hadha batila",
+            nameBn = "রব্বানা মা খালাকতা হাযা বাতিলা",
             arabic = "رَبَّنَا مَا خَلَقْتَ هَٰذَا بَاطِلًا سُبْحَانَكَ فَقِنَا عَذَابَ النَّارِ، رَبَّنَا إِنَّكَ مَنْ تُدْخِلِ النَّارَ فَقَدْ أَخْزَيْتَهُ وَمَا لِلظَّالِمِينَ مِنْ أَنْصَارٍ، رَبَّنَا إِنَّنَا سَمِعْنَا مُنَادِيًا يُنَادِي لِلْإِيمَانِ أَنْ آمِنُوا بِرَبِّكُمْ فَآمَنَّا، رَبَّنَا فَاغْفِرْ لَنَا ذُنُوبَنَا وَكَفِّرْ عَنَّا سَيِّئَاتِنَا وَتَوَفَّنَا مَعَ الْأَبْرَارِ، رَبَّنَا وَآتِنَا مَا وَعَدْتَنَا عَلَىٰ رُسُلِكَ وَلَا تُخْزِنَا يَوْمَ الْقِيَامَةِ إِنَّكَ لَا تُخْلِفُ الْمِيعَادَ",
             pronunciation = "রব্বানা মা খালাকতা হাযা বাতিলা সুবহানাকা ফাকিনা আযাবান নার, রব্বানা ইন্নাকা মান তুদখিলিন নারা ফাকাদ আখযাইতাহু ওয়া মা লিয যালিমিনা মিন আনসার, রব্বানা ইন্নানা সামিনা মুনাদিয়াই ইউনাদি লিল ঈমানি আন আমিনু বিরব্বিকুম ফাআমান্না, রব্বানা ফাগফির লানা যুনুবানা ওয়া কাফফির আন্না সাইয়িআতিনা ওয়া তাওয়াফফানা মাআল আবরার, রব্বানা ওয়া আতিনা মা ওয়াআত্তানা আলা রুসুলিকা ওয়া লা তুখযিনা ইয়াওমাল কিয়ামাহ ইন্নাকা লা তুখলিফুল মিআদ",
             translation = "হে আমাদের রব, আপনি এসব অনর্থক সৃষ্টি করেননি; আপনি পবিত্র; আমাদের জাহান্নামের শাস্তি থেকে রক্ষা করুন… হে আমাদের রব, আমাদের গুনাহ ক্ষমা করুন, আমাদের মন্দ কাজগুলো মুছে দিন এবং সৎকর্মশীলদের সাথে মৃত্যু দিন; হে আমাদের রব, আপনার রাসূলদের মাধ্যমে যে প্রতিশ্রুতি দিয়েছেন তা আমাদের দিন এবং কিয়ামতের দিন লাঞ্ছিত করবেন না; নিশ্চয়ই আপনি প্রতিশ্রুতি ভঙ্গ করেন না — Our Lord, You did not create this in vain… so protect us from the punishment of the Fire… Our Lord, forgive us our sins, remove our evil deeds and let us die with the righteous. Our Lord, give us what You promised through Your messengers and do not disgrace us on the Day of Resurrection; You do not break Your promise",
@@ -1653,6 +1788,7 @@ object SeedData {
         dhikr(
             id = "qd_angels",
             name = "Rabbana wasi'ta kulla shay'in rahmatan wa ilma",
+            nameBn = "রব্বানা ওয়াসিতা কুল্লা শাইইন রাহমাতান ওয়া ইলমা",
             arabic = "رَبَّنَا وَسِعْتَ كُلَّ شَيْءٍ رَحْمَةً وَعِلْمًا فَاغْفِرْ لِلَّذِينَ تَابُوا وَاتَّبَعُوا سَبِيلَكَ وَقِهِمْ عَذَابَ الْجَحِيمِ، رَبَّنَا وَأَدْخِلْهُمْ جَنَّاتِ عَدْنٍ الَّتِي وَعَدْتَهُمْ وَمَنْ صَلَحَ مِنْ آبَائِهِمْ وَأَزْوَاجِهِمْ وَذُرِّيَّاتِهِمْ إِنَّكَ أَنْتَ الْعَزِيزُ الْحَكِيمُ، وَقِهِمُ السَّيِّئَاتِ وَمَنْ تَقِ السَّيِّئَاتِ يَوْمَئِذٍ فَقَدْ رَحِمْتَهُ وَذَٰلِكَ هُوَ الْفَوْزُ الْعَظِيمُ",
             pronunciation = "রব্বানা ওয়াসিতা কুল্লা শাইইন রাহমাতাও ওয়া ইলমান ফাগফির লিল্লাযিনা তাবু ওয়াত্তাবাউ সাবিলাকা ওয়া কিহিম আযাবাল জাহীম, রব্বানা ওয়া আদখিলহুম জান্নাতি আদনিনিল্লাতি ওয়াআত্তাহুম ওয়া মান সালাহা মিন আবাইহিম ওয়া আযওয়াজিহিম ওয়া যুররিয়্যাতিহিম ইন্নাকা আনতাল আযীযুল হাকীম, ওয়া কিহিমুস সাইয়িআত ওয়া মান তাকিস সাইয়িআতি ইয়াওমাইযিন ফাকাদ রাহিমতাহু ওয়া যালিকা হুয়াল ফাওযুল আযীম",
             translation = "হে আমাদের রব, আপনি রহমত ও জ্ঞানে সবকিছু পরিবেষ্টন করেছেন; যারা তওবা করেছে ও আপনার পথ অনুসরণ করেছে তাদের ক্ষমা করুন ও জাহান্নামের শাস্তি থেকে রক্ষা করুন; হে আমাদের রব, তাদের ও তাদের সৎ পিতা-মাতা, স্ত্রী ও সন্তানদের চিরস্থায়ী জান্নাতে প্রবেশ করান; আপনি পরাক্রমশালী, প্রজ্ঞাময়; তাদের মন্দ পরিণতি থেকে রক্ষা করুন — Our Lord, You encompass all things in mercy and knowledge, so forgive those who repent and follow Your way and protect them from the punishment of Hell… admit them to the Gardens of Eden… and protect them from evil consequences; that is the great triumph",
@@ -1663,6 +1799,7 @@ object SeedData {
         dhikr(
             id = "qd_cave_mercy",
             name = "Rabbana atina min ladunka rahmatan wa hayyi' lana min amrina rashada",
+            nameBn = "রব্বানা আতিনা মিন লাদুনকা রাহমাতান",
             arabic = "رَبَّنَا آتِنَا مِنْ لَدُنْكَ رَحْمَةً وَهَيِّئْ لَنَا مِنْ أَمْرِنَا رَشَدًا",
             pronunciation = "রব্বানা আতিনা মিল লাদুনকা রাহমাতাও ওয়া হাইয়ি লানা মিন আমরিনা রাশাদা",
             translation = "হে আমাদের রব, আপনার পক্ষ থেকে আমাদের রহমত দিন এবং আমাদের কাজে সঠিক পথ সহজ করে দিন — Our Lord, grant us mercy from Yourself and prepare for us right guidance in our affair",
@@ -1673,6 +1810,7 @@ object SeedData {
         dhikr(
             id = "qd_firmness_heart",
             name = "Rabbana la tuzigh qulubana ba'da idh hadaytana",
+            nameBn = "রব্বানা লা তুযিগ কুলূবানা বাদা ইয হাদাইতানা",
             arabic = "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ",
             pronunciation = "রব্বানা লা তুযিগ কুলুবানা বাদা ইয হাদাইতানা ওয়া হাব লানা মিল লাদুনকা রাহমাতান ইন্নাকা আনতাল ওয়াহহাব",
             translation = "হে আমাদের রব, হেদায়েত দেওয়ার পর আমাদের অন্তরকে বাঁকা করবেন না এবং আপনার পক্ষ থেকে আমাদের রহমত দান করুন; নিশ্চয়ই আপনি মহাদাতা — Our Lord, do not let our hearts deviate after You have guided us, and grant us mercy from Yourself; You are the Bestower",
@@ -1683,6 +1821,7 @@ object SeedData {
         dhikr(
             id = "qd_zidni_ilma",
             name = "Rabbi zidni ilma",
+            nameBn = "রব্বি যিদনি ইলমা",
             arabic = "رَبِّ زِدْنِي عِلْمًا",
             pronunciation = "রব্বি যিদনি ইলমা",
             translation = "হে আমার রব, আমার জ্ঞান বৃদ্ধি করুন — My Lord, increase me in knowledge",
@@ -1693,6 +1832,7 @@ object SeedData {
         dhikr(
             id = "qd_ibrahim_hukm",
             name = "Rabbi hab li hukman wa alhiqni bis salihin",
+            nameBn = "রব্বি হাব লি হুকমান ওয়া আলহিকনি বিস সালিহীন",
             arabic = "رَبِّ هَبْ لِي حُكْمًا وَأَلْحِقْنِي بِالصَّالِحِينَ، وَاجْعَلْ لِي لِسَانَ صِدْقٍ فِي الْآخِرِينَ، وَاجْعَلْنِي مِنْ وَرَثَةِ جَنَّةِ النَّعِيمِ، وَلَا تُخْزِنِي يَوْمَ يُبْعَثُونَ، يَوْمَ لَا يَنْفَعُ مَالٌ وَلَا بَنُونَ، إِلَّا مَنْ أَتَى اللّٰهَ بِقَلْبٍ سَلِيمٍ",
             pronunciation = "রব্বি হাব লি হুকমাও ওয়া আলহিকনি বিস সালিহীন, ওয়াজআল লি লিসানা সিদকিন ফিল আখিরীন, ওয়াজআলনি মিও ওয়ারাছাতি জান্নাতিন নাঈম, ওয়া লা তুখযিনি ইয়াওমা ইউবআছূন, ইয়াওমা লা ইয়ানফাউ মালুও ওয়া লা বানূন, ইল্লা মান আতাল্লাহা বিকালবিন সালীম",
             translation = "হে আমার রব, আমাকে প্রজ্ঞা দিন ও সৎকর্মশীলদের সাথে মিলিত করুন; পরবর্তীদের মধ্যে আমার সুনাম রাখুন; আমাকে জান্নাতুন নাঈমের উত্তরাধিকারী করুন; পুনরুত্থানের দিন লাঞ্ছিত করবেন না—যেদিন ধন-সম্পদ ও সন্তান কাজে আসবে না, কেবল সে ছাড়া যে সুস্থ অন্তরে আল্লাহর কাছে আসবে — My Lord, grant me wisdom and join me with the righteous… do not disgrace me on the Day they are resurrected—the Day when neither wealth nor children avail, except one who comes to Allah with a sound heart",
@@ -1703,6 +1843,7 @@ object SeedData {
         dhikr(
             id = "qd_ibrahim_muqim_salah",
             name = "Rabbi-j'alni muqimas salati wa min dhurriyyati",
+            nameBn = "রব্বিজআলনি মুকীমাস সালাতি ওয়া মিন যুররিয়্যাতি",
             arabic = "رَبِّ اجْعَلْنِي مُقِيمَ الصَّلَاةِ وَمِنْ ذُرِّيَّتِي، رَبَّنَا وَتَقَبَّلْ دُعَاءِ، رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
             pronunciation = "রব্বিজআলনি মুকীমাস সালাতি ওয়া মিন যুররিয়্যাতি, রব্বানা ওয়া তাকাব্বাল দুআ, রব্বানাগফির লি ওয়া লিওয়ালিদাইয়া ওয়া লিলমুমিনীনা ইয়াওমা ইয়াকুমুল হিসাব",
             translation = "হে আমার রব, আমাকে ও আমার বংশধরদের নামাজ কায়েমকারী বানান; হে আমাদের রব, আমার দুআ কবুল করুন; হে আমাদের রব, হিসাবের দিন আমাকে, আমার পিতা-মাতাকে ও মুমিনদের ক্ষমা করুন — My Lord, make me an establisher of prayer, and my offspring too. Our Lord, accept my supplication. Our Lord, forgive me, my parents and the believers on the Day the account is established",
@@ -1713,6 +1854,7 @@ object SeedData {
         dhikr(
             id = "qd_zakariyya_tayyibah",
             name = "Rabbi hab li min ladunka dhurriyyatan tayyibah",
+            nameBn = "রব্বি হাব লি মিন লাদুনকা যুররিয়্যাতান তাইয়িবাহ",
             arabic = "رَبِّ هَبْ لِي مِنْ لَدُنْكَ ذُرِّيَّةً طَيِّبَةً إِنَّكَ سَمِيعُ الدُّعَاءِ",
             pronunciation = "রব্বি হাব লি মিল লাদুনকা যুররিয়্যাতান তাইয়্যিবাতান ইন্নাকা সামিউদ দুআ",
             translation = "হে আমার রব, আপনার পক্ষ থেকে আমাকে সৎ সন্তান দান করুন; নিশ্চয়ই আপনি দুআ শ্রবণকারী — My Lord, grant me from Yourself good offspring; indeed You are the Hearer of supplication",
@@ -1723,6 +1865,7 @@ object SeedData {
         dhikr(
             id = "qd_ibrahim_salihin",
             name = "Rabbi hab li minas salihin",
+            nameBn = "রব্বি হাব লি মিনাস সালিহীন",
             arabic = "رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ",
             pronunciation = "রব্বি হাব লি মিনাস সালিহীন",
             translation = "হে আমার রব, আমাকে সৎকর্মশীলদের মধ্য থেকে সন্তান দান করুন — My Lord, grant me offspring from among the righteous",
@@ -1733,6 +1876,7 @@ object SeedData {
         dhikr(
             id = "qd_zakariyya_fardan",
             name = "Rabbi la tadharni fardan wa Anta khayrul warithin",
+            nameBn = "রব্বি লা তাযারনি ফারদান ওয়া আনতা খাইরুল ওয়ারিছীন",
             arabic = "رَبِّ لَا تَذَرْنِي فَرْدًا وَأَنْتَ خَيْرُ الْوَارِثِينَ",
             pronunciation = "রব্বি লা তাযারনি ফারদাও ওয়া আনতা খাইরুল ওয়ারিছীন",
             translation = "হে আমার রব, আমাকে একা রাখবেন না, আপনিই শ্রেষ্ঠ উত্তরাধিকারী — My Lord, do not leave me alone, though You are the best of inheritors",
@@ -1743,6 +1887,7 @@ object SeedData {
         dhikr(
             id = "qd_qurrata_ayun",
             name = "Rabbana hab lana min azwajina wa dhurriyyatina qurrata a'yun",
+            nameBn = "রব্বানা হাব লানা মিন আযওয়াজিনা ওয়া যুররিয়্যাতিনা কুররাতা আয়ুন",
             arabic = "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
             pronunciation = "রব্বানা হাব লানা মিন আযওয়াজিনা ওয়া যুররিয়্যাতিনা কুররাতা আইউনিও ওয়াজআলনা লিলমুত্তাকীনা ইমামা",
             translation = "হে আমাদের রব, আমাদের স্ত্রী ও সন্তানদের চোখের শীতলতা বানিয়ে দিন এবং আমাদের মুত্তাকিদের নেতা বানান — Our Lord, grant us from our spouses and offspring comfort to our eyes, and make us leaders of the God-fearing",
@@ -1753,6 +1898,7 @@ object SeedData {
         dhikr(
             id = "qd_sulayman_shukr",
             name = "Rabbi awzi'ni an ashkura ni'matakalati an'amta alayya",
+            nameBn = "রব্বি আওযিনি আন আশকুরা নিমাতাকাল্লাতি আনআমতা আলাইয়া",
             arabic = "رَبِّ أَوْزِعْنِي أَنْ أَشْكُرَ نِعْمَتَكَ الَّتِي أَنْعَمْتَ عَلَيَّ وَعَلَىٰ وَالِدَيَّ وَأَنْ أَعْمَلَ صَالِحًا تَرْضَاهُ وَأَدْخِلْنِي بِرَحْمَتِكَ فِي عِبَادِكَ الصَّالِحِينَ",
             pronunciation = "রব্বি আওযিনি আন আশকুরা নিমাতাকাল্লাতি আনআমতা আলাইয়া ওয়া আলা ওয়ালিদাইয়া ওয়া আন আমালা সালিহান তারদাহু ওয়া আদখিলনি বিরাহমাতিকা ফি ইবাদিকাস সালিহীন",
             translation = "হে আমার রব, আমাকে সামর্থ্য দিন যেন আপনার নিয়ামতের শোকর করি যা আমার ও আমার পিতা-মাতার প্রতি দিয়েছেন এবং এমন সৎকাজ করি যাতে আপনি সন্তুষ্ট; আর আপনার রহমতে আমাকে আপনার সৎ বান্দাদের অন্তর্ভুক্ত করুন — My Lord, enable me to be grateful for Your favour upon me and my parents, and to do righteousness that pleases You, and admit me by Your mercy among Your righteous servants",
@@ -1763,6 +1909,7 @@ object SeedData {
         dhikr(
             id = "qd_awzini_dhurriyyah",
             name = "Rabbi awzi'ni an ashkura ni'matak... wa aslih li fi dhurriyyati",
+            nameBn = "রব্বি আওযিনি আন আশকুরা নিমাতাক ওয়া আসলিহ লি ফি যুররিয়্যাতি",
             arabic = "رَبِّ أَوْزِعْنِي أَنْ أَشْكُرَ نِعْمَتَكَ الَّتِي أَنْعَمْتَ عَلَيَّ وَعَلَىٰ وَالِدَيَّ وَأَنْ أَعْمَلَ صَالِحًا تَرْضَاهُ وَأَصْلِحْ لِي فِي ذُرِّيَّتِي إِنِّي تُبْتُ إِلَيْكَ وَإِنِّي مِنَ الْمُسْلِمِينَ",
             pronunciation = "রব্বি আওযিনি আন আশকুরা নিমাতাকাল্লাতি আনআমতা আলাইয়া ওয়া আলা ওয়ালিদাইয়া ওয়া আন আমালা সালিহান তারদাহু ওয়া আসলিহ লি ফি যুররিয়্যাতি ইন্নি তুবতু ইলাইকা ওয়া ইন্নি মিনাল মুসলিমীন",
             translation = "হে আমার রব, আমাকে সামর্থ্য দিন যেন আপনার নিয়ামতের শোকর করি… এবং আমার বংশধরদের সংশোধন করে দিন; আমি আপনার কাছে তওবা করলাম এবং আমি আত্মসমর্পণকারীদের অন্তর্ভুক্ত — My Lord, enable me to be grateful for Your favour… and make my offspring righteous; I have repented to You and I am of those who submit",
@@ -1773,6 +1920,7 @@ object SeedData {
         dhikr(
             id = "qd_hamazat",
             name = "Rabbi a'udhu bika min hamazatish shayatin",
+            nameBn = "রব্বি আউযু বিকা মিন হামাযাতিশ শায়াতীন",
             arabic = "رَبِّ أَعُوذُ بِكَ مِنْ هَمَزَاتِ الشَّيَاطِينِ، وَأَعُوذُ بِكَ رَبِّ أَنْ يَحْضُرُونِ",
             pronunciation = "রব্বি আউযু বিকা মিন হামাযাতিশ শায়াতিন, ওয়া আউযু বিকা রব্বি আন ইয়াহদুরূন",
             translation = "হে আমার রব, শয়তানদের কুমন্ত্রণা থেকে আপনার আশ্রয় চাই; হে আমার রব, তারা যেন আমার কাছে না আসে সে জন্যও আপনার আশ্রয় চাই — My Lord, I seek refuge in You from the promptings of the devils, and I seek refuge in You, my Lord, lest they be present with me",
@@ -1783,6 +1931,7 @@ object SeedData {
         dhikr(
             id = "qd_ghfir_israfana",
             name = "Rabbana-ghfir lana dhunubana wa israfana fi amrina",
+            nameBn = "রব্বানাগফির লানা যুনূবানা ওয়া ইসরাফানা ফি আমরিনা",
             arabic = "رَبَّنَا اغْفِرْ لَنَا ذُنُوبَنَا وَإِسْرَافَنَا فِي أَمْرِنَا وَثَبِّتْ أَقْدَامَنَا وَانْصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ",
             pronunciation = "রব্বানাগফির লানা যুনুবানা ওয়া ইসরাফানা ফি আমরিনা ওয়া ছাব্বিত আকদামানা ওয়ানসুরনা আলাল কাওমিল কাফিরীন",
             translation = "হে আমাদের রব, আমাদের গুনাহ ও কাজে সীমালঙ্ঘন ক্ষমা করুন, আমাদের পা অবিচল রাখুন এবং কাফির সম্প্রদায়ের বিরুদ্ধে সাহায্য করুন — Our Lord, forgive us our sins and our excesses in our affairs, make our feet firm and help us against the disbelieving people",
@@ -1793,6 +1942,7 @@ object SeedData {
         dhikr(
             id = "qd_afrigh_sabra",
             name = "Rabbana afrigh alayna sabran wa thabbit aqdamana",
+            nameBn = "রব্বানা আফরিগ আলাইনা সাবরান ওয়া ছাব্বিত আকদামানা",
             arabic = "رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَثَبِّتْ أَقْدَامَنَا وَانْصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ",
             pronunciation = "রব্বানা আফরিগ আলাইনা সাবরাও ওয়া ছাব্বিত আকদামানা ওয়ানসুরনা আলাল কাওমিল কাফিরীন",
             translation = "হে আমাদের রব, আমাদের উপর ধৈর্য ঢেলে দিন, আমাদের পা অবিচল রাখুন এবং কাফির সম্প্রদায়ের বিরুদ্ধে সাহায্য করুন — Our Lord, pour upon us patience, make our feet firm and help us against the disbelieving people",
@@ -1803,6 +1953,7 @@ object SeedData {
         dhikr(
             id = "qd_lut_mufsidin",
             name = "Rabbi-nsurni alal qawmil mufsidin",
+            nameBn = "রব্বিনসুরনি আলাল কাওমিল মুফসিদীন",
             arabic = "رَبِّ انْصُرْنِي عَلَى الْقَوْمِ الْمُفْسِدِينَ",
             pronunciation = "রব্বিনসুরনি আলাল কাওমিল মুফসিদীন",
             translation = "হে আমার রব, বিপর্যয় সৃষ্টিকারী সম্প্রদায়ের বিরুদ্ধে আমাকে সাহায্য করুন — My Lord, help me against the corrupting people",
@@ -1813,6 +1964,7 @@ object SeedData {
         dhikr(
             id = "qd_zalimin_47",
             name = "Rabbana la taj'alna ma'al qawmiz zalimin",
+            nameBn = "রব্বানা লা তাজআলনা মাআল কাওমিয যালিমীন",
             arabic = "رَبَّنَا لَا تَجْعَلْنَا مَعَ الْقَوْمِ الظَّالِمِينَ",
             pronunciation = "রব্বানা লা তাজআলনা মাআল কাওমিয যালিমীন",
             translation = "হে আমাদের রব, আমাদের জালিম সম্প্রদায়ের অন্তর্ভুক্ত করবেন না — Our Lord, do not place us with the wrongdoing people",
@@ -1823,6 +1975,7 @@ object SeedData {
         dhikr(
             id = "qd_fitnah_zalimin",
             name = "Rabbana la taj'alna fitnatan lil qawmiz zalimin",
+            nameBn = "রব্বানা লা তাজআলনা ফিতনাতান লিল কাওমিয যালিমীন",
             arabic = "رَبَّنَا لَا تَجْعَلْنَا فِتْنَةً لِلْقَوْمِ الظَّالِمِينَ، وَنَجِّنَا بِرَحْمَتِكَ مِنَ الْقَوْمِ الْكَافِرِينَ",
             pronunciation = "রব্বানা লা তাজআলনা ফিতনাতাল লিলকাওমিয যালিমীন, ওয়া নাজ্জিনা বিরাহমাতিকা মিনাল কাওমিল কাফিরীন",
             translation = "হে আমাদের রব, আমাদের জালিম সম্প্রদায়ের পরীক্ষার পাত্র বানাবেন না এবং আপনার রহমতে কাফির সম্প্রদায় থেকে আমাদের রক্ষা করুন — Our Lord, do not make us a trial for the wrongdoing people, and save us by Your mercy from the disbelieving people",
@@ -1833,6 +1986,7 @@ object SeedData {
         dhikr(
             id = "qd_persecution",
             name = "Rabbana alayka tawakkalna wa ilayka anabna",
+            nameBn = "রব্বানা আলাইকা তাওয়াক্কালনা ওয়া ইলাইকা আনাবনা",
             arabic = "رَبَّنَا عَلَيْكَ تَوَكَّلْنَا وَإِلَيْكَ أَنَبْنَا وَإِلَيْكَ الْمَصِيرُ، رَبَّنَا لَا تَجْعَلْنَا فِتْنَةً لِلَّذِينَ كَفَرُوا وَاغْفِرْ لَنَا رَبَّنَا إِنَّكَ أَنْتَ الْعَزِيزُ الْحَكِيمُ",
             pronunciation = "রব্বানা আলাইকা তাওয়াক্কালনা ওয়া ইলাইকা আনাবনা ওয়া ইলাইকাল মাসীর, রব্বানা লা তাজআলনা ফিতনাতাল লিল্লাযিনা কাফারু ওয়াগফির লানা রব্বানা ইন্নাকা আনতাল আযীযুল হাকীম",
             translation = "হে আমাদের রব, আপনার উপরই ভরসা করলাম, আপনার দিকেই প্রত্যাবর্তন করলাম, প্রত্যাবর্তন আপনার কাছেই; হে আমাদের রব, যারা কুফরি করেছে তাদের জন্য আমাদের পরীক্ষার পাত্র বানাবেন না এবং আমাদের ক্ষমা করুন; নিশ্চয়ই আপনি পরাক্রমশালী, প্রজ্ঞাময় — Our Lord, upon You we rely, to You we turn, and to You is the destination. Our Lord, do not make us a trial for those who disbelieve, and forgive us, our Lord; You are the Almighty, the All-Wise",
@@ -1843,6 +1997,7 @@ object SeedData {
         dhikr(
             id = "qd_ayyub",
             name = "Anni massaniyad durru wa Anta Arhamur rahimin",
+            nameBn = "আন্নি মাসসানিয়াদ দুররু ওয়া আনতা আরহামুর রাহিমীন",
             arabic = "رَبِّ أَنِّي مَسَّنِيَ الضُّرُّ وَأَنْتَ أَرْحَمُ الرَّاحِمِينَ",
             pronunciation = "রব্বি আন্নি মাস্সানিয়াদ দুররু ওয়া আনতা আরহামুর রাহিমীন",
             translation = "হে আমার রব, আমাকে দুর্দশা স্পর্শ করেছে, আর আপনি দয়ালুদের মধ্যে শ্রেষ্ঠ দয়ালু — My Lord, adversity has touched me, and You are the Most Merciful of the merciful",
@@ -1853,6 +2008,7 @@ object SeedData {
         dhikr(
             id = "qd_yusuf",
             name = "Fatiras samawati wal ard, Anta waliyyi fid dunya wal akhirah",
+            nameBn = "ফাতিরাস সামাওয়াতি ওয়াল আরদ আনতা ওয়ালিয়্যি ফিদ দুনইয়া ওয়াল আখিরাহ",
             arabic = "فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ أَنْتَ وَلِيِّي فِي الدُّنْيَا وَالْآخِرَةِ تَوَفَّنِي مُسْلِمًا وَأَلْحِقْنِي بِالصَّالِحِينَ",
             pronunciation = "ফাতিরাস সামাওয়াতি ওয়াল আরদি আনতা ওয়ালিয়্যি ফিদ দুনইয়া ওয়াল আখিরাহ তাওয়াফফানি মুসলিমাও ওয়া আলহিকনি বিস সালিহীন",
             translation = "হে আসমান-জমিনের স্রষ্টা, আপনি দুনিয়া ও আখিরাতে আমার অভিভাবক; আমাকে মুসলিম অবস্থায় মৃত্যু দিন এবং সৎকর্মশীলদের সাথে মিলিত করুন — Originator of the heavens and the earth, You are my Protector in this world and the Hereafter; cause me to die a Muslim and join me with the righteous",
@@ -1863,6 +2019,7 @@ object SeedData {
         dhikr(
             id = "qd_taqabbal_minna",
             name = "Rabbana taqabbal minna innaka Antas Sami'ul Alim",
+            nameBn = "রব্বানা তাকাব্বাল মিন্না ইন্নাকা আনতাস সামীউল আলীম",
             arabic = "رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ، وَتُبْ عَلَيْنَا إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
             pronunciation = "রব্বানা তাকাব্বাল মিন্না ইন্নাকা আনতাস সামিউল আলীম, ওয়া তুব আলাইনা ইন্নাকা আনতাত তাওয়াবুর রাহীম",
             translation = "হে আমাদের রব, আমাদের থেকে কবুল করুন; নিশ্চয়ই আপনি সর্বশ্রোতা, সর্বজ্ঞ; আর আমাদের তওবা কবুল করুন; নিশ্চয়ই আপনি তওবা কবুলকারী, পরম দয়ালু — Our Lord, accept from us; indeed You are the All-Hearing, the All-Knowing. And accept our repentance; indeed You are the Accepter of repentance, the Merciful",
@@ -1877,6 +2034,7 @@ object SeedData {
         dhikr(
             id = "salawat_1",
             name = "Salawat Ibrahimiyyah (Bukhari 3370)",
+            nameBn = "সালাতে ইবরাহীমিয়্যাহ",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا صَلَّيْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ، اللّٰهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা ইবরাহিমা ওয়া আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ, আল্লাহুম্মা বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিমা ওয়া আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি করেছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত; হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad as You sent blessings upon Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious. O Allah, bless Muhammad and the family of Muhammad as You blessed Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious",
@@ -1887,6 +2045,7 @@ object SeedData {
         dhikr(
             id = "salawat_2",
             name = "Salawat ala ali baytih (Abu Dawud 981)",
+            nameBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন ওয়া আলা আলি বাইতিহি",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ بَيْتِهِ، كَمَا صَلَّيْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ، اللّٰهُمَّ صَلِّ عَلَيْنَا مَعَهُمْ، اللّٰهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ بَيْتِهِ، كَمَا بَارَكْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ، اللّٰهُمَّ بَارِكْ عَلَيْنَا مَعَهُمْ، صَلَوَاتُ اللّٰهِ وَصَلَاةُ الْمُؤْمِنِينَ عَلَىٰ مُحَمَّدٍ النَّبِيِّ الْأُمِّيِّ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি বাইতিহি, কামা সাল্লাইতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ, আল্লাহুম্মা সাল্লি আলাইনা মাআহুম, আল্লাহুম্মা বারিক আলা মুহাম্মাদিও ওয়া আলা আলি বাইতিহি, কামা বারাকতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ, আল্লাহুম্মা বারিক আলাইনা মাআহুম, সালাওয়াতুল্লাহি ওয়া সালাতুল মুমিনীনা আলা মুহাম্মাদিন নাবিয়্যিল উম্মিয়্যি",
             translation = "হে আল্লাহ, মুহাম্মাদ ও তাঁর পরিবারবর্গের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত; হে আল্লাহ, তাদের সাথে আমাদের প্রতিও রহমত বর্ষণ করুন; হে আল্লাহ, মুহাম্মাদ ও তাঁর পরিবারবর্গের প্রতি বরকত দিন… তাদের সাথে আমাদেরও বরকত দিন; আল্লাহর রহমত ও মুমিনদের সালাত উম্মি নবি মুহাম্মাদের প্রতি — O Allah, send blessings upon Muhammad and the people of his house as You blessed the family of Ibrahim… and bless us along with them; the blessings of Allah and the prayers of the believers be upon Muhammad, the unlettered Prophet",
@@ -1897,6 +2056,7 @@ object SeedData {
         dhikr(
             id = "salawat_3",
             name = "Salawat ala azwajihi wa dhurriyyatih (Bukhari 3369)",
+            nameBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন ওয়া আযওয়াজিহি ওয়া যুররিয়্যাতিহি",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَأَزْوَاجِهِ وَذُرِّيَّتِهِ، كَمَا صَلَّيْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، وَبَارِكْ عَلَىٰ مُحَمَّدٍ وَأَزْوَاجِهِ وَذُرِّيَّتِهِ، كَمَا بَارَكْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আযওয়াজিহি ওয়া যুররিয়্যাতিহি, কামা সাল্লাইতা আলা আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আযওয়াজিহি ওয়া যুররিয়্যাতিহি, কামা বারাকতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ, তাঁর স্ত্রীগণ ও বংশধরদের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; আর মুহাম্মাদ, তাঁর স্ত্রীগণ ও বংশধরদের প্রতি বরকত দিন যেভাবে ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad, his wives and his offspring as You blessed the family of Ibrahim; and bless Muhammad, his wives and his offspring as You blessed the family of Ibrahim; You are Praiseworthy, Glorious",
@@ -1907,6 +2067,7 @@ object SeedData {
         dhikr(
             id = "salawat_4",
             name = "Salawat ala ali Ibrahima fil alamin (Muslim 405)",
+            nameBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন ফিল আলামীন",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا صَلَّيْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، وَبَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَىٰ آلِ إِبْرَاهِيمَ فِي الْعَالَمِينَ، إِنَّكَ حَمِيدٌ مَجِيدٌ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা আলি ইবরাহিমা ফিল আলামিন, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; আর মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে বিশ্বজগতে ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad as You blessed the family of Ibrahim, and bless Muhammad and the family of Muhammad as You blessed the family of Ibrahim among the worlds; You are Praiseworthy, Glorious",
@@ -1917,6 +2078,7 @@ object SeedData {
         dhikr(
             id = "salawat_5",
             name = "Salawat kama barakta ala Ibrahima fil alamin",
+            nameBn = "আল্লাহুম্মা সাল্লি ওয়া বারিক আলা মুহাম্মাদিন কামা বারাকতা আলা ইবরাহীম",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، وَبَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَىٰ إِبْرَاهِيمَ فِي الْعَالَمِينَ، إِنَّكَ حَمِيدٌ مَجِيدٌ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিমা ফিল আলামিন, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন এবং বরকত দিন যেভাবে বিশ্বজগতে ইবরাহিমের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad, and bless Muhammad and the family of Muhammad as You blessed Ibrahim among the worlds; You are Praiseworthy, Glorious",
@@ -1927,6 +2089,7 @@ object SeedData {
         dhikr(
             id = "salawat_6",
             name = "Salawat ala Muhammadin abdika wa rasulik",
+            nameBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন আবদিকা ওয়া রাসূলিক",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ عَبْدِكَ وَرَسُولِكَ، كَمَا صَلَّيْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، وَبَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَىٰ إِبْرَاهِيمَ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন আবদিকা ওয়া রাসূলিকা, কামা সাল্লাইতা আলা আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিম",
             translation = "হে আল্লাহ, আপনার বান্দা ও রাসূল মুহাম্মাদের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; আর মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিমের প্রতি দিয়েছেন — O Allah, send blessings upon Muhammad, Your servant and Messenger, as You blessed the family of Ibrahim; and bless Muhammad and the family of Muhammad as You blessed Ibrahim",
@@ -1937,6 +2100,7 @@ object SeedData {
         dhikr(
             id = "salawat_7",
             name = "Salawat ala ali Ibrahima (short Ibrahimiyyah)",
+            nameBn = "সালাতে ইবরাহীমিয়্যাহ (সংক্ষিপ্ত)",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا صَلَّيْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ، اللّٰهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ, আল্লাহুম্মা বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত; হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad as You blessed the family of Ibrahim; You are Praiseworthy, Glorious. O Allah, bless Muhammad and the family of Muhammad as You blessed the family of Ibrahim; You are Praiseworthy, Glorious",
@@ -1947,6 +2111,7 @@ object SeedData {
         dhikr(
             id = "salawat_8",
             name = "Salawat ala Muhammadin an-Nabiyyil ummiyy",
+            nameBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন নাবিয়্যিল উম্মিয়্যি",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ النَّبِيِّ الْأُمِّيِّ وَعَلَىٰ آلِ مُحَمَّدٍ، كَمَا صَلَّيْتَ عَلَىٰ إِبْرَاهِيمَ وَآلِ إِبْرَاهِيمَ، وَبَارِكْ عَلَىٰ مُحَمَّدٍ النَّبِيِّ الْأُمِّيِّ، كَمَا بَارَكْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ، إِنَّكَ حَمِيدٌ مَجِيدٌ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন নাবিয়্যিল উম্মিয়্যি ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা ইবরাহিমা ওয়া আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিন নাবিয়্যিল উম্মিয়্যি, কামা বারাকতা আলা ইবরাহিমা ওয়া আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, উম্মি নবি মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি করেছেন; আর উম্মি নবি মুহাম্মাদের প্রতি বরকত দিন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad the unlettered Prophet and the family of Muhammad as You blessed Ibrahim and the family of Ibrahim; and bless Muhammad the unlettered Prophet as You blessed Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious",
@@ -1957,6 +2122,7 @@ object SeedData {
         dhikr(
             id = "salawat_9",
             name = "Allahumma salli ala Muhammadin wa ala ali Muhammad (shortest)",
+            nameBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন ওয়া আলা আলি মুহাম্মাদ",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন — O Allah, send blessings upon Muhammad and the family of Muhammad",
@@ -1973,6 +2139,7 @@ object SeedData {
         dhikr(
             id = "ruq_baqarah",
             name = "Surah al-Baqarah",
+            nameBn = "সূরা আল-বাকারা",
             arabic = "سُورَةُ الْبَقَرَةِ",
             pronunciation = "সূরা আল-বাকারা তিলাওয়াত",
             translation = "সূরা আল-বাকারা তিলাওয়াত — Recite Surah al-Baqarah",
@@ -1983,6 +2150,7 @@ object SeedData {
         dhikr(
             id = "ruq_tammat_crafty",
             name = "A'udhu bi kalimatillahit tammatillati la yujawizuhunna barrun wa la fajir",
+            nameBn = "আউযু বিকালিমাতিল্লাহিত তাম্মাতিল্লাতি লা ইউজাউিযুহুন্না বাররুন ওয়া লা ফাজির",
             arabic = "أَعُوذُ بِكَلِمَاتِ اللّٰهِ التَّامَّاتِ الَّتِي لَا يُجَاوِزُهُنَّ بَرٌّ وَلَا فَاجِرٌ مِنْ شَرِّ مَا خَلَقَ وَبَرَأَ وَذَرَأَ، وَمِنْ شَرِّ مَا يَنْزِلُ مِنَ السَّمَاءِ وَمِنْ شَرِّ مَا يَعْرُجُ فِيهَا، وَمِنْ شَرِّ مَا ذَرَأَ فِي الْأَرْضِ وَمِنْ شَرِّ مَا يَخْرُجُ مِنْهَا، وَمِنْ شَرِّ فِتَنِ اللَّيْلِ وَالنَّهَارِ، وَمِنْ شَرِّ كُلِّ طَارِقٍ إِلَّا طَارِقًا يَطْرُقُ بِخَيْرٍ يَا رَحْمَٰنُ",
             pronunciation = "আউযু বিকালিমাতিল্লাহিত তাম্মাতিল্লাতি লা ইউজাওয়িযুহুন্না বাররুও ওয়া লা ফাজির, মিন শাররি মা খালাকা ওয়া বারাআ ওয়া যারাআ, ওয়া মিন শাররি মা ইয়ানযিলু মিনাস সামাই ওয়া মিন শাররি মা ইয়ারুজু ফিহা, ওয়া মিন শাররি মা যারাআ ফিল আরদি ওয়া মিন শাররি মা ইয়াখরুজু মিনহা, ওয়া মিন শাররি ফিতানিল লাইলি ওয়ান নাহার, ওয়া মিন শাররি কুল্লি তারিকিন ইল্লা তারিকাই ইয়াতরুকু বিখাইরিন ইয়া রাহমান",
             translation = "আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় আশ্রয় চাই—যা কোনো সৎ বা পাপী অতিক্রম করতে পারে না—তিনি যা সৃষ্টি করেছেন, অস্তিত্ব দিয়েছেন ও ছড়িয়ে দিয়েছেন তার অনিষ্ট থেকে; আসমান থেকে যা নামে ও এতে যা ওঠে তার অনিষ্ট থেকে; জমিনে যা ছড়িয়েছেন ও এ থেকে যা বের হয় তার অনিষ্ট থেকে; দিন-রাতের ফিতনার অনিষ্ট থেকে; এবং কল্যাণ নিয়ে আগমনকারী ছাড়া প্রতিটি রাতের আগন্তুকের অনিষ্ট থেকে—হে পরম করুণাময় — I seek refuge in the perfect words of Allah, which no righteous or wicked can surpass, from the evil of what He created, brought into being and scattered… from the evil of the trials of night and day, and from the evil of every night-comer except one that comes with good, O Most Merciful",
@@ -1993,6 +2161,7 @@ object SeedData {
         dhikr(
             id = "ruq_wajhillah",
             name = "A'udhu bi wajhillahil azim wa bi asma'illahil husna",
+            nameBn = "আউযু বিওয়াজহিল্লাহিল আযীম ওয়া বিআসমাইল্লাহিল হুসনা",
             arabic = "أَعُوذُ بِوَجْهِ اللّٰهِ الْعَظِيمِ الَّذِي لَيْسَ شَيْءٌ أَعْظَمَ مِنْهُ، وَبِكَلِمَاتِ اللّٰهِ التَّامَّاتِ الَّتِي لَا يُجَاوِزُهُنَّ بَرٌّ وَلَا فَاجِرٌ، وَبِأَسْمَاءِ اللّٰهِ الْحُسْنَىٰ كُلِّهَا مَا عَلِمْتُ مِنْهَا وَمَا لَمْ أَعْلَمْ، مِنْ شَرِّ مَا خَلَقَ وَبَرَأَ وَذَرَأَ",
             pronunciation = "আউযু বিওয়াজহিল্লাহিল আযীমিল্লাযি লাইসা শাইউন আযামা মিনহু, ওয়া বিকালিমাতিল্লাহিত তাম্মাতিল্লাতি লা ইউজাওয়িযুহুন্না বাররুও ওয়া লা ফাজির, ওয়া বিআসমাইল্লাহিল হুসনা কুল্লিহা মা আলিমতু মিনহা ওয়া মা লাম আলাম, মিন শাররি মা খালাকা ওয়া বারাআ ওয়া যারাআ",
             translation = "আশ্রয় চাই মহান আল্লাহর সত্তার অসিলায়, যাঁর চেয়ে বড় কিছু নেই; আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায়, যা কোনো সৎ বা পাপী অতিক্রম করতে পারে না; এবং আল্লাহর সকল সুন্দর নামের অসিলায়—যা আমি জানি ও যা জানি না—তিনি যা সৃষ্টি করেছেন, অস্তিত্ব দিয়েছেন ও ছড়িয়েছেন তার অনিষ্ট থেকে — I seek refuge in the Face of Allah the Supreme, than whom nothing is greater; in the perfect words of Allah which no righteous or wicked can surpass; and in all the beautiful names of Allah, those I know and those I do not, from the evil of what He created, brought into being and scattered",
@@ -2003,6 +2172,7 @@ object SeedData {
         dhikr(
             id = "ruq_ghadabih",
             name = "A'udhu bi kalimatillahit tammati min ghadabihi wa iqabih",
+            nameBn = "আউযু বিকালিমাতিল্লাহিত তাম্মাতি মিন গাদাবিহি ওয়া ইকাবিহ",
             arabic = "أَعُوذُ بِكَلِمَاتِ اللّٰهِ التَّامَّاتِ مِنْ غَضَبِهِ وَعِقَابِهِ، وَشَرِّ عِبَادِهِ، وَمِنْ هَمَزَاتِ الشَّيَاطِينِ وَأَنْ يَحْضُرُونِ",
             pronunciation = "আউযু বিকালিমাতিল্লাহিত তাম্মাতি মিন গাদাবিহি ওয়া ইকাবিহি, ওয়া শাররি ইবাদিহি, ওয়া মিন হামাযাতিশ শায়াতিনি ওয়া আন ইয়াহদুরূন",
             translation = "আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় আশ্রয় চাই তাঁর ক্রোধ ও শাস্তি থেকে, তাঁর বান্দাদের অনিষ্ট থেকে, শয়তানদের কুমন্ত্রণা থেকে এবং তারা আমার কাছে উপস্থিত হওয়া থেকে — I seek refuge in the perfect words of Allah from His anger and His punishment, from the evil of His servants, from the promptings of the devils and from their presence with me",
@@ -2013,6 +2183,7 @@ object SeedData {
         dhikr(
             id = "ruq_baras",
             name = "Allahumma inni a'udhu bika minal barasi wal jununi wal judham",
+            nameBn = "আল্লাহুম্মা ইন্নি আউযু বিকা মিনাল বারাসি ওয়াল জুনূনি ওয়াল জুযাম",
             arabic = "اللّٰهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْبَرَصِ، وَالْجُنُونِ، وَالْجُذَامِ، وَمِنْ سَيِّئِ الْأَسْقَامِ",
             pronunciation = "আল্লাহুম্মা ইন্নি আউযু বিকা মিনাল বারাসি, ওয়াল জুনুনি, ওয়াল জুযামি, ওয়া মিন সাইয়িইল আসকাম",
             translation = "হে আল্লাহ, শ্বেতী, উন্মাদনা, কুষ্ঠ ও নিকৃষ্ট রোগসমূহ থেকে আপনার আশ্রয় চাই — O Allah, I seek refuge in You from leprosy, insanity, elephantiasis and evil diseases",
@@ -2023,6 +2194,7 @@ object SeedData {
         dhikr(
             id = "ruq_uidhukuma",
             name = "U'idhukuma bi kalimatillahit tammah min kulli shaytanin wa hammah",
+            nameBn = "উইযুকুমা বিকালিমাতিল্লাহিত তাম্মাহ মিন কুল্লি শাইতানিন ওয়া হাম্মাহ",
             arabic = "أُعِيذُكُمَا بِكَلِمَاتِ اللّٰهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ",
             pronunciation = "উইযুকুমা বিকালিমাতিল্লাহিত তাম্মাতি মিন কুল্লি শাইতানিও ওয়া হাম্মাহ, ওয়া মিন কুল্লি আইনিল লাম্মাহ",
             translation = "আমি তোমাদের দুজনকে আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় প্রতিটি শয়তান ও বিষাক্ত প্রাণী থেকে এবং প্রতিটি ক্ষতিকর নজর থেকে আশ্রয়ে দিচ্ছি — I seek protection for you both in the perfect words of Allah from every devil and poisonous creature, and from every harmful evil eye",
@@ -2033,6 +2205,7 @@ object SeedData {
         dhikr(
             id = "ruq_pain_body",
             name = "Bismillah (x3), A'udhu billahi wa qudratihi min sharri ma ajidu wa uhadhir",
+            nameBn = "বিসমিল্লাহ (৩ বার), আউযু বিল্লাহি ওয়া কুদরাতিহি মিন শাররি মা আজিদু ওয়া উহাযির",
             arabic = "بِسْمِ اللّٰهِ (ثَلَاثًا)، أَعُوذُ بِاللّٰهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ",
             pronunciation = "বিসমিল্লাহ (তিনবার), আউযু বিল্লাহি ওয়া কুদরাতিহি মিন শাররি মা আজিদু ওয়া উহাযির",
             translation = "আল্লাহর নামে (তিনবার); আমি যা অনুভব করছি ও যার ভয় করছি তার অনিষ্ট থেকে আল্লাহ ও তাঁর ক্ষমতার অসিলায় আশ্রয় চাই — In the name of Allah (three times); I seek refuge in Allah and His power from the evil of what I feel and what I fear",
@@ -2043,6 +2216,7 @@ object SeedData {
         dhikr(
             id = "ruq_unwell",
             name = "Allahumma inni as'aluka ta'jila afiyatik wa sabran ala baliyyatik",
+            nameBn = "আল্লাহুম্মা ইন্নি আসআলুকা তাজীলা আফিয়াতিক",
             arabic = "اللّٰهُمَّ إِنِّي أَسْأَلُكَ تَعْجِيلَ عَافِيَتِكَ، وَصَبْرًا عَلَىٰ بَلِيَّتِكَ، وَخُرُوجًا مِنَ الدُّنْيَا إِلَىٰ رَحْمَتِكَ",
             pronunciation = "আল্লাহুম্মা ইন্নি আসআলুকা তাজিলা আফিয়াতিকা, ওয়া সাবরান আলা বালিয়্যাতিকা, ওয়া খুরূজান মিনাদ দুনইয়া ইলা রাহমাতিকা",
             translation = "হে আল্লাহ, আমি আপনার কাছে চাই দ্রুত আরোগ্য, আপনার পরীক্ষায় ধৈর্য, এবং দুনিয়া থেকে আপনার রহমতের দিকে প্রস্থান — O Allah, I ask You for a swift recovery from You, patience with Your trial, and a departure from this world to Your mercy",
@@ -2053,6 +2227,7 @@ object SeedData {
         dhikr(
             id = "ruq_remedy_pain",
             name = "Rabbunallahilladhi fis samai taqaddasa-smuk",
+            nameBn = "রব্বুনাল্লাহুল্লাযি ফিস সামাই তাকাদ্দাসাসমুক",
             arabic = "رَبُّنَا اللّٰهُ الَّذِي فِي السَّمَاءِ تَقَدَّسَ اسْمُكَ، أَمْرُكَ فِي السَّمَاءِ وَالْأَرْضِ، كَمَا رَحْمَتُكَ فِي السَّمَاءِ فَاجْعَلْ رَحْمَتَكَ فِي الْأَرْضِ، وَاغْفِرْ لَنَا حُوبَنَا وَخَطَايَانَا أَنْتَ رَبُّ الطَّيِّبِينَ، فَأَنْزِلْ رَحْمَةً مِنْ رَحْمَتِكَ، وَشِفَاءً مِنْ شِفَائِكَ عَلَىٰ هَٰذَا الْوَجَعِ فَيَبْرَأَ",
             pronunciation = "রব্বুনাল্লাহুল্লাযি ফিস সামাই তাকাদ্দাসাসমুক, আমরুকা ফিস সামাই ওয়াল আরদ, কামা রাহমাতুকা ফিস সামাই ফাজআল রাহমাতাকা ফিল আরদ, ওয়াগফির লানা হূবানা ওয়া খাতায়ানা আনতা রব্বুত তাইয়্যিবীন, ফাআনযিল রাহমাতান মিন রাহমাতিকা, ওয়া শিফাআন মিন শিফাইকা আলা হাযাল ওয়াজাই ফাইয়াবরাআ",
             translation = "আমাদের রব আল্লাহ, যিনি আসমানে; আপনার নাম পবিত্র; আপনার আদেশ আসমান-জমিনে চলে; যেমন আপনার রহমত আসমানে তেমনি জমিনেও রহমত দিন; আমাদের গুনাহ ও ভুল ক্ষমা করুন, আপনি সৎ লোকদের রব; আপনার রহমত থেকে রহমত ও আপনার শিফা থেকে শিফা এই ব্যথার উপর নাযিল করুন যেন তা সেরে যায় — Our Lord Allah who is in the heaven, hallowed be Your name… as Your mercy is in the heaven, place Your mercy on the earth; forgive us our sins and errors; You are the Lord of the good. Send down mercy from Your mercy and healing from Your healing upon this pain so it heals",
@@ -2063,6 +2238,7 @@ object SeedData {
         dhikr(
             id = "ruq_adhhibil_bas",
             name = "Allahumma Rabban nas adhhibil ba's, ishfi Antash Shafi",
+            nameBn = "আল্লাহুম্মা রব্বান নাস আযহিবিল বাস",
             arabic = "اللّٰهُمَّ رَبَّ النَّاسِ، أَذْهِبِ الْبَأْسَ، اشْفِ أَنْتَ الشَّافِي، لَا شِفَاءَ إِلَّا شِفَاؤُكَ، شِفَاءً لَا يُغَادِرُ سَقَمًا",
             pronunciation = "আল্লাহুম্মা রব্বান নাস, আযহিবিল বাস, ইশফি আনতাশ শাফি, লা শিফাআ ইল্লা শিফাউকা, শিফাআন লা ইউগাদিরু সাকামা",
             translation = "হে আল্লাহ, মানুষের রব, এই কষ্ট দূর করুন, সুস্থ করে দিন—আপনিই আরোগ্যদাতা; আপনার শিফা ছাড়া কোনো শিফা নেই; এমন শিফা যা কোনো রোগ অবশিষ্ট রাখে না — O Allah, Lord of mankind, remove the harm and heal; You are the Healer; there is no cure but Your cure; a cure that leaves no illness behind",
@@ -2073,6 +2249,7 @@ object SeedData {
         dhikr(
             id = "ruq_jibril",
             name = "Bismillahi arqika min kulli shay'in yu'dhik",
+            nameBn = "বিসমিল্লাহি আরকিকা মিন কুল্লি শাইইন ইউযিক",
             arabic = "بِسْمِ اللّٰهِ أَرْقِيكَ مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ، مِنْ شَرِّ كُلِّ نَفْسٍ أَوْ عَيْنِ حَاسِدٍ، اللّٰهُ يَشْفِيكَ، بِسْمِ اللّٰهِ أَرْقِيكَ",
             pronunciation = "বিসমিল্লাহি আরকিকা মিন কুল্লি শাইইন ইউযিক, মিন শাররি কুল্লি নাফসিন আও আইনি হাসিদিন, আল্লাহু ইয়াশফিক, বিসমিল্লাহি আরকিক",
             translation = "আল্লাহর নামে আমি তোমাকে ঝাড়ফুঁক করছি প্রতিটি কষ্টদায়ক জিনিস থেকে, প্রতিটি নফস বা হিংসুক নজরের অনিষ্ট থেকে; আল্লাহ তোমাকে সুস্থ করুন; আল্লাহর নামে আমি তোমাকে ঝাড়ফুঁক করছি — In the name of Allah I perform ruqyah over you from everything that harms you, from the evil of every soul or envious eye; may Allah heal you; in the name of Allah I perform ruqyah over you",
@@ -2083,6 +2260,7 @@ object SeedData {
         dhikr(
             id = "ruq_turbah",
             name = "Bismillahi turbatu ardina bi riqati ba'dina",
+            nameBn = "বিসমিল্লাহি তুরবাতু আরদিনা বিরীকাতি বাদিনা",
             arabic = "بِسْمِ اللّٰهِ تُرْبَةُ أَرْضِنَا بِرِيقَةِ بَعْضِنَا، يُشْفَىٰ سَقِيمُنَا بِإِذْنِ رَبِّنَا",
             pronunciation = "বিসমিল্লাহি তুরবাতু আরদিনা বিরিকাতি বাদিনা, ইউশফা সাকীমুনা বিইযনি রব্বিনা",
             translation = "আল্লাহর নামে; আমাদের জমিনের মাটি আমাদের কারও থুতুর সাথে (মিশিয়ে); আমাদের অসুস্থ ব্যক্তি আমাদের রবের অনুমতিতে সুস্থ হবে — In the name of Allah, the dust of our land with the saliva of one of us; our sick one is healed by the permission of our Lord",
@@ -2093,6 +2271,7 @@ object SeedData {
         dhikr(
             id = "ruq_as_alullah",
             name = "As'alullahal Azim Rabbal arshil azim an yashfiyak",
+            nameBn = "আসআলুল্লাহাল আযীম রব্বাল আরশিল আযীম আন ইয়াশফিয়াক",
             arabic = "أَسْأَلُ اللّٰهَ الْعَظِيمَ رَبَّ الْعَرْشِ الْعَظِيمِ أَنْ يَشْفِيَكَ",
             pronunciation = "আসআলুল্লাহাল আযীমা রব্বাল আরশিল আযীমি আন ইয়াশফিয়াক",
             translation = "আমি মহান আল্লাহর কাছে, মহান আরশের রবের কাছে চাই যেন তিনি তোমাকে সুস্থ করেন — I ask Allah the Supreme, Lord of the Mighty Throne, to heal you",
@@ -2103,6 +2282,7 @@ object SeedData {
         dhikr(
             id = "ruq_la_bas",
             name = "La ba'sa tahurun in sha Allah",
+            nameBn = "লা বাসা তাহূরুন ইনশাআল্লাহ",
             arabic = "لَا بَأْسَ طَهُورٌ إِنْ شَاءَ اللّٰهُ",
             pronunciation = "লা বাসা তাহুরুন ইন শাআল্লাহ",
             translation = "কোনো ক্ষতি নেই, ইনশাআল্লাহ এটি (গুনাহের) পবিত্রতা হবে — No harm, it is a purification, Allah willing",
@@ -2120,6 +2300,7 @@ object SeedData {
         dhikr(
             id = "bd_bedouin",
             name = "La ilaha illallahu wahdahu... Allahu Akbar kabiran wal hamdu lillahi kathira",
+            nameBn = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু (বেদুইনের যিকর)",
             arabic = "لَا إِلَٰهَ إِلَّا اللّٰهُ وَحْدَهُ لَا شَرِيكَ لَهُ، اللّٰهُ أَكْبَرُ كَبِيرًا، وَالْحَمْدُ لِلّٰهِ كَثِيرًا، وَسُبْحَانَ اللّٰهِ رَبِّ الْعَالَمِينَ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللّٰهِ الْعَزِيزِ الْحَكِيمِ",
             pronunciation = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, আল্লাহু আকবারু কাবীরা, ওয়াল হামদু লিল্লাহি কাছীরা, ওয়া সুবহানাল্লাহি রব্বিল আলামিন, ওয়া লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহিল আযীযিল হাকীম",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; আল্লাহ সর্বমহান, মহত্ত্ব তাঁরই; সকল প্রশংসা আল্লাহর প্রচুর পরিমাণে; বিশ্বজগতের রব আল্লাহ পবিত্র; পরাক্রমশালী প্রজ্ঞাময় আল্লাহ ছাড়া কোনো শক্তি-সামর্থ্য নেই — There is no god but Allah alone, no partner has He; Allah is the Greatest, greatness is His; abundant praise is for Allah; glory be to Allah, Lord of the worlds; there is no might nor power except by Allah, the Almighty, the All-Wise",
@@ -2130,6 +2311,7 @@ object SeedData {
         dhikr(
             id = "bd_ghfirli_4",
             name = "Allahummaghfir li warhamni wahdini warzuqni",
+            nameBn = "আল্লাহুম্মাগফির লি ওয়ারহামনি ওয়াহদিনি ওয়ারযুকনি",
             arabic = "اللّٰهُمَّ اغْفِرْ لِي وَارْحَمْنِي وَاهْدِنِي وَارْزُقْنِي",
             pronunciation = "আল্লাহুম্মাগফির লি ওয়ারহামনি ওয়াহদিনি ওয়ারযুকনি",
             translation = "হে আল্লাহ, আমাকে ক্ষমা করুন, দয়া করুন, হেদায়েত দিন ও রিযিক দিন — O Allah, forgive me, have mercy on me, guide me and provide for me",
@@ -2140,6 +2322,7 @@ object SeedData {
         dhikr(
             id = "bd_salli_muhammad",
             name = "Allahumma salli ala Muhammad",
+            nameBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদ",
             arabic = "اللّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ",
             pronunciation = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদ",
             translation = "হে আল্লাহ, মুহাম্মাদের প্রতি রহমত বর্ষণ করুন — O Allah, send blessings upon Muhammad",
@@ -2150,6 +2333,7 @@ object SeedData {
         dhikr(
             id = "bd_beloved_words",
             name = "Subhanaka-llahumma wa bihamdik... Rabbi inni qad zalamtu nafsi faghfir li",
+            nameBn = "সুবহানাকাল্লাহুম্মা ওয়া বিহামদিক (প্রিয় বাক্যসমূহ)",
             arabic = "سُبْحَانَكَ اللّٰهُمَّ وَبِحَمْدِكَ، تَبَارَكَ اسْمُكَ، وَتَعَالَىٰ جَدُّكَ، وَلَا إِلَٰهَ غَيْرُكَ، رَبِّ إِنِّي قَدْ ظَلَمْتُ نَفْسِي فَاغْفِرْ لِي إِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
             pronunciation = "সুবহানাকাল্লাহুম্মা ওয়া বিহামদিকা, তাবারাকাসমুকা, ওয়া তাআলা জাদ্দুকা, ওয়া লা ইলাহা গাইরুকা, রব্বি ইন্নি কাদ যালামতু নাফসি ফাগফির লি ইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা",
             translation = "হে আল্লাহ, আপনি কতই না পবিত্র, সকল প্রশংসা আপনার; আপনার নাম বরকতময়, আপনার মর্যাদা সুউচ্চ, আপনি ছাড়া কোনো উপাস্য নেই; হে আমার রব, আমি নিজের উপর জুলুম করেছি, তাই আমাকে ক্ষমা করুন; আপনি ছাড়া গুনাহ কেউ ক্ষমা করতে পারে না — Glory and praise be to You, O Allah; blessed is Your name, exalted is Your majesty, there is no god but You. My Lord, I have wronged myself, so forgive me; none forgives sins but You",
