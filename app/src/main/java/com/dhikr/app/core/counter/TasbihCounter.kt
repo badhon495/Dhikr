@@ -6,12 +6,15 @@ class TasbihCounter(lapTarget: Int, private val totalLaps: Int) {
 
     private var count = 0
     private var lap = 1
-    private var previous: Pair<Int, Int>? = null // (count, lap) before the last increment/undo-eligible change
+    // Stack of (count, lap) states before each increment — undo pops one at a
+    // time, so the user can keep undoing tap-by-tap back to the session start
+    // (count 0, lap 1) instead of only a single step.
+    private val history = mutableListOf<Pair<Int, Int>>()
     private var running = true
     private var complete = false
 
     fun increment(): CounterSnapshot {
-        previous = count to lap
+        history.add(count to lap)
         var justCompletedLap = false
         // True only on the tap that first reaches the final lap's target —
         // goal-reached signals (session log, routine advance) fire once here,
@@ -43,10 +46,9 @@ class TasbihCounter(lapTarget: Int, private val totalLaps: Int) {
     }
 
     fun undo(): CounterSnapshot {
-        val prior = previous ?: return snapshot()
+        val prior = history.removeLastOrNull() ?: return snapshot()
         count = prior.first
         lap = prior.second
-        previous = null
         complete = false
         return snapshot()
     }
@@ -54,7 +56,7 @@ class TasbihCounter(lapTarget: Int, private val totalLaps: Int) {
     fun reset(): CounterSnapshot {
         count = 0
         lap = 1
-        previous = null
+        history.clear()
         complete = false
         return snapshot()
     }
@@ -63,11 +65,15 @@ class TasbihCounter(lapTarget: Int, private val totalLaps: Int) {
      * Restores internal state from a previously persisted snapshot (cold-start
      * session recovery). Not part of the normal increment/undo/reset state
      * machine — called once by CounterViewModel after reading SessionRepository.
+     * Only the single most recent step survives persistence, so a restored
+     * session can undo one tap; further undos resume building depth once the
+     * user starts tapping again in this process.
      */
     fun restore(count: Int, lap: Int, previous: Pair<Int, Int>?) {
         this.count = count
         this.lap = lap
-        this.previous = previous
+        history.clear()
+        if (previous != null) history.add(previous)
         // count never sits at lapTarget any more (the target tap rolls to 0 and
         // bumps lap), so a completed final lap is simply lap past totalLaps.
         // The `count >= lapTarget` arm keeps sessions persisted by the older
@@ -85,14 +91,17 @@ class TasbihCounter(lapTarget: Int, private val totalLaps: Int) {
 
     fun isRunning(): Boolean = running
 
-    fun snapshot(): CounterSnapshot = CounterSnapshot(
-        count = count,
-        lap = lap,
-        previousCount = previous?.first,
-        previousLap = previous?.second,
-        isComplete = complete,
-        justCompletedLap = false,
-    )
+    fun snapshot(): CounterSnapshot {
+        val prior = history.lastOrNull()
+        return CounterSnapshot(
+            count = count,
+            lap = lap,
+            previousCount = prior?.first,
+            previousLap = prior?.second,
+            isComplete = complete,
+            justCompletedLap = false,
+        )
+    }
 
     fun progressFraction(): Float = count.toFloat() / lapTarget.toFloat()
 
