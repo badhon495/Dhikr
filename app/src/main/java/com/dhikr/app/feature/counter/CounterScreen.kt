@@ -643,7 +643,13 @@ fun CounterScreen(
                             // lap target with the ring full, then snaps back.
                             // For a 1-per-lap dhikr the engine count is always 0,
                             // so between taps show reps done (lap - 1) instead.
+                            // A past-step preview has no real lap/count from an
+                            // engine at all — state.count is already the step's
+                            // finished tally (CounterViewModel.onSelectRoutineStep),
+                            // so show it as-is rather than run it through the
+                            // lap-1 reasoning meant for a live session.
                             val shownCount = when {
+                                state.isViewingPastStep -> state.count
                                 showLapTargetNumber -> state.dhikr.lapTarget
                                 state.dhikr.lapTarget == 1 -> (state.lap - 1).coerceAtLeast(0)
                                 else -> state.count
@@ -675,8 +681,13 @@ fun CounterScreen(
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
                         for (i in 1..state.totalLaps) {
-                            val pipWidth = if (i == state.lap) 26.dp else 8.dp
+                            val pipWidth = if (!state.isViewingPastStep && i == state.lap) 26.dp else 8.dp
                             val pipColor = when {
+                                // A past-step preview has no in-progress lap to
+                                // highlight — the whole (single) lap is done, so
+                                // paint it completed (sage) rather than
+                                // "current" (terra).
+                                state.isViewingPastStep -> colors.sage
                                 i < state.lap -> colors.sage
                                 i == state.lap -> colors.terra
                                 else -> colors.track

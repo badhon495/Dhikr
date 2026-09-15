@@ -210,6 +210,8 @@ fun undoIcon(): ImageVector = ImageVector.Builder(
     }
 }.build()
 
+// Trash-can glyph, not a mirrored undo arrow — the two need to read as
+// different actions (undo one tap vs. wipe the whole count) at a glance.
 fun resetIcon(): ImageVector = ImageVector.Builder(
     name = "Reset",
     defaultWidth = 24.dp,
@@ -217,12 +219,7 @@ fun resetIcon(): ImageVector = ImageVector.Builder(
     viewportWidth = 24f,
     viewportHeight = 24f,
 ).apply {
-    // SVG: M21 12a9 9 0 1 1-3-6.7
-    // Centre solves to (12, 12.01) and sweep=1 gives a clockwise on-screen
-    // sweep of +311.9 degrees, from (21,12) round to (18, 5.3) — direction
-    // confirmed correct. Split into 4 equal sub-90-degree segments, each an
-    // exact circular bezier, so the terminus lands on the true radius-9 circle
-    // instead of bulging off it.
+    // SVG: M4 7h16
     path(
         fill = null,
         stroke = SolidColor(Color.Black),
@@ -230,13 +227,10 @@ fun resetIcon(): ImageVector = ImageVector.Builder(
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Round,
     ) {
-        moveTo(21.00f, 12.00f)
-        curveTo(21.00f, 16.25f, 18.04f, 19.92f, 13.88f, 20.81f)
-        curveTo(9.73f, 21.70f, 5.52f, 19.56f, 3.78f, 15.68f)
-        curveTo(2.05f, 11.81f, 3.26f, 7.24f, 6.69f, 4.74f)
-        curveTo(10.13f, 2.23f, 14.84f, 2.47f, 18.00f, 5.30f)
+        moveTo(4f, 7f)
+        lineTo(20f, 7f)
     }
-    // SVG: M21 3v6h-6
+    // SVG: M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2
     path(
         fill = null,
         stroke = SolidColor(Color.Black),
@@ -244,9 +238,49 @@ fun resetIcon(): ImageVector = ImageVector.Builder(
         strokeLineCap = StrokeCap.Round,
         strokeLineJoin = StrokeJoin.Round,
     ) {
-        moveTo(21f, 3f)
-        lineTo(21f, 9f)
-        lineTo(15f, 9f)
+        moveTo(9f, 7f)
+        lineTo(9f, 5f)
+        curveTo(9f, 3.9f, 9.9f, 3f, 11f, 3f)
+        lineTo(13f, 3f)
+        curveTo(14.1f, 3f, 15f, 3.9f, 15f, 5f)
+        lineTo(15f, 7f)
+    }
+    // SVG: M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13
+    path(
+        fill = null,
+        stroke = SolidColor(Color.Black),
+        strokeLineWidth = STROKE_WIDTH,
+        strokeLineCap = StrokeCap.Round,
+        strokeLineJoin = StrokeJoin.Round,
+    ) {
+        moveTo(6f, 7f)
+        lineTo(7f, 20f)
+        curveTo(7f, 21.1f, 7.9f, 22f, 9f, 22f)
+        lineTo(15f, 22f)
+        curveTo(16.1f, 22f, 17f, 21.1f, 17f, 20f)
+        lineTo(18f, 7f)
+    }
+    // SVG: M10 11v6
+    path(
+        fill = null,
+        stroke = SolidColor(Color.Black),
+        strokeLineWidth = STROKE_WIDTH,
+        strokeLineCap = StrokeCap.Round,
+        strokeLineJoin = StrokeJoin.Round,
+    ) {
+        moveTo(10f, 11f)
+        lineTo(10f, 17f)
+    }
+    // SVG: M14 11v6
+    path(
+        fill = null,
+        stroke = SolidColor(Color.Black),
+        strokeLineWidth = STROKE_WIDTH,
+        strokeLineCap = StrokeCap.Round,
+        strokeLineJoin = StrokeJoin.Round,
+    ) {
+        moveTo(14f, 11f)
+        lineTo(14f, 17f)
     }
 }.build()
 

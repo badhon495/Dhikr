@@ -497,7 +497,15 @@ class CounterViewModel(
             val step = sortedRoutineSteps.getOrNull(index) ?: return@launch
             val stepTasbih = tasbihRepository.getById(step.tasbihId) ?: return@launch
             viewingStepIndex = index
-            viewingDhikr = stepTasbih
+            // The routine step's own target (step.targetCount) can differ from
+            // this tasbih's standalone default (stepTasbih.lapTarget) — the
+            // live routine engine is already built off the former
+            // (initializeSession/advanceRoutineStep: TasbihCounter(step.targetCount, 1)).
+            // buildState()'s "of N" / ring-fraction text all read dhikr.lapTarget,
+            // so the preview must override it to the step's real target too, or
+            // it shows the tasbih's unrelated default (e.g. "of 7" for a step
+            // whose chip says its target is 1).
+            viewingDhikr = stepTasbih.copy(lapTarget = step.targetCount)
             viewingTargetCount = step.targetCount
             _uiState.value = buildState()
         }
