@@ -111,7 +111,13 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // recitation + split translation, with a Roman-script pronunciation still
     // pending (see SeedData.pendingRomanTransliterationIds). No hand migration
     // — fallbackToDestructiveMigration rebuilds + reseeds.
-    version = 27,
+    // v28: Morning/Evening/Ruqyah preset routines now walk the 3 Quls and the
+    // tasbih-tahmid-takbir as separate steps (surah_ikhlas/surah_falaq/surah_nas
+    // and subhan/hamd/akbar) instead of the merged morn_3quls/morn_tasbih100
+    // rows. Removed sleep_sajdah_mulk (Surah as-Sajdah & al-Mulk merged into
+    // one dhikr with only abbreviated Arabic) rather than split it without
+    // full text. No schema change; bump reseeds. fallbackToDestructiveMigration.
+    version = 28,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {

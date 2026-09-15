@@ -203,7 +203,7 @@ object SeedData {
         "salawat_7", "salawat_8", "salawat_9", "sleep_amutu_ahya",
         "sleep_aslamtu_nafsi", "sleep_at_amana", "sleep_baqarah_end", "sleep_bismika_janbi",
         "sleep_forgiven", "sleep_ghfir_dhambi", "sleep_kafani", "sleep_kafirun",
-        "sleep_khalaqta_nafsi", "sleep_qini", "sleep_rabbas_samawat", "sleep_sajdah_mulk",
+        "sleep_khalaqta_nafsi", "sleep_qini", "sleep_rabbas_samawat",
         "sleep_wajhikal_karim", "surah_falaq", "surah_ikhlas", "surah_nas",
     )
 
@@ -1279,21 +1279,13 @@ object SeedData {
 
         // --- Before-sleep adhkar (lifewithallah.com/dhikr-dua/main-adhkar/before-sleep)
         // The sleep-time dhikr from that page with no existing built-in.
-        // Ayat al-Kursi (`kursi`), the 3 Quls (`morn_3quls`) and Allahumma
-        // Fatiras samawati (`morn_fatir`) are reused; the tasbih/tahmid/takbir
-        // 33/33/34 uses the existing `subhan`/`hamd`/`akbar` rows. The "Before
+        // Ayat al-Kursi (`kursi`), the 3 Quls (`surah_ikhlas`/`surah_falaq`/
+        // `surah_nas`) and Allahumma Fatiras samawati (`morn_fatir`) are
+        // reused; the tasbih/tahmid/takbir 33/33/34 uses the existing
+        // `subhan`/`hamd`/`akbar` rows. Surah as-Sajdah & al-Mulk (Tirmidhi
+        // 2892) are dropped — no full Arabic text in this app, and we don't
+        // point users elsewhere for it. The "Before
         // Sleep" preset walks the whole page in order.
-        dhikr(
-            id = "sleep_sajdah_mulk",
-            name = "Surah as-Sajdah & Surah al-Mulk",
-            nameBn = "সূরা আস-সাজদাহ ও সূরা আল-মুলক",
-            arabic = "الٓمٓ تَنْزِيلُ… (السجدة) ۞ تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ… (الملك)",
-            pronunciation = "সূরা আস-সাজদাহ ও সূরা আল-মুলক তিলাওয়াত",
-            translation = "শোয়ার আগে সূরা আস-সাজদাহ (৩২) ও সূরা আল-মুলক (৬৭) তিলাওয়াত — Recite Surah as-Sajdah and Surah al-Mulk before sleeping",
-            lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার আগে এই দুই সূরা না পড়ে ঘুমাতেন না — তিরমিযি ৩৪০৪, ২৮৯২। সূরা আল-মুলক কবরের আযাব থেকে রক্ষা করে।",
-            source = "Jami at-Tirmidhi 3404; Jami at-Tirmidhi 2892",
-        ),
         dhikr(
             id = "sleep_baqarah_end",
             name = "Last two ayahs of Surah al-Baqarah (Amanar-rasul)",
@@ -2566,7 +2558,9 @@ object SeedData {
         "qd_fatihah" to 1,
         "kursi" to 1,
         "sleep_baqarah_end" to 1,
-        "morn_3quls" to 1,
+        "surah_ikhlas" to 1,
+        "surah_falaq" to 1,
+        "surah_nas" to 1,
         "hasbiyallah_arsh" to 7,
         "ruq_baqarah" to 1,
         "eve_kalimat_tammat" to 3,
@@ -2637,7 +2631,9 @@ object SeedData {
     // tahlil_wahdahu, durood_ali, istighfar_atubu, adada_khalqih.
     private val morningSteps: List<RoutineStepEntity> = listOf(
         "kursi" to 1,
-        "morn_3quls" to 3,
+        "surah_ikhlas" to 3,
+        "surah_falaq" to 3,
+        "surah_nas" to 3,
         "istighfar_sayyid" to 1,
         "hamm_hazan" to 1,
         "morn_afiyah" to 1,
@@ -2656,7 +2652,9 @@ object SeedData {
         "morn_la_yadurru" to 3,
         "bihamdihi" to 100,
         "tahlil_wahdahu" to 100,
-        "morn_tasbih100" to 100,
+        "subhan" to 100,
+        "hamd" to 100,
+        "akbar" to 100,
         "durood_ali" to 10,
         "istighfar_atubu" to 100,
         "adada_khalqih" to 3,
@@ -2670,7 +2668,9 @@ object SeedData {
     // morning/evening word; the eve_* rows are the "amsayna/amsa" wordings.
     private val eveningSteps: List<RoutineStepEntity> = listOf(
         "kursi" to 1,
-        "morn_3quls" to 3,
+        "surah_ikhlas" to 3,
+        "surah_falaq" to 3,
+        "surah_nas" to 3,
         "istighfar_sayyid" to 1,
         "hamm_hazan" to 1,
         "morn_afiyah" to 1,
@@ -2689,7 +2689,9 @@ object SeedData {
         "morn_la_yadurru" to 3,
         "bihamdihi" to 100,
         "tahlil_wahdahu" to 100,
-        "morn_tasbih100" to 33,
+        "subhan" to 33,
+        "hamd" to 33,
+        "akbar" to 34,
         "durood_ali" to 10,
         "eve_kalimat_tammat" to 3,
     ).mapIndexed { i, (id, count) ->
@@ -2724,11 +2726,12 @@ object SeedData {
     // Replaces the old 2-step stub. The tasbih/tahmid/takbir (Fatimah's dhikr,
     // Bukhari 3705) is the three existing subhan/hamd/akbar rows at 33/33/34.
     private val beforeSleepSteps: List<RoutineStepEntity> = listOf(
-        "sleep_sajdah_mulk" to 1,
         "kursi" to 1,
         "sleep_baqarah_end" to 1,
         "sleep_kafirun" to 1,
-        "morn_3quls" to 3,
+        "surah_ikhlas" to 3,
+        "surah_falaq" to 3,
+        "surah_nas" to 3,
         "subhan" to 33,
         "hamd" to 33,
         "akbar" to 34,
