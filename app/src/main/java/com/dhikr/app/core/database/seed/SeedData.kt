@@ -159,6 +159,8 @@ object SeedData {
         "grave_lowering", "after_burial", "grave_visit",
         // Hajj / Umrah / Qurbani
         "safa_marwah", "hajar_aswad", "maqam_ibrahim", "qurbani",
+        // Title-only placeholders, no actual ayat/dua text
+        "ruq_baqarah",
     )
 
     /**
@@ -195,7 +197,7 @@ object SeedData {
         "qd_lut_mufsidin", "qd_persecution", "qd_qurrata_ayun", "qd_rahimin_109",
         "qd_sulayman_shukr", "qd_tafakkur", "qd_taqabbal_minna", "qd_yusuf",
         "qd_zakariyya_fardan", "qd_zakariyya_tayyibah", "qd_zalimin_47", "qd_zidni_ilma",
-        "ruq_adhhibil_bas", "ruq_as_alullah", "ruq_baqarah", "ruq_baras",
+        "ruq_adhhibil_bas", "ruq_as_alullah", "ruq_baras",
         "ruq_ghadabih", "ruq_jibril", "ruq_la_bas", "ruq_pain_body",
         "ruq_remedy_pain", "ruq_tammat_crafty", "ruq_turbah", "ruq_uidhukuma",
         "ruq_unwell", "ruq_wajhillah", "salawat_1", "salawat_2",
@@ -2127,18 +2129,9 @@ object SeedData {
         // The healing/protection dhikr from that page with no existing built-in.
         // Reused: qd_fatihah, kursi, sleep_baqarah_end, morn_3quls,
         // hasbiyallah_arsh, eve_kalimat_tammat. The "Ruqyah & Illness" preset
-        // walks the whole page in order.
-        dhikr(
-            id = "ruq_baqarah",
-            name = "Surah al-Baqarah",
-            nameBn = "সূরা আল-বাকারা",
-            arabic = "سُورَةُ الْبَقَرَةِ",
-            pronunciation = "সূরা আল-বাকারা তিলাওয়াত",
-            translation = "সূরা আল-বাকারা তিলাওয়াত — Recite Surah al-Baqarah",
-            lapTarget = 1,
-            note = "যে ঘরে সূরা আল-বাকারা পড়া হয় সেখান থেকে শয়তান পালায়, তিন রাত থাকে না — সহীহ মুসলিম ৭৮০। জাদু-বান হয় না।",
-            source = "Sahih Muslim 780",
-        ),
+        // walks the whole page in order. Dropped ruq_baqarah (Sahih Muslim 780,
+        // "recite Surah al-Baqarah") — title-only placeholder with no actual
+        // ayat text, just a "go recite the whole surah" pointer.
         dhikr(
             id = "ruq_tammat_crafty",
             name = "A'udhu bi kalimatillahit tammatillati la yujawizuhunna barrun wa la fajir",
@@ -2562,7 +2555,6 @@ object SeedData {
         "surah_falaq" to 1,
         "surah_nas" to 1,
         "hasbiyallah_arsh" to 7,
-        "ruq_baqarah" to 1,
         "eve_kalimat_tammat" to 3,
         "ruq_tammat_crafty" to 1,
         "ruq_wajhillah" to 1,
