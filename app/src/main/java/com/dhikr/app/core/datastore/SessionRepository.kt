@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.dhikr.app.core.model.CounterSessionState
@@ -29,6 +30,7 @@ class SessionRepository(private val context: Context) {
         val ROUTINE_ID = stringPreferencesKey("routine_id")
         val ROUTINE_STEP = intPreferencesKey("routine_step")
         val LOGGED_TOTAL = intPreferencesKey("logged_total")
+        val DAY_START_MILLIS = longPreferencesKey("day_start_millis")
     }
 
     val sessionFlow: Flow<CounterSessionState?> = context.sessionDataStore.data
@@ -49,6 +51,7 @@ class SessionRepository(private val context: Context) {
                 routineId = prefs[Keys.ROUTINE_ID],
                 routineStep = prefs[Keys.ROUTINE_STEP] ?: 0,
                 loggedTotal = prefs[Keys.LOGGED_TOTAL] ?: 0,
+                dayStartMillis = prefs[Keys.DAY_START_MILLIS] ?: 0L,
             )
         }
 
@@ -77,6 +80,7 @@ class SessionRepository(private val context: Context) {
             }
             prefs[Keys.ROUTINE_STEP] = state.routineStep
             prefs[Keys.LOGGED_TOTAL] = state.loggedTotal
+            prefs[Keys.DAY_START_MILLIS] = state.dayStartMillis
         }
     }
 

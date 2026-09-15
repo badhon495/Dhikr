@@ -16,6 +16,7 @@
     <string name="counter_lap_label">ল্যাপ %2$d এর %1$d · %4$d এর %3$d</string>
     <string name="counter_tap_hint">গণনা করতে যেকোনো জায়গায় ট্যাপ করুন</string>
     <string name="counter_tap_hint_locked">লক করা — গণনা তবুও চলছে</string>
+    <string name="counter_viewing_past_step_hint">সম্পন্ন ধাপ দেখছেন — ফিরে যেতে আবার ট্যাপ করুন</string>
     <string name="counter_tap_action_label">গণনা</string>
     <string name="counter_count_description">%2$d এর %1$d</string>
     <string name="counter_previous_content_description">পূর্ববর্তী তসবিহ</string>

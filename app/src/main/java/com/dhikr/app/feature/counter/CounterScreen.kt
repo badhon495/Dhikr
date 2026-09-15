@@ -7,6 +7,7 @@ import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -485,16 +486,39 @@ fun CounterScreen(
                 itemsIndexed(state.routineSteps) { index, step ->
                     val isCurrent = index == state.currentRoutineStepIndex
                     val isCompleted = index < state.currentRoutineStepIndex
+                    val isViewed = index == state.viewingRoutineStepIndex
                     val bg = if (isCurrent) colors.sage else colors.surface
                     val fg = when {
                         isCurrent -> colors.onSage
                         isCompleted -> colors.faint
                         else -> colors.dim
                     }
+                    // Completed steps are tappable to glance back read-only
+                    // (CounterViewModel.onSelectRoutineStep); tapping the
+                    // currently-previewed chip again — or the live current
+                    // chip while previewing — returns to the live step.
+                    // Future (not-yet-reached) steps stay inert.
+                    val chipClickable = isCompleted || (isCurrent && state.isViewingPastStep)
                     Box(
                         modifier = Modifier
                             .clip(PillShape)
                             .background(bg)
+                            .then(
+                                if (isViewed) {
+                                    Modifier.border(1.5.dp, colors.terra, PillShape)
+                                } else {
+                                    Modifier
+                                }
+                            )
+                            .clickable(enabled = chipClickable) {
+                                if (isCurrent) {
+                                    viewModel.onReturnToCurrentStep()
+                                } else if (isViewed) {
+                                    viewModel.onReturnToCurrentStep()
+                                } else {
+                                    viewModel.onSelectRoutineStep(index)
+                                }
+                            }
                             .padding(horizontal = 11.dp, vertical = 5.dp),
                     ) {
                         Text(
@@ -526,8 +550,9 @@ fun CounterScreen(
                     indication = null,
                     // Room's seed data may not have loaded yet (finding #2) —
                     // disable the tap target rather than let it silently do
-                    // nothing (or, pre-fix, crash the ViewModel).
-                    enabled = state.sessionReady,
+                    // nothing (or, pre-fix, crash the ViewModel). Also disabled
+                    // while previewing a completed routine step (read-only).
+                    enabled = state.sessionReady && !state.isViewingPastStep,
                     // TalkBack: "double-tap to Count" instead of the generic
                     // "double-tap to activate" on this full-screen tap zone.
                     onClickLabel = tapActionLabel,
@@ -681,10 +706,10 @@ fun CounterScreen(
                 }
 
                 Text(
-                    text = if (state.locked) {
-                        stringResource(R.string.counter_tap_hint_locked)
-                    } else {
-                        stringResource(R.string.counter_tap_hint)
+                    text = when {
+                        state.isViewingPastStep -> stringResource(R.string.counter_viewing_past_step_hint)
+                        state.locked -> stringResource(R.string.counter_tap_hint_locked)
+                        else -> stringResource(R.string.counter_tap_hint)
                     },
                     fontSize = 11.5.sp,
                     color = colors.faint,
@@ -741,14 +766,14 @@ fun CounterScreen(
                         .background(colors.surface)
                         // Undo is blocked while locked, same as reset — a pocket
                         // touch shouldn't be able to unwind counted taps either.
-                        .clickable(enabled = state.sessionReady && state.canUndo && !state.locked) { viewModel.onUndo() }
+                        .clickable(enabled = state.sessionReady && state.canUndo && !state.locked && !state.isViewingPastStep) { viewModel.onUndo() }
                         .minTapTarget(),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = undoIcon(),
                         contentDescription = undoLabel,
-                        tint = if (state.canUndo && !state.locked) colors.text else colors.faint,
+                        tint = if (state.canUndo && !state.locked && !state.isViewingPastStep) colors.text else colors.faint,
                         modifier = Modifier.size(17.dp),
                     )
                 }
@@ -767,15 +792,16 @@ fun CounterScreen(
                         // Room's seed data may not have loaded yet (finding #2).
                         // Pause/resume is blocked while locked too — the lock's
                         // whole point is a session that can't be knocked off
-                        // course by a stray touch.
-                        .clickable(enabled = state.sessionReady && !state.locked) { viewModel.onTogglePause() }
+                        // course by a stray touch. Also blocked while
+                        // previewing a completed routine step (read-only).
+                        .clickable(enabled = state.sessionReady && !state.locked && !state.isViewingPastStep) { viewModel.onTogglePause() }
                         .minTapTarget(),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = if (state.running) pauseIcon() else playIcon(),
                         contentDescription = pauseResumeLabel,
-                        tint = if (state.locked) colors.faint else colors.onSage,
+                        tint = if (state.locked || state.isViewingPastStep) colors.faint else colors.onSage,
                         modifier = Modifier.size(17.dp),
                     )
                 }
@@ -790,14 +816,15 @@ fun CounterScreen(
                         // Reset is destructive, so it is blocked while locked and, when
                         // unlocked, only opens the confirmation dialog. Also gated on
                         // sessionReady (finding #2) — Room's seed data may not have
-                        // loaded yet.
-                        .clickable(enabled = state.sessionReady && !state.locked) { showResetDialog = true },
+                        // loaded yet — and blocked while previewing a completed
+                        // routine step (read-only).
+                        .clickable(enabled = state.sessionReady && !state.locked && !state.isViewingPastStep) { showResetDialog = true },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = resetIcon(),
                         contentDescription = resetLabel,
-                        tint = if (state.locked) colors.faint else colors.dim,
+                        tint = if (state.locked || state.isViewingPastStep) colors.faint else colors.dim,
                         modifier = Modifier.size(18.dp),
                     )
                 }

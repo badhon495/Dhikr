@@ -14,6 +14,7 @@ import com.dhikr.app.core.datastore.SessionRepository
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.model.CounterSessionState
+import com.dhikr.app.core.utilities.DayBounds
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,6 +94,15 @@ class CounterViewModel(
     private var sortedRoutineSteps: List<RoutineStepEntity> = emptyList()
     private var cachedRoutineStepDisplays: List<RoutineStepDisplay> = emptyList()
 
+    // Non-null while previewing an already-completed routine step tapped from
+    // the progress-chip strip (see onSelectRoutineStep). Purely a display
+    // overlay — `engine`/`dhikr`/`routineStepIndex` (the real in-progress
+    // step) are untouched the whole time, so returning to the live step via
+    // onReturnToCurrentStep() needs no restore logic.
+    private var viewingStepIndex: Int? = null
+    private var viewingDhikr: TasbihEntity? = null
+    private var viewingTargetCount: Int = 0
+
     private val _uiState = MutableStateFlow(CounterUiState.Empty)
     val uiState: StateFlow<CounterUiState> = _uiState.asStateFlow()
 
@@ -139,6 +149,15 @@ class CounterViewModel(
         // silently reopened the unfinished routine instead.
         val routineIdToLoad = requestedRoutineId
             ?: savedSession?.routineId.takeIf { requestedStartingId == null }
+        // The DataStore session is one global slot with no day-scoped expiry of
+        // its own (unlike routine_progress / tasbih_progress rows, which drop
+        // out of their day-filtered query once local midnight passes). Without
+        // this check, an unfinished routine/Tasbih from a previous day — whose
+        // day-scoped progress row is now correctly hidden — fell back to this
+        // slot's leftover count/step and silently resumed exactly where
+        // yesterday left off, even though the card showed 0.
+        val sessionIsFromToday = savedSession != null &&
+            savedSession.dayStartMillis == DayBounds.startOfTodayMillis()
         if (routineIdToLoad != null) {
             val routine = routineRepository.getWithSteps(routineIdToLoad)
             if (routine != null && routine.steps.isNotEmpty()) {
@@ -161,7 +180,7 @@ class CounterViewModel(
                 // half-done / fully-checked step just because the last routine
                 // counted left off there.
                 val savedStepForThisRoutine = savedSession?.routineStep
-                    ?.takeIf { savedSession.routineId == routineIdToLoad }
+                    ?.takeIf { sessionIsFromToday && savedSession.routineId == routineIdToLoad }
                 // If this routine's last step was already completed today,
                 // start fresh at step 0 regardless of any leftover session
                 // pointer. Covers the race where the app dies after
@@ -189,7 +208,7 @@ class CounterViewModel(
                         // not logged a second time on resume.
                         loggedTotal = savedProgress.loggedInStep.coerceIn(0, restoredCount)
                         _elapsedSeconds.value = savedSession?.elapsedSeconds?.takeIf {
-                            savedSession.routineId == routineIdToLoad
+                            sessionIsFromToday && savedSession.routineId == routineIdToLoad
                         } ?: 0
                     } else {
                         // The single DataStore session is one global slot. Only
@@ -198,9 +217,11 @@ class CounterViewModel(
                         // routine bleeds into every other routine that has the
                         // same dhikr as its current step (they share activeDhikrId
                         // but not routineId).
-                        applyRestoredCountIfMatching(savedSession, currentStep.tasbihId, routineIdToLoad)
+                        if (sessionIsFromToday) {
+                            applyRestoredCountIfMatching(savedSession, currentStep.tasbihId, routineIdToLoad)
+                        }
                     }
-                    sessionStartedAtMillis = if (savedSession != null &&
+                    sessionStartedAtMillis = if (savedSession != null && sessionIsFromToday &&
                         savedSession.routineId == routineIdToLoad &&
                         savedSession.activeDhikrId == currentStep.tasbihId
                     ) {
@@ -250,15 +271,15 @@ class CounterViewModel(
                 .coerceIn(0, (loaded.lapTarget - 1).coerceAtLeast(0))
             engine.restore(count = restoredCount, lap = restoredLap, previous = null)
             loggedTotal = savedTasbihProgress.loggedInSession.coerceAtLeast(0)
-            if (savedSession != null && savedSession.activeDhikrId == loaded.id && savedSession.routineId == null) {
+            if (savedSession != null && sessionIsFromToday && savedSession.activeDhikrId == loaded.id && savedSession.routineId == null) {
                 _elapsedSeconds.value = savedSession.elapsedSeconds
                 locked = savedSession.locked
                 if (!savedSession.running) engine.pause()
             }
-        } else {
+        } else if (sessionIsFromToday) {
             applyRestoredCountIfMatching(savedSession, loaded.id, expectedRoutineId = null)
         }
-        sessionStartedAtMillis = if (savedSession != null && savedSession.activeDhikrId == loaded.id) {
+        sessionStartedAtMillis = if (savedSession != null && sessionIsFromToday && savedSession.activeDhikrId == loaded.id) {
             System.currentTimeMillis() - _elapsedSeconds.value * 1000L
         } else {
             System.currentTimeMillis()
@@ -322,7 +343,7 @@ class CounterViewModel(
         // ViewModel isn't ready yet, so without this guard a fast tap here
         // would dereference the lateinit `engine`/`dhikr` and crash with
         // UninitializedPropertyAccessException (finding #2).
-        if (!sessionReady) return
+        if (!sessionReady || viewingStepIndex != null) return
         val snap = engine.increment()
         if (snap.isComplete && activeRoutine != null) {
             advanceRoutineStep()
@@ -346,6 +367,8 @@ class CounterViewModel(
 
     private fun advanceRoutineStep() {
         val routine = activeRoutine ?: return
+        viewingStepIndex = null // defensive: a step advance always means live view
+        viewingDhikr = null
         val sortedSteps = sortedRoutineSteps // B1: sorted once at load
         val nextIndex = routineStepIndex + 1
         if (nextIndex > sortedSteps.lastIndex) {
@@ -445,6 +468,8 @@ class CounterViewModel(
     fun onRoutineRestart() {
         if (activeRoutine == null) return
         val firstStep = sortedRoutineSteps.firstOrNull() ?: return
+        viewingStepIndex = null // defensive: a restart always means live view
+        viewingDhikr = null
         viewModelScope.launch {
             logCurrentSessionIfNonZero()
             val firstTasbih = tasbihRepository.getById(firstStep.tasbihId) ?: return@launch
@@ -458,9 +483,39 @@ class CounterViewModel(
         }
     }
 
+    /**
+     * A progress-chip for an already-completed step was tapped — show that
+     * step's dhikr and finished tally read-only, without disturbing the
+     * routine's real in-progress step. Only steps strictly before the current
+     * one qualify: the current step is already live on screen, and future
+     * steps haven't been reached yet (nothing to look back at).
+     */
+    fun onSelectRoutineStep(index: Int) {
+        if (!sessionReady || activeRoutine == null) return
+        if (index !in 0 until routineStepIndex) return
+        viewModelScope.launch {
+            val step = sortedRoutineSteps.getOrNull(index) ?: return@launch
+            val stepTasbih = tasbihRepository.getById(step.tasbihId) ?: return@launch
+            viewingStepIndex = index
+            viewingDhikr = stepTasbih
+            viewingTargetCount = step.targetCount
+            _uiState.value = buildState()
+        }
+    }
+
+    /** Leaves the past-step preview and returns the screen to the routine's
+     * live in-progress step, which was never touched while previewing. */
+    fun onReturnToCurrentStep() {
+        if (viewingStepIndex == null) return
+        viewingStepIndex = null
+        viewingDhikr = null
+        _uiState.value = buildState()
+    }
+
     fun onUndo() {
-        // See onTap() — same not-ready-yet guard (finding #2).
-        if (!sessionReady) return
+        // See onTap() — same not-ready-yet guard (finding #2), plus the
+        // read-only past-step-preview guard.
+        if (!sessionReady || viewingStepIndex != null) return
         // If the session was complete, increment() had paused the engine as part
         // of finishing — undoing past that point should un-stick it. An ordinary
         // undo of a normal tap while the user had manually paused must NOT force
@@ -473,8 +528,9 @@ class CounterViewModel(
     }
 
     fun onReset() {
-        // See onTap() — same not-ready-yet guard (finding #2).
-        if (!sessionReady) return
+        // See onTap() — same not-ready-yet guard (finding #2), plus the
+        // read-only past-step-preview guard.
+        if (!sessionReady || viewingStepIndex != null) return
         engine.reset()
         engine.resume()
         // Reset clears the count to 0, so anything logged so far this session
@@ -490,8 +546,9 @@ class CounterViewModel(
     }
 
     fun onTogglePause() {
-        // See onTap() — same not-ready-yet guard (finding #2).
-        if (!sessionReady) return
+        // See onTap() — same not-ready-yet guard (finding #2), plus the
+        // read-only past-step-preview guard.
+        if (!sessionReady || viewingStepIndex != null) return
         if (engine.isRunning()) engine.pause() else engine.resume()
         _uiState.value = buildState()
     }
@@ -566,15 +623,21 @@ class CounterViewModel(
         val routine = activeRoutine
         val steps = if (routine != null) cachedRoutineStepDisplays else emptyList()
         val tasbihIndex = if (routine == null) tasbihOrder.indexOf(dhikr.id) else -1
+        // While previewing a past step, every display field below comes from
+        // that step instead of the live engine/dhikr — but routineStepIndex
+        // itself (currentRoutineStepIndex) stays the real in-progress step so
+        // the chip strip's tinting doesn't change just because the user is
+        // looking back (see viewingStepIndex's doc comment).
+        val viewing = viewingStepIndex
         return CounterUiState(
-            dhikr = dhikr,
-            count = snap.count,
-            lap = snap.lap,
-            totalLaps = dhikr.lapCount,
-            canUndo = snap.canUndo,
-            running = engine.isRunning(),
+            dhikr = if (viewing != null) viewingDhikr ?: dhikr else dhikr,
+            count = if (viewing != null) viewingTargetCount else snap.count,
+            lap = if (viewing != null) 1 else snap.lap,
+            totalLaps = if (viewing != null) 1 else dhikr.lapCount,
+            canUndo = if (viewing != null) false else snap.canUndo,
+            running = if (viewing != null) false else engine.isRunning(),
             locked = locked,
-            isComplete = snap.isComplete,
+            isComplete = if (viewing != null) true else snap.isComplete,
             justCompletedLap = justCompletedLap,
             sessionStartedAtMillis = sessionStartedAtMillis,
             routineSteps = steps,
@@ -586,6 +649,8 @@ class CounterViewModel(
             sessionReady = true,
             canGoToPrevious = tasbihIndex > 0,
             canGoToNext = tasbihIndex in 0 until tasbihOrder.lastIndex,
+            isViewingPastStep = viewing != null,
+            viewingRoutineStepIndex = viewing,
         )
     }
 
@@ -651,6 +716,7 @@ class CounterViewModel(
                 routineId = persistRoutineId,
                 routineStep = if (persistRoutineId != null) routineStepIndex.coerceAtLeast(0) else 0,
                 loggedTotal = loggedTotal,
+                dayStartMillis = DayBounds.startOfTodayMillis(),
             )
         )
         // Per-routine progress row — the part that survives opening a different

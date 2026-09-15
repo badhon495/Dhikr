@@ -41,6 +41,16 @@ data class CounterUiState(
     // Tasbih-Library order — see CounterViewModel's tasbihOrder cache.
     val canGoToPrevious: Boolean = false,
     val canGoToNext: Boolean = false,
+    // Non-null while the user is glancing back at an already-completed
+    // routine step tapped from the progress-chip strip (viewingRoutineStepIndex
+    // holds which one). The step's own tally is read-only — dhikr/count/etc.
+    // above are swapped to show it — so the tap area is disabled
+    // (isViewingPastStep) rather than let a stray tap mutate a finished step's
+    // count. currentRoutineStepIndex is left pointing at the real in-progress
+    // step throughout, so the chip strip's current/completed/upcoming tinting
+    // never changes just because the user is looking back.
+    val isViewingPastStep: Boolean = false,
+    val viewingRoutineStepIndex: Int? = null,
 ) {
     val totalCount: Int get() = (lap - 1) * dhikr.lapTarget + count
     val progressFraction: Float get() = count.toFloat() / dhikr.lapTarget.toFloat()
