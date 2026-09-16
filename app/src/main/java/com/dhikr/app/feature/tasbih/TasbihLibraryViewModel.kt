@@ -18,7 +18,26 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+enum class TasbihSortField { NONE, LENGTH, RECITE_COUNT }
+enum class SortDirection { ASC, DESC }
+
+data class TasbihSort(
+    val field: TasbihSortField = TasbihSortField.NONE,
+    val direction: SortDirection = SortDirection.ASC,
+)
+
+private fun List<TasbihEntity>.sortedWith(sort: TasbihSort): List<TasbihEntity> {
+    val comparator: Comparator<TasbihEntity> = when (sort.field) {
+        TasbihSortField.NONE -> return this
+        TasbihSortField.LENGTH -> compareBy { it.arabic.length }
+        TasbihSortField.RECITE_COUNT -> compareBy { it.lapTarget }
+    }
+    val ordered = if (sort.direction == SortDirection.DESC) comparator.reversed() else comparator
+    return this.sortedWith(ordered)
+}
 
 data class TasbihLibraryUiState(
     val query: String = "",
@@ -28,6 +47,7 @@ data class TasbihLibraryUiState(
     // tasbihId -> 0f..1f of today's counting position toward the Tasbih's total
     // goal; drives the row's green fill. Clears on its own the next day.
     val progressByTasbihId: Map<String, Float> = emptyMap(),
+    val sort: TasbihSort = TasbihSort(),
 )
 
 /** One-shot event for TasbihLibraryScreen to show when a delete is blocked
@@ -54,6 +74,7 @@ class TasbihLibraryViewModel(
 ) : ViewModel() {
 
     private val query = MutableStateFlow("")
+    private val sort = MutableStateFlow(TasbihSort())
 
     val uiState: StateFlow<TasbihLibraryUiState> = combine(
         query,
@@ -62,13 +83,15 @@ class TasbihLibraryViewModel(
         },
         repository.observeAll(), // stable built-in/custom counts, independent of the filter
         repository.observeSessionProgressToday(),
-    ) { q, results, all, progress ->
+        sort,
+    ) { q, results, all, progress, sort ->
         TasbihLibraryUiState(
             query = q,
-            results = results,
+            results = results.sortedWith(sort),
             builtInCount = all.count { it.isBuiltIn },
             customCount = all.count { !it.isBuiltIn },
             progressByTasbihId = progress,
+            sort = sort,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -78,6 +101,17 @@ class TasbihLibraryViewModel(
 
     fun onQueryChange(newQuery: String) {
         query.value = newQuery
+    }
+
+    /** Picking the already-active field flips ASC/DESC; picking a new field starts it at ASC. */
+    fun onSelectSortField(field: TasbihSortField) {
+        sort.update { current ->
+            if (current.field == field) {
+                current.copy(direction = if (current.direction == SortDirection.ASC) SortDirection.DESC else SortDirection.ASC)
+            } else {
+                TasbihSort(field = field, direction = SortDirection.ASC)
+            }
+        }
     }
 
     fun onToggleFavorite(id: String, currentlyFavorite: Boolean) {

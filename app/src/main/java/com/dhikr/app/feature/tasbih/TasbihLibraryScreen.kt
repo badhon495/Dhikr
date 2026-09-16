@@ -24,9 +24,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -138,13 +142,20 @@ fun TasbihLibraryScreen(
             }
         }
 
-        // ---- Search pill: surface fill, 1px line border, magnifier in faint ----
+        // ---- Search pill + sort button, same row ----
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
+                .padding(top = 16.dp),
+        ) {
+        // Search pill: surface fill, 1px line border, magnifier in faint
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .weight(1f)
                 .heightIn(min = 48.dp)
                 .clip(PillShape)
                 .background(colors.surface)
@@ -172,6 +183,54 @@ fun TasbihLibraryScreen(
                     cursorBrush = SolidColor(colors.text),
                     modifier = Modifier.fillMaxWidth(),
                 )
+            }
+        }
+
+            var sortMenuOpen by remember { mutableStateOf(false) }
+            val sortActive = state.sort.field != TasbihSortField.NONE
+            Box {
+                Box(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(if (sortActive) colors.sageSoft else colors.surface)
+                        .clickable(role = Role.Button, onClickLabel = stringResource(R.string.tasbih_library_sort_content_description)) {
+                            sortMenuOpen = true
+                        }
+                        .minTapTarget()
+                        .padding(10.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = if (state.sort.direction == SortDirection.DESC) {
+                            Icons.Filled.KeyboardArrowDown
+                        } else {
+                            Icons.Filled.KeyboardArrowUp
+                        },
+                        contentDescription = stringResource(R.string.tasbih_library_sort_content_description),
+                        tint = if (sortActive) colors.sage else colors.faint,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
+                DropdownMenu(expanded = sortMenuOpen, onDismissRequest = { sortMenuOpen = false }) {
+                    TasbihSortField.entries.filter { it != TasbihSortField.NONE }.forEach { field ->
+                        val label = stringResource(
+                            if (field == TasbihSortField.LENGTH) R.string.tasbih_library_sort_option_length
+                            else R.string.tasbih_library_sort_option_count,
+                        )
+                        val directionMark = when {
+                            state.sort.field != field -> ""
+                            state.sort.direction == SortDirection.ASC -> " ↑"
+                            else -> " ↓"
+                        }
+                        DropdownMenuItem(
+                            text = { Text(label + directionMark) },
+                            onClick = {
+                                viewModel.onSelectSortField(field)
+                                sortMenuOpen = false
+                            },
+                        )
+                    }
+                }
             }
         }
 

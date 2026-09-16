@@ -71,6 +71,9 @@
     <string name="tasbih_library_new">+ নতুন</string>
     <string name="tasbih_library_search_placeholder">নাম, আরবি, উচ্চারণ খুঁজুন</string>
     <string name="tasbih_library_search_content_description">খুঁজুন</string>
+    <string name="tasbih_library_sort_content_description">সাজান</string>
+    <string name="tasbih_library_sort_option_length">দৈর্ঘ্য</string>
+    <string name="tasbih_library_sort_option_count">জপ সংখ্যা</string>
     <string name="tasbih_library_result_count_all">%1$d টি অন্তর্নির্মিত · %2$d টি কাস্টম</string>
     <string name="tasbih_library_result_count_filtered">\"%3$s\" এর সাথে %2$d এর %1$d টি মিলেছে</string>
     <string name="tasbih_library_empty">এর সাথে কিছু মেলেনি। এটি কাস্টম তাসবিহ হিসেবে তৈরি করুন।</string>
