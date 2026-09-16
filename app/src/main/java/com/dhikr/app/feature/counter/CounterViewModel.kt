@@ -197,7 +197,7 @@ class CounterViewModel(
                 val currentStep = sortedSteps[routineStepIndex]
                 val stepTasbih = tasbihRepository.getById(currentStep.tasbihId)
                 if (stepTasbih != null) {
-                    dhikr = stepTasbih
+                    dhikr = stepTasbih.copy(lapTarget = currentStep.targetCount)
                     engine = TasbihCounter(currentStep.targetCount, 1)
                     if (savedProgress != null) {
                         val restoredCount = savedProgress.countInStep
@@ -395,7 +395,7 @@ class CounterViewModel(
             val nextStep = sortedSteps[nextIndex]
             val nextTasbih = tasbihRepository.getById(nextStep.tasbihId) ?: return@launch
             routineStepIndex = nextIndex
-            dhikr = nextTasbih
+            dhikr = nextTasbih.copy(lapTarget = nextStep.targetCount)
             engine = TasbihCounter(nextStep.targetCount, 1)
             loggedTotal = 0 // fresh engine starts at 0; nothing logged for it yet
             // elapsedSeconds is intentionally left as-is — the session timer
@@ -474,7 +474,7 @@ class CounterViewModel(
             logCurrentSessionIfNonZero()
             val firstTasbih = tasbihRepository.getById(firstStep.tasbihId) ?: return@launch
             routineStepIndex = 0
-            dhikr = firstTasbih
+            dhikr = firstTasbih.copy(lapTarget = firstStep.targetCount)
             engine = TasbihCounter(firstStep.targetCount, 1)
             loggedTotal = 0
             _elapsedSeconds.value = 0

@@ -64,16 +64,21 @@ class AppPreferencesRepository(private val context: Context) {
 
     /**
      * When the counter vibrates. Falls back to the pre-3.x boolean
-     * `haptics_enabled` so an existing user's choice carries over: absent →
-     * EVERY_TAP, false → OFF, true → EVERY_TAP. An unknown stored string also
-     * falls back to EVERY_TAP rather than crashing on a hand-edited store.
+     * `haptics_enabled` so an existing user's choice carries over: false →
+     * OFF, true → EVERY_TAP. If neither key was ever set (fresh install),
+     * defaults to LAP_ONLY. An unknown stored string also falls back to
+     * LAP_ONLY rather than crashing on a hand-edited store.
      */
     val hapticMode = context.preferencesDataStore.data.map { prefs ->
         when (prefs[hapticModeKey]) {
             HapticMode.OFF.name -> HapticMode.OFF
             HapticMode.EVERY_TAP.name -> HapticMode.EVERY_TAP
             HapticMode.LAP_ONLY.name -> HapticMode.LAP_ONLY
-            else -> if (prefs[hapticsEnabledKey] == false) HapticMode.OFF else HapticMode.EVERY_TAP
+            else -> when (prefs[hapticsEnabledKey]) {
+                false -> HapticMode.OFF
+                true -> HapticMode.EVERY_TAP
+                else -> HapticMode.LAP_ONLY
+            }
         }
     }
 

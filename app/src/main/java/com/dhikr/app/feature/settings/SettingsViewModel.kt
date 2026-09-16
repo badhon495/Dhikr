@@ -176,6 +176,14 @@ class SettingsViewModel(
         // Reflect the choice right away so the pill updates even on devices/API
         // levels where the locale switch doesn't recreate this activity.
         _uiState.value = _uiState.value.copy(appLanguage = value)
+        // Keep the AI benefits language in step with the app language by
+        // default, so switching to Bangla doesn't leave benefit write-ups
+        // generating in English until the user notices the separate setting.
+        val matchingBenefitsLanguage = when (value) {
+            AppLanguage.ENGLISH -> BenefitsLanguage.ENGLISH
+            AppLanguage.BANGLA -> BenefitsLanguage.BANGLA
+        }
+        onBenefitsLanguageChange(matchingBenefitsLanguage)
     }
 
     fun onAutoCounterEnabledChange(enabled: Boolean) {
