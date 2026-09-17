@@ -360,6 +360,11 @@
     <string name="onboarding_privacy_body">Everything stays on your device. The app works fully offline and never sends your Dhikr anywhere.</string>
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
+    <string name="onboarding_previous">Previous</string>
     <string name="onboarding_get_started">Get started</string>
     <string name="onboarding_page_indicator">Page %1$d of %2$d</string>
+    <string name="onboarding_skip_confirm_title">Skip setup?</string>
+    <string name="onboarding_skip_confirm_body">You can always change language and theme later in Settings.</string>
+    <string name="onboarding_skip_confirm_action">Skip</string>
+    <string name="onboarding_skip_confirm_cancel">Cancel</string>
 </resources>

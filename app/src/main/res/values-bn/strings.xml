@@ -232,8 +232,8 @@
     <string name="settings_language_bangla">বাংলা</string>
     <string name="settings_appearance">চেহারা</string>
     <string name="settings_theme_system">সিস্টেম</string>
-    <string name="settings_theme_light">উজ্জ্বল</string>
-    <string name="settings_theme_dark">গাঢ়</string>
+    <string name="settings_theme_light">লাইট</string>
+    <string name="settings_theme_dark">ডার্ক</string>
     <string name="settings_dynamic_color">Material You</string>
     <string name="settings_dynamic_color_desc">আপনার ওয়ালপেপার থেকে অ্যাপের রঙ নিন</string>
     <string name="settings_counting">গণনা</string>
@@ -341,21 +341,28 @@
 
     <!-- Onboarding (shown once, before Home, plan.md §25) -->
     <string name="onboarding_welcome_title">Dhikr</string>
-    <string name="onboarding_welcome_body">সহজে যিকর গণনা করুন। একটি শান্ত, ব্যক্তিগত কাউন্টার — কোনো অ্যাকাউন্ট নেই, বিজ্ঞাপন নেই, কিছুই ট্র্যাক করা হয় না।</string>
+    <string name="onboarding_welcome_body">সহজেই জিকির গুনুন। শান্ত ও ব্যক্তিগত একটি কাউন্টার, যেখানে নেই কোনো বিজ্ঞাপন, নেই কোনো তথ্য ট্র্যাকিং।
+</string>
     <string name="onboarding_setup_title">নিজের মতো সাজান</string>
-    <string name="onboarding_setup_body">একটি ভাষা ও থিম বাছুন। পরে সেটিংস থেকে দুটোই বদলাতে পারবেন।</string>
+    <string name="onboarding_setup_body">ভাষা এবং থিম পছন্দ করুন। পরে প্রয়োজন হলে সেটিংস থেকে দুটোই বদলাতে পারবেন।</string>
     <string name="onboarding_setup_language">ভাষা</string>
     <string name="onboarding_setup_theme">থিম</string>
     <string name="onboarding_tap_title">গণনা করতে ট্যাপ করুন</string>
-    <string name="onboarding_tap_body">কাউন্টার স্ক্রিনে যেকোনো জায়গায় ট্যাপ করুন। গণনা সাথে সাথে হালনাগাদ হয়, নিশ্চিত করতে একটি মৃদু কম্পন সহ।</string>
+    <string name="onboarding_tap_body">কাউন্টার স্ক্রিনের যেকোনো জায়গায় ট্যাপ করুন। সঙ্গে সঙ্গেই গণনা আপডেট হবে এবং নিশ্চিত করার জন্য হালকা কম্পন অনুভূত হবে।
+।</string>
     <string name="onboarding_laps_title">ল্যাপ ও লক্ষ্য</string>
-    <string name="onboarding_laps_body">একটি ল্যাপ লক্ষ্য ঠিক করুন, অ্যাপ আপনার জন্য ল্যাপ গণনা করবে। দৈনিক ও রুটিন লক্ষ্য আপনার অগ্রগতি দেখায়।</string>
+    <string name="onboarding_laps_body">একটি লক্ষ্য নির্ধারণ করুন, অ্যাপটি আপনার জিকিরের ল্যাপগুলো নিজে থেকেই হিসাব রাখবে। দৈনিক ও রুটিনের লক্ষ্য পূরণের অগ্রগতি আপনি সহজেই দেখতে পারবেন।</string>
     <string name="onboarding_history_title">কিছুই হারায় না</string>
-    <string name="onboarding_history_body">প্রতিটি সেশন স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়। যেকোনো সময়, এমনকি অফলাইনেও আপনার ইতিহাস ও মোট দেখুন।</string>
-    <string name="onboarding_privacy_title">নকশাগতভাবে ব্যক্তিগত</string>
-    <string name="onboarding_privacy_body">সবকিছু আপনার ডিভাইসেই থাকে। অ্যাপটি সম্পূর্ণ অফলাইনে কাজ করে এবং কখনো আপনার যিকর কোথাও পাঠায় না।</string>
-    <string name="onboarding_skip">বাদ দিন</string>
+    <string name="onboarding_history_body">প্রতিটি সেশন স্বয়ংক্রিয়ভাবে অফলাইনে সংরক্ষিত হয়।</string>
+    <string name="onboarding_privacy_title">প্রাইভেসি ফোকাসড</string>
+    <string name="onboarding_privacy_body">সবকিছু আপনার ডিভাইসেই থাকে। অ্যাপটি সম্পূর্ণ অফলাইনে কাজ করে এবং কখনো আপনার ডাটা কোথাও পাঠায় না।</string>
+    <string name="onboarding_skip">স্কিপ করুন</string>
     <string name="onboarding_next">পরবর্তী</string>
+    <string name="onboarding_previous">পূর্ববর্তী</string>
     <string name="onboarding_get_started">শুরু করুন</string>
     <string name="onboarding_page_indicator">%2$d এর %1$d পৃষ্ঠা</string>
+    <string name="onboarding_skip_confirm_title">সেটআপ বাদ দেবেন?</string>
+    <string name="onboarding_skip_confirm_body">পরে সেটিংস থেকে ভাষা ও থিম যেকোনো সময় বদলাতে পারবেন।</string>
+    <string name="onboarding_skip_confirm_action">স্কিপ করুন</string>
+    <string name="onboarding_skip_confirm_cancel">বাতিল</string>
 </resources>

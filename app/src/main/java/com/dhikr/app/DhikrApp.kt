@@ -244,6 +244,14 @@ fun DhikrApp(
             LocalReducedMotion provides reducedMotion,
             LocalAppLanguage provides appLanguage,
         ) {
+        // Gated on hasSeenOnboarding == true (not just "!= false"): a language
+        // switch recreates the Activity (AppLanguage.apply -> AppCompatDelegate
+        // locale change), and hasSeenOnboarding re-initializes to null for the
+        // instant it takes DataStore to reload. Rendering the NavHost/Home
+        // underneath during that instant is exactly the flash the onboarding
+        // overlay is supposed to prevent, so the main app UI stays out of the
+        // tree entirely until onboarding is confirmed done.
+        if (hasSeenOnboarding == true) {
         Scaffold(
             containerColor = DhikrTheme.colors.bg,
             bottomBar = {
@@ -452,6 +460,7 @@ fun DhikrApp(
                     )
                 }
             }
+        }
         }
         }
 

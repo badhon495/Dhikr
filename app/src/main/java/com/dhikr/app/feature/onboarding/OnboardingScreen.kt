@@ -1,5 +1,6 @@
 package com.dhikr.app.feature.onboarding
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,14 +17,17 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +49,7 @@ import com.dhikr.app.ui.NavInsightsIcon
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.Caprasimo
 import com.dhikr.app.ui.theme.DhikrTheme
+import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.PillShape
 import kotlinx.coroutines.launch
 
@@ -83,6 +88,20 @@ fun OnboardingScreen(
     val pagerState = rememberPagerState(pageCount = { pages.size })
     val scope = rememberCoroutineScope()
     val isLastPage by remember { derivedStateOf { pagerState.currentPage == pages.lastIndex } }
+    val isFirstPage by remember { derivedStateOf { pagerState.currentPage == 0 } }
+    var showSkipConfirm by remember { mutableStateOf(false) }
+
+    // Device back button: step back a page like the on-screen Previous
+    // button, or — on the first page, where there's nowhere left to go back
+    // to — ask for confirmation instead of silently dropping the user onto
+    // Home with setup unfinished.
+    BackHandler {
+        if (isFirstPage) {
+            showSkipConfirm = true
+        } else {
+            scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -134,32 +153,83 @@ fun OnboardingScreen(
                 .padding(bottom = 24.dp),
         )
 
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .clip(PillShape)
-                .background(colors.sage)
-                .clickable(role = Role.Button) {
-                    if (isLastPage) {
-                        onFinished()
-                    } else {
-                        scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
-                    }
-                }
-                .minTapTarget()
-                .padding(vertical = 16.dp),
-            contentAlignment = Alignment.Center,
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(
-                text = stringResource(
-                    if (isLastPage) R.string.onboarding_get_started else R.string.onboarding_next,
-                ),
-                color = colors.onSage,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-            )
+            if (!isFirstPage) {
+                Box(
+                    modifier = Modifier
+                        .clip(PillShape)
+                        .background(colors.card)
+                        .clickable(role = Role.Button) {
+                            scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+                        }
+                        .minTapTarget()
+                        .padding(horizontal = 20.dp, vertical = 16.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(
+                        text = stringResource(R.string.onboarding_previous),
+                        color = colors.dim,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .clip(PillShape)
+                    .background(colors.sage)
+                    .clickable(role = Role.Button) {
+                        if (isLastPage) {
+                            onFinished()
+                        } else {
+                            scope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+                        }
+                    }
+                    .minTapTarget()
+                    .padding(vertical = 16.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = stringResource(
+                        if (isLastPage) R.string.onboarding_get_started else R.string.onboarding_next,
+                    ),
+                    color = colors.onSage,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
         }
+    }
+
+    if (showSkipConfirm) {
+        AlertDialog(
+            onDismissRequest = { showSkipConfirm = false },
+            title = { Text(stringResource(R.string.onboarding_skip_confirm_title)) },
+            text = { Text(stringResource(R.string.onboarding_skip_confirm_body)) },
+            containerColor = colors.card,
+            titleContentColor = colors.text,
+            textContentColor = colors.dim,
+            shape = DialogShape,
+            confirmButton = {
+                TextButton(onClick = {
+                    showSkipConfirm = false
+                    onFinished()
+                }) {
+                    Text(stringResource(R.string.onboarding_skip_confirm_action), color = colors.terra)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showSkipConfirm = false }) {
+                    Text(stringResource(R.string.onboarding_skip_confirm_cancel), color = colors.dim)
+                }
+            },
+        )
     }
 }
 
