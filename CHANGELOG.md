@@ -3,6 +3,24 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.1] - 2026-09-17
+
+versionCode 5
+
+### Added
+- Sorting options in the Tasbih Library.
+- Skip-confirmation dialog in onboarding.
+- Multi-resolution status-bar notification icon assets.
+- New string resource for the "view past step" hint on the counter screen.
+
+### Changed
+- Haptic feedback settings: benefits language now syncs with app language.
+- Dhikr placeholders and session label formatting on the counter screen.
+- Routine steps for morning/evening presets; database version bump.
+- Database seeding logic; clearer settings screen text.
+- Counter step target counts now reflect correctly; better past-step display.
+- Tasbih counter state refactor for more reliable undo and session restore.
+
 ## [1.2.0] - 2026-09-07
 
 versionCode 4
