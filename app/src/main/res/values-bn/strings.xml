@@ -230,7 +230,7 @@
     <string name="settings_language_desc">অ্যাপ জুড়ে ব্যবহৃত ভাষা</string>
     <string name="settings_language_english">English</string>
     <string name="settings_language_bangla">বাংলা</string>
-    <string name="settings_appearance">চেহারা</string>
+    <string name="settings_appearance">থিম</string>
     <string name="settings_theme_system">সিস্টেম</string>
     <string name="settings_theme_light">লাইট</string>
     <string name="settings_theme_dark">ডার্ক</string>
@@ -256,7 +256,7 @@
     <string name="settings_daily_goal">দৈনিক লক্ষ্য</string>
     <string name="settings_daily_goal_desc">হোমের রিং-এ দেখানো লক্ষ্য</string>
     <string name="settings_counter_script">কাউন্টার দেখায়</string>
-    <string name="settings_counter_script_desc">কাউন্টারে কোন লিপি দেখা যাবে। নির্বাচিতটি তাসবিহ যোগ করার সময় আবশ্যক হয়ে যায়।</string>
+    <string name="settings_counter_script_desc">কাউন্টারে কোন লিপি দেখা যাবে। নির্বাচিতটি তাসবিহ যোগ করার সময় আবশ্যক হয়ে যাবে।</string>
     <string name="settings_counter_script_pronunciation">উচ্চারণ</string>
     <string name="settings_counter_script_arabic">আরবি</string>
     <string name="settings_daily_goal_custom">কাস্টম</string>
@@ -364,5 +364,5 @@
     <string name="onboarding_skip_confirm_title">সেটআপ বাদ দেবেন?</string>
     <string name="onboarding_skip_confirm_body">পরে সেটিংস থেকে ভাষা ও থিম যেকোনো সময় বদলাতে পারবেন।</string>
     <string name="onboarding_skip_confirm_action">স্কিপ করুন</string>
-    <string name="onboarding_skip_confirm_cancel">বাতিল</string>
+    <string name="onboarding_skip_confirm_cancel">চালিয়ে যান</string>
 </resources>

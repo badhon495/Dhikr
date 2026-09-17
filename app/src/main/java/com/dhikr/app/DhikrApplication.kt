@@ -34,9 +34,10 @@ class DhikrApplication : Application() {
         // not Default. Room runs the actual SQLite work on its own executor,
         // but the coroutine still shouldn't sit on a CPU-bound dispatcher.
         applicationScope.launch(Dispatchers.IO) {
-            if (database.tasbihDao().count() == 0) {
-                database.tasbihDao().insertAll(SeedData.builtInTasbih)
-            }
+            // IGNORE conflict strategy: existing rows (by id) are untouched, so
+            // this is safe to run on every launch and syncs newly-added
+            // built-in dhikr into installs that already seeded the DB.
+            database.tasbihDao().insertAll(SeedData.builtInTasbih)
             if (database.routineDao().count() == 0) {
                 database.routineDao().insertRoutines(SeedData.presetRoutines)
                 database.routineDao().insertSteps(SeedData.presetRoutineSteps)

@@ -657,7 +657,16 @@ private fun BenefitsPromptEditor(
     onReset: () -> Unit,
 ) {
     val colors = DhikrTheme.colors
-    var draft by rememberSaveable(effectivePrompt) { mutableStateOf(effectivePrompt) }
+    // Keyed (not just input-gated) by effectivePrompt: rememberSaveable's
+    // vararg inputs only reset the draft on recomposition, not on restore
+    // after an Activity recreate (e.g. the one AppLanguage.apply triggers).
+    // Without an explicit key, restore pulls back the pre-switch Bundle
+    // value regardless of the new language, leaving the box showing the
+    // stale-language prompt. Keying on effectivePrompt makes restore miss
+    // and fall back to init() with the freshly-translated default.
+    var draft by rememberSaveable(effectivePrompt, key = effectivePrompt) {
+        mutableStateOf(effectivePrompt)
+    }
     val dirty = draft.trim() != effectivePrompt.trim()
 
     Text(
