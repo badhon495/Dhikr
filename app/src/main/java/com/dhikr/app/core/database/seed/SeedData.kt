@@ -161,6 +161,11 @@ object SeedData {
         "safa_marwah", "hajar_aswad", "maqam_ibrahim", "qurbani",
         // Title-only placeholders, no actual ayat/dua text
         "ruq_baqarah",
+        // Merged dhikr superseded by their individual rows once routine steps
+        // switched to walking surah_ikhlas/surah_falaq/surah_nas and
+        // subhan/hamd/akbar separately (v28) — kept both before, duplicating
+        // the same content in the Tasbih library.
+        "morn_3quls", "morn_tasbih100",
     )
 
     /**
