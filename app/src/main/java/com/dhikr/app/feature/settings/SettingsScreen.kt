@@ -6,7 +6,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,13 +23,19 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
@@ -55,6 +63,7 @@ import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
+import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.ListRowShape
 import com.dhikr.app.ui.theme.PillShape
 import java.text.SimpleDateFormat
@@ -116,11 +125,38 @@ fun SettingsScreen(
                 ThemeMode.DARK to stringResource(R.string.settings_theme_dark),
                 ThemeMode.AUTO_TIME to stringResource(R.string.settings_theme_auto_time),
             )
+            var showAutoTimes by rememberSaveable { mutableStateOf(false) }
             ChoiceRow(
                 options = themeLabels,
                 selected = state.themeMode,
                 onSelect = viewModel::onThemeModeChange,
+                onLongPress = { mode ->
+                    if (mode == ThemeMode.AUTO_TIME) {
+                        viewModel.onThemeModeChange(mode)
+                        showAutoTimes = true
+                    }
+                },
             )
+            if (state.themeMode == ThemeMode.AUTO_TIME) {
+                Text(
+                    stringResource(R.string.settings_theme_auto_hint),
+                    fontSize = 11.5.sp,
+                    color = colors.faint,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            }
+            if (showAutoTimes) {
+                AutoTimeDialog(
+                    lightStart = state.autoLightStart,
+                    darkStart = state.autoDarkStart,
+                    onConfirm = { light, dark ->
+                        viewModel.onAutoLightStartChange(light)
+                        viewModel.onAutoDarkStartChange(dark)
+                        showAutoTimes = false
+                    },
+                    onDismiss = { showAutoTimes = false },
+                )
+            }
             if (state.dynamicColorSupported) {
                 Column(modifier = Modifier.padding(top = 14.dp)) {
                     SwitchRow(
@@ -330,11 +366,78 @@ private fun SettingsSection(title: String, content: @Composable () -> Unit) {
     }
 }
 
+/**
+ * Two-step time picker for [ThemeMode.AUTO_TIME]: first when light starts, then
+ * when dark starts. Nothing is saved until the second step is confirmed.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AutoTimeDialog(
+    lightStart: Int,
+    darkStart: Int,
+    onConfirm: (light: Int, dark: Int) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    var step by rememberSaveable { mutableStateOf(0) }
+    var pickedLight by rememberSaveable { mutableStateOf(lightStart) }
+    val initial = if (step == 0) lightStart else darkStart
+    // Re-created per step so the dial resets to that step's current value.
+    val picker = key(step) {
+        rememberTimePickerState(
+            initialHour = initial / 60,
+            initialMinute = initial % 60,
+            is24Hour = false,
+        )
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = colors.card,
+        shape = DialogShape,
+        title = {
+            Text(
+                stringResource(
+                    if (step == 0) R.string.settings_theme_auto_light_title
+                    else R.string.settings_theme_auto_dark_title,
+                ),
+                color = colors.text,
+                fontSize = 16.sp,
+            )
+        },
+        text = { key(step) { TimePicker(state = picker) } },
+        confirmButton = {
+            TextButton(onClick = {
+                val minute = picker.hour * 60 + picker.minute
+                if (step == 0) {
+                    pickedLight = minute
+                    step = 1
+                } else {
+                    onConfirm(pickedLight, minute)
+                }
+            }) {
+                Text(
+                    stringResource(
+                        if (step == 0) R.string.settings_theme_auto_next else R.string.routine_complete_done,
+                    ),
+                    color = colors.text,
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.routines_delete_cancel_action), color = colors.dim)
+            }
+        },
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun <T> ChoiceRow(
     options: List<Pair<T, String>>,
     selected: T,
     onSelect: (T) -> Unit,
+    onLongPress: ((T) -> Unit)? = null,
 ) {
     val colors = DhikrTheme.colors
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -344,7 +447,11 @@ private fun <T> ChoiceRow(
                 modifier = Modifier
                     .clip(PillShape)
                     .background(if (isSelected) colors.sage else colors.surface)
-                    .clickable(role = Role.RadioButton) { if (!isSelected) onSelect(value) }
+                    .combinedClickable(
+                        role = Role.RadioButton,
+                        onLongClick = onLongPress?.let { { it(value) } },
+                        onClick = { if (!isSelected) onSelect(value) },
+                    )
                     .minTapTarget()
                     .padding(horizontal = 16.dp, vertical = 10.dp),
                 contentAlignment = Alignment.Center,

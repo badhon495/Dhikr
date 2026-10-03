@@ -12,6 +12,8 @@ import com.dhikr.app.core.counter.AutoCounterSensorListener
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.widget.DhikrWidgets
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
+import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.ui.theme.supportsDynamicColor
@@ -25,6 +27,8 @@ import kotlinx.coroutines.launch
 
 data class SettingsUiState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val autoLightStart: Int = DEFAULT_AUTO_LIGHT_START,
+    val autoDarkStart: Int = DEFAULT_AUTO_DARK_START,
     val hapticMode: HapticMode = HapticMode.EVERY_TAP,
     val reducedMotion: Boolean = false,
     val strongBorders: Boolean = false,
@@ -122,6 +126,8 @@ class SettingsViewModel(
             .combine(preferencesRepository.strongBorders) { state, strongBorders ->
                 state.copy(strongBorders = strongBorders)
             }
+            .combine(preferencesRepository.autoLightStart) { state, v -> state.copy(autoLightStart = v) }
+            .combine(preferencesRepository.autoDarkStart) { state, v -> state.copy(autoDarkStart = v) }
             .combine(preferencesRepository.counterScript) { state, counterScript ->
                 state.copy(counterScript = counterScript)
             }
@@ -142,6 +148,14 @@ class SettingsViewModel(
 
     fun onThemeModeChange(mode: ThemeMode) {
         viewModelScope.launch { preferencesRepository.setThemeMode(mode) }
+    }
+
+    fun onAutoLightStartChange(minuteOfDay: Int) {
+        viewModelScope.launch { preferencesRepository.setAutoLightStart(minuteOfDay) }
+    }
+
+    fun onAutoDarkStartChange(minuteOfDay: Int) {
+        viewModelScope.launch { preferencesRepository.setAutoDarkStart(minuteOfDay) }
     }
 
     fun onHapticModeChange(mode: HapticMode) {

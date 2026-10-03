@@ -17,6 +17,9 @@ private val Context.preferencesDataStore by preferencesDataStore(name = "prefere
  *  AUTO_TIME switches light/dark by the clock (see [resolveIsDark]). */
 enum class ThemeMode { SYSTEM, LIGHT, DARK, AUTO_TIME }
 
+const val DEFAULT_AUTO_LIGHT_START = 7 * 60
+const val DEFAULT_AUTO_DARK_START = 18 * 60
+
 /**
  * When the counter vibrates.
  *  - OFF: never
@@ -32,7 +35,9 @@ enum class CounterScript { PRONUNCIATION, ARABIC }
 class AppPreferencesRepository(private val context: Context) {
     private val dailyGoalKey = intPreferencesKey("daily_goal_target")
     private val themeModeKey = stringPreferencesKey("theme_mode")
-    private val hapticsEnabledKey = booleanPreferencesKey("haptics_enabled")
+    private val autoLightStartKey = intPreferencesKey("auto_light_start")
+    private val autoDarkStartKey = intPreferencesKey("auto_dark_start")
+    private val hapticsEnabledKey =booleanPreferencesKey("haptics_enabled")
     private val hapticModeKey = stringPreferencesKey("haptic_mode")
     private val reducedMotionKey = booleanPreferencesKey("reduced_motion")
     private val strongBordersKey = booleanPreferencesKey("strong_borders")
@@ -62,6 +67,20 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setThemeMode(value: ThemeMode) {
         context.preferencesDataStore.edit { it[themeModeKey] = value.name }
+    }
+
+    /** Minute-of-day at which [ThemeMode.AUTO_TIME] switches to light. Default 7:00. */
+    val autoLightStart = context.preferencesDataStore.data.map { it[autoLightStartKey] ?: DEFAULT_AUTO_LIGHT_START }
+
+    /** Minute-of-day at which [ThemeMode.AUTO_TIME] switches to dark. Default 18:00. */
+    val autoDarkStart = context.preferencesDataStore.data.map { it[autoDarkStartKey] ?: DEFAULT_AUTO_DARK_START }
+
+    suspend fun setAutoLightStart(minuteOfDay: Int) {
+        context.preferencesDataStore.edit { it[autoLightStartKey] = minuteOfDay.coerceIn(0, 1439) }
+    }
+
+    suspend fun setAutoDarkStart(minuteOfDay: Int) {
+        context.preferencesDataStore.edit { it[autoDarkStartKey] = minuteOfDay.coerceIn(0, 1439) }
     }
 
     /**

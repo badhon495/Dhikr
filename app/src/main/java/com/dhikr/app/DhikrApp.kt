@@ -54,6 +54,8 @@ import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
+import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.datastore.HapticMode
@@ -116,6 +118,8 @@ fun DhikrApp(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
     strongBorders: Boolean = false,
+    autoLightStart: Int = DEFAULT_AUTO_LIGHT_START,
+    autoDarkStart: Int = DEFAULT_AUTO_DARK_START,
     pendingRoutineId: String? = null,
     onPendingRoutineConsumed: () -> Unit = {},
     pendingTasbihId: String? = null,
@@ -125,7 +129,13 @@ fun DhikrApp(
     pendingShareUri: Uri? = null,
     onPendingShareConsumed: () -> Unit = {},
 ) {
-    DhikrTheme(themeMode = themeMode, dynamicColor = dynamicColor, strongBorders = strongBorders) {
+    DhikrTheme(
+        themeMode = themeMode,
+        dynamicColor = dynamicColor,
+        strongBorders = strongBorders,
+        autoLightStart = autoLightStart,
+        autoDarkStart = autoDarkStart,
+    ) {
         val navController = rememberNavController()
         val context = LocalContext.current
         val app = context.applicationContext as DhikrApplication

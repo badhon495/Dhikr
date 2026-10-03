@@ -237,7 +237,11 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
-    <string name="settings_theme_auto_time">Auto (time-based)</string>
+    <string name="settings_theme_auto_time">Auto</string>
+    <string name="settings_theme_auto_hint">Long-press Auto to set when light and dark start.</string>
+    <string name="settings_theme_auto_light_title">Light mode starts at</string>
+    <string name="settings_theme_auto_dark_title">Dark mode starts at</string>
+    <string name="settings_theme_auto_next">Next</string>
     <string name="settings_dynamic_color">Material You</string>
     <string name="settings_dynamic_color_desc">Colour the app from your wallpaper</string>
     <string name="settings_counting">Counting</string>

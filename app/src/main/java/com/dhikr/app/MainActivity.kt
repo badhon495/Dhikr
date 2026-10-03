@@ -16,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.dhikr.app.core.datastore.AppPreferencesRepository
+import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
+import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.core.notifications.ReminderNotifications
 import com.dhikr.app.ui.theme.resolveIsDark
@@ -52,6 +54,10 @@ class MainActivity : AppCompatActivity() {
             val themeMode by preferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
             val dynamicColor by preferencesRepository.dynamicColorEnabled.collectAsState(initial = true)
             val strongBorders by preferencesRepository.strongBorders.collectAsState(initial = false)
+            val autoLightStart by preferencesRepository.autoLightStart
+                .collectAsState(initial = DEFAULT_AUTO_LIGHT_START)
+            val autoDarkStart by preferencesRepository.autoDarkStart
+                .collectAsState(initial = DEFAULT_AUTO_DARK_START)
 
             // Explicit transparent style, re-applied via SideEffect whenever the
             // resolved dark/light signal flips — now driven by the user's theme
@@ -60,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             // enableEdgeToEdge() default, which (combined with the window
             // background left at platform white, see themes.xml) was what made
             // the status bar render as an opaque white bar.
-            val darkTheme = themeMode.resolveIsDark()
+            val darkTheme = themeMode.resolveIsDark(autoLightStart, autoDarkStart)
             SideEffect {
                 val style = if (darkTheme) {
                     SystemBarStyle.dark(TRANSPARENT)
@@ -73,6 +79,8 @@ class MainActivity : AppCompatActivity() {
                 themeMode = themeMode,
                 dynamicColor = dynamicColor,
                 strongBorders = strongBorders,
+                autoLightStart = autoLightStart,
+                autoDarkStart = autoDarkStart,
                 pendingRoutineId = pendingRoutineId,
                 onPendingRoutineConsumed = { pendingRoutineId = null },
                 pendingTasbihId = pendingTasbihId,
