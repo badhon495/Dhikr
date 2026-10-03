@@ -234,6 +234,7 @@
     <string name="settings_theme_system">সিস্টেম</string>
     <string name="settings_theme_light">লাইট</string>
     <string name="settings_theme_dark">ডার্ক</string>
+    <string name="settings_theme_auto_time">অটো (সময় অনুযায়ী)</string>
     <string name="settings_dynamic_color">Material You</string>
     <string name="settings_dynamic_color_desc">আপনার ওয়ালপেপার থেকে অ্যাপের রঙ নিন</string>
     <string name="settings_counting">গণনা</string>

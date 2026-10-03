@@ -13,8 +13,9 @@ import kotlinx.coroutines.runBlocking
 
 private val Context.preferencesDataStore by preferencesDataStore(name = "preferences")
 
-/** User's app-theme choice. SYSTEM defers to the device dark/light setting. */
-enum class ThemeMode { SYSTEM, LIGHT, DARK }
+/** User's app-theme choice. SYSTEM defers to the device dark/light setting;
+ *  AUTO_TIME switches light/dark by the clock (see [resolveIsDark]). */
+enum class ThemeMode { SYSTEM, LIGHT, DARK, AUTO_TIME }
 
 /**
  * When the counter vibrates.
@@ -54,6 +55,7 @@ class AppPreferencesRepository(private val context: Context) {
         when (prefs[themeModeKey]) {
             ThemeMode.LIGHT.name -> ThemeMode.LIGHT
             ThemeMode.DARK.name -> ThemeMode.DARK
+            ThemeMode.AUTO_TIME.name -> ThemeMode.AUTO_TIME
             else -> ThemeMode.SYSTEM
         }
     }

@@ -7,8 +7,18 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.platform.LocalContext
 import com.dhikr.app.core.datastore.ThemeMode
+import java.util.Calendar
+import kotlinx.coroutines.delay
+
+/** Light hours for [ThemeMode.AUTO_TIME]: 7am (inclusive) to 6pm (exclusive). */
+private val autoLightHours = 7..17
+
+private fun isDaylightHourNow(): Boolean =
+    Calendar.getInstance().get(Calendar.HOUR_OF_DAY) in autoLightHours
 
 val LocalDhikrColors = compositionLocalOf { LightDhikrColors }
 
@@ -17,12 +27,24 @@ object DhikrTheme {
         @Composable get() = LocalDhikrColors.current
 }
 
-/** Resolves the user's [ThemeMode] against the system dark/light signal. */
+/** Resolves the user's [ThemeMode] against the system dark/light signal, or
+ *  (for [ThemeMode.AUTO_TIME]) the wall clock. The clock read is re-checked
+ *  once a minute so a session left open across the 7am/6pm boundary flips
+ *  without needing a restart. */
 @Composable
 fun ThemeMode.resolveIsDark(): Boolean = when (this) {
     ThemeMode.SYSTEM -> isSystemInDarkTheme()
     ThemeMode.LIGHT -> false
     ThemeMode.DARK -> true
+    ThemeMode.AUTO_TIME -> {
+        val isDaylight by produceState(initialValue = isDaylightHourNow()) {
+            while (true) {
+                value = isDaylightHourNow()
+                delay(60_000L)
+            }
+        }
+        !isDaylight
+    }
 }
 
 @Composable

@@ -114,6 +114,7 @@ fun SettingsScreen(
                 ThemeMode.SYSTEM to stringResource(R.string.settings_theme_system),
                 ThemeMode.LIGHT to stringResource(R.string.settings_theme_light),
                 ThemeMode.DARK to stringResource(R.string.settings_theme_dark),
+                ThemeMode.AUTO_TIME to stringResource(R.string.settings_theme_auto_time),
             )
             ChoiceRow(
                 options = themeLabels,
