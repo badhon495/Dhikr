@@ -3,6 +3,20 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.2.3] - 2026-10-15
+
+versionCode 7
+
+### Added
+- **Auto theme** mode — switches between light and dark at custom start
+  times set in Settings.
+
+### Changed
+- Tasbih Library sorting options and more responsive layout.
+- Home and Insights screens polished for better responsiveness.
+- Updated seed data for dhikr routines (database version bump).
+- Backup / data-extraction rules updated for the new theme preferences.
+
 ## [1.2.1] - 2026-09-17
 
 versionCode 5
