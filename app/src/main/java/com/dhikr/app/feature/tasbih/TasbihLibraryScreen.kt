@@ -89,6 +89,12 @@ fun TasbihLibraryScreen(
         if (scrollToTopSignal > 0) listState.animateScrollToItem(0)
     }
 
+    // Keyed LazyColumn anchors scroll to the first visible item, so after a
+    // re-sort the view follows that item and the new order looks unchanged.
+    LaunchedEffect(state.sort) {
+        listState.scrollToItem(0)
+    }
+
     // Long-press action menu (Edit/Delete) state — which Tasbih, if any,
     // currently has its menu open. Built-in Tasbih are included: the user can
     // delete them too (the repository still blocks a delete while a routine
@@ -214,8 +220,11 @@ fun TasbihLibraryScreen(
                 DropdownMenu(expanded = sortMenuOpen, onDismissRequest = { sortMenuOpen = false }) {
                     TasbihSortField.entries.filter { it != TasbihSortField.NONE }.forEach { field ->
                         val label = stringResource(
-                            if (field == TasbihSortField.LENGTH) R.string.tasbih_library_sort_option_length
-                            else R.string.tasbih_library_sort_option_count,
+                            when (field) {
+                                TasbihSortField.LENGTH -> R.string.tasbih_library_sort_option_length
+                                TasbihSortField.CUSTOM -> R.string.tasbih_library_sort_option_custom
+                                else -> R.string.tasbih_library_sort_option_count
+                            },
                         )
                         val directionMark = when {
                             state.sort.field != field -> ""

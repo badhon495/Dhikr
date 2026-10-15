@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,6 +41,8 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
@@ -231,10 +234,34 @@ fun HomeScreen(
                             .padding(14.dp),
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(tasbih.displayName(lang), fontSize = 14.5.sp, color = colors.text)
-                            Text(tasbih.displayPronunciation(lang), fontSize = 12.sp, color = colors.faint, maxLines = 1)
+                            Text(
+                                tasbih.displayName(lang),
+                                fontSize = 14.5.sp,
+                                color = colors.text,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                            Text(
+                                tasbih.displayPronunciation(lang),
+                                fontSize = 12.sp,
+                                color = colors.faint,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
                         }
-                        Text(tasbih.arabic, fontSize = 14.sp, color = colors.dim)
+                        // Capped so a long Arabic text can't squeeze the name
+                        // column down to a single character per line.
+                        Text(
+                            tasbih.arabic,
+                            fontSize = 14.sp,
+                            color = colors.dim,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            textAlign = TextAlign.End,
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                                .widthIn(max = 120.dp),
+                        )
                     }
                 }
             }

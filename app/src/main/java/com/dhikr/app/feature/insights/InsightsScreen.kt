@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -154,14 +156,27 @@ fun InsightsScreen(
                 .padding(top = 20.dp, bottom = 8.dp)
                 .headingSemantics(),
         )
+        // Labels built here (not in the repository) so they follow the in-app
+        // language and re-render when it changes.
+        val appLanguage = LocalAppLanguage.current
+        val dayLabels = remember(appLanguage, state.last7Days.size) {
+            val format = SimpleDateFormat("EEE", Locale.forLanguageTag(appLanguage.tag))
+            val cal = Calendar.getInstance()
+            val count = state.last7Days.size
+            List(count) { index ->
+                cal.timeInMillis = System.currentTimeMillis()
+                cal.add(Calendar.DAY_OF_YEAR, index - (count - 1))
+                format.format(cal.time)
+            }
+        }
         val barChartDescription = stringResource(
             R.string.insights_bar_chart_description,
-            state.last7Days.joinToString(", ") { (label, value) -> "$label $value" },
+            state.last7Days.mapIndexed { i, (_, value) -> "${dayLabels[i]} $value" }.joinToString(", "),
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(112.dp)
+                .height(136.dp)
                 .clip(RoundedCornerShape(20.dp))
                 .background(colors.card)
                 .padding(12.dp)
@@ -169,19 +184,44 @@ fun InsightsScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             val maxValue = (state.last7Days.maxOfOrNull { it.second } ?: 1).coerceAtLeast(1)
-            state.last7Days.forEachIndexed { index, (label, value) ->
+            state.last7Days.forEachIndexed { index, (_, value) ->
                 val isToday = index == state.last7Days.lastIndex
-                Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.weight(1f)) {
-                    Text(value.localizedDigits(LocalAppLanguage.current), fontSize = 10.5.sp, color = colors.dim)
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 4.dp)
-                            .width(18.dp)
-                            .height((value.toFloat() / maxValue * 70).dp.coerceAtLeast(4.dp))
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(if (isToday) colors.terra else colors.sage),
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                ) {
+                    Text(
+                        value.localizedDigits(appLanguage),
+                        fontSize = 10.5.sp,
+                        color = colors.dim,
+                        maxLines = 1,
+                        softWrap = false,
                     )
-                    Text(label, fontSize = 10.5.sp, color = colors.faint, modifier = Modifier.padding(top = 4.dp))
+                    // Bar area takes the leftover height, so a tall bar can
+                    // never push the day label out of the card.
+                    BoxWithConstraints(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(vertical = 4.dp),
+                        contentAlignment = Alignment.BottomCenter,
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .width(18.dp)
+                                .height((maxHeight * (value.toFloat() / maxValue)).coerceAtLeast(4.dp))
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(if (isToday) colors.terra else colors.sage),
+                        )
+                    }
+                    Text(
+                        dayLabels[index],
+                        fontSize = 10.5.sp,
+                        color = colors.faint,
+                        maxLines = 1,
+                        softWrap = false,
+                    )
                 }
             }
         }

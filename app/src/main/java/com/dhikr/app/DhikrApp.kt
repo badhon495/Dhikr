@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import android.net.Uri
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -283,7 +284,7 @@ fun DhikrApp(
             NavHost(
                 navController = navController,
                 startDestination = ROUTE_HOME,
-                modifier = Modifier.padding(padding),
+                modifier = Modifier.padding(padding).consumeWindowInsets(padding),
                 enterTransition = { navEnter(reducedMotion, isTabSwitch(), forward = true) },
                 exitTransition = { navExit(reducedMotion, isTabSwitch(), forward = true) },
                 popEnterTransition = { navEnter(reducedMotion, isTabSwitch(), forward = false) },

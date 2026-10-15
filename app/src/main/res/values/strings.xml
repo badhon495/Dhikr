@@ -77,6 +77,7 @@
     <string name="tasbih_library_sort_content_description">Sort</string>
     <string name="tasbih_library_sort_option_length">Length</string>
     <string name="tasbih_library_sort_option_count">Recite count</string>
+    <string name="tasbih_library_sort_option_custom">Custom (↑ top, ↓ bottom)</string>
     <string name="tasbih_library_result_count_all">%1$d built-in · %2$d custom</string>
     <string name="tasbih_library_result_count_filtered">%1$d of %2$d match \"%3$s\"</string>
     <string name="tasbih_library_empty">Nothing matches that. Create it as a custom Tasbih.</string>
