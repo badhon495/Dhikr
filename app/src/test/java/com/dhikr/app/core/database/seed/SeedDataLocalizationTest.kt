@@ -11,12 +11,8 @@ import org.junit.Test
  *  Bangla name, a Bangla-script recitation guide, and a clean English/Bangla
  *  split of the translation and note.
  *
- *  The situational-dhikr batches (istighfar / morning / evening / before-sleep /
- *  praise / Qur'anic-dua / salawat / ruqyah / beneficial / surah) are fully
- *  localized on the Bangla side but their English-side `pronunciation` still
- *  holds the Bangla rendering — a faithful Roman transliteration is tracked
- *  follow-up work. Those ids live in [SeedData.pendingRomanTransliterationIds]
- *  and are exempt only from the "English pronunciation is Roman script" check.
+ *  The English-side `pronunciation` is Roman script for every built-in; the
+ *  Bangla-script recitation lives in `pronunciationBn`.
  */
 class SeedDataLocalizationTest {
 
@@ -65,22 +61,13 @@ class SeedDataLocalizationTest {
     }
 
     @Test
-    fun english_pronunciation_is_roman_script_except_pending() {
-        SeedData.builtInTasbih
-            .filter { it.id !in SeedData.pendingRomanTransliterationIds }
-            .forEach { t ->
-                assertFalse(
-                    "${t.id} pronunciation has Bangla characters",
-                    t.pronunciation.any { it in bengali },
-                )
-            }
-    }
-
-    @Test
-    fun pending_transliteration_ids_all_exist() {
-        val builtInIds = SeedData.builtInTasbih.map { it.id }.toSet()
-        val unknown = SeedData.pendingRomanTransliterationIds - builtInIds
-        assertEquals("pendingRomanTransliterationIds names dhikr that do not exist: $unknown", emptySet<String>(), unknown)
+    fun english_pronunciation_is_roman_script() {
+        SeedData.builtInTasbih.forEach { t ->
+            assertFalse(
+                "${t.id} pronunciation has Bangla characters",
+                t.pronunciation.any { it in bengali },
+            )
+        }
     }
 
     @Test

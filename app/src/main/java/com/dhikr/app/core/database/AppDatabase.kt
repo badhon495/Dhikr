@@ -117,7 +117,10 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // rows. Removed sleep_sajdah_mulk (Surah as-Sajdah & al-Mulk merged into
     // one dhikr with only abbreviated Arabic) rather than split it without
     // full text. No schema change; bump reseeds. fallbackToDestructiveMigration.
-    version = 28,
+    // v29: Roman-script pronunciation filled in for the situational-dhikr
+    // batches (previously the Bangla rendering); pronunciationBn keeps the
+    // Bangla script. No schema change; bump reseeds. fallbackToDestructiveMigration.
+    version = 29,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
