@@ -3,6 +3,7 @@ package com.dhikr.app.core.datastore
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -19,6 +20,9 @@ enum class ThemeMode { SYSTEM, LIGHT, DARK, AUTO_TIME }
 
 const val DEFAULT_AUTO_LIGHT_START = 7 * 60
 const val DEFAULT_AUTO_DARK_START = 18 * 60
+
+/** Default dim level (5% brightness) for [AppPreferencesRepository.dimBrightnessLevel]. */
+const val DEFAULT_DIM_BRIGHTNESS_LEVEL = 0.05f
 
 /**
  * When the counter vibrates.
@@ -46,6 +50,7 @@ class AppPreferencesRepository(private val context: Context) {
     private val autoCounterEnabledKey = booleanPreferencesKey("auto_counter_enabled")
     private val hasSeenOnboardingKey = booleanPreferencesKey("has_seen_onboarding")
     private val dimScreenEnabledKey = booleanPreferencesKey("dim_screen_enabled")
+    private val dimBrightnessLevelKey = floatPreferencesKey("dim_brightness_level")
     private val benefitsLanguageKey = stringPreferencesKey("benefits_language")
     private val benefitsPromptOverrideKey = stringPreferencesKey("benefits_prompt_override")
 
@@ -195,6 +200,18 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setDimScreenEnabled(value: Boolean) {
         context.preferencesDataStore.edit { it[dimScreenEnabledKey] = value }
+    }
+
+    /** How dark the dim toggle makes the screen (0.01-1.0 fraction of max
+     *  brightness), user-adjustable via the Counter screen's dim slider.
+     *  Only takes effect while [dimScreenEnabled] is on — "off" always means
+     *  the device's normal (unmanaged) brightness, not a stored level. */
+    val dimBrightnessLevel = context.preferencesDataStore.data.map {
+        it[dimBrightnessLevelKey] ?: DEFAULT_DIM_BRIGHTNESS_LEVEL
+    }
+
+    suspend fun setDimBrightnessLevel(value: Float) {
+        context.preferencesDataStore.edit { it[dimBrightnessLevelKey] = value.coerceIn(0.01f, 1f) }
     }
 
     /**

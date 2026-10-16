@@ -56,6 +56,7 @@ import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
+import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
@@ -180,6 +181,8 @@ fun DhikrApp(
         val counterScript by preferencesRepository.counterScript.collectAsState(initial = CounterScript.PRONUNCIATION)
         val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsState(initial = false)
         val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
+        val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
+            .collectAsState(initial = DEFAULT_DIM_BRIGHTNESS_LEVEL)
         val appLanguage by AppLanguage.state.collectAsState()
         // Unlike the preferences above, this one gates a full-screen overlay, so
         // an initial=false here flashes the onboarding screen on every Activity
@@ -229,8 +232,12 @@ fun DhikrApp(
                     MainActivity.OPEN_INSIGHTS -> ROUTE_INSIGHTS
                     else -> ROUTE_COUNTER.substringBefore("?")
                 }
+                // ROUTE_HOME directly, not navController.graph.findStartDestination()
+                // — reading .graph here races NavHost's own graph-set on a cold
+                // start (this effect can run before NavHost finishes composing),
+                // throwing "You must call setGraph() before calling getGraph()".
                 navController.navigate(route) {
-                    popUpTo(navController.graph.findStartDestination().id)
+                    popUpTo(ROUTE_HOME)
                     launchSingleTop = true
                 }
             }
@@ -365,6 +372,15 @@ fun DhikrApp(
                         dimScreenEnabled = dimScreenEnabled,
                         onToggleDimScreen = {
                             coroutineScope.launch { preferencesRepository.setDimScreenEnabled(!dimScreenEnabled) }
+                        },
+                        dimBrightnessLevel = dimBrightnessLevel,
+                        // Live preview while dragging the slider, applied immediately
+                        // (MainActivity's SideEffect reacts to the same Flow) without
+                        // waiting for the user to let go — committing on every drag
+                        // tick rather than only on release so the screen genuinely
+                        // previews the level as they drag.
+                        onDimBrightnessLevelChange = { level ->
+                            coroutineScope.launch { preferencesRepository.setDimBrightnessLevel(level) }
                         },
                         onBack = { navController.popBackStack() },
                         onLockedChanged = { counterLocked = it },

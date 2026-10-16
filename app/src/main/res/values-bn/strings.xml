@@ -10,6 +10,8 @@
     <string name="counter_lock_content_description">কাউন্টার লক</string>
     <string name="counter_dim_screen_on_content_description">স্ক্রিন ডিম করুন</string>
     <string name="counter_dim_screen_off_content_description">স্ক্রিন ডিম বন্ধ করুন</string>
+    <string name="counter_dim_level_dialog_title">ডিম লেভেল</string>
+    <string name="counter_dim_level_percent">%1$d%% উজ্জ্বলতা</string>
     <string name="counter_undo">পূর্বাবস্থা</string>
     <string name="counter_pause">বিরতি</string>
     <string name="counter_resume">চালিয়ে যান</string>

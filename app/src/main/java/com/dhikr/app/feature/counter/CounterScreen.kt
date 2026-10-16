@@ -8,7 +8,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +36,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.PlainTooltip
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TooltipBox
@@ -78,12 +82,15 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dhikr.app.R
 import com.dhikr.app.core.counter.AutoCounterSensorListener
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.haptics.rememberHaptics
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.displayNote
 import com.dhikr.app.core.localization.displayPronunciation
+import com.dhikr.app.core.utilities.MIN_SCREEN_BRIGHTNESS
+import com.dhikr.app.core.utilities.currentSystemBrightnessFraction
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.COUNTER_TAP_AREA_TEST_TAG
 import com.dhikr.app.ui.ClampedFontScale
@@ -106,6 +113,7 @@ import kotlinx.coroutines.delay
 
 private const val LONG_TEXT_THRESHOLD = 90
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CounterScreen(
     viewModel: CounterViewModel,
@@ -119,9 +127,12 @@ fun CounterScreen(
     // From the "Count on wrist flick" setting (off by default, plan.md §40).
     autoCounterEnabled: Boolean = false,
     // App-wide screen dim (MainActivity applies the actual brightness change);
-    // this screen only shows/toggles it.
+    // this screen only shows/toggles it and, via long-press, lets the user set
+    // dimBrightnessLevel.
     dimScreenEnabled: Boolean = false,
     onToggleDimScreen: () -> Unit = {},
+    dimBrightnessLevel: Float = DEFAULT_DIM_BRIGHTNESS_LEVEL,
+    onDimBrightnessLevelChange: (Float) -> Unit = {},
     onBack: () -> Unit,
     // Reports the lock toggle up to DhikrApp, which owns the Scaffold the
     // bottom nav bar lives in — CounterScreen has no reach to it directly.
@@ -137,6 +148,7 @@ fun CounterScreen(
     var showResetDialog by remember { mutableStateOf(false) }
     var showSessionSummary by remember { mutableStateOf(false) }
     var showNotesDialog by remember { mutableStateOf(false) }
+    var showDimLevelDialog by remember { mutableStateOf(false) }
 
     // The on-screen back chevron is gated on !state.locked, but the system
     // back gesture/button bypasses that entirely — it doesn't go through
@@ -477,7 +489,13 @@ fun CounterScreen(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(CircleShape)
-                        .clickable { onToggleDimScreen() },
+                        .combinedClickable(
+                            onClick = { onToggleDimScreen() },
+                            // Long-press opens the level slider rather than toggling —
+                            // the tap target is tiny, so a slider doesn't fit inline;
+                            // this is the only spare gesture the icon has to offer it.
+                            onLongClick = { showDimLevelDialog = true },
+                        ),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -1042,6 +1060,91 @@ fun CounterScreen(
             },
         )
     }
+
+    if (showDimLevelDialog) {
+        // Turn dim on for the dialog's duration so the slider actually
+        // previews something — adjusting a level nobody can see defeats the
+        // point. Only auto-enables; never auto-disables on dismiss, since the
+        // user may have opened this while dim was already on.
+        LaunchedEffect(Unit) {
+            if (!dimScreenEnabled) onToggleDimScreen()
+        }
+        DimLevelDialog(
+            level = dimBrightnessLevel,
+            onLevelChange = onDimBrightnessLevelChange,
+            onDismiss = { showDimLevelDialog = false },
+        )
+    }
+}
+
+/**
+ * Dim-level slider, opened by long-pressing the top-bar dim button. The
+ * slider's range is anchored to the device's own brightness: its top is
+ * whatever system brightness is currently set (dimming is never brighter
+ * than "normal"), its bottom is the practical minimum the screen can show.
+ * Both bounds are read once, at dialog-open — the system setting itself
+ * never moves while this is open, since the window-level override this
+ * screen applies doesn't touch Settings.System.SCREEN_BRIGHTNESS.
+ */
+@Composable
+private fun DimLevelDialog(
+    level: Float,
+    onLevelChange: (Float) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    val context = LocalContext.current
+    val maxBrightness = remember { currentSystemBrightnessFraction(context) }
+    // A level saved under a brighter device setting can exceed today's max
+    // (e.g. the user dimmed the device itself since last time) — clamp on
+    // open rather than let the slider show a value past its own track end.
+    // Pushed back through onLevelChange immediately so the persisted value
+    // matches what's shown even if the user closes without touching the
+    // slider — otherwise the next-applied brightness would silently differ
+    // from the dialog's own display.
+    val clampedLevel = level.coerceIn(MIN_SCREEN_BRIGHTNESS, maxBrightness)
+    var sliderValue by remember(level) { mutableStateOf(clampedLevel) }
+    LaunchedEffect(clampedLevel) {
+        if (clampedLevel != level) onLevelChange(clampedLevel)
+    }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.counter_dim_level_dialog_title)) },
+        containerColor = colors.card,
+        titleContentColor = colors.text,
+        textContentColor = colors.dim,
+        shape = DialogShape,
+        text = {
+            Column {
+                Text(
+                    text = stringResource(R.string.counter_dim_level_percent, (sliderValue * 100).toInt()),
+                    fontSize = 13.sp,
+                    color = colors.faint,
+                )
+                Slider(
+                    value = sliderValue,
+                    onValueChange = {
+                        sliderValue = it
+                        onLevelChange(it)
+                    },
+                    valueRange = MIN_SCREEN_BRIGHTNESS..maxBrightness,
+                    colors = SliderDefaults.colors(
+                        thumbColor = colors.sage,
+                        activeTrackColor = colors.sage,
+                    ),
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = stringResource(R.string.session_summary_close),
+                    color = colors.sage,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        },
+    )
 }
 
 /**

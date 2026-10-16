@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
+import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.core.notifications.ReminderNotifications
 import com.dhikr.app.ui.theme.resolveIsDark
@@ -59,13 +60,21 @@ class MainActivity : AppCompatActivity() {
             val autoDarkStart by preferencesRepository.autoDarkStart
                 .collectAsState(initial = DEFAULT_AUTO_DARK_START)
             val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
+            val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
+                .collectAsState(initial = DEFAULT_DIM_BRIGHTNESS_LEVEL)
 
-            // App-wide screen dim, toggled from the Counter screen's top bar.
-            // Window-level, so it applies no matter which screen is visible and
-            // survives navigation — unlike a per-screen brightness override.
+            // App-wide screen dim, toggled from the Counter screen's top bar and
+            // leveled via its long-press slider. Window-level, so it applies no
+            // matter which screen is visible and survives navigation — unlike a
+            // per-screen brightness override. "Off" is -1f (WindowManager's
+            // "defer to the device's own brightness"), not a stored level, so
+            // light mode always tracks whatever the user has set system-wide.
             SideEffect {
-                window.attributes = window.attributes.apply {
-                    screenBrightness = if (dimScreenEnabled) DIM_SCREEN_BRIGHTNESS else -1f
+                val targetBrightness = if (dimScreenEnabled) dimBrightnessLevel else -1f
+                val params = window.attributes
+                if (params.screenBrightness != targetBrightness) {
+                    params.screenBrightness = targetBrightness
+                    window.attributes = params
                 }
             }
 
@@ -116,8 +125,5 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_OPEN = "com.dhikr.app.extra.OPEN"
         const val OPEN_COUNTER = "counter"
         const val OPEN_INSIGHTS = "insights"
-
-        // Fixed low level for the app-wide dim toggle — not user-adjustable.
-        private const val DIM_SCREEN_BRIGHTNESS = 0.05f
     }
 }
