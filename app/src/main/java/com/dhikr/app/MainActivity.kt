@@ -8,6 +8,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -63,21 +64,6 @@ class MainActivity : AppCompatActivity() {
             val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
                 .collectAsState(initial = DEFAULT_DIM_BRIGHTNESS_LEVEL)
 
-            // App-wide screen dim, toggled from the Counter screen's top bar and
-            // leveled via its long-press slider. Window-level, so it applies no
-            // matter which screen is visible and survives navigation — unlike a
-            // per-screen brightness override. "Off" is -1f (WindowManager's
-            // "defer to the device's own brightness"), not a stored level, so
-            // light mode always tracks whatever the user has set system-wide.
-            SideEffect {
-                val targetBrightness = if (dimScreenEnabled) dimBrightnessLevel else -1f
-                val params = window.attributes
-                if (params.screenBrightness != targetBrightness) {
-                    params.screenBrightness = targetBrightness
-                    window.attributes = params
-                }
-            }
-
             // Explicit transparent style, re-applied via SideEffect whenever the
             // resolved dark/light signal flips — now driven by the user's theme
             // choice as well as isSystemInDarkTheme(), the same input DhikrTheme
@@ -86,13 +72,40 @@ class MainActivity : AppCompatActivity() {
             // background left at platform white, see themes.xml) was what made
             // the status bar render as an opaque white bar.
             val darkTheme = themeMode.resolveIsDark(autoLightStart, autoDarkStart)
-            SideEffect {
+            // Keyed on darkTheme (not a plain SideEffect) so this only
+            // re-runs when the dark/light signal actually flips — enableEdgeToEdge
+            // re-fetches and re-sets window.attributes wholesale, which was
+            // clobbering the dim SideEffect's screenBrightness write whenever
+            // both fired on the same recomposition (e.g. toggling dim).
+            LaunchedEffect(darkTheme) {
                 val style = if (darkTheme) {
                     SystemBarStyle.dark(TRANSPARENT)
                 } else {
                     SystemBarStyle.light(TRANSPARENT, TRANSPARENT)
                 }
                 enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
+            }
+
+            // App-wide screen dim, toggled from the Counter screen's top bar and
+            // leveled via its long-press slider. Window-level, so it applies no
+            // matter which screen is visible and survives navigation — unlike a
+            // per-screen brightness override. "Off" is -1f (WindowManager's
+            // "defer to the device's own brightness"), not a stored level, so
+            // light mode always tracks whatever the user has set system-wide.
+            // Keyed on the two dim inputs (not a plain SideEffect), and delayed
+            // past the current frame: enableEdgeToEdge's own window.attributes
+            // write — even scoped to its own LaunchedEffect(darkTheme) above —
+            // can still land in the same frame as this one and clobber whichever
+            // write loses the race at the WindowManager/OS level. A short delay
+            // lets that settle first so this write always lands last.
+            LaunchedEffect(dimScreenEnabled, dimBrightnessLevel) {
+                kotlinx.coroutines.delay(16L)
+                val targetBrightness = if (dimScreenEnabled) dimBrightnessLevel else -1f
+                val params = window.attributes
+                if (params.screenBrightness != targetBrightness) {
+                    params.screenBrightness = targetBrightness
+                    window.attributes = params
+                }
             }
             DhikrApp(
                 themeMode = themeMode,
