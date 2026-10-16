@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.dhikr.app.core.database.entity.TasbihEntity
 import kotlinx.coroutines.flow.Flow
@@ -46,6 +47,40 @@ interface TasbihDao {
      *  (merge semantics, backup wins). */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(tasbih: List<TasbihEntity>)
+
+    /** Startup sync: push corrected seed text onto an existing built-in row
+     *  (insertAll's IGNORE leaves old seed text in place). User state —
+     *  favourite, counts, reminders, cached benefits — is left untouched. */
+    @Query(
+        "UPDATE tasbih SET name = :name, nameBn = :nameBn, arabic = :arabic, " +
+            "pronunciation = :pronunciation, pronunciationBn = :pronunciationBn, " +
+            "translation = :translation, translationBn = :translationBn, " +
+            "note = :note, noteBn = :noteBn, source = :source " +
+            "WHERE id = :id AND isBuiltIn = 1",
+    )
+    suspend fun refreshBuiltInText(
+        id: String,
+        name: String,
+        nameBn: String?,
+        arabic: String,
+        pronunciation: String,
+        pronunciationBn: String?,
+        translation: String,
+        translationBn: String?,
+        note: String,
+        noteBn: String?,
+        source: String?,
+    )
+
+    @Transaction
+    suspend fun refreshBuiltInTexts(seed: List<TasbihEntity>) {
+        seed.forEach {
+            refreshBuiltInText(
+                it.id, it.name, it.nameBn, it.arabic, it.pronunciation, it.pronunciationBn,
+                it.translation, it.translationBn, it.note, it.noteBn, it.source,
+            )
+        }
+    }
 
     @Query("SELECT * FROM tasbih")
     suspend fun getAll(): List<TasbihEntity>

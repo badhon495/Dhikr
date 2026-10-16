@@ -38,6 +38,10 @@ class DhikrApplication : Application() {
             // this is safe to run on every launch and syncs newly-added
             // built-in dhikr into installs that already seeded the DB.
             database.tasbihDao().insertAll(SeedData.builtInTasbih)
+            // Built-ins aren't user-editable, so overwriting their seed text is
+            // safe and carries seed-text corrections to existing installs
+            // without a destructive version bump.
+            database.tasbihDao().refreshBuiltInTexts(SeedData.builtInTasbih)
             if (database.routineDao().count() == 0) {
                 database.routineDao().insertRoutines(SeedData.presetRoutines)
                 database.routineDao().insertSteps(SeedData.presetRoutineSteps)
