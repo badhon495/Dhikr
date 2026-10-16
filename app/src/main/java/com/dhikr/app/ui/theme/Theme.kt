@@ -71,10 +71,10 @@ fun DhikrTheme(
     val useDynamic = dynamicColor && supportsDynamicColor()
     val context = LocalContext.current
     val tokens = when {
-        useDynamic -> dynamicDhikrColors(context, darkTheme)
-        darkTheme -> DarkDhikrColors
-        else -> LightDhikrColors
-    }.let { if (strongBorders) it.withStrongBorders() else it }
+        useDynamic -> dynamicDhikrColors(context, darkTheme, strongBorders)
+        darkTheme -> DarkDhikrColors.let { if (strongBorders) it.withStrongBorders() else it }
+        else -> LightDhikrColors.let { if (strongBorders) it.withStrongBorders() else it }
+    }
     // Material3's default colorScheme (background ~white, surface ~white) is
     // otherwise left untouched by DhikrColorTokens — components that read it
     // directly instead of DhikrTheme.colors (Scaffold's containerColor,
