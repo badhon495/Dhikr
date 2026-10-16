@@ -58,6 +58,16 @@ class MainActivity : AppCompatActivity() {
                 .collectAsState(initial = DEFAULT_AUTO_LIGHT_START)
             val autoDarkStart by preferencesRepository.autoDarkStart
                 .collectAsState(initial = DEFAULT_AUTO_DARK_START)
+            val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
+
+            // App-wide screen dim, toggled from the Counter screen's top bar.
+            // Window-level, so it applies no matter which screen is visible and
+            // survives navigation — unlike a per-screen brightness override.
+            SideEffect {
+                window.attributes = window.attributes.apply {
+                    screenBrightness = if (dimScreenEnabled) DIM_SCREEN_BRIGHTNESS else -1f
+                }
+            }
 
             // Explicit transparent style, re-applied via SideEffect whenever the
             // resolved dark/light signal flips — now driven by the user's theme
@@ -106,5 +116,8 @@ class MainActivity : AppCompatActivity() {
         const val EXTRA_OPEN = "com.dhikr.app.extra.OPEN"
         const val OPEN_COUNTER = "counter"
         const val OPEN_INSIGHTS = "insights"
+
+        // Fixed low level for the app-wide dim toggle — not user-adjustable.
+        private const val DIM_SCREEN_BRIGHTNESS = 0.05f
     }
 }

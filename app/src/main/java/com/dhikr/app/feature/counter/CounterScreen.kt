@@ -118,6 +118,10 @@ fun CounterScreen(
     counterScript: CounterScript = CounterScript.PRONUNCIATION,
     // From the "Count on wrist flick" setting (off by default, plan.md §40).
     autoCounterEnabled: Boolean = false,
+    // App-wide screen dim (MainActivity applies the actual brightness change);
+    // this screen only shows/toggles it.
+    dimScreenEnabled: Boolean = false,
+    onToggleDimScreen: () -> Unit = {},
     onBack: () -> Unit,
     // Reports the lock toggle up to DhikrApp, which owns the Scaffold the
     // bottom nav bar lives in — CounterScreen has no reach to it directly.
@@ -459,6 +463,27 @@ fun CounterScreen(
                         imageVector = lockIcon(state.locked),
                         contentDescription = lockLabel,
                         tint = if (state.locked) colors.terra else colors.faint,
+                        modifier = Modifier.size(19.dp),
+                    )
+                }
+            }
+            val dimLabel = if (dimScreenEnabled) {
+                stringResource(R.string.counter_dim_screen_off_content_description)
+            } else {
+                stringResource(R.string.counter_dim_screen_on_content_description)
+            }
+            IconButtonTooltip(label = dimLabel) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .clickable { onToggleDimScreen() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = dimScreenIcon(dimScreenEnabled),
+                        contentDescription = dimLabel,
+                        tint = if (dimScreenEnabled) colors.terra else colors.faint,
                         modifier = Modifier.size(19.dp),
                     )
                 }

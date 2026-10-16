@@ -45,6 +45,7 @@ class AppPreferencesRepository(private val context: Context) {
     private val counterScriptKey = stringPreferencesKey("counter_script")
     private val autoCounterEnabledKey = booleanPreferencesKey("auto_counter_enabled")
     private val hasSeenOnboardingKey = booleanPreferencesKey("has_seen_onboarding")
+    private val dimScreenEnabledKey = booleanPreferencesKey("dim_screen_enabled")
     private val benefitsLanguageKey = stringPreferencesKey("benefits_language")
     private val benefitsPromptOverrideKey = stringPreferencesKey("benefits_prompt_override")
 
@@ -186,6 +187,14 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setHasSeenOnboarding(value: Boolean) {
         context.preferencesDataStore.edit { it[hasSeenOnboardingKey] = value }
+    }
+
+    /** Dims the screen to a fixed low brightness app-wide, toggled from the
+     *  Counter screen's top bar. Off by default. Applied in [MainActivity]. */
+    val dimScreenEnabled = context.preferencesDataStore.data.map { it[dimScreenEnabledKey] ?: false }
+
+    suspend fun setDimScreenEnabled(value: Boolean) {
+        context.preferencesDataStore.edit { it[dimScreenEnabledKey] = value }
     }
 
     /**

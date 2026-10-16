@@ -179,6 +179,7 @@ fun DhikrApp(
         val reducedMotion by preferencesRepository.reducedMotion.collectAsState(initial = false)
         val counterScript by preferencesRepository.counterScript.collectAsState(initial = CounterScript.PRONUNCIATION)
         val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsState(initial = false)
+        val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
         val appLanguage by AppLanguage.state.collectAsState()
         // Unlike the preferences above, this one gates a full-screen overlay, so
         // an initial=false here flashes the onboarding screen on every Activity
@@ -361,6 +362,10 @@ fun DhikrApp(
                         hapticMode = hapticMode,
                         counterScript = counterScript,
                         autoCounterEnabled = autoCounterEnabled,
+                        dimScreenEnabled = dimScreenEnabled,
+                        onToggleDimScreen = {
+                            coroutineScope.launch { preferencesRepository.setDimScreenEnabled(!dimScreenEnabled) }
+                        },
                         onBack = { navController.popBackStack() },
                         onLockedChanged = { counterLocked = it },
                     )

@@ -306,6 +306,59 @@ fun checkIcon(): ImageVector = ImageVector.Builder(
     }
 }.build()
 
+/** Sun/dim glyph: filled circle with radiating rays when off (full brightness),
+ *  hollow circle with no rays when on (dimmed) — matches the lock icon's
+ *  on/off silhouette-swap convention instead of adding a strikethrough. */
+fun dimScreenIcon(dimmed: Boolean): ImageVector = ImageVector.Builder(
+    name = if (dimmed) "ScreenDimmed" else "ScreenBright",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f,
+).apply {
+    path(
+        fill = if (dimmed) null else SolidColor(Color.Black),
+        stroke = if (dimmed) SolidColor(Color.Black) else null,
+        strokeLineWidth = STROKE_WIDTH,
+        strokeLineCap = StrokeCap.Round,
+        strokeLineJoin = StrokeJoin.Round,
+        pathFillType = PathFillType.NonZero,
+    ) {
+        moveTo(17f, 12f)
+        curveTo(17f, 14.76f, 14.76f, 17f, 12f, 17f)
+        curveTo(9.24f, 17f, 7f, 14.76f, 7f, 12f)
+        curveTo(7f, 9.24f, 9.24f, 7f, 12f, 7f)
+        curveTo(14.76f, 7f, 17f, 9.24f, 17f, 12f)
+        close()
+    }
+    if (!dimmed) {
+        // Eight rays at 45-degree increments, drawn short-to-long from the
+        // circle's edge (radius 5) outward.
+        val rays = listOf(
+            12f to 3.5f to (12f to 1.5f),
+            12f to 20.5f to (12f to 22.5f),
+            3.5f to 12f to (1.5f to 12f),
+            20.5f to 12f to (22.5f to 12f),
+            5.46f to 5.46f to (4.05f to 4.05f),
+            18.54f to 18.54f to (19.95f to 19.95f),
+            5.46f to 18.54f to (4.05f to 19.95f),
+            18.54f to 5.46f to (19.95f to 4.05f),
+        )
+        for ((start, end) in rays) {
+            path(
+                fill = null,
+                stroke = SolidColor(Color.Black),
+                strokeLineWidth = STROKE_WIDTH,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+            ) {
+                moveTo(start.first, start.second)
+                lineTo(end.first, end.second)
+            }
+        }
+    }
+}.build()
+
 fun lockIcon(locked: Boolean): ImageVector = ImageVector.Builder(
     name = if (locked) "LockClosed" else "LockOpen",
     defaultWidth = 24.dp,
