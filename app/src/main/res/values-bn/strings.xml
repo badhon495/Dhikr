@@ -375,4 +375,32 @@
     <string name="onboarding_skip_confirm_body">পরে সেটিংস থেকে ভাষা ও থিম যেকোনো সময় বদলাতে পারবেন।</string>
     <string name="onboarding_skip_confirm_action">স্কিপ করুন</string>
     <string name="onboarding_skip_confirm_cancel">চালিয়ে যান</string>
+    <!-- Cloud sync -->
+    <string name="settings_sync">ক্লাউড সিঙ্ক</string>
+    <string name="settings_sync_desc">আপনার নিজের গুগল ড্রাইভ বা ওয়ানড্রাইভের মাধ্যমে কাস্টম তাসবিহ, রুটিন, ইতিহাস ও দৈনিক লক্ষ্য সব ডিভাইসে একই রাখুন। ফাইলগুলো শুধু আপনিই দেখতে পারবেন, আর “এখনই সিঙ্ক করুন” চাপার আগে কিছুই পাঠানো হয় না।</string>
+    <string name="sync_provider_google">গুগল ড্রাইভ</string>
+    <string name="sync_provider_onedrive">ওয়ানড্রাইভ</string>
+    <string name="sync_connect">%1$s সংযুক্ত করুন</string>
+    <string name="sync_not_set_up">%1$s — এখনো সেটআপ করা হয়নি</string>
+    <string name="sync_disconnect">সংযোগ বিচ্ছিন্ন করুন</string>
+    <string name="sync_signed_in_as">%1$s · %2$s</string>
+    <string name="sync_now">এখনই সিঙ্ক করুন</string>
+    <string name="sync_working">সিঙ্ক হচ্ছে…</string>
+    <string name="sync_last">সর্বশেষ সিঙ্ক %1$s</string>
+    <string name="sync_never">কখনো সিঙ্ক হয়নি</string>
+    <string name="sync_same_provider_note">সব ডিভাইসে একই প্রোভাইডার ব্যবহার করুন, তাহলে ডেটা মিলে থাকবে।</string>
+    <string name="sync_undo">শেষ সিঙ্ক ফিরিয়ে নিন</string>
+    <string name="sync_undo_note">শেষ সিঙ্কের আগের অবস্থায় এই ডিভাইসকে ফিরিয়ে আনে। পরের সিঙ্কে ক্লাউডের পরিবর্তন আবার আসবে।</string>
+    <string name="sync_done">সম্পন্ন। এই ডিভাইসে %1$dটি ও ক্লাউডে %2$dটি পরিবর্তন হয়েছে।</string>
+    <string name="sync_undone">শেষ সিঙ্কের আগের অবস্থায় এই ডিভাইস ফিরে এসেছে।</string>
+    <string name="sync_no_undo">ফিরিয়ে নেওয়ার মতো কিছু নেই।</string>
+    <string name="sync_err_network">সংযোগ নেই। অনলাইনে এসে আবার চেষ্টা করুন।</string>
+    <string name="sync_err_auth">সাইন-ইনের মেয়াদ শেষ। সংযোগ বিচ্ছিন্ন করে আবার সংযুক্ত করুন।</string>
+    <string name="sync_err_quota">প্রোভাইডার অনুরোধ সীমিত করছে বা স্টোরেজ ভরে গেছে। পরে আবার চেষ্টা করুন।</string>
+    <string name="sync_err_newer">ক্লাউডের ফাইলটি অ্যাপের নতুন সংস্করণে তৈরি। আগে অ্যাপ আপডেট করুন।</string>
+    <string name="sync_err_corrupt">ক্লাউডের ফাইলটি পড়া যাচ্ছে না। কিছুই বদলানো হয়নি।</string>
+    <string name="sync_err_busy">একটি সিঙ্ক ইতিমধ্যে চলছে।</string>
+    <string name="sync_err_conflict">ক্লাউডের ফাইল বারবার বদলে যাচ্ছে। আবার চেষ্টা করুন।</string>
+    <string name="sync_err_cancelled">সাইন-ইন বাতিল করা হয়েছে।</string>
+    <string name="sync_err_unknown">সিঙ্ক ব্যর্থ হয়েছে। কিছু হারায়নি।</string>
 </resources>

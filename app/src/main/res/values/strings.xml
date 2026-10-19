@@ -377,4 +377,32 @@
     <string name="onboarding_skip_confirm_body">You can always change language and theme later in Settings.</string>
     <string name="onboarding_skip_confirm_action">Skip</string>
     <string name="onboarding_skip_confirm_cancel">Cancel</string>
+    <!-- Cloud sync -->
+    <string name="settings_sync">Cloud sync</string>
+    <string name="settings_sync_desc">Keep custom tasbih, routines, history and your daily goal in step across your devices through your own Google Drive or OneDrive. Only you can see the files, and nothing is sent until you tap Sync now.</string>
+    <string name="sync_provider_google">Google Drive</string>
+    <string name="sync_provider_onedrive">OneDrive</string>
+    <string name="sync_connect">Connect %1$s</string>
+    <string name="sync_not_set_up">%1$s — not set up yet</string>
+    <string name="sync_disconnect">Disconnect</string>
+    <string name="sync_signed_in_as">%1$s · %2$s</string>
+    <string name="sync_now">Sync now</string>
+    <string name="sync_working">Syncing…</string>
+    <string name="sync_last">Last synced %1$s</string>
+    <string name="sync_never">Never synced</string>
+    <string name="sync_same_provider_note">Use the same provider on every device so they stay in step.</string>
+    <string name="sync_undo">Undo last sync</string>
+    <string name="sync_undo_note">Puts this device back as it was before the last sync. The next sync brings cloud changes in again.</string>
+    <string name="sync_done">Done. %1$d changed on this device, %2$d in the cloud.</string>
+    <string name="sync_undone">This device is back to how it was before the last sync.</string>
+    <string name="sync_no_undo">Nothing to undo yet.</string>
+    <string name="sync_err_network">No connection. Try again when you are online.</string>
+    <string name="sync_err_auth">Sign-in expired. Disconnect and connect again.</string>
+    <string name="sync_err_quota">The provider is limiting requests or your storage is full. Try again later.</string>
+    <string name="sync_err_newer">The cloud file was made by a newer version of this app. Update the app first.</string>
+    <string name="sync_err_corrupt">The cloud file cannot be read. Nothing was changed.</string>
+    <string name="sync_err_busy">A sync is already running.</string>
+    <string name="sync_err_conflict">The cloud file kept changing. Try again.</string>
+    <string name="sync_err_cancelled">Sign-in cancelled.</string>
+    <string name="sync_err_unknown">Sync failed. Nothing was lost.</string>
 </resources>

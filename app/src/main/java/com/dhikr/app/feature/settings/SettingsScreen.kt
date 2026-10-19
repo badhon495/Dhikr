@@ -37,6 +37,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -58,6 +59,8 @@ import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.localizedDigits
+import com.dhikr.app.core.sync.ProviderId
+import com.dhikr.app.core.sync.SyncException
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.ui.headingSemantics
@@ -74,6 +77,7 @@ import java.util.Locale
 fun SettingsScreen(
     viewModel: SettingsViewModel,
     backupViewModel: BackupViewModel,
+    syncViewModel: SyncViewModel,
     scrollToTopSignal: Int = 0,
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -312,6 +316,11 @@ fun SettingsScreen(
         // ---- Backup ----
         SettingsSection(stringResource(R.string.settings_backup)) {
             BackupControls(backupViewModel)
+        }
+
+        // ---- Cloud sync ----
+        SettingsSection(stringResource(R.string.settings_sync)) {
+            SyncControls(syncViewModel)
         }
 
         // ---- About ----
@@ -980,4 +989,126 @@ private fun BackupActionRow(label: String, enabled: Boolean, onClick: () -> Unit
             color = if (enabled) colors.onSage else colors.faint,
         )
     }
+}
+
+/**
+ * Cloud sync rows. Owns the sign-in Activity launcher; the ViewModel only sees the
+ * redirect result. Providers whose client ID isn't configured show as disabled.
+ */
+@Composable
+private fun SyncControls(viewModel: SyncViewModel) {
+    val colors = DhikrTheme.colors
+    val ui by viewModel.ui.collectAsState()
+    var pending by rememberSaveable { mutableStateOf<String?>(null) }
+
+    val signInLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) { result ->
+        val provider = pending?.let { name -> ProviderId.values().firstOrNull { it.name == name } }
+        if (provider != null) viewModel.onSignInResult(provider, result.data)
+    }
+
+    Text(
+        stringResource(R.string.settings_sync_desc),
+        fontSize = 12.sp,
+        color = colors.faint,
+        modifier = Modifier.padding(bottom = 12.dp),
+    )
+
+    val connected = ui.provider
+    if (connected == null) {
+        listOf(
+            Triple(ProviderId.GOOGLE, R.string.sync_provider_google, ui.googleConfigured),
+            Triple(ProviderId.MICROSOFT, R.string.sync_provider_onedrive, ui.microsoftConfigured),
+        ).forEach { (id, nameRes, configured) ->
+            val name = stringResource(nameRes)
+            BackupActionRow(
+                label = if (configured) stringResource(R.string.sync_connect, name)
+                else stringResource(R.string.sync_not_set_up, name),
+                enabled = configured,
+                onClick = {
+                    viewModel.connect(id)?.let { intent ->
+                        pending = id.name
+                        signInLauncher.launch(intent)
+                    }
+                },
+            )
+        }
+    } else {
+        val name = stringResource(
+            if (connected == ProviderId.GOOGLE) R.string.sync_provider_google else R.string.sync_provider_onedrive,
+        )
+        Text(
+            stringResource(R.string.sync_signed_in_as, name, ui.accountLabel ?: ""),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = colors.text,
+        )
+        BackupActionRow(
+            label = stringResource(if (ui.running) R.string.sync_working else R.string.sync_now),
+            enabled = !ui.running,
+            onClick = viewModel::syncNow,
+        )
+        val last = if (ui.lastSyncedAt > 0L) {
+            stringResource(
+                R.string.sync_last,
+                java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT)
+                    .format(Date(ui.lastSyncedAt)),
+            )
+        } else {
+            stringResource(R.string.sync_never)
+        }
+        Text(last, fontSize = 11.5.sp, color = colors.faint, modifier = Modifier.padding(top = 10.dp))
+
+        ui.message?.let { m ->
+            val text = when (m) {
+                is SyncMessage.Success -> stringResource(R.string.sync_done, m.localChanges, m.remoteChanges)
+                SyncMessage.Undone -> stringResource(R.string.sync_undone)
+                SyncMessage.NoUndo -> stringResource(R.string.sync_no_undo)
+                is SyncMessage.Error -> stringResource(
+                    when (m.kind) {
+                        SyncException.Kind.NETWORK -> R.string.sync_err_network
+                        SyncException.Kind.AUTH_EXPIRED -> R.string.sync_err_auth
+                        SyncException.Kind.QUOTA -> R.string.sync_err_quota
+                        SyncException.Kind.NEWER_FORMAT -> R.string.sync_err_newer
+                        SyncException.Kind.CORRUPT -> R.string.sync_err_corrupt
+                        SyncException.Kind.BUSY -> R.string.sync_err_busy
+                        SyncException.Kind.CONFLICT -> R.string.sync_err_conflict
+                        SyncException.Kind.NOT_CONNECTED -> R.string.sync_err_cancelled
+                        SyncException.Kind.UNKNOWN -> R.string.sync_err_unknown
+                    },
+                )
+            }
+            Text(
+                text,
+                fontSize = 12.sp,
+                color = if (m is SyncMessage.Error) colors.text else colors.dim,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
+
+        BackupActionRow(
+            label = stringResource(R.string.sync_undo),
+            enabled = ui.canUndo && !ui.running,
+            onClick = viewModel::undo,
+        )
+        Text(
+            stringResource(R.string.sync_undo_note),
+            fontSize = 11.5.sp,
+            color = colors.faint,
+            modifier = Modifier.padding(top = 8.dp),
+        )
+        BackupActionRow(
+            label = stringResource(R.string.sync_disconnect),
+            enabled = !ui.running,
+            onClick = viewModel::disconnect,
+        )
+    }
+
+    Text(
+        stringResource(R.string.sync_same_provider_note),
+        fontSize = 11.5.sp,
+        color = colors.faint,
+        modifier = Modifier.padding(top = 10.dp),
+    )
 }

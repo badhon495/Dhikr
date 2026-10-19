@@ -85,6 +85,16 @@ import com.dhikr.app.feature.routines.RoutineShareViewModel
 import com.dhikr.app.feature.routines.RoutinesScreen
 import com.dhikr.app.feature.routines.RoutinesViewModel
 import com.dhikr.app.feature.settings.BackupViewModel
+import com.dhikr.app.feature.settings.SyncViewModel
+import com.dhikr.app.core.sync.FileSyncFiles
+import com.dhikr.app.core.sync.GoogleDriveProvider
+import com.dhikr.app.core.sync.OAuthClient
+import com.dhikr.app.core.sync.OneDriveProvider
+import com.dhikr.app.core.sync.ProviderId
+import com.dhikr.app.core.sync.RoomSyncLocal
+import com.dhikr.app.core.sync.SyncEngine
+import com.dhikr.app.core.sync.SyncStateStore
+import com.dhikr.app.core.sync.SyncTokenStore
 import com.dhikr.app.feature.settings.SettingsScreen
 import com.dhikr.app.feature.settings.SettingsViewModel
 import com.dhikr.app.feature.tasbih.TasbihEditorScreen
@@ -485,9 +495,31 @@ fun DhikrApp(
                     val backupViewModel: BackupViewModel = viewModel(
                         factory = BackupViewModel.Factory(backupRepository, appVersionName),
                     )
+                    val syncViewModel: SyncViewModel = viewModel(
+                        factory = remember {
+                            val tokens = SyncTokenStore(context.applicationContext)
+                            val oauth = OAuthClient(context.applicationContext, tokens)
+                            val engine = SyncEngine(
+                                local = RoomSyncLocal(app.database, backupRepository, preferencesRepository, appVersionName),
+                                files = FileSyncFiles(java.io.File(context.applicationContext.filesDir, "sync")),
+                            )
+                            SyncViewModel.Factory(
+                                engine = engine,
+                                state = SyncStateStore(context.applicationContext),
+                                auth = oauth,
+                                providerFactory = { id ->
+                                    when (id) {
+                                        ProviderId.GOOGLE -> GoogleDriveProvider(oauth)
+                                        ProviderId.MICROSOFT -> OneDriveProvider(oauth)
+                                    }
+                                },
+                            )
+                        },
+                    )
                     SettingsScreen(
                         viewModel = viewModel,
                         backupViewModel = backupViewModel,
+                        syncViewModel = syncViewModel,
                         scrollToTopSignal = signalOf(ROUTE_SETTINGS),
                     )
                 }

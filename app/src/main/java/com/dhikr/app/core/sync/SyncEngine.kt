@@ -85,4 +85,6 @@ class SyncEngine(
     }
 
     fun resetBase() = files.deleteBase()
+
+    fun hasSnapshot(): Boolean = files.readSnapshot() != null
 }

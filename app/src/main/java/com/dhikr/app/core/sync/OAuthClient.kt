@@ -71,18 +71,28 @@ fun labelFromIdToken(idToken: String?): String? {
 
 private fun JsonObject.stringClaim(name: String): String? = this[name]?.jsonPrimitive?.contentOrNull
 
+/** Sign-in operations the Settings UI needs; [OAuthClient] is the real implementation. */
+interface SyncAuth {
+    fun isConfigured(provider: ProviderId): Boolean
+    fun authorizationIntent(provider: ProviderId): Intent?
+    suspend fun completeSignIn(provider: ProviderId, data: Intent): String
+    fun signOut(provider: ProviderId)
+}
+
 /** AppAuth wrapper: start sign-in, finish it, and hand out fresh access tokens. */
 class OAuthClient(
     context: Context,
     private val tokens: SyncTokenStore,
     private val clock: () -> Long = System::currentTimeMillis,
-) {
+) : SyncAuth {
     private val appContext = context.applicationContext
 
-    fun isConfigured(provider: ProviderId): Boolean = oauthConfig(provider) != null
+    override fun isConfigured(provider: ProviderId): Boolean = oauthConfig(provider) != null
+
+    override fun signOut(provider: ProviderId) = tokens.clear(provider)
 
     /** Intent to launch for the browser sign-in; null if the provider isn't configured. */
-    fun authorizationIntent(provider: ProviderId): Intent? {
+    override fun authorizationIntent(provider: ProviderId): Intent? {
         val cfg = oauthConfig(provider) ?: return null
         val request = AuthorizationRequest.Builder(
             serviceConfig(cfg), cfg.clientId, ResponseTypeValues.CODE, Uri.parse(cfg.redirectUri),
@@ -104,7 +114,7 @@ class OAuthClient(
     }
 
     /** Finishes sign-in from the redirect [data]; returns the account label (email) or a generic name. */
-    suspend fun completeSignIn(provider: ProviderId, data: Intent): String {
+    override suspend fun completeSignIn(provider: ProviderId, data: Intent): String {
         val cfg = oauthConfig(provider) ?: throw SyncException(SyncException.Kind.NOT_CONNECTED, "Provider not set up")
         val response = AuthorizationResponse.fromIntent(data)
         val error = AuthorizationException.fromIntent(data)
