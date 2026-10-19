@@ -16,6 +16,19 @@ val keystoreProperties = Properties().apply {
     }
 }
 
+// Cloud-sync OAuth client IDs (public identifiers, not secrets). Optional: with
+// none set the app builds and the provider rows show "Not set up yet".
+val localProperties = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) FileInputStream(f).use { load(it) }
+}
+val googleClientId: String = localProperties.getProperty("google.clientId", "").trim()
+val microsoftClientId: String = localProperties.getProperty("microsoft.clientId", "").trim()
+val googleRedirectScheme: String =
+    if (googleClientId.endsWith(".apps.googleusercontent.com"))
+        "com.googleusercontent.apps." + googleClientId.removeSuffix(".apps.googleusercontent.com")
+    else "dhikr.unconfigured"
+
 android {
     namespace = "com.dhikr.app"
     compileSdk = 37
@@ -38,6 +51,14 @@ android {
         versionCode = 8
         versionName = "1.3.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"$googleClientId\"")
+        buildConfigField("String", "MICROSOFT_CLIENT_ID", "\"$microsoftClientId\"")
+        // AppAuth's own manifest needs appAuthRedirectScheme; our manifest replaces its
+        // redirect activity with one that handles both providers' schemes.
+        manifestPlaceholders["appAuthRedirectScheme"] = "dhikr.unconfigured"
+        manifestPlaceholders["googleRedirectScheme"] = googleRedirectScheme
+        manifestPlaceholders["microsoftRedirectScheme"] = "com.badhon495.dhikr.msauth"
 
         // Ship only the languages we actually translate. Keeps the per-app
         // language picker (locales_config.xml) honest and trims unused
@@ -79,6 +100,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 
@@ -127,6 +149,7 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.datastore.preferences)
     implementation(libs.security.crypto)
+    implementation(libs.appauth)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
