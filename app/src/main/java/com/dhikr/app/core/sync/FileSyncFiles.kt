@@ -15,6 +15,9 @@ class FileSyncFiles(private val dir: File) : SyncFiles {
 
     override fun readSnapshot(): String? = read(snapshotFile)
     override fun writeSnapshot(text: String) = write(snapshotFile, text)
+    override fun deleteSnapshot() {
+        snapshotFile.delete()
+    }
 
     private fun read(f: File): String? = if (f.exists()) f.readText(Charsets.UTF_8) else null
 

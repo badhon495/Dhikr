@@ -45,23 +45,31 @@ class RoomSyncLocal(
 
             // 2. New/changed tasbih. Copy synced fields onto the existing row so
             //    cached benefits text and reminders on this device survive.
-            val tasbihUpserts = target.customTasbih.mapNotNull { b ->
+            //    Never REPLACE an existing row: SQLite implements that as delete+insert, which
+            //    fires the foreign keys (cascades sessions/progress/steps, or RESTRICT-fails
+            //    when a routine uses the tasbih). New rows are inserted, existing ones updated.
+            target.customTasbih.forEach { b ->
                 val existing = localTasbih[b.id]
                 when {
-                    existing == null -> b.toEntity()
-                    BackupTasbih.from(existing) == b -> null
-                    else -> existing.copy(
-                        name = b.name, arabic = b.arabic, pronunciation = b.pronunciation,
-                        translation = b.translation, note = b.note, source = b.source,
-                        lapTarget = b.lapTarget, lapCount = b.lapCount, dailyGoal = b.dailyGoal,
-                        isFavorite = b.isFavorite, updatedAt = b.updatedAt,
+                    existing == null -> tasbihDao.insert(b.toEntity())
+                    BackupTasbih.from(existing) == b -> Unit
+                    else -> tasbihDao.update(
+                        existing.copy(
+                            name = b.name, arabic = b.arabic, pronunciation = b.pronunciation,
+                            translation = b.translation, note = b.note, source = b.source,
+                            lapTarget = b.lapTarget, lapCount = b.lapCount, dailyGoal = b.dailyGoal,
+                            isFavorite = b.isFavorite, updatedAt = b.updatedAt,
+                        ),
                     )
                 }
             }
-            if (tasbihUpserts.isNotEmpty()) tasbihDao.upsertAll(tasbihUpserts)
 
             // 3. New/changed routines with their steps.
+            val validTasbihIds = tasbihDao.getAllIds().toHashSet()
             target.customRoutines.forEach { b ->
+                // A step naming a tasbih this device doesn't have (e.g. a built-in from a newer
+                // app version) would violate the foreign key; leave that routine as it is here.
+                if (b.steps.any { it.tasbihId !in validTasbihIds }) return@forEach
                 val existing = localRoutines[b.id]
                 val sameSteps = existing?.steps?.sortedBy { it.stepOrder }
                     ?.map(BackupRoutineStep::from) == b.steps
@@ -70,17 +78,24 @@ class RoomSyncLocal(
                     existing.routine.isFavorite == b.isFavorite &&
                     existing.routine.updatedAt == b.updatedAt
                 if (!unchanged) {
-                    routineDao.upsertRoutine(
-                        existing?.routine?.copy(
-                            name = b.name, isFavorite = b.isFavorite, updatedAt = b.updatedAt,
-                        ) ?: b.toEntity(),
-                    )
+                    if (existing == null) {
+                        routineDao.upsertRoutine(b.toEntity())
+                    } else {
+                        routineDao.updateRoutine(
+                            existing.routine.copy(
+                                name = b.name, isFavorite = b.isFavorite, updatedAt = b.updatedAt,
+                            ),
+                        )
+                    }
                     if (!sameSteps) routineDao.replaceSteps(b.id, b.steps.map { it.toEntity(b.id) })
                 }
             }
 
             // 4. Tasbih gone from the target.
-            val gone = localTasbih.keys.filter { it !in targetTasbihIds }
+            // (skip any still used by a routine step, which RESTRICT would reject)
+            val gone = localTasbih.keys.filter {
+                it !in targetTasbihIds && routineDao.countStepsUsingTasbih(it) == 0
+            }
             if (gone.isNotEmpty()) tasbihDao.deleteByIds(gone)
 
             // Built-in favourites.

@@ -1060,33 +1060,6 @@ private fun SyncControls(viewModel: SyncViewModel) {
         }
         Text(last, fontSize = 11.5.sp, color = colors.faint, modifier = Modifier.padding(top = 10.dp))
 
-        ui.message?.let { m ->
-            val text = when (m) {
-                is SyncMessage.Success -> stringResource(R.string.sync_done, m.localChanges, m.remoteChanges)
-                SyncMessage.Undone -> stringResource(R.string.sync_undone)
-                SyncMessage.NoUndo -> stringResource(R.string.sync_no_undo)
-                is SyncMessage.Error -> stringResource(
-                    when (m.kind) {
-                        SyncException.Kind.NETWORK -> R.string.sync_err_network
-                        SyncException.Kind.AUTH_EXPIRED -> R.string.sync_err_auth
-                        SyncException.Kind.QUOTA -> R.string.sync_err_quota
-                        SyncException.Kind.NEWER_FORMAT -> R.string.sync_err_newer
-                        SyncException.Kind.CORRUPT -> R.string.sync_err_corrupt
-                        SyncException.Kind.BUSY -> R.string.sync_err_busy
-                        SyncException.Kind.CONFLICT -> R.string.sync_err_conflict
-                        SyncException.Kind.NOT_CONNECTED -> R.string.sync_err_cancelled
-                        SyncException.Kind.UNKNOWN -> R.string.sync_err_unknown
-                    },
-                )
-            }
-            Text(
-                text,
-                fontSize = 12.sp,
-                color = if (m is SyncMessage.Error) colors.text else colors.dim,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-        }
-
         BackupActionRow(
             label = stringResource(R.string.sync_undo),
             enabled = ui.canUndo && !ui.running,
@@ -1102,6 +1075,34 @@ private fun SyncControls(viewModel: SyncViewModel) {
             label = stringResource(R.string.sync_disconnect),
             enabled = !ui.running,
             onClick = viewModel::disconnect,
+        )
+    }
+
+    ui.message?.let { m ->
+        val text = when (m) {
+            is SyncMessage.Success -> stringResource(R.string.sync_done, m.localChanges, m.remoteChanges)
+            SyncMessage.Undone -> stringResource(R.string.sync_undone)
+            SyncMessage.NoUndo -> stringResource(R.string.sync_no_undo)
+            SyncMessage.UndoBlocked -> stringResource(R.string.sync_undo_blocked)
+            is SyncMessage.Error -> stringResource(
+                when (m.kind) {
+                    SyncException.Kind.NETWORK -> R.string.sync_err_network
+                    SyncException.Kind.AUTH_EXPIRED -> R.string.sync_err_auth
+                    SyncException.Kind.QUOTA -> R.string.sync_err_quota
+                    SyncException.Kind.NEWER_FORMAT -> R.string.sync_err_newer
+                    SyncException.Kind.CORRUPT -> R.string.sync_err_corrupt
+                    SyncException.Kind.BUSY -> R.string.sync_err_busy
+                    SyncException.Kind.CONFLICT -> R.string.sync_err_conflict
+                    SyncException.Kind.NOT_CONNECTED -> R.string.sync_err_cancelled
+                    SyncException.Kind.UNKNOWN -> R.string.sync_err_unknown
+                },
+            )
+        }
+        Text(
+            text,
+            fontSize = 12.sp,
+            color = if (m is SyncMessage.Error) colors.text else colors.dim,
+            modifier = Modifier.padding(top = 8.dp),
         )
     }
 

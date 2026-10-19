@@ -52,6 +52,7 @@ class SyncViewModelTest {
         override fun deleteBase() { base = null }
         override fun readSnapshot() = snapshot
         override fun writeSnapshot(text: String) { snapshot = text }
+        override fun deleteSnapshot() { snapshot = null }
     }
 
     private class FakeProvider : CloudProvider {

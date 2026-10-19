@@ -398,9 +398,10 @@
     <string name="sync_err_auth">সাইন-ইনের মেয়াদ শেষ। সংযোগ বিচ্ছিন্ন করে আবার সংযুক্ত করুন।</string>
     <string name="sync_err_quota">প্রোভাইডার অনুরোধ সীমিত করছে বা স্টোরেজ ভরে গেছে। পরে আবার চেষ্টা করুন।</string>
     <string name="sync_err_newer">ক্লাউডের ফাইলটি অ্যাপের নতুন সংস্করণে তৈরি। আগে অ্যাপ আপডেট করুন।</string>
-    <string name="sync_err_corrupt">ক্লাউডের ফাইলটি পড়া যাচ্ছে না। কিছুই বদলানো হয়নি।</string>
+    <string name="sync_err_corrupt">ক্লাউডের ফাইলটি পড়া যাচ্ছে না, তাই কিছুই বদলানো হয়নি। সংযোগ বিচ্ছিন্ন করে আবার সংযুক্ত করুন, অথবা ড্রাইভের অ্যাপ ফোল্ডার থেকে dhikr-sync.json মুছে দিন।</string>
     <string name="sync_err_busy">একটি সিঙ্ক ইতিমধ্যে চলছে।</string>
     <string name="sync_err_conflict">ক্লাউডের ফাইল বারবার বদলে যাচ্ছে। আবার চেষ্টা করুন।</string>
     <string name="sync_err_cancelled">সাইন-ইন বাতিল করা হয়েছে।</string>
     <string name="sync_err_unknown">সিঙ্ক ব্যর্থ হয়েছে। কিছু হারায়নি।</string>
+    <string name="sync_undo_blocked">শেষ সিঙ্কের পর আপনি পরিবর্তন করেছেন, তাই এটি আর ফিরিয়ে নেওয়া যাবে না।</string>
 </resources>

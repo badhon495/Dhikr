@@ -7,6 +7,7 @@ import com.dhikr.app.core.backup.BackupRoutineStep
 import com.dhikr.app.core.backup.BackupSession
 import com.dhikr.app.core.backup.BackupTasbih
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -161,6 +162,23 @@ class SyncMergeTest {
     @Test
     fun goalFirstSyncRemoteWins() {
         assertEquals(900, mergeState(file(goal = 500), file(goal = 900), null).merged.preferences.dailyGoalTarget)
+    }
+
+    @Test
+    fun backgroundUpdatedAtBumpDoesNotBeatRealEdit() {
+        val base = file(listOf(t("a", "old", 1)))
+        // Local only had its updatedAt bumped (e.g. AI benefits cached); remote really renamed.
+        val local = file(listOf(t("a", "old", 99)))
+        val remote = file(listOf(t("a", "renamed", 5)))
+        assertEquals("renamed", mergeState(local, remote, base).merged.customTasbih.single().name)
+    }
+
+    @Test
+    fun sameSyncedStateIgnoresPreferencesOtherThanGoalAndOrder() {
+        val a = file(listOf(t("a"), t("b")), favs = listOf("x", "y"), goal = 5)
+        val b = file(listOf(t("b"), t("a")), favs = listOf("y", "x"), goal = 5)
+        assertTrue(sameSyncedState(a, b))
+        assertFalse(sameSyncedState(a, file(listOf(t("a")), favs = listOf("x", "y"), goal = 5)))
     }
 
     @Test

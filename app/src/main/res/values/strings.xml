@@ -400,9 +400,10 @@
     <string name="sync_err_auth">Sign-in expired. Disconnect and connect again.</string>
     <string name="sync_err_quota">The provider is limiting requests or your storage is full. Try again later.</string>
     <string name="sync_err_newer">The cloud file was made by a newer version of this app. Update the app first.</string>
-    <string name="sync_err_corrupt">The cloud file cannot be read. Nothing was changed.</string>
+    <string name="sync_err_corrupt">The cloud file cannot be read, so nothing was changed. Disconnect and reconnect, or delete dhikr-sync.json from the app folder in your drive.</string>
     <string name="sync_err_busy">A sync is already running.</string>
     <string name="sync_err_conflict">The cloud file kept changing. Try again.</string>
     <string name="sync_err_cancelled">Sign-in cancelled.</string>
     <string name="sync_err_unknown">Sync failed. Nothing was lost.</string>
+    <string name="sync_undo_blocked">You have made changes since the last sync, so it can no longer be undone.</string>
 </resources>

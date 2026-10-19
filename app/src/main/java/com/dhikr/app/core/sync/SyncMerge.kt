@@ -32,11 +32,11 @@ fun mergeState(local: BackupFile, remote: BackupFile?, base: BackupFile?): Merge
 
     val mergedTasbih = mergeById(
         local.customTasbih, remote?.customTasbih, effectiveBase?.customTasbih,
-        id = { it.id }, updatedAt = { it.updatedAt },
+        id = { it.id }, updatedAt = { it.updatedAt }, content = { it.copy(updatedAt = 0L) },
     ).toMutableList()
     val mergedRoutines = mergeById(
         local.customRoutines, remote?.customRoutines, effectiveBase?.customRoutines,
-        id = { it.id }, updatedAt = { it.updatedAt },
+        id = { it.id }, updatedAt = { it.updatedAt }, content = { it.copy(updatedAt = 0L) },
     )
 
     // A tasbih still used by a surviving routine step must not be deleted (FK RESTRICT).
@@ -100,6 +100,9 @@ private fun <T> mergeById(
     base: List<T>?,
     id: (T) -> String,
     updatedAt: (T) -> Long,
+    // Equality that ignores updatedAt: background writes (AI benefits, reminders) bump it
+    // without changing anything that syncs, and must not count as an edit.
+    content: (T) -> T,
 ): List<T> {
     val l = local.associateBy(id)
     val r = remote.orEmpty().associateBy(id)
@@ -111,16 +114,16 @@ private fun <T> mergeById(
         val bv = b?.get(key)
         val pick: T? = when {
             lv != null && rv != null -> when {
-                lv == rv -> lv
-                bv != null && lv == bv -> rv
-                bv != null && rv == bv -> lv
+                content(lv) == content(rv) -> if (updatedAt(lv) > updatedAt(rv)) lv else rv
+                bv != null && content(lv) == content(bv) -> rv
+                bv != null && content(rv) == content(bv) -> lv
                 updatedAt(lv) > updatedAt(rv) -> lv
                 else -> rv
             }
             // Only local has it: deleted remotely if it was in base — unless edited here.
-            lv != null -> if (bv != null && lv == bv) null else lv
+            lv != null -> if (bv != null && content(lv) == content(bv)) null else lv
             // Only remote has it: deleted locally if it was in base — unless edited there.
-            rv != null -> if (bv != null && rv == bv) null else rv
+            rv != null -> if (bv != null && content(rv) == content(bv)) null else rv
             else -> null
         }
         if (pick != null) out += pick
@@ -167,3 +170,12 @@ private fun <T> symmetricDiff(a: List<T>, b: List<T>, id: (T) -> String): Int {
     val bm = b.associateBy(id)
     return (am.keys + bm.keys).count { am[it] != bm[it] }
 }
+
+/** True when two states hold the same synced data (used to tell whether anything changed
+ *  on this device since the last sync). */
+fun sameSyncedState(a: BackupFile, b: BackupFile): Boolean =
+    a.customTasbih.sortedBy { it.id } == b.customTasbih.sortedBy { it.id } &&
+        a.customRoutines.sortedBy { it.id } == b.customRoutines.sortedBy { it.id } &&
+        a.builtInFavorites.toSet() == b.builtInFavorites.toSet() &&
+        a.sessions.mapTo(HashSet(), ::sessionKey) == b.sessions.mapTo(HashSet(), ::sessionKey) &&
+        a.preferences.dailyGoalTarget == b.preferences.dailyGoalTarget

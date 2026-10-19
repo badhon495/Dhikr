@@ -24,7 +24,8 @@ class OneDriveProvider(private val oauth: OAuthClient) : CloudProvider {
 
     override suspend fun upload(content: String, ifMatch: String?): String = withContext(Dispatchers.IO) {
         val token = oauth.freshAccessToken(ProviderId.MICROSOFT)
-        val headers = if (ifMatch != null) mapOf("If-Match" to ifMatch) else emptyMap()
+        // First upload must not overwrite a file another device just created.
+        val headers = if (ifMatch != null) mapOf("If-Match" to ifMatch) else mapOf("If-None-Match" to "*")
         val res = httpCall(
             "PUT", "$ITEM:/content", token,
             content.toByteArray(Charsets.UTF_8), "application/json", headers,

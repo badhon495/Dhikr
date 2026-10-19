@@ -45,6 +45,7 @@ class SyncEngineTest {
         override fun deleteBase() { base = null }
         override fun readSnapshot() = snapshot
         override fun writeSnapshot(text: String) { snapshot = text }
+        override fun deleteSnapshot() { snapshot = null }
     }
 
     private class FakeProvider(var content: String? = null) : CloudProvider {
@@ -182,13 +183,52 @@ class SyncEngineTest {
         val engine = SyncEngine(local, files)
         engine.sync(provider)
         assertEquals(listOf("a", "b"), local.state.customTasbih.map { it.id })
-        assertTrue(engine.undoLast())
+        assertEquals(UndoResult.DONE, engine.undoLast())
         assertEquals(listOf("a"), local.state.customTasbih.map { it.id })
         assertNull(files.base)
+        assertNull(files.snapshot) // single use
     }
 
     @Test
-    fun undoWithoutSnapshotReturnsFalse() = kotlinx.coroutines.runBlocking {
-        assertFalse(SyncEngine(FakeLocal(file()), FakeFiles()).undoLast())
+    fun undoWithoutSnapshotReturnsNothingToUndo() = kotlinx.coroutines.runBlocking {
+        assertEquals(UndoResult.NOTHING_TO_UNDO, SyncEngine(FakeLocal(file()), FakeFiles()).undoLast())
+    }
+
+    @Test
+    fun undoRefusedAfterLocalChangesSinceSync() = kotlinx.coroutines.runBlocking {
+        val local = FakeLocal(file(t("a")))
+        val files = FakeFiles()
+        val engine = SyncEngine(local, files)
+        engine.sync(FakeProvider(SyncCodec.encode(file(t("b")))))
+        local.state = local.state.copy(customTasbih = local.state.customTasbih + t("c")) // user adds one later
+        assertEquals(UndoResult.CHANGED_SINCE, engine.undoLast())
+        assertEquals(listOf("a", "b", "c"), local.state.customTasbih.map { it.id }) // nothing was deleted
+    }
+
+    @Test
+    fun resetBaseAlsoForgetsSnapshot() = kotlinx.coroutines.runBlocking {
+        val files = FakeFiles()
+        val engine = SyncEngine(FakeLocal(file(t("a"))), files)
+        engine.sync(FakeProvider())
+        engine.resetBase()
+        assertNull(files.base)
+        assertNull(files.snapshot)
+    }
+
+    @Test
+    fun itemThisDeviceCannotApplyIsNotTreatedAsDeletedNextTime() = kotlinx.coroutines.runBlocking {
+        // A local that silently skips tasbih "x" (e.g. needs a built-in it lacks).
+        val local = object : SyncLocal {
+            var state = file(t("a"))
+            override suspend fun readState() = state
+            override suspend fun applyState(target: BackupFile) {
+                state = target.copy(customTasbih = target.customTasbih.filter { it.id != "x" })
+            }
+        }
+        val provider = FakeProvider(SyncCodec.encode(file(t("x"))))
+        val engine = SyncEngine(local, FakeFiles())
+        engine.sync(provider)
+        engine.sync(provider)
+        assertTrue("x" in SyncCodec.decode(provider.content!!).customTasbih.map { it.id })
     }
 }

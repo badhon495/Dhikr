@@ -21,7 +21,10 @@ interface SyncFiles {
     fun deleteBase()
     fun readSnapshot(): String?
     fun writeSnapshot(text: String)
+    fun deleteSnapshot()
 }
+
+enum class UndoResult { DONE, NOTHING_TO_UNDO, CHANGED_SINCE }
 
 data class SyncSummary(val localChanges: Int, val remoteChanges: Int)
 
@@ -68,7 +71,10 @@ class SyncEngine(
                     throw e
                 }
             }
-            files.writeBase(encoded)
+            // The base is what this device actually holds after applying, not the merged
+            // target: anything the device could not apply (e.g. a routine using a built-in
+            // it lacks) stays "new on the cloud" next time instead of looking deleted here.
+            files.writeBase(SyncCodec.encode(local.readState()))
             return SyncSummary(localChanges, remoteChanges)
         }
         throw SyncException(SyncException.Kind.CONFLICT, "Cloud file kept changing")
@@ -76,15 +82,29 @@ class SyncEngine(
 
     /** Restores this device to the state before the last sync. The cloud is not touched;
      *  the base is dropped, so the next sync re-applies cloud changes (union, no deletes).
-     *  @return false if there is no snapshot. */
-    suspend fun undoLast(): Boolean {
-        val snapshot = files.readSnapshot() ?: return false
-        local.applyState(SyncCodec.decode(snapshot))
-        files.deleteBase()
-        return true
+     *  Refused once anything has changed on this device since that sync, so undo can never
+     *  delete newer counting history. The snapshot is single-use.
+     *  @throws SyncException BUSY while a sync or another undo is running. */
+    suspend fun undoLast(): UndoResult {
+        if (!lock.tryLock()) throw SyncException(SyncException.Kind.BUSY, "A sync is already running")
+        try {
+            val snapshot = files.readSnapshot() ?: return UndoResult.NOTHING_TO_UNDO
+            val base = files.readBase()?.let { runCatching { SyncCodec.decode(it) }.getOrNull() }
+            if (base != null && !sameSyncedState(local.readState(), base)) return UndoResult.CHANGED_SINCE
+            local.applyState(SyncCodec.decode(snapshot))
+            files.deleteBase()
+            files.deleteSnapshot()
+            return UndoResult.DONE
+        } finally {
+            lock.unlock()
+        }
     }
 
-    fun resetBase() = files.deleteBase()
+    /** Forget sync history (provider switch / disconnect): base and undo snapshot. */
+    fun resetBase() {
+        files.deleteBase()
+        files.deleteSnapshot()
+    }
 
     fun hasSnapshot(): Boolean = files.readSnapshot() != null
 }

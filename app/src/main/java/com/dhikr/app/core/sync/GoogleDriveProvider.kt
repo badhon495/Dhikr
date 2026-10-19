@@ -65,7 +65,8 @@ class GoogleDriveProvider(private val oauth: OAuthClient) : CloudProvider {
     private fun findFile(token: String): Meta? {
         val q = URLEncoder.encode("name='$FILE_NAME'", "UTF-8")
         val fields = URLEncoder.encode("files(id,md5Checksum)", "UTF-8")
-        val res = httpCall("GET", "$FILES?spaces=appDataFolder&q=$q&fields=$fields", token)
+        // Oldest first: if two devices raced to create the file, everyone converges on the same one.
+        val res = httpCall("GET", "$FILES?spaces=appDataFolder&q=$q&fields=$fields&orderBy=createdTime", token)
         mapHttpStatus(res.code, res.body)?.let { throw it }
         val files: JsonArray = parseObject(res.body)["files"]?.jsonArray ?: return null
         val first = files.firstOrNull()?.jsonObject ?: return null

@@ -10,6 +10,8 @@ import com.dhikr.app.core.sync.SyncAuth
 import com.dhikr.app.core.sync.SyncEngine
 import com.dhikr.app.core.sync.SyncException
 import com.dhikr.app.core.sync.SyncStateStorage
+import com.dhikr.app.core.sync.UndoResult
+import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +23,7 @@ sealed interface SyncMessage {
     data class Error(val kind: SyncException.Kind) : SyncMessage
     data object Undone : SyncMessage
     data object NoUndo : SyncMessage
+    data object UndoBlocked : SyncMessage
 }
 
 data class SyncUi(
@@ -102,6 +105,8 @@ class SyncViewModel(
                 SyncMessage.Success(summary.localChanges, summary.remoteChanges)
             } catch (e: SyncException) {
                 SyncMessage.Error(e.kind)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 SyncMessage.Error(SyncException.Kind.UNKNOWN)
             }
@@ -110,9 +115,19 @@ class SyncViewModel(
     }
 
     fun undo() {
+        if (_ui.value.running) return
+        _ui.update { it.copy(running = true, message = null) }
         viewModelScope.launch {
             val message = try {
-                if (engine.undoLast()) SyncMessage.Undone else SyncMessage.NoUndo
+                when (engine.undoLast()) {
+                    UndoResult.DONE -> SyncMessage.Undone
+                    UndoResult.NOTHING_TO_UNDO -> SyncMessage.NoUndo
+                    UndoResult.CHANGED_SINCE -> SyncMessage.UndoBlocked
+                }
+            } catch (e: SyncException) {
+                SyncMessage.Error(e.kind)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 SyncMessage.Error(SyncException.Kind.UNKNOWN)
             }
