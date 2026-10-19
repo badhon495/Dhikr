@@ -12,6 +12,11 @@ import kotlinx.serialization.Serializable
 const val BACKUP_FORMAT = "dhikr.backup"
 const val BACKUP_VERSION = 1
 
+/** Format/version of the cloud sync file (dhikr-sync.json). Shares the
+ *  [BackupFile] shape; only the format string differs from a manual backup. */
+const val SYNC_FORMAT = "dhikr.sync"
+const val SYNC_VERSION = 1
+
 @Serializable
 data class BackupFile(
     val format: String = BACKUP_FORMAT,
