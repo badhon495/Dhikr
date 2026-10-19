@@ -14,6 +14,7 @@ Kotlin · Jetpack Compose · Material 3 · Room · DataStore. minSdk 24, targetS
 - Reminders: scheduled local notifications, persist across reboot
 - Home screen widgets: a counter widget (count without opening the app) and an insights widget
 - Backup: JSON export / import from Settings; routine sharing via share code
+- Cloud sync (optional): Sync now with your own Google Drive or OneDrive app folder; three-way merge, undo last sync. Needs one-time OAuth setup — see [docs/cloud-sync-setup.md](docs/cloud-sync-setup.md)
 - Optional AI benefits: bring your own Google Gemini API key (encrypted on-device), per-tasbih virtues cached locally
 - Auto counter (experimental, off by default): accelerometer wrist-flick detection
 - English and Bengali UI; light / dark themes; onboarding tutorial

@@ -1,6 +1,6 @@
 # Privacy Policy for Dhikr
 
-**Last updated:** 4 September 2026
+**Last updated:** 19 October 2026
 
 Dhikr ("the app") is a native Android Tasbih / Dhikr counter developed by the
 Dhikr developer ("we", "us"). This policy explains what data the app handles and
@@ -14,8 +14,9 @@ Google Play.
 - We do **not** use analytics, advertising, tracking, or crash-reporting SDKs.
 - All of your data — counts, sessions, custom dhikr, routines, history,
   reminders, goals, and settings — is stored **only on your device**.
-- The single optional feature that contacts the internet is the AI benefits
-  feature, and only when you enable it with your own API key (see below).
+- Two optional features contact the internet, and only when you turn them on:
+  the AI benefits feature (with your own API key) and Cloud sync (with your own
+  Google Drive or OneDrive account). See below.
 
 ## Data the app stores on your device
 
@@ -72,11 +73,33 @@ When enabled and used:
 Removing the API key in Settings disables the feature. Clearing the cached
 benefits text removes it from your device.
 
+## Optional cloud sync
+
+Cloud sync is **off until you connect an account** in Settings, and it only runs
+when you tap **Sync now**. It keeps your custom Tasbih, custom routines,
+favourites, session history and daily goal in step across your own devices.
+
+- You sign in to **your own** Google Drive or Microsoft OneDrive account through
+  the provider's sign-in page in your browser. The app never sees your password.
+- The app asks only for access to its **own private app folder** (Google Drive
+  `appDataFolder`, OneDrive "App Folder"). It cannot see, read or change any
+  other file in your account.
+- The sync file (`dhikr-sync.json`) is sent from your device directly to the
+  provider you chose, over HTTPS. It is **not** sent to us; we operate no server
+  and receive nothing. The provider's own privacy policy governs what it does
+  with files in your account.
+- Sign-in tokens are stored encrypted on your device (Android
+  `EncryptedSharedPreferences`) and are removed when you tap Disconnect.
+- Theme, haptics and other per-device settings, and your Gemini API key, are
+  **not** synced.
+- To delete the cloud copy, delete the app's folder in your Google Drive or
+  OneDrive (or revoke the app's access in your Google / Microsoft account).
+
 ## Permissions the app requests
 
 | Permission | Why |
 |------------|-----|
-| `INTERNET` | Only for the optional AI benefits feature described above. With that feature off, the app makes no network connections. |
+| `INTERNET` | Only for the optional AI benefits and cloud sync features described above. With both off, the app makes no network connections. |
 | `VIBRATE` | Haptic feedback on counting. |
 | `POST_NOTIFICATIONS` | Showing the local reminder notifications you schedule. |
 | `RECEIVE_BOOT_COMPLETED` | Re-registering your reminders after the device restarts. |

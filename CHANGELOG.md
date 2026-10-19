@@ -3,6 +3,16 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [Unreleased]
+
+### Added
+- **Cloud sync** — Settings → Cloud sync. Connect your own Google Drive or
+  OneDrive and tap *Sync now* to keep custom tasbih, custom routines,
+  favourites, history and the daily goal in step across devices. Uses each
+  provider's private app folder; two-way merge that also propagates deletes;
+  *Undo last sync*. Needs OAuth client IDs (docs/cloud-sync-setup.md); without
+  them the provider rows show "Not set up yet".
+
 ## [1.3.0] - 2026-10-19
 
 versionCode 8
