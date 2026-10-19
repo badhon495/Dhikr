@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5ead8"><link rel="icon" href="assets/icon.png"><link rel="stylesheet" href="style.css"><title>Privacy Policy – Dhikr</title><meta name="description" content="Privacy policy for the Dhikr Android app."></head><body>
+<header class="top"><div class="wrap"><a class="brand" href="./"><img src="assets/icon.png" alt="">Dhikr</a><nav><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></nav></div></header>
+<main class="wrap doc">
+<h1>Privacy Policy for Dhikr</h1>
+<p class="meta"><strong>Last updated:</strong> 19 October 2026</p>
+<p>Dhikr ("the app") is a native Android Tasbih / Dhikr counter developed by the Dhikr developer ("we", "us"). This policy explains what data the app handles and how it is treated. It applies to the app distributed as <code>com.badhon495.dhikr</code> on Google Play.</p>
+<h2>Summary</h2>
+<ul>
+<li>The app has <strong>no account system</strong> and <strong>no login</strong>.</li>
+<li>We do <strong>not</strong> collect, transmit, or sell any personal data.</li>
+<li>We do <strong>not</strong> use analytics, advertising, tracking, or crash-reporting SDKs.</li>
+<li>All of your data — counts, sessions, custom dhikr, routines, history, reminders, goals, and settings — is stored <strong>only on your device</strong>.</li>
+<li>Two optional features contact the internet, and only when you turn them on: the AI benefits feature (with your own API key) and Cloud sync (with your own Google Drive or OneDrive account). See below.</li>
+</ul>
+<h2>Data the app stores on your device</h2>
+<p>The app creates and stores the following locally, in its private app storage (a Room database, Jetpack DataStore preferences, and Android encrypted preferences). None of it leaves your device except as described in "Data you choose to export" and "Optional AI benefits feature" below.</p>
+<table><tr><th>Data</th><th>Purpose</th></tr><tr><td>Dhikr / Tasbih counts, sessions, and undo state</td><td>Core counting feature</td></tr><tr><td>Custom Tasbih you create (name, target, text)</td><td>Your personal dhikr library</td></tr><tr><td>Routines (multi-step dhikr sequences)</td><td>Routine feature</td></tr><tr><td>Daily goals, favorites, resume state</td><td>Home screen</td></tr><tr><td>Daily / weekly / all-time totals, history log, consistency calendar</td><td>Insights feature</td></tr><tr><td>Reminder schedules</td><td>Local scheduled notifications</td></tr><tr><td>Widget state (current count)</td><td>Home screen widgets</td></tr><tr><td>Theme, language, onboarding, and other app settings</td><td>App preferences</td></tr><tr><td>Your Google Gemini API key (if you enter one)</td><td>Optional AI benefits feature; stored with Android <code>EncryptedSharedPreferences</code></td></tr><tr><td>Cached AI-generated "virtues / benefits" text per Tasbih</td><td>Avoids repeat network requests</td></tr></table>
+<p>You can erase all of this at any time by clearing the app's storage in Android Settings or uninstalling the app.</p>
+<h2>Data you choose to export</h2>
+<p>The app has a Backup feature (Settings → Export) that writes your app data to a JSON file, and a routine-sharing feature that produces a share code or a <code>.dhikrroutine</code> file. These files are created only when you ask for them, are saved or shared to the destination <strong>you</strong> pick, and are then outside the app's control. We never receive them.</p>
+<h2>Optional AI benefits feature</h2>
+<p>The app can show AI-generated notes about the virtues of a given dhikr. This feature is <strong>off until you turn it on</strong>, and it requires you to supply your own Google Gemini API key.</p>
+<p>When enabled and used:</p>
+<ul>
+<li>The app sends the dhikr text (Arabic / transliteration / translation) and your API key directly from your device to Google's Generative Language API (<code>https://generativelanguage.googleapis.com</code>).</li>
+<li>No other data — no counts, history, device identifiers, or personal information — is included in that request.</li>
+<li>The request goes to Google, not to us. Google's handling of it is governed by Google's Privacy Policy and the Gemini API terms: <a href="https://ai.google.dev/gemini-api/terms">https://ai.google.dev/gemini-api/terms</a> and <a href="https://policies.google.com/privacy">https://policies.google.com/privacy</a>.</li>
+<li>The generated text is cached on your device so the request is not repeated.</li>
+<li>Your API key is stored encrypted on your device and is transmitted only to Google, only as part of these requests.</li>
+</ul>
+<p>Removing the API key in Settings disables the feature. Clearing the cached benefits text removes it from your device.</p>
+<h2>Optional cloud sync</h2>
+<p>Cloud sync is <strong>off until you connect an account</strong> in Settings, and it only runs when you tap <strong>Sync now</strong>. It keeps your custom Tasbih, custom routines, favourites, session history and daily goal in step across your own devices.</p>
+<ul>
+<li>You sign in to <strong>your own</strong> Google Drive or Microsoft OneDrive account through the provider's sign-in page in your browser. The app never sees your password.</li>
+<li>The app asks only for access to its <strong>own private app folder</strong> (Google Drive <code>appDataFolder</code>, OneDrive "App Folder"). It cannot see, read or change any other file in your account.</li>
+<li>The sync file (<code>dhikr-sync.json</code>) is sent from your device directly to the provider you chose, over HTTPS. It is <strong>not</strong> sent to us; we operate no server and receive nothing. The provider's own privacy policy governs what it does with files in your account.</li>
+<li>Sign-in tokens are stored encrypted on your device (Android <code>EncryptedSharedPreferences</code>) and are removed when you tap Disconnect.</li>
+<li>Theme, haptics and other per-device settings, and your Gemini API key, are <strong>not</strong> synced.</li>
+<li>To delete the cloud copy, delete the app's folder in your Google Drive or OneDrive (or revoke the app's access in your Google / Microsoft account).</li>
+</ul>
+<h2>Permissions the app requests</h2>
+<table><tr><th>Permission</th><th>Why</th></tr><tr><td><code>INTERNET</code></td><td>Only for the optional AI benefits and cloud sync features described above. With both off, the app makes no network connections.</td></tr><tr><td><code>VIBRATE</code></td><td>Haptic feedback on counting.</td></tr><tr><td><code>POST_NOTIFICATIONS</code></td><td>Showing the local reminder notifications you schedule.</td></tr><tr><td><code>RECEIVE_BOOT_COMPLETED</code></td><td>Re-registering your reminders after the device restarts.</td></tr><tr><td><code>android.hardware.sensor.accelerometer</code> (optional, <code>required="false"</code>)</td><td>Only for the experimental, off-by-default auto-counter (wrist-flick) setting. Sensor data is processed in memory to detect a flick and is never stored or transmitted.</td></tr></table>
+<h2>Children's privacy</h2>
+<p>The app does not collect personal data from anyone, including children. It contains no ads and no in-app purchases.</p>
+<h2>Data security</h2>
+<p>Data stays in the app's private storage, which other apps cannot read on a non-rooted device. The Gemini API key is additionally encrypted at rest using <code>androidx.security-crypto</code>. Network requests to Google use HTTPS.</p>
+<h2>Changes to this policy</h2>
+<p>If this policy changes, the "Last updated" date above will change and the new version will be published at the same URL used in the Play Store listing.</p>
+<h2>Contact</h2>
+<p>Questions about this policy: badhon495@gmail.com</p>
+</main>
+<footer><div class="wrap"><a href="./">Home</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="https://github.com/badhon495/Dhikr">GitHub</a><p>&copy; 2026 Dhikr &middot; badhon495@gmail.com</p></div></footer></body></html>
