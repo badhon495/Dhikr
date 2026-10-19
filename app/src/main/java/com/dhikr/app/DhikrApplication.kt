@@ -46,8 +46,34 @@ class DhikrApplication : Application() {
                 database.routineDao().insertRoutines(SeedData.presetRoutines)
                 database.routineDao().insertSteps(SeedData.presetRoutineSteps)
             }
+            syncRoutineStepAdditions()
             purgeRetiredTasbih()
         }
+    }
+
+    /**
+     * One-time: append the later-added Morning/Evening steps
+     * ([SeedData.routineStepAdditions]) to installs that seeded the routines
+     * before those steps existed. Skips tasbih already in the routine. Runs
+     * once so steps the user later removes don't come back.
+     */
+    private suspend fun syncRoutineStepAdditions() {
+        val prefs = getSharedPreferences("seed_sync", MODE_PRIVATE)
+        val key = "routine_step_additions_v1"
+        if (prefs.getBoolean(key, false)) return
+        val routineDao = database.routineDao()
+        for ((routineId, additions) in SeedData.routineStepAdditions) {
+            val routine = routineDao.getWithSteps(routineId) ?: continue
+            val present = routine.steps.map { it.tasbihId }.toSet()
+            var order = (routine.steps.maxOfOrNull { it.stepOrder } ?: -1) + 1
+            val toAdd = additions.filter { (id, _) -> id !in present }.map { (id, count) ->
+                com.dhikr.app.core.database.entity.RoutineStepEntity(
+                    routineId = routineId, tasbihId = id, stepOrder = order++, targetCount = count,
+                )
+            }
+            if (toAdd.isNotEmpty()) routineDao.insertSteps(toAdd)
+        }
+        prefs.edit().putBoolean(key, true).apply()
     }
 
     /**
