@@ -3,6 +3,25 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.3.0] - 2026-10-19
+
+versionCode 8
+
+### Added
+- **Screen dimming** — app-wide adjustable dimming with a brightness slider,
+  toggled from the Counter screen.
+- Strong-borders option for the dynamic color scheme.
+- New dhikr entries; routine step additions now sync to existing installs.
+
+### Changed
+- Counter shows routine progress (`done/total`) instead of pace during routines.
+
+### Fixed
+- Screen dim toggle silently doing nothing in release builds.
+- Duplicate/stale built-in dhikr left over from older seed versions are
+  removed on startup (favourites and routine-referenced rows are kept).
+- Tasbih Library keeps its scroll position when returning via back.
+
 ## [1.2.3] - 2026-10-15
 
 versionCode 7

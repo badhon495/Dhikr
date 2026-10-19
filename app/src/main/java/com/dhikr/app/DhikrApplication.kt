@@ -77,8 +77,8 @@ class DhikrApplication : Application() {
     }
 
     /**
-     * Drop the retired situational built-in dhikr from an existing database
-     * (fresh installs never seed them). Keeps any the user favourited, and any a
+     * Drop the retired situational built-in dhikr, and any built-in row not in
+     * the current seed, from an existing database (fresh installs never seed them). Keeps any the user favourited, and any a
      * routine step still references — routine_step -> tasbih is RESTRICT, so
      * deleting a referenced row would throw.
      */
@@ -86,10 +86,14 @@ class DhikrApplication : Application() {
         val tasbihDao = database.tasbihDao()
         val routineDao = database.routineDao()
         val favourites = tasbihDao.getBuiltInFavoriteIds().toSet()
-        val purgeable = SeedData.retiredBuiltInIds
+        // Retired ids plus any built-in row the current seed no longer ships
+        // (stale leftovers from older seed versions show up as duplicates).
+        // Custom tasbih (isBuiltIn = 0) are never in getBuiltInIds().
+        val seedIds = SeedData.builtInTasbih.mapTo(HashSet()) { it.id }
+        val stale = tasbihDao.getBuiltInIds().filter { it !in seedIds }
+        val purgeable = (SeedData.retiredBuiltInIds + stale)
             .filter { it !in favourites && routineDao.countStepsUsingTasbih(it) == 0 }
-        if (purgeable.isNotEmpty()) {
-            tasbihDao.deleteByIds(purgeable)
-        }
+        // Chunked to stay under SQLite's bound-variable limit.
+        purgeable.chunked(500).forEach { tasbihDao.deleteByIds(it) }
     }
 }

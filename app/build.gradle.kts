@@ -35,8 +35,8 @@ android {
         applicationId = "com.badhon495.dhikr"
         minSdk = 24
         targetSdk = 37
-        versionCode = 7
-        versionName = "1.2.3"
+        versionCode = 8
+        versionName = "1.3.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Ship only the languages we actually translate. Keeps the per-app

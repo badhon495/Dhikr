@@ -81,7 +81,7 @@ object SeedData {
         meaningBn: String,
         meaningEn: String,
     ) = TasbihEntity(
-        id = "asma_%02d".format(n),
+        id = "asma_%02d".format(java.util.Locale.ROOT, n),
         name = translit,
         nameBn = bangla,
         arabic = arabic,
@@ -3152,7 +3152,7 @@ object SeedData {
     private val asmaUlHusnaSteps: List<RoutineStepEntity> = (1..99).map { n ->
         RoutineStepEntity(
             routineId = "asma_ul_husna",
-            tasbihId = "asma_%02d".format(n),
+            tasbihId = "asma_%02d".format(java.util.Locale.ROOT, n),
             stepOrder = n - 1,
             targetCount = 3,
         )

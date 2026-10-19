@@ -417,11 +417,17 @@ fun CounterScreen(
                     maxLines = 1,
                 )
                 Text(
-                    text = formatSessionLabel(
-                        elapsedSeconds,
-                        state.totalCount,
-                        showPace = state.routineSteps.isEmpty(),
-                    ),
+                    text = if (state.routineSteps.isNotEmpty()) {
+                        val total = state.routineSteps.size
+                        val done = if (state.isRoutineComplete) {
+                            total
+                        } else {
+                            state.currentRoutineStepIndex.coerceIn(0, total)
+                        }
+                        "$done/$total"
+                    } else {
+                        formatSessionLabel(elapsedSeconds, state.totalCount)
+                    },
                     fontSize = 11.5.sp,
                     color = colors.faint,
                     maxLines = 1,
@@ -1237,12 +1243,10 @@ private fun formatDuration(elapsedSeconds: Int): String {
     return "%02d:%02d".format(minutes, seconds)
 }
 
-/** "12:34" once the session is a few seconds old, plus a "· 41/min" pace readout
- * (suppressed via [showPace] during routines — pace isn't meaningful when
- * stepping through short fixed-count steps). */
-private fun formatSessionLabel(elapsedSeconds: Int, total: Int, showPace: Boolean = true): String {
+/** "12:34" once the session is a few seconds old, plus a "· 41/min" pace readout. */
+private fun formatSessionLabel(elapsedSeconds: Int, total: Int): String {
     val time = formatDuration(elapsedSeconds)
-    if (!showPace || elapsedSeconds <= 4) return time
+    if (elapsedSeconds <= 4) return time
     val rate = (total.toFloat() / (elapsedSeconds / 60f)).toInt()
     return if (rate > 0) "$time  ·  $rate/min" else time
 }

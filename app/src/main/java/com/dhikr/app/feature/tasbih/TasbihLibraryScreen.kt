@@ -91,8 +91,11 @@ fun TasbihLibraryScreen(
 
     // Keyed LazyColumn anchors scroll to the first visible item, so after a
     // re-sort the view follows that item and the new order looks unchanged.
+    // Skip the first run: it also fires when returning from a Tasbih via back
+    // (screen re-enters composition) and would wipe the restored position.
+    var firstSortRun by remember { mutableStateOf(true) }
     LaunchedEffect(state.sort) {
-        listState.scrollToItem(0)
+        if (firstSortRun) firstSortRun = false else listState.scrollToItem(0)
     }
 
     // Long-press action menu (Edit/Delete) state — which Tasbih, if any,

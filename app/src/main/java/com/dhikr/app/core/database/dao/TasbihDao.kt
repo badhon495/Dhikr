@@ -95,6 +95,9 @@ interface TasbihDao {
     @Query("SELECT id FROM tasbih WHERE isBuiltIn = 1 AND isFavorite = 1")
     suspend fun getBuiltInFavoriteIds(): List<String>
 
+    @Query("SELECT id FROM tasbih WHERE isBuiltIn = 1")
+    suspend fun getBuiltInIds(): List<String>
+
     @Query("SELECT id FROM tasbih")
     suspend fun getAllIds(): List<String>
 
