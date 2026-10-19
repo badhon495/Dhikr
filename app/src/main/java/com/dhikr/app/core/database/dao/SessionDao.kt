@@ -34,6 +34,9 @@ interface SessionDao {
     @Query("SELECT * FROM session")
     suspend fun getAll(): List<SessionEntity>
 
+    @Query("DELETE FROM session WHERE id IN (:ids)")
+    suspend fun deleteByIds(ids: List<Long>)
+
     // Flow-returning so Room's invalidation tracker re-emits on every insert
     // into `session` — HomeViewModel/InsightsViewModel collect this reactively
     // instead of reading it once in init, so counting from the Counter screen

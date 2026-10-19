@@ -36,7 +36,11 @@ class BackupRepository(
         encodeDefaults = true
     }
 
-    suspend fun export(appVersionName: String): String {
+    suspend fun export(appVersionName: String): String =
+        json.encodeToString(BackupFile.serializer(), buildFile(appVersionName))
+
+    /** Snapshot of everything a backup carries; also the local state cloud sync merges. */
+    suspend fun buildFile(appVersionName: String): BackupFile {
         val tasbihDao = database.tasbihDao()
         val routineDao = database.routineDao()
         val sessionDao = database.sessionDao()
@@ -73,7 +77,7 @@ class BackupRepository(
                 benefitsPromptOverride = prefs.benefitsPromptOverride,
             ),
         )
-        return json.encodeToString(BackupFile.serializer(), file)
+        return file
     }
 
     /** @throws BackupFormatException if [content] isn't a readable backup. */
