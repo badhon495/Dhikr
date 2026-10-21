@@ -35,6 +35,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -51,6 +52,7 @@ import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.core.localization.localizedDigits
+import com.dhikr.app.core.utilities.IslamicSeason
 import com.dhikr.app.ui.HOME_SCREEN_TEST_TAG
 import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.Motion
@@ -103,6 +105,20 @@ fun HomeScreen(
                     color = colors.dim,
                     modifier = Modifier.padding(top = 3.dp),
                 )
+                state.hijriDate?.let { hijri ->
+                    val months = stringArrayResource(R.array.hijri_months)
+                    Text(
+                        stringResource(
+                            R.string.home_hijri_date,
+                            hijri.day.localizedDigits(lang),
+                            months.getOrElse(hijri.month - 1) { "" },
+                            hijri.year.localizedDigits(lang),
+                        ),
+                        fontSize = 12.5.sp,
+                        color = colors.faint,
+                        modifier = Modifier.padding(top = 1.dp),
+                    )
+                }
             }
             GoalRing(
                 progress = if (state.dailyGoalTarget > 0) state.todayTotal.toFloat() / state.dailyGoalTarget else 0f,
@@ -111,6 +127,13 @@ fun HomeScreen(
                     state.todayTotal,
                     state.dailyGoalTarget,
                 ),
+            )
+        }
+
+        state.season?.let { season ->
+            SeasonBanner(
+                season = season,
+                onOpen = state.seasonTasbihId?.let { id -> { onOpenTasbih(id) } },
             )
         }
 
@@ -265,6 +288,42 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+/**
+ * A gentle note for special times — Ramadan, the days of Dhul Hijjah, Friday —
+ * with a shortcut to the fitting dhikr when there is one.
+ */
+@Composable
+private fun SeasonBanner(season: IslamicSeason, onOpen: (() -> Unit)?) {
+    val colors = DhikrTheme.colors
+    val (title, body) = when (season) {
+        IslamicSeason.RAMADAN -> R.string.home_season_ramadan_title to R.string.home_season_ramadan_body
+        IslamicSeason.DHUL_HIJJAH -> R.string.home_season_dhul_hijjah_title to R.string.home_season_dhul_hijjah_body
+        IslamicSeason.FRIDAY -> R.string.home_season_friday_title to R.string.home_season_friday_body
+    }
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(22.dp))
+            .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(22.dp))
+            .then(if (onOpen != null) Modifier.clickable(role = Role.Button) { onOpen() } else Modifier)
+            .semantics(mergeDescendants = true) {}
+            .padding(16.dp),
+    ) {
+        Text(stringResource(title), fontSize = 15.sp, fontWeight = FontWeight.SemiBold, color = colors.text)
+        Text(stringResource(body), fontSize = 12.5.sp, color = colors.dim, modifier = Modifier.padding(top = 3.dp))
+        if (onOpen != null) {
+            Text(
+                stringResource(R.string.home_season_action),
+                fontSize = 12.5.sp,
+                color = colors.sage,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.padding(top = 8.dp),
+            )
         }
     }
 }

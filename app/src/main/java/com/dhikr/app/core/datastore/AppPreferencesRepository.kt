@@ -2,12 +2,17 @@ package com.dhikr.app.core.datastore
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.dhikr.app.core.ai.BenefitsLanguage
+import com.dhikr.app.core.prayer.AsrMethod
+import com.dhikr.app.core.prayer.CalculationMethod
+import com.dhikr.app.core.prayer.DEFAULT_PRAYER_OFFSET_MINUTES
+import com.dhikr.app.core.prayer.PrayerSettings
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -36,6 +41,12 @@ enum class HapticMode { OFF, EVERY_TAP, LAP_ONLY }
  *  becomes the mandatory field in the tasbih editor. */
 enum class CounterScript { PRONUNCIATION, ARABIC }
 
+/** Size of the dhikr text on the counter screen. */
+enum class CounterTextSize(val scale: Float) { SMALL(0.85f), DEFAULT(1f), LARGE(1.2f), EXTRA_LARGE(1.4f) }
+
+/** Preset weekly-goal targets; 0 means no weekly goal. */
+val WEEKLY_GOAL_OPTIONS = listOf(0, 2_000, 3_500, 7_000)
+
 class AppPreferencesRepository(private val context: Context) {
     private val dailyGoalKey = intPreferencesKey("daily_goal_target")
     private val themeModeKey = stringPreferencesKey("theme_mode")
@@ -48,6 +59,18 @@ class AppPreferencesRepository(private val context: Context) {
     private val dynamicColorKey = booleanPreferencesKey("dynamic_color")
     private val counterScriptKey = stringPreferencesKey("counter_script")
     private val autoCounterEnabledKey = booleanPreferencesKey("auto_counter_enabled")
+    private val keepScreenOnKey = booleanPreferencesKey("keep_screen_on")
+    private val volumeKeyCountingKey = booleanPreferencesKey("volume_key_counting")
+    private val weeklyGoalKey = intPreferencesKey("weekly_goal_target")
+    private val counterTextSizeKey = stringPreferencesKey("counter_text_size")
+    private val hijriAdjustKey = intPreferencesKey("hijri_adjust_days")
+    private val prayerLatKey = doublePreferencesKey("prayer_latitude")
+    private val prayerLngKey = doublePreferencesKey("prayer_longitude")
+    private val prayerLocationNameKey = stringPreferencesKey("prayer_location_name")
+    private val prayerMethodKey = stringPreferencesKey("prayer_method")
+    private val prayerAsrKey = stringPreferencesKey("prayer_asr")
+    private val prayerMaskKey = intPreferencesKey("prayer_reminders_mask")
+    private val prayerOffsetKey = intPreferencesKey("prayer_offset_minutes")
     private val hasSeenOnboardingKey = booleanPreferencesKey("has_seen_onboarding")
     private val dimScreenEnabledKey = booleanPreferencesKey("dim_screen_enabled")
     private val dimBrightnessLevelKey = floatPreferencesKey("dim_brightness_level")
@@ -158,6 +181,82 @@ class AppPreferencesRepository(private val context: Context) {
         context.preferencesDataStore.edit { it[autoCounterEnabledKey] = value }
     }
 
+    /** Keeps the display on while the Counter screen is open and counting
+     *  (plan.md §34). Off by default — never applied globally. */
+    val keepScreenOn = context.preferencesDataStore.data.map { it[keepScreenOnKey] ?: false }
+
+    suspend fun setKeepScreenOn(value: Boolean) {
+        context.preferencesDataStore.edit { it[keepScreenOnKey] = value }
+    }
+
+    /** Hardware volume buttons count on the Counter screen instead of changing
+     *  the volume. Off by default, since it overrides a system control. */
+    val volumeKeyCounting = context.preferencesDataStore.data.map { it[volumeKeyCountingKey] ?: false }
+
+    suspend fun setVolumeKeyCounting(value: Boolean) {
+        context.preferencesDataStore.edit { it[volumeKeyCountingKey] = value }
+    }
+
+    /** Rolling seven-day goal shown on Insights; 0 (default) = off. */
+    val weeklyGoalTarget = context.preferencesDataStore.data.map { it[weeklyGoalKey] ?: 0 }
+
+    suspend fun setWeeklyGoalTarget(value: Int) {
+        context.preferencesDataStore.edit { it[weeklyGoalKey] = value.coerceAtLeast(0) }
+    }
+
+    /** Absent/unknown falls back to DEFAULT. */
+    val counterTextSize = context.preferencesDataStore.data.map { prefs ->
+        CounterTextSize.entries.firstOrNull { it.name == prefs[counterTextSizeKey] } ?: CounterTextSize.DEFAULT
+    }
+
+    suspend fun setCounterTextSize(value: CounterTextSize) {
+        context.preferencesDataStore.edit { it[counterTextSizeKey] = value.name }
+    }
+
+    /** Days added to the computed Hijri date to match local moon sighting. */
+    val hijriAdjustDays = context.preferencesDataStore.data.map { (it[hijriAdjustKey] ?: 0).coerceIn(-2, 2) }
+
+    suspend fun setHijriAdjustDays(value: Int) {
+        context.preferencesDataStore.edit { it[hijriAdjustKey] = value.coerceIn(-2, 2) }
+    }
+
+    val prayerSettings = context.preferencesDataStore.data.map { prefs ->
+        PrayerSettings(
+            latitude = prefs[prayerLatKey],
+            longitude = prefs[prayerLngKey],
+            locationName = prefs[prayerLocationNameKey],
+            method = CalculationMethod.entries.firstOrNull { it.name == prefs[prayerMethodKey] }
+                ?: CalculationMethod.KARACHI,
+            asr = AsrMethod.entries.firstOrNull { it.name == prefs[prayerAsrKey] } ?: AsrMethod.HANAFI,
+            remindersMask = prefs[prayerMaskKey] ?: 0,
+            offsetMinutes = prefs[prayerOffsetKey] ?: DEFAULT_PRAYER_OFFSET_MINUTES,
+        )
+    }
+
+    suspend fun setPrayerLocation(latitude: Double, longitude: Double, name: String?) {
+        context.preferencesDataStore.edit { prefs ->
+            prefs[prayerLatKey] = latitude.coerceIn(-90.0, 90.0)
+            prefs[prayerLngKey] = longitude.coerceIn(-180.0, 180.0)
+            if (name == null) prefs.remove(prayerLocationNameKey) else prefs[prayerLocationNameKey] = name
+        }
+    }
+
+    suspend fun setPrayerMethod(value: CalculationMethod) {
+        context.preferencesDataStore.edit { it[prayerMethodKey] = value.name }
+    }
+
+    suspend fun setPrayerAsr(value: AsrMethod) {
+        context.preferencesDataStore.edit { it[prayerAsrKey] = value.name }
+    }
+
+    suspend fun setPrayerRemindersMask(value: Int) {
+        context.preferencesDataStore.edit { it[prayerMaskKey] = value and 0x1F }
+    }
+
+    suspend fun setPrayerOffsetMinutes(value: Int) {
+        context.preferencesDataStore.edit { it[prayerOffsetKey] = value.coerceIn(0, 120) }
+    }
+
     /** Language the AI benefits write-up is generated in. Absent/unknown falls
      *  back to ENGLISH. Only touches the Gemini prompt/response, not the app UI. */
     val benefitsLanguage = context.preferencesDataStore.data.map { prefs ->
@@ -235,6 +334,12 @@ class AppPreferencesRepository(private val context: Context) {
             dynamicColorEnabled = dynamicColorEnabled.first(),
             counterScript = counterScript.first(),
             autoCounterEnabled = autoCounterEnabled.first(),
+            keepScreenOn = keepScreenOn.first(),
+            volumeKeyCounting = volumeKeyCounting.first(),
+            weeklyGoalTarget = weeklyGoalTarget.first(),
+            counterTextSize = counterTextSize.first(),
+            hijriAdjustDays = hijriAdjustDays.first(),
+            prayerSettings = prayerSettings.first(),
             benefitsLanguage = benefitsLanguage.first(),
             benefitsPromptOverride = benefitsPromptOverride.first(),
         )
@@ -294,6 +399,12 @@ data class SettingsInitialValues(
     val dynamicColorEnabled: Boolean,
     val counterScript: CounterScript,
     val autoCounterEnabled: Boolean,
+    val keepScreenOn: Boolean,
+    val volumeKeyCounting: Boolean,
+    val weeklyGoalTarget: Int,
+    val counterTextSize: CounterTextSize,
+    val hijriAdjustDays: Int,
+    val prayerSettings: PrayerSettings,
     val benefitsLanguage: BenefitsLanguage,
     val benefitsPromptOverride: String?,
 )

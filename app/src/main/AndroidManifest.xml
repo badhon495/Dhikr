@@ -56,6 +56,9 @@
                 <data android:scheme="content" android:mimeType="application/json" />
                 <data android:scheme="file" android:mimeType="application/json" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <receiver
@@ -63,11 +66,18 @@
             android:exported="false" />
 
         <receiver
+            android:name=".core.prayer.PrayerReminderReceiver"
+            android:exported="false" />
+
+        <!-- TIMEZONE_CHANGED: prayer reminders are computed for the local zone,
+             so a zone change (travel) re-arms them along with everything else. -->
+        <receiver
             android:name=".core.notifications.BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
             </intent-filter>
         </receiver>
 
@@ -102,6 +112,20 @@
                 <action android:name="com.dhikr.app.action.WIDGET_INCREMENT" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".core.counter.CounterTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_stat_reminder"
+            android:label="@string/tile_counter_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.ACTIVE_TILE"
+                android:value="false" />
+        </service>
 
         <provider
             android:name="androidx.core.content.FileProvider"

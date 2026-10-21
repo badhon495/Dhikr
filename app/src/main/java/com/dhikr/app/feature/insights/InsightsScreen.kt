@@ -29,7 +29,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -38,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.database.TasbihHistoryGroup
+import com.dhikr.app.core.share.ProgressShareText
+import com.dhikr.app.core.utilities.Consistency
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.INSIGHTS_SCREEN_TEST_TAG
@@ -129,13 +134,48 @@ fun InsightsScreen(
         val monthName = remember {
             SimpleDateFormat("MMMM", Locale.getDefault()).format(Calendar.getInstance().time)
         }
-        Text(
-            stringResource(R.string.insights_title),
-            fontSize = 23.sp,
-            color = colors.text,
-            modifier = Modifier.headingSemantics(),
-        )
-        Text(monthName, fontSize = 13.sp, color = colors.dim, modifier = Modifier.padding(top = 2.dp))
+        val context = LocalContext.current
+        val shareTitle = stringResource(R.string.insights_share_title)
+        val shareTotalFormat = stringResource(R.string.insights_share_total)
+        val shareChooser = stringResource(R.string.insights_share_chooser)
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.insights_title),
+                    fontSize = 23.sp,
+                    color = colors.text,
+                    modifier = Modifier.headingSemantics(),
+                )
+                Text(monthName, fontSize = 13.sp, color = colors.dim, modifier = Modifier.padding(top = 2.dp))
+            }
+            // Share today's summary (plan.md §42). Only shown once there is
+            // something counted today to share.
+            if (state.today > 0) {
+                Box(
+                    modifier = Modifier
+                        .clip(PillShape)
+                        .background(colors.surface)
+                        .clickable(role = Role.Button) {
+                            viewModel.loadTodayForShare { items ->
+                                if (items.isEmpty()) return@loadTodayForShare
+                                val text = ProgressShareText.build(shareTitle, items) {
+                                    shareTotalFormat.format(it)
+                                }
+                                val send = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, text)
+                                }
+                                context.startActivity(Intent.createChooser(send, shareChooser))
+                            }
+                        }
+                        .minTapTarget()
+                        .padding(horizontal = 14.dp, vertical = 8.dp),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(stringResource(R.string.insights_share_today), fontSize = 12.5.sp, color = colors.text)
+                }
+            }
+        }
 
         // Totals 2x2 grid
         Row(modifier = Modifier.padding(top = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -145,6 +185,10 @@ fun InsightsScreen(
         Row(modifier = Modifier.padding(top = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             TotalTile(stringResource(R.string.insights_this_month), state.month, Modifier.weight(1f))
             TotalTile(stringResource(R.string.insights_all_time), state.allTime, Modifier.weight(1f))
+        }
+
+        if (state.weeklyGoalTarget > 0) {
+            WeeklyGoalBar(state.week, state.weeklyGoalTarget)
         }
 
         // Last 7 days
@@ -235,6 +279,7 @@ fun InsightsScreen(
                 .padding(top = 20.dp, bottom = 2.dp)
                 .headingSemantics(),
         )
+        state.consistency?.let { ConsistencyCard(it) }
         val activeDaysThisMonth = state.calendarIntensity.values.count { it > 0 }
         Text(
             stringResource(R.string.insights_consistency_meta, activeDaysThisMonth),
@@ -477,6 +522,97 @@ private fun formatDayLabel(dayStartMillis: Long, todayLabel: String, yesterdayLa
 private fun isSameDay(a: Calendar, b: Calendar): Boolean =
     a.get(Calendar.YEAR) == b.get(Calendar.YEAR) &&
         a.get(Calendar.DAY_OF_YEAR) == b.get(Calendar.DAY_OF_YEAR)
+
+/** Rolling seven-day progress toward the optional weekly goal. */
+@Composable
+private fun WeeklyGoalBar(week: Int, target: Int) {
+    val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
+    val fraction = (week.toFloat() / target).coerceIn(0f, 1f)
+    val description = stringResource(R.string.insights_weekly_goal_description, week, target)
+    Column(
+        modifier = Modifier
+            .padding(top = 10.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(colors.card)
+            .clearAndSetSemantics { contentDescription = description }
+            .padding(14.dp),
+    ) {
+        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
+            Text(stringResource(R.string.insights_weekly_goal), fontSize = 12.5.sp, color = colors.dim)
+            Text(
+                "${week.localizedDigits(lang)} / ${target.localizedDigits(lang)}",
+                fontSize = 12.5.sp,
+                color = if (week >= target) colors.sage else colors.text,
+            )
+        }
+        Box(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth()
+                .height(8.dp)
+                .clip(PillShape)
+                .background(colors.track),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(fraction)
+                    .height(8.dp)
+                    .clip(PillShape)
+                    .background(colors.sage),
+            )
+        }
+    }
+}
+
+/**
+ * Consistency run and milestone (plan.md §18). Positive framing only: it
+ * names what has been kept up, never what was missed.
+ */
+@Composable
+private fun ConsistencyCard(summary: Consistency.Summary) {
+    val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
+    Column(
+        modifier = Modifier
+            .padding(top = 6.dp, bottom = 10.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(colors.sageSoft)
+            .padding(14.dp),
+    ) {
+        Text(
+            if (summary.currentRun > 0) {
+                pluralStringResource(R.plurals.insights_consistency_run, summary.currentRun, summary.currentRun.localizedDigits(lang))
+            } else {
+                stringResource(R.string.insights_consistency_start)
+            },
+            fontSize = 15.sp,
+            color = colors.text,
+        )
+        val reached = summary.reachedMilestone
+        val next = summary.nextMilestone
+        val detail = when {
+            reached != null && reached == summary.currentRun ->
+                pluralStringResource(R.plurals.insights_consistency_milestone, reached, reached.localizedDigits(lang))
+            next != null && summary.currentRun > 0 ->
+                pluralStringResource(R.plurals.insights_consistency_next, next, next.localizedDigits(lang))
+            else -> null
+        }
+        if (detail != null) {
+            Text(detail, fontSize = 12.sp, color = colors.dim, modifier = Modifier.padding(top = 3.dp))
+        }
+        if (summary.bestRun > summary.currentRun) {
+            Text(
+                pluralStringResource(R.plurals.insights_consistency_best, summary.bestRun, summary.bestRun.localizedDigits(lang)),
+                fontSize = 11.5.sp,
+                color = colors.faint,
+                modifier = Modifier.padding(top = 3.dp),
+            )
+        }
+    }
+}
 
 @Composable
 private fun TotalTile(label: String, value: Int, modifier: Modifier = Modifier) {

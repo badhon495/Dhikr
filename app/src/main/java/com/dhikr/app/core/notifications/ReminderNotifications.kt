@@ -1,6 +1,7 @@
 package com.dhikr.app.core.notifications
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -14,6 +15,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.dhikr.app.MainActivity
 import com.dhikr.app.R
+import com.dhikr.app.core.prayer.Prayer
+import com.dhikr.app.core.prayer.PrayerReminderScheduler
 
 /**
  * Builds and posts the per-routine reminder notification, and owns the
@@ -92,6 +95,46 @@ object ReminderNotifications {
             .build()
 
         NotificationManagerCompat.from(context).notify(id, notification)
+    }
+
+    /**
+     * "After <prayer>" reminder. Tapping opens [routineId] (the After Salah
+     * routine) or, if that preset was deleted, just the app. No snooze: the
+     * next prayer's reminder is never far away.
+     */
+    // hasPermission() is checked first; lint can't see through the helper.
+    @SuppressLint("MissingPermission")
+    fun postPrayer(context: Context, prayer: Prayer, routineId: String?) {
+        if (!hasPermission(context)) return
+        ensureChannel(context)
+        val id = PrayerReminderScheduler.requestCode(prayer)
+        val openIntent = Intent(context, MainActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            if (routineId != null) putExtra(EXTRA_ROUTINE_ID, routineId)
+        }
+        val openPending = PendingIntent.getActivity(
+            context, id, openIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val prayerName = context.getString(prayerNameRes(prayer))
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_stat_reminder)
+            .setLargeIcon(launcherBitmap(context))
+            .setContentTitle(context.getString(R.string.prayer_notification_title, prayerName))
+            .setContentText(context.getString(R.string.prayer_notification_body))
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_REMINDER)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(openPending)
+            .build()
+        NotificationManagerCompat.from(context).notify(id, notification)
+    }
+
+    fun prayerNameRes(prayer: Prayer): Int = when (prayer) {
+        Prayer.FAJR -> R.string.prayer_fajr
+        Prayer.DHUHR -> R.string.prayer_dhuhr
+        Prayer.ASR -> R.string.prayer_asr
+        Prayer.MAGHRIB -> R.string.prayer_maghrib
+        Prayer.ISHA -> R.string.prayer_isha
     }
 
     fun cancel(context: Context, routineId: String) {

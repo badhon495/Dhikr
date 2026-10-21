@@ -50,6 +50,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,9 +80,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.dhikr.app.MainActivity
 import com.dhikr.app.R
 import com.dhikr.app.core.counter.AutoCounterSensorListener
+import com.dhikr.app.core.counter.LiveCounter
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.datastore.CounterTextSize
 import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.haptics.rememberHaptics
@@ -126,6 +130,12 @@ fun CounterScreen(
     counterScript: CounterScript = CounterScript.PRONUNCIATION,
     // From the "Count on wrist flick" setting (off by default, plan.md §40).
     autoCounterEnabled: Boolean = false,
+    // From the "Counter text size" setting.
+    counterTextSize: CounterTextSize = CounterTextSize.DEFAULT,
+    // From the "Keep screen awake" setting (plan.md §34, off by default).
+    keepScreenOn: Boolean = false,
+    // From the "Count with volume buttons" setting (off by default).
+    volumeKeyCounting: Boolean = false,
     // App-wide screen dim (MainActivity applies the actual brightness change);
     // this screen only shows/toggles it and, via long-press, lets the user set
     // dimBrightnessLevel.
@@ -243,6 +253,58 @@ fun CounterScreen(
         onDispose {
             sensorListener?.stop()
         }
+    }
+
+    // Route Quick Settings tile taps into this live session (see LiveCounter)
+    // for as long as the screen exists — including while backgrounded, since
+    // the ViewModel's in-memory state would otherwise overwrite a count the
+    // tile wrote straight to the session store.
+    val liveState by rememberUpdatedState(state)
+    val liveLang by rememberUpdatedState(LocalAppLanguage.current)
+    DisposableEffect(viewModel) {
+        val handle = LiveCounter.Handle(
+            tap = { viewModel.onTap() },
+            status = {
+                val s = liveState
+                LiveCounter.Status(
+                    title = s.dhikr.displayName(liveLang),
+                    subtitle = "${s.count}/${s.dhikr.lapTarget}",
+                )
+            },
+        )
+        LiveCounter.handle = handle
+        onDispose {
+            if (LiveCounter.handle === handle) LiveCounter.handle = null
+        }
+    }
+
+    // Keep screen awake (plan.md §34): only while this screen is showing and
+    // the session is actually running, never app-wide. View-scoped, so leaving
+    // the screen (or pausing) hands the timeout straight back to the system.
+    DisposableEffect(keepScreenOn, state.running, view) {
+        view.keepScreenOn = keepScreenOn && state.running
+        onDispose { view.keepScreenOn = false }
+    }
+
+    // Volume-button counting. Deliberately still active while locked: the lock
+    // guards the touchscreen against pocket touches, and a hardware button
+    // press is a deliberate action — lock + volume keys is the intended way to
+    // count without looking at the screen. Disabled while previewing a past
+    // routine step (read-only) and once the routine is complete.
+    val currentHapticMode by rememberUpdatedState(hapticMode)
+    DisposableEffect(volumeKeyCounting, state.sessionReady, state.isViewingPastStep, state.isRoutineComplete, view) {
+        val activity = view.context as? MainActivity
+        val active = volumeKeyCounting && state.sessionReady &&
+            !state.isViewingPastStep && !state.isRoutineComplete
+        activity?.volumeKeyHandler = if (active) {
+            {
+                if (currentHapticMode == HapticMode.EVERY_TAP) haptics.tick()
+                viewModel.onTap()
+            }
+        } else {
+            null
+        }
+        onDispose { activity?.volumeKeyHandler = null }
     }
 
     val lang = LocalAppLanguage.current
@@ -628,9 +690,14 @@ fun CounterScreen(
                 verticalArrangement = Arrangement.Center,
             ) {
                 if (scriptText.isNotEmpty()) {
+                    val baseStyle = if (showArabic) ArabicLineStyle else pronunciationStyle
+                    val scale = counterTextSize.scale
                     Text(
                         text = scriptText,
-                        style = if (showArabic) ArabicLineStyle else pronunciationStyle,
+                        style = if (scale == 1f) baseStyle else baseStyle.copy(
+                            fontSize = baseStyle.fontSize * scale,
+                            lineHeight = baseStyle.lineHeight * scale,
+                        ),
                         color = if (showArabic) colors.text else colors.dim,
                         textAlign = if (isLongText) TextAlign.Justify else TextAlign.Center,
                         modifier = Modifier

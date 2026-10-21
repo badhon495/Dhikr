@@ -4,6 +4,7 @@ import com.dhikr.app.core.database.dao.SessionDao
 import com.dhikr.app.core.database.entity.SessionEntity
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.utilities.Consistency
 import com.dhikr.app.core.utilities.DayBounds
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
@@ -140,6 +141,27 @@ class HistoryRepository(
                     speedPerMin = dhikrSpeedPerMin(row.timedCount, row.timedMillis),
                 )
             }
+    }
+
+    /** Today's totals per tasbih (display name to count), largest first —
+     *  the body of the "share today's dhikr" summary. */
+    suspend fun todayByTasbih(): List<Pair<String, Int>> {
+        val totals = sessionDao.dailyTotalsSince(DayBounds.startOfTodayMillis(), dayMillis, localOffsetMillis())
+            .groupBy { it.tasbihId }
+            .mapValues { (_, rows) -> rows.sumOf { it.total } }
+        if (totals.isEmpty()) return emptyList()
+        val names = tasbihRepository.getAll().associate { it.id to it.displayName(AppLanguage.current) }
+        return totals.entries
+            .mapNotNull { (id, total) -> names[id]?.let { it to total } }
+            .sortedByDescending { it.second }
+    }
+
+    /** Consistency run/best across all of history (plan.md §18). */
+    suspend fun consistency(): Consistency.Summary {
+        val active = sessionDao.allDailyTotals(dayMillis, localOffsetMillis())
+            .filter { it.total > 0 }
+            .map { it.dayStartMillis }
+        return Consistency.summarize(active, DayBounds.startOfTodayMillis(), dayMillis)
     }
 
     /**

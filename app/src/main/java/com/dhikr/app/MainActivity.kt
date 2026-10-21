@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color.TRANSPARENT
 import android.net.Uri
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -41,6 +42,27 @@ class MainActivity : AppCompatActivity() {
     // Set from an ACTION_VIEW launch (a tapped .dhikrroutine file) and consumed
     // once by DhikrApp, which navigates to the import preview.
     private var pendingShareUri by mutableStateOf<Uri?>(null)
+
+    /**
+     * Set by CounterScreen while "Count with volume buttons" is on and a
+     * session is ready; null everywhere else so the keys keep their normal
+     * system behaviour. Handled here rather than in Compose because volume
+     * keys reach the Activity before any focused composable sees them.
+     */
+    var volumeKeyHandler: (() -> Unit)? = null
+
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val handler = volumeKeyHandler
+        if (handler != null &&
+            (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)
+        ) {
+            // One count per press: ignore auto-repeat from a held button. Both
+            // DOWN and UP are consumed so the system volume panel never shows.
+            if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) handler()
+            return true
+        }
+        return super.dispatchKeyEvent(event)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

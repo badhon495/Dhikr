@@ -55,6 +55,9 @@ import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.datastore.CounterTextSize
+import com.dhikr.app.core.shortcuts.AppShortcuts
+import kotlinx.coroutines.flow.combine
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
 import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
@@ -180,6 +183,9 @@ fun DhikrApp(
         val reducedMotion by preferencesRepository.reducedMotion.collectAsState(initial = false)
         val counterScript by preferencesRepository.counterScript.collectAsState(initial = CounterScript.PRONUNCIATION)
         val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsState(initial = false)
+        val keepScreenOn by preferencesRepository.keepScreenOn.collectAsState(initial = false)
+        val counterTextSize by preferencesRepository.counterTextSize.collectAsState(initial = CounterTextSize.DEFAULT)
+        val volumeKeyCounting by preferencesRepository.volumeKeyCounting.collectAsState(initial = false)
         val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
         val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
             .collectAsState(initial = DEFAULT_DIM_BRIGHTNESS_LEVEL)
@@ -206,6 +212,20 @@ fun DhikrApp(
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val onCounterRoute = currentBackStackEntry?.destination?.route?.substringBefore("?") ==
             ROUTE_COUNTER.substringBefore("?")
+
+        // Launcher shortcuts for favourite routines track the Routines list
+        // and the app language.
+        LaunchedEffect(Unit) {
+            routineRepository.observeAllWithSteps()
+                .combine(AppLanguage.state) { routines, lang -> routines to lang }
+                .collect { (routines, lang) ->
+                    AppShortcuts.update(
+                        context.applicationContext,
+                        routines.filter { it.routine.isFavorite },
+                        lang,
+                    )
+                }
+        }
 
         // Reminder-notification tap: deep-link into the routine's counter. The
         // existing CounterViewModel routineId path handles the rest.
@@ -369,6 +389,9 @@ fun DhikrApp(
                         hapticMode = hapticMode,
                         counterScript = counterScript,
                         autoCounterEnabled = autoCounterEnabled,
+                        counterTextSize = counterTextSize,
+                        keepScreenOn = keepScreenOn,
+                        volumeKeyCounting = volumeKeyCounting,
                         dimScreenEnabled = dimScreenEnabled,
                         onToggleDimScreen = {
                             coroutineScope.launch { preferencesRepository.setDimScreenEnabled(!dimScreenEnabled) }

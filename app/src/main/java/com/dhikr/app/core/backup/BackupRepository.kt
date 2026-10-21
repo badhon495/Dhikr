@@ -7,6 +7,9 @@ import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.datastore.ThemeMode
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.displayName
+import kotlinx.coroutines.flow.first
 import kotlinx.serialization.json.Json
 
 /** Thrown by [BackupRepository.restore] when the file isn't a backup this app
@@ -34,6 +37,25 @@ class BackupRepository(
         prettyPrint = true
         ignoreUnknownKeys = true
         encodeDefaults = true
+    }
+
+    /** Session history as CSV (see [HistoryCsv]); names in the app language.
+     *  Sessions whose tasbih has since been deleted keep its id as the name. */
+    suspend fun exportHistoryCsv(): String {
+        val lang = AppLanguage.current
+        val tasbihNames = database.tasbihDao().getAll().associate { it.id to it.displayName(lang) }
+        val routineNames = database.routineDao().observeAllWithSteps().first()
+            .associate { it.routine.id to it.routine.displayName(lang) }
+        val rows = database.sessionDao().getAll().map { session ->
+            HistoryCsv.Row(
+                startedAt = session.startedAt,
+                endedAt = session.endedAt,
+                tasbihName = tasbihNames[session.tasbihId] ?: session.tasbihId,
+                routineName = session.routineId?.let { routineNames[it] ?: it },
+                count = session.count,
+            )
+        }
+        return HistoryCsv.build(rows)
     }
 
     suspend fun export(appVersionName: String): String {

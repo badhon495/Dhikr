@@ -19,6 +19,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
+import com.dhikr.app.core.utilities.Consistency
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 data class InsightsUiState(
@@ -31,6 +34,9 @@ data class InsightsUiState(
     val historyByTasbih: List<TasbihHistoryGroup> = emptyList(),
     val previousMonth: MonthSummary? = null,
     val dailyGoalTarget: Int = 500,
+    // 0 = no weekly goal set.
+    val weeklyGoalTarget: Int = 0,
+    val consistency: Consistency.Summary? = null,
     val isEmpty: Boolean = true,
 )
 
@@ -84,16 +90,28 @@ class InsightsViewModel(
                     val history = async { repository.historyByTasbih() }
                     val previousMonth = async { repository.previousMonthSummary() }
                     val dailyGoalTarget = async { preferencesRepository.dailyGoalTarget.first() }
+                    val consistency = async { repository.consistency() }
                     _uiState.value = _uiState.value.copy(
                         last7Days = last7Days.await(),
                         calendarIntensity = calendar.await(),
                         historyByTasbih = history.await(),
                         previousMonth = previousMonth.await(),
                         dailyGoalTarget = dailyGoalTarget.await(),
+                        consistency = consistency.await(),
                     )
                 }
             }
             .launchIn(viewModelScope)
+
+        preferencesRepository.weeklyGoalTarget
+            .onEach { _uiState.value = _uiState.value.copy(weeklyGoalTarget = it) }
+            .launchIn(viewModelScope)
+    }
+
+    /** Loads today's per-tasbih totals for the share sheet; the screen builds
+     *  the localized text and launches the chooser. */
+    fun loadTodayForShare(onReady: (List<Pair<String, Int>>) -> Unit) {
+        viewModelScope.launch { onReady(repository.todayByTasbih()) }
     }
 
     private data class InsightsTotals(

@@ -27,6 +27,7 @@ class BackupViewModel(
         data object Idle : Status
         data object Working : Status
         data class ExportDone(val bytes: Int) : Status
+        data class CsvDone(val bytes: Int) : Status
         data class RestoreDone(val result: RestoreResult) : Status
         data class Error(val message: String) : Status
     }
@@ -53,6 +54,24 @@ class BackupViewModel(
                 Status.ExportDone(bytes)
             } catch (e: Exception) {
                 Status.Error("Couldn't write the backup file.")
+            }
+        }
+    }
+
+    /** History as CSV; same flow as [export], to a file the user picked. */
+    fun exportCsv(writeBytes: suspend (ByteArray) -> Unit) {
+        if (_status.value == Status.Working) return
+        _status.value = Status.Working
+        viewModelScope.launch {
+            _status.value = try {
+                val bytes = withContext(Dispatchers.IO) {
+                    val data = repository.exportHistoryCsv().toByteArray(Charsets.UTF_8)
+                    writeBytes(data)
+                    data.size
+                }
+                Status.CsvDone(bytes)
+            } catch (e: Exception) {
+                Status.Error("Couldn't write the CSV file.")
             }
         }
     }

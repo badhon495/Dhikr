@@ -55,6 +55,8 @@ import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.ai.BenefitsLanguage
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.datastore.CounterTextSize
+import com.dhikr.app.core.datastore.WEEKLY_GOAL_OPTIONS
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.localizedDigits
@@ -240,6 +242,68 @@ fun SettingsScreen(
                     selected = state.counterScript,
                     onSelect = viewModel::onCounterScriptChange,
                 )
+            }
+            Column(modifier = Modifier.padding(top = 14.dp)) {
+                SwitchRow(
+                    title = stringResource(R.string.settings_keep_screen_on),
+                    description = stringResource(R.string.settings_keep_screen_on_desc),
+                    checked = state.keepScreenOn,
+                    onCheckedChange = viewModel::onKeepScreenOnChange,
+                )
+                SwitchRow(
+                    title = stringResource(R.string.settings_volume_keys),
+                    description = stringResource(R.string.settings_volume_keys_desc),
+                    checked = state.volumeKeyCounting,
+                    onCheckedChange = viewModel::onVolumeKeyCountingChange,
+                )
+            }
+            Column(modifier = Modifier.padding(top = 14.dp)) {
+                Text(stringResource(R.string.settings_weekly_goal), fontSize = 14.sp, color = colors.text)
+                Text(
+                    stringResource(R.string.settings_weekly_goal_desc),
+                    fontSize = 12.sp,
+                    color = colors.faint,
+                    modifier = Modifier.padding(top = 2.dp, bottom = 10.dp),
+                )
+                val lang = LocalAppLanguage.current
+                ChoiceRow(
+                    options = WEEKLY_GOAL_OPTIONS.map { goal ->
+                        goal to if (goal == 0) {
+                            stringResource(R.string.settings_weekly_goal_off)
+                        } else {
+                            goal.localizedDigits(lang)
+                        }
+                    },
+                    selected = state.weeklyGoalTarget,
+                    onSelect = viewModel::onWeeklyGoalChange,
+                )
+            }
+            Column(modifier = Modifier.padding(top = 14.dp)) {
+                Text(stringResource(R.string.settings_counter_text_size), fontSize = 14.sp, color = colors.text)
+                Text(
+                    stringResource(R.string.settings_counter_text_size_desc),
+                    fontSize = 12.sp,
+                    color = colors.faint,
+                    modifier = Modifier.padding(top = 2.dp, bottom = 10.dp),
+                )
+                ChoiceRow(
+                    options = listOf(
+                        CounterTextSize.SMALL to stringResource(R.string.settings_text_size_small),
+                        CounterTextSize.DEFAULT to stringResource(R.string.settings_text_size_default),
+                        CounterTextSize.LARGE to stringResource(R.string.settings_text_size_large),
+                        CounterTextSize.EXTRA_LARGE to stringResource(R.string.settings_text_size_extra_large),
+                    ),
+                    selected = state.counterTextSize,
+                    onSelect = viewModel::onCounterTextSizeChange,
+                )
+            }
+        }
+
+        // ---- Prayer reminders + Hijri date ----
+        SettingsSection(stringResource(R.string.settings_prayer)) {
+            PrayerSettingsSection(state, viewModel)
+            Column(modifier = Modifier.padding(top = 18.dp)) {
+                HijriAdjustRow(state, viewModel)
             }
         }
 
@@ -433,7 +497,7 @@ private fun AutoTimeDialog(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun <T> ChoiceRow(
+internal fun <T> ChoiceRow(
     options: List<Pair<T, String>>,
     selected: T,
     onSelect: (T) -> Unit,
@@ -572,7 +636,7 @@ private fun GoalPill(label: String, selected: Boolean, onClick: () -> Unit) {
 }
 
 @Composable
-private fun SwitchRow(
+internal fun SwitchRow(
     title: String,
     description: String,
     checked: Boolean,
@@ -881,6 +945,19 @@ private fun BackupControls(viewModel: BackupViewModel) {
         }
     }
 
+    val csvLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("text/csv"),
+    ) { uri ->
+        if (uri == null) {
+            viewModel.clearStatus()
+        } else {
+            viewModel.exportCsv { bytes ->
+                context.contentResolver.openOutputStream(uri)?.use { it.write(bytes) }
+                    ?: error("no output stream")
+            }
+        }
+    }
+
     val importLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument(),
     ) { uri ->
@@ -913,6 +990,15 @@ private fun BackupControls(viewModel: BackupViewModel) {
             )
         },
     )
+    val csvFilenameFormat = stringResource(R.string.settings_backup_csv_filename)
+    BackupActionRow(
+        label = stringResource(R.string.settings_backup_export_csv),
+        enabled = !working,
+        onClick = {
+            val stamp = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+            csvLauncher.launch(String.format(Locale.US, csvFilenameFormat, stamp))
+        },
+    )
     BackupActionRow(
         label = stringResource(R.string.settings_backup_import),
         enabled = !working,
@@ -930,6 +1016,7 @@ private fun BackupControls(viewModel: BackupViewModel) {
         BackupViewModel.Status.Idle -> null
         BackupViewModel.Status.Working -> stringResource(R.string.settings_backup_working)
         is BackupViewModel.Status.ExportDone -> stringResource(R.string.settings_backup_export_done)
+        is BackupViewModel.Status.CsvDone -> stringResource(R.string.settings_backup_csv_done)
         is BackupViewModel.Status.RestoreDone -> {
             val r = s.result
             val base = if (r.sessionsSkipped > 0) {

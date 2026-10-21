@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Long-press launcher shortcuts. MainActivity routes EXTRA_OPEN the same way
+     as a widget tap; favourite routines are added at runtime by AppShortcuts.
+     targetPackage is the applicationId (resource XML gets no ${applicationId}
+     substitution) — keep it in step with app/build.gradle.kts. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="counter"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_counter"
+        android:shortcutShortLabel="@string/shortcut_counter_short"
+        android:shortcutLongLabel="@string/shortcut_counter_long">
+        <intent
+            android:action="com.dhikr.app.action.SHORTCUT"
+            android:targetPackage="com.badhon495.dhikr"
+            android:targetClass="com.dhikr.app.MainActivity">
+            <extra android:name="com.dhikr.app.extra.OPEN" android:value="counter" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="insights"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_insights"
+        android:shortcutShortLabel="@string/shortcut_insights_short"
+        android:shortcutLongLabel="@string/shortcut_insights_long">
+        <intent
+            android:action="com.dhikr.app.action.SHORTCUT"
+            android:targetPackage="com.badhon495.dhikr"
+            android:targetClass="com.dhikr.app.MainActivity">
+            <extra android:name="com.dhikr.app.extra.OPEN" android:value="insights" />
+        </intent>
+    </shortcut>
+</shortcuts>

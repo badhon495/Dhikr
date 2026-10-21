@@ -9,6 +9,14 @@ import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.ai.SecureKeyStore
 import com.dhikr.app.core.ai.defaultBenefitsTemplate
 import com.dhikr.app.core.counter.AutoCounterSensorListener
+import com.dhikr.app.core.datastore.CounterTextSize
+import com.dhikr.app.core.prayer.AsrMethod
+import com.dhikr.app.core.prayer.CalculationMethod
+import com.dhikr.app.core.prayer.Prayer
+import com.dhikr.app.core.prayer.PrayerReminderScheduler
+import com.dhikr.app.core.prayer.PrayerSettings
+import com.dhikr.app.core.prayer.PrayerTimes
+import kotlinx.coroutines.flow.distinctUntilChanged
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.widget.DhikrWidgets
 import com.dhikr.app.core.datastore.CounterScript
@@ -41,6 +49,14 @@ data class SettingsUiState(
     val hasGeminiKey: Boolean = false,
     val autoCounterEnabled: Boolean = false,
     val autoCounterSupported: Boolean = true,
+    val keepScreenOn: Boolean = false,
+    val volumeKeyCounting: Boolean = false,
+    val weeklyGoalTarget: Int = 0,
+    val counterTextSize: CounterTextSize = CounterTextSize.DEFAULT,
+    val hijriAdjustDays: Int = 0,
+    val prayerSettings: PrayerSettings = PrayerSettings(),
+    // Today's computed prayer times, shown beside each reminder toggle.
+    val prayerTimesToday: Map<Prayer, Long> = emptyMap(),
     val benefitsLanguage: BenefitsLanguage = BenefitsLanguage.ENGLISH,
     // null = no user override; the built-in template for [benefitsLanguage] is used.
     val benefitsPromptOverride: String? = null,
@@ -93,6 +109,13 @@ class SettingsViewModel(
                 dynamicColorEnabled = p.dynamicColorEnabled,
                 counterScript = p.counterScript,
                 autoCounterEnabled = p.autoCounterEnabled,
+                keepScreenOn = p.keepScreenOn,
+                volumeKeyCounting = p.volumeKeyCounting,
+                weeklyGoalTarget = p.weeklyGoalTarget,
+                counterTextSize = p.counterTextSize,
+                hijriAdjustDays = p.hijriAdjustDays,
+                prayerSettings = p.prayerSettings,
+                prayerTimesToday = todayTimes(p.prayerSettings),
                 benefitsLanguage = p.benefitsLanguage,
                 benefitsPromptOverride = p.benefitsPromptOverride,
                 appVersion = appVersion,
@@ -134,6 +157,14 @@ class SettingsViewModel(
             .combine(preferencesRepository.autoCounterEnabled) { state, autoCounterEnabled ->
                 state.copy(autoCounterEnabled = autoCounterEnabled)
             }
+            .combine(preferencesRepository.keepScreenOn) { state, v -> state.copy(keepScreenOn = v) }
+            .combine(preferencesRepository.volumeKeyCounting) { state, v -> state.copy(volumeKeyCounting = v) }
+            .combine(preferencesRepository.weeklyGoalTarget) { state, v -> state.copy(weeklyGoalTarget = v) }
+            .combine(preferencesRepository.counterTextSize) { state, v -> state.copy(counterTextSize = v) }
+            .combine(preferencesRepository.hijriAdjustDays) { state, v -> state.copy(hijriAdjustDays = v) }
+            .combine(preferencesRepository.prayerSettings) { state, v ->
+                state.copy(prayerSettings = v, prayerTimesToday = todayTimes(v))
+            }
             .combine(preferencesRepository.benefitsLanguage) { state, benefitsLanguage ->
                 state.copy(benefitsLanguage = benefitsLanguage)
             }
@@ -144,6 +175,58 @@ class SettingsViewModel(
             // carry the value read at construction through each rebuild.
             .onEach { _uiState.value = it.copy(appLanguage = _uiState.value.appLanguage) }
             .launchIn(viewModelScope)
+
+        // Keep the alarms in step with the prayer settings: every change (and
+        // the first emission, which also heals alarms lost to a force-stop)
+        // re-arms or cancels each prayer's next reminder.
+        preferencesRepository.prayerSettings
+            .distinctUntilChanged()
+            .onEach { prayerScheduler.apply(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private val prayerScheduler get() = PrayerReminderScheduler(appContext)
+
+    private fun todayTimes(settings: PrayerSettings): Map<Prayer, Long> {
+        val lat = settings.latitude ?: return emptyMap()
+        val lng = settings.longitude ?: return emptyMap()
+        return PrayerTimes.forDay(System.currentTimeMillis(), lat, lng, settings.method, settings.asr)
+    }
+
+    fun onWeeklyGoalChange(value: Int) {
+        viewModelScope.launch { preferencesRepository.setWeeklyGoalTarget(value) }
+    }
+
+    fun onCounterTextSizeChange(value: CounterTextSize) {
+        viewModelScope.launch { preferencesRepository.setCounterTextSize(value) }
+    }
+
+    fun onHijriAdjustChange(value: Int) {
+        viewModelScope.launch { preferencesRepository.setHijriAdjustDays(value) }
+    }
+
+    fun onPrayerLocationChange(latitude: Double, longitude: Double, name: String?) {
+        viewModelScope.launch { preferencesRepository.setPrayerLocation(latitude, longitude, name) }
+    }
+
+    fun onPrayerMethodChange(value: CalculationMethod) {
+        viewModelScope.launch { preferencesRepository.setPrayerMethod(value) }
+    }
+
+    fun onPrayerAsrChange(value: AsrMethod) {
+        viewModelScope.launch { preferencesRepository.setPrayerAsr(value) }
+    }
+
+    fun onPrayerOffsetChange(minutes: Int) {
+        viewModelScope.launch { preferencesRepository.setPrayerOffsetMinutes(minutes) }
+    }
+
+    fun onPrayerReminderToggle(prayer: Prayer, enabled: Boolean) {
+        val mask = _uiState.value.prayerSettings.remindersMask
+        val bit = 1 shl prayer.bit
+        viewModelScope.launch {
+            preferencesRepository.setPrayerRemindersMask(if (enabled) mask or bit else mask and bit.inv())
+        }
     }
 
     fun onThemeModeChange(mode: ThemeMode) {
@@ -202,6 +285,14 @@ class SettingsViewModel(
 
     fun onAutoCounterEnabledChange(enabled: Boolean) {
         viewModelScope.launch { preferencesRepository.setAutoCounterEnabled(enabled) }
+    }
+
+    fun onKeepScreenOnChange(enabled: Boolean) {
+        viewModelScope.launch { preferencesRepository.setKeepScreenOn(enabled) }
+    }
+
+    fun onVolumeKeyCountingChange(enabled: Boolean) {
+        viewModelScope.launch { preferencesRepository.setVolumeKeyCounting(enabled) }
     }
 
     fun onDailyGoalChange(value: Int) {

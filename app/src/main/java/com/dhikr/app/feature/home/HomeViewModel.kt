@@ -21,7 +21,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
+import com.dhikr.app.core.utilities.HijriCalendar
+import com.dhikr.app.core.utilities.HijriDate
+import com.dhikr.app.core.utilities.IslamicSeason
+import com.dhikr.app.core.utilities.IslamicSeasons
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -29,6 +34,11 @@ data class ContinueSessionInfo(val tasbihName: String, val count: Int, val targe
 
 data class HomeUiState(
     val dateLabel: String = "",
+    // Null if the platform calendar can't produce one (never expected on API 24+).
+    val hijriDate: HijriDate? = null,
+    val season: IslamicSeason? = null,
+    // Tasbih the seasonal banner opens, when that built-in still exists.
+    val seasonTasbihId: String? = null,
     val dailyGoalTarget: Int = 500,
     val todayTotal: Int = 0,
     val continueSession: ContinueSessionInfo? = null,
@@ -89,7 +99,8 @@ class HomeViewModel(
             // Re-emit when the language changes so the DB-derived names below
             // are rebuilt — nothing upstream fires on a locale switch.
             .combine(AppLanguage.state) { combined, lang -> combined to lang }
-            .mapLatest { (combined, lang) ->
+            .combine(preferencesRepository.hijriAdjustDays) { pair, adjust -> Triple(pair.first, pair.second, adjust) }
+            .mapLatest { (combined, lang, hijriAdjust) ->
                 val (inputs, dayProgress, tasbihProgress, allTasbihs) = combined
                 val tasbihNamesById = allTasbihs.associate { it.id to it.displayName(lang) }
                 val continueInfo = inputs.session?.let { s ->
@@ -101,8 +112,17 @@ class HomeViewModel(
                         )
                     }
                 }
+                val now = System.currentTimeMillis()
+                val hijri = runCatching { HijriCalendar.of(now, hijriAdjust) }.getOrNull()
+                val season = hijri?.let {
+                    IslamicSeasons.detect(it, Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+                }
+                val seasonTasbihId = SEASON_TASBIH[season]?.takeIf { id -> allTasbihs.any { it.id == id } }
                 HomeUiState(
-                    dateLabel = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault()).format(Date()),
+                    dateLabel = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault()).format(Date(now)),
+                    hijriDate = hijri,
+                    season = season,
+                    seasonTasbihId = seasonTasbihId,
                     dailyGoalTarget = inputs.dailyGoal,
                     todayTotal = inputs.todayTotal,
                     continueSession = continueInfo,
@@ -119,6 +139,15 @@ class HomeViewModel(
             }
             .onEach { _uiState.value = it }
             .launchIn(viewModelScope)
+    }
+
+    private companion object {
+        // Built-in tasbih ids from SeedData: salawat on Friday, takbir in the
+        // days of Dhul Hijjah. Ramadan's banner is a reminder only.
+        val SEASON_TASBIH = mapOf(
+            IslamicSeason.FRIDAY to "short_salawat",
+            IslamicSeason.DHUL_HIJJAH to "akbar",
+        )
     }
 
     private data class HomeCombined(

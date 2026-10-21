@@ -6,14 +6,17 @@ import android.content.Intent
 import com.dhikr.app.DhikrApplication
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
+import com.dhikr.app.core.datastore.AppPreferencesRepository
+import com.dhikr.app.core.prayer.PrayerReminderScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
  * Alarms are cleared on reboot and on app update, so re-arm every enabled
- * routine reminder when the device finishes booting or the package is
+ * routine reminder (and prayer-linked reminder) when the device finishes booting or the package is
  * replaced.
  */
 class BootReceiver : BroadcastReceiver() {
@@ -22,7 +25,7 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
-            Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED -> Unit
+            Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED, Intent.ACTION_TIMEZONE_CHANGED -> Unit
             else -> return
         }
         val app = context.applicationContext as DhikrApplication
@@ -42,6 +45,9 @@ class BootReceiver : BroadcastReceiver() {
         scope.launch {
             try {
                 scheduler.rescheduleAll(routineRepository, tasbihRepository)
+                PrayerReminderScheduler(context.applicationContext).apply(
+                    AppPreferencesRepository(context.applicationContext).prayerSettings.first(),
+                )
             } finally {
                 pending.finish()
             }

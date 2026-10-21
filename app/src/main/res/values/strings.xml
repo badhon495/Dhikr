@@ -250,6 +250,12 @@
     <string name="settings_dynamic_color">Material You</string>
     <string name="settings_dynamic_color_desc">Colour the app from your wallpaper</string>
     <string name="settings_counting">Counting</string>
+    <string name="settings_keep_screen_on">Keep screen awake</string>
+    <string name="settings_keep_screen_on_desc">Stop the screen turning off while the counter is open and running</string>
+    <string name="settings_volume_keys">Count with volume buttons</string>
+    <string name="settings_volume_keys_desc">Either volume button adds one count on the counter screen, even while it is locked</string>
+    <string name="tile_counter_label">Dhikr count</string>
+    <string name="tile_counter_no_session">Tap to open</string>
     <string name="settings_accessibility">Accessibility</string>
     <string name="settings_reduce_motion">Reduce motion</string>
     <string name="settings_reduce_motion_desc">Minimise animations across the app</string>
@@ -377,4 +383,106 @@
     <string name="onboarding_skip_confirm_body">You can always change language and theme later in Settings.</string>
     <string name="onboarding_skip_confirm_action">Skip</string>
     <string name="onboarding_skip_confirm_cancel">Cancel</string>
+
+    <!-- Prayer-linked reminders, Hijri date, weekly goal, text size -->
+    <string name="settings_prayer">Prayer reminders &amp; Hijri date</string>
+    <string name="settings_prayer_desc">Get a dhikr reminder a little after each prayer. Times are calculated on this phone from the location you set — your location is never looked up or sent anywhere.</string>
+    <string name="settings_prayer_location">Location</string>
+    <string name="settings_prayer_location_none">Not set — pick a city to turn this on</string>
+    <string name="settings_prayer_location_change">Change</string>
+    <string name="settings_prayer_location_manual">Enter coordinates…</string>
+    <string name="settings_prayer_location_save">Save</string>
+    <string name="settings_prayer_location_cancel">Cancel</string>
+    <string name="settings_prayer_latitude">Latitude (-90 to 90)</string>
+    <string name="settings_prayer_longitude">Longitude (-180 to 180)</string>
+    <string name="settings_prayer_method">Calculation method</string>
+    <string name="settings_prayer_method_karachi">Karachi</string>
+    <string name="settings_prayer_method_mwl">Muslim World League</string>
+    <string name="settings_prayer_method_isna">ISNA</string>
+    <string name="settings_prayer_method_egypt">Egypt</string>
+    <string name="settings_prayer_method_umm_al_qura">Umm al-Qura</string>
+    <string name="settings_prayer_asr">Asr time</string>
+    <string name="settings_prayer_asr_standard">Standard</string>
+    <string name="settings_prayer_asr_hanafi">Hanafi</string>
+    <string name="settings_prayer_offset">Remind me</string>
+    <string name="settings_prayer_offset_minutes">%1$d min after</string>
+    <string name="settings_prayer_time_today">Today at %1$s</string>
+    <string name="settings_prayer_time_unavailable">Not reached today at this latitude</string>
+    <string name="settings_prayer_note">Times are estimates and may differ from your local mosque by a few minutes. Reminders can arrive a little late when the phone is saving battery.</string>
+    <string name="prayer_fajr">Fajr</string>
+    <string name="prayer_dhuhr">Dhuhr</string>
+    <string name="prayer_asr">Asr</string>
+    <string name="prayer_maghrib">Maghrib</string>
+    <string name="prayer_isha">Isha</string>
+    <string name="prayer_notification_title">After %1$s</string>
+    <string name="prayer_notification_body">A few minutes for the after-salah dhikr</string>
+    <string name="settings_hijri_adjust">Hijri date adjustment</string>
+    <string name="settings_hijri_adjust_desc">Shift the Hijri date on Home by a day or two to match your local moon sighting</string>
+    <string name="settings_weekly_goal">Weekly goal</string>
+    <string name="settings_weekly_goal_desc">Counts over the last 7 days, shown on Insights</string>
+    <string name="settings_weekly_goal_off">Off</string>
+    <string name="settings_counter_text_size">Counter text size</string>
+    <string name="settings_counter_text_size_desc">Size of the dhikr text on the counter screen</string>
+    <string name="settings_text_size_small">Small</string>
+    <string name="settings_text_size_default">Default</string>
+    <string name="settings_text_size_large">Large</string>
+    <string name="settings_text_size_extra_large">Extra large</string>
+    <string name="settings_backup_export_csv">Export history as CSV</string>
+    <string name="settings_backup_csv_filename">dhikr-history-%1$s.csv</string>
+    <string name="settings_backup_csv_done">History exported.</string>
+
+    <!-- Insights: share, weekly goal, consistency -->
+    <string name="insights_share_today">Share today</string>
+    <string name="insights_share_title">Today\'s Dhikr</string>
+    <string name="insights_share_total">Total: %1$d</string>
+    <string name="insights_share_chooser">Share today\'s dhikr</string>
+    <string name="insights_weekly_goal">Weekly goal · last 7 days</string>
+    <string name="insights_weekly_goal_description">Weekly goal: %1$d of %2$d counts in the last 7 days</string>
+    <plurals name="insights_consistency_run">
+        <item quantity="one">%1$s day of consistency</item>
+        <item quantity="other">%1$s days of consistency</item>
+    </plurals>
+    <string name="insights_consistency_start">Every day is a fresh start</string>
+    <plurals name="insights_consistency_milestone">
+        <item quantity="one">Milestone reached: %1$s day, alhamdulillah</item>
+        <item quantity="other">Milestone reached: %1$s days, alhamdulillah</item>
+    </plurals>
+    <plurals name="insights_consistency_next">
+        <item quantity="one">Next milestone: %1$s day</item>
+        <item quantity="other">Next milestone: %1$s days</item>
+    </plurals>
+    <plurals name="insights_consistency_best">
+        <item quantity="one">Your longest run: %1$s day</item>
+        <item quantity="other">Your longest run: %1$s days</item>
+    </plurals>
+
+    <!-- Home: Hijri date and seasonal banner -->
+    <string name="home_hijri_date">%1$s %2$s %3$s AH</string>
+    <string-array name="hijri_months">
+        <item>Muharram</item>
+        <item>Safar</item>
+        <item>Rabi\' al-Awwal</item>
+        <item>Rabi\' al-Thani</item>
+        <item>Jumada al-Ula</item>
+        <item>Jumada al-Akhirah</item>
+        <item>Rajab</item>
+        <item>Sha\'ban</item>
+        <item>Ramadan</item>
+        <item>Shawwal</item>
+        <item>Dhu al-Qa\'dah</item>
+        <item>Dhu al-Hijjah</item>
+    </string-array>
+    <string name="home_season_ramadan_title">Ramadan Mubarak</string>
+    <string name="home_season_ramadan_body">Keep your tongue moist with the remembrance of Allah this blessed month.</string>
+    <string name="home_season_dhul_hijjah_title">The days of Dhul Hijjah</string>
+    <string name="home_season_dhul_hijjah_body">Increase in tahlil, takbir and tahmid in these blessed days.</string>
+    <string name="home_season_friday_title">Jumu\'ah Mubarak</string>
+    <string name="home_season_friday_body">Send plenty of salawat upon the Prophet ﷺ today.</string>
+    <string name="home_season_action">Start counting</string>
+
+    <!-- Launcher shortcuts -->
+    <string name="shortcut_counter_short">Count</string>
+    <string name="shortcut_counter_long">Continue counting</string>
+    <string name="shortcut_insights_short">Insights</string>
+    <string name="shortcut_insights_long">Open insights</string>
 </resources>
