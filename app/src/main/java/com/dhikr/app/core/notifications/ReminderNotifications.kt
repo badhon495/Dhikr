@@ -58,6 +58,8 @@ object ReminderNotifications {
     fun postTasbih(context: Context, tasbihId: String, tasbihName: String) =
         post(context, tasbihNotifId(tasbihId), EXTRA_TASBIH_ID, tasbihId, tasbihName)
 
+    // hasPermission() is checked first; lint can't see through the helper.
+    @SuppressLint("MissingPermission")
     private fun post(
         context: Context,
         id: Int,

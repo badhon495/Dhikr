@@ -37,6 +37,13 @@ class Haptics(context: Context) {
     private fun buzz(durationMs: Long) {
         if (!hasVibrator) return
         val v = vibrator ?: return
+        // VibrationEffect is API 26+; minSdk is 24, so Android 7.x needs the
+        // legacy duration call or every haptic tap crashes there.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            @Suppress("DEPRECATION")
+            v.vibrate(durationMs)
+            return
+        }
         val effect = VibrationEffect.createOneShot(durationMs, VibrationEffect.DEFAULT_AMPLITUDE)
         // USAGE_HARDWARE_FEEDBACK, not USAGE_TOUCH: many devices set the
         // "Touch" vibration-intensity category to OFF while leaving the app's

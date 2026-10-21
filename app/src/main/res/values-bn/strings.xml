@@ -313,6 +313,7 @@
     <string name="settings_about_no_upload">কিছুই আপলোড হয় না। আপনার গণনা এই ডিভাইসেই থাকে।</string>
     <string name="settings_about_developer">তৈরি করেছেন badhon495 (github.com/badhon495)</string>
     <string name="settings_about_feedback">ফিচার পরামর্শ বা কোনো অভিযোগ? badhon495@gmail.com</string>
+    <string name="settings_about_disclaimer">দাবিত্যাগ: এই অ্যাপের ডেভেলপার কোনো ইসলামি আলেম নন। কনটেন্ট ইন্টারনেট থেকে AI-এর সাহায্যে সংগ্রহ করা হয়েছে। কোনো ভুল চোখে পড়লে অনুগ্রহ করে badhon495@gmail.com-এ ইমেইল করুন।</string>
     <string name="settings_version">সংস্করণ %1$s</string>
 
     <!-- Reminders (Phase 5A) -->

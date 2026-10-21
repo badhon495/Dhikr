@@ -980,14 +980,13 @@ private fun BackupControls(viewModel: BackupViewModel) {
     )
 
     val working = status is BackupViewModel.Status.Working
+    val backupFilenameFormat = stringResource(R.string.settings_backup_filename)
     BackupActionRow(
         label = stringResource(R.string.settings_backup_export),
         enabled = !working,
         onClick = {
             val stamp = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
-            exportLauncher.launch(
-                context.getString(R.string.settings_backup_filename, stamp),
-            )
+            exportLauncher.launch(String.format(Locale.US, backupFilenameFormat, stamp))
         },
     )
     val csvFilenameFormat = stringResource(R.string.settings_backup_csv_filename)

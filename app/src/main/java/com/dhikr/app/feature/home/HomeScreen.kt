@@ -92,7 +92,10 @@ fun HomeScreen(
     ) {
         // Greeting + goal ring
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Column {
+            // weight(1f): on a narrow phone the greeting's intrinsic width
+            // otherwise eats the row and squeezes the fixed-size ring into an
+            // oval; with it the text wraps and the ring keeps its 86dp.
+            Column(modifier = Modifier.weight(1f).padding(end = 12.dp)) {
                 Text(
                     stringResource(R.string.home_greeting),
                     fontFamily = Caprasimo,

@@ -266,9 +266,11 @@ class CounterViewModel(
         // session is only a fallback for the pre-progress-row cold-start case.
         val savedTasbihProgress = tasbihRepository.getSessionProgress(loaded.id)
         if (savedTasbihProgress != null) {
-            val restoredLap = savedTasbihProgress.lap.coerceIn(1, loaded.lapCount + 1)
-            val restoredCount = savedTasbihProgress.count
-                .coerceIn(0, (loaded.lapTarget - 1).coerceAtLeast(0))
+            val (restoredCount, restoredLap) = restoredPosition(
+                count = savedTasbihProgress.count,
+                lap = savedTasbihProgress.lap,
+                lapTarget = loaded.lapTarget,
+            )
             engine.restore(count = restoredCount, lap = restoredLap, previous = null)
             loggedTotal = savedTasbihProgress.loggedInSession.coerceAtLeast(0)
             if (savedSession != null && sessionIsFromToday && savedSession.activeDhikrId == loaded.id && savedSession.routineId == null) {
@@ -783,3 +785,14 @@ class CounterViewModel(
         }
     }
 }
+
+/**
+ * Sanitises a saved (count, lap) before it is handed to [TasbihCounter.restore].
+ * The count must sit inside a lap, but the lap has no upper bound: the engine
+ * keeps lapping past the goal ("bonus rounds"), so clamping it to
+ * `lapCount + 1` threw those rounds away on every cold start — and left the
+ * History watermark (`loggedInSession`) above the restored total, so the next
+ * taps went unlogged too.
+ */
+internal fun restoredPosition(count: Int, lap: Int, lapTarget: Int): Pair<Int, Int> =
+    count.coerceIn(0, (lapTarget - 1).coerceAtLeast(0)) to lap.coerceAtLeast(1)
