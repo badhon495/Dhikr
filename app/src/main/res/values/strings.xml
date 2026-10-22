@@ -73,6 +73,22 @@
     <!-- Home routine card step preview when there are more steps than shown, e.g. "SubhanAllah · Alhamdulillah +2 more" -->
     <string name="home_routine_step_preview_more">%1$s  +%2$d more</string>
 
+    <!-- Dua screen -->
+    <string name="dua_screen_title">Dua</string>
+    <string name="dua_screen_add">Add</string>
+    <string name="dua_category_bathroom">Bathroom</string>
+    <string name="dua_category_eating">Eating</string>
+    <string name="dua_category_hardship">Hardship</string>
+    <string name="dua_category_house">House</string>
+    <string name="dua_category_mosque">Mosque</string>
+    <string name="dua_category_nature">Nature</string>
+    <string name="dua_category_seeing">Seeing</string>
+    <string name="dua_category_travel">Travel</string>
+    <string name="dua_delete_confirm_title">Delete this dua?</string>
+    <string name="dua_delete_confirm_body">This cannot be undone.</string>
+    <string name="dua_delete_confirm_action">Delete</string>
+    <string name="dua_delete_cancel_action">Cancel</string>
+
     <!-- Tasbih library screen -->
     <string name="tasbih_library_title">Tasbih</string>
     <string name="tasbih_library_new">+ New</string>

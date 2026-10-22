@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 data class DuaCategoryUi(val category: String, val entries: List<DuaEntity>)
 
@@ -34,6 +35,10 @@ class DuaViewModel(private val repository: DuaRepository) : ViewModel() {
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = DuaUiState(emptyList()),
         )
+
+    fun deleteDua(id: String) {
+        viewModelScope.launch { repository.delete(id) }
+    }
 
     class Factory(private val repository: DuaRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")

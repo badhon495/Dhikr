@@ -70,6 +70,22 @@
     <string name="home_routine_step_chip">%1$d ধাপ · %2$d</string>
     <string name="home_routine_step_preview_more">%1$s  +%2$d আরও</string>
 
+    <!-- Dua screen -->
+    <string name="dua_screen_title">দোয়া</string>
+    <string name="dua_screen_add">যোগ করুন</string>
+    <string name="dua_category_bathroom">বাথরুম</string>
+    <string name="dua_category_eating">খাওয়া</string>
+    <string name="dua_category_hardship">কষ্ট</string>
+    <string name="dua_category_house">বাড়ি</string>
+    <string name="dua_category_mosque">মসজিদ</string>
+    <string name="dua_category_nature">প্রকৃতি</string>
+    <string name="dua_category_seeing">দেখা</string>
+    <string name="dua_category_travel">যাত্রা</string>
+    <string name="dua_delete_confirm_title">এই দোয়া মুছবেন?</string>
+    <string name="dua_delete_confirm_body">এটি পূর্বাবস্থায় ফেরানো যাবে না।</string>
+    <string name="dua_delete_confirm_action">মুছুন</string>
+    <string name="dua_delete_cancel_action">বাতিল</string>
+
     <!-- Tasbih library screen -->
     <string name="tasbih_library_title">তাসবিহ</string>
     <string name="tasbih_library_new">+ নতুন</string>
