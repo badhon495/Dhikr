@@ -89,6 +89,8 @@
     <string name="dua_category_travel">Travel</string>
     <string name="dua_filter_all">All</string>
     <string name="dua_filter_content_description">Filter by category</string>
+    <string name="dua_search_placeholder">Search dua</string>
+    <string name="dua_search_content_description">Search dua</string>
     <string name="dua_delete_confirm_title">Delete this dua?</string>
     <string name="dua_delete_confirm_body">This cannot be undone.</string>
     <string name="dua_delete_confirm_action">Delete</string>

@@ -10,15 +10,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -34,9 +37,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -69,11 +74,26 @@ fun DuaScreen(
     var deleteConfirmTarget by remember { mutableStateOf<DuaEntity?>(null) }
     var categoryFilter by remember { mutableStateOf<String?>(null) }
     var filterMenuOpen by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
 
-    val visibleCategories = if (categoryFilter == null) {
+    val byCategoryFilter = if (categoryFilter == null) {
         state.categories
     } else {
         state.categories.filter { it.category == categoryFilter }
+    }
+    val visibleCategories = if (searchQuery.isBlank()) {
+        byCategoryFilter
+    } else {
+        byCategoryFilter
+            .map { categoryUi ->
+                categoryUi.copy(
+                    entries = categoryUi.entries.filter { entry ->
+                        entry.displayName(lang).contains(searchQuery, ignoreCase = true) ||
+                            entry.displayTranslation(lang).contains(searchQuery, ignoreCase = true)
+                    },
+                )
+            }
+            .filter { it.entries.isNotEmpty() }
     }
 
     Column(
@@ -134,54 +154,99 @@ fun DuaScreen(
             }
         }
 
-        // ---- Category filter dropdown ----
-        Box(modifier = Modifier.padding(top = 12.dp)) {
-            Box(
+        // ---- Search pill + category filter dropdown, same row ----
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
+                    .weight(1f)
+                    .heightIn(min = 44.dp)
                     .clip(PillShape)
                     .background(colors.surface)
-                    .clickable(
-                        role = Role.Button,
-                        onClickLabel = stringResource(R.string.dua_filter_content_description),
-                    ) { filterMenuOpen = true }
-                    .minTapTarget()
-                    .testTag("dua_filter_button")
-                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                    .padding(horizontal = 14.dp),
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = categoryFilter?.let { categoryLabel(it) }
-                            ?: stringResource(R.string.dua_filter_all),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colors.text,
-                    )
-                    Icon(
-                        imageVector = Icons.Filled.KeyboardArrowDown,
-                        contentDescription = null,
-                        tint = colors.faint,
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = stringResource(R.string.dua_search_content_description),
+                    tint = colors.faint,
+                    modifier = Modifier.size(16.dp),
+                )
+                Box(modifier = Modifier.weight(1f)) {
+                    if (searchQuery.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.dua_search_placeholder),
+                            fontSize = 13.sp,
+                            color = colors.faint,
+                        )
+                    }
+                    BasicTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        singleLine = true,
+                        textStyle = TextStyle(fontSize = 13.sp, color = colors.text),
+                        cursorBrush = SolidColor(colors.text),
                         modifier = Modifier
-                            .padding(start = 4.dp)
-                            .size(16.dp),
+                            .fillMaxWidth()
+                            .testTag("dua_search_field"),
                     )
                 }
             }
-            DropdownMenu(expanded = filterMenuOpen, onDismissRequest = { filterMenuOpen = false }) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.dua_filter_all)) },
-                    onClick = {
-                        categoryFilter = null
-                        filterMenuOpen = false
-                    },
-                )
-                state.categories.forEach { categoryUi ->
+
+            Box {
+                Box(
+                    modifier = Modifier
+                        .clip(PillShape)
+                        .background(colors.surface)
+                        .clickable(
+                            role = Role.Button,
+                            onClickLabel = stringResource(R.string.dua_filter_content_description),
+                        ) { filterMenuOpen = true }
+                        .minTapTarget()
+                        .testTag("dua_filter_button")
+                        .padding(horizontal = 14.dp, vertical = 10.dp),
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = categoryFilter?.let { categoryLabel(it) }
+                                ?: stringResource(R.string.dua_filter_all),
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colors.text,
+                        )
+                        Icon(
+                            imageVector = Icons.Filled.KeyboardArrowDown,
+                            contentDescription = null,
+                            tint = colors.faint,
+                            modifier = Modifier
+                                .padding(start = 4.dp)
+                                .size(16.dp),
+                        )
+                    }
+                }
+                DropdownMenu(expanded = filterMenuOpen, onDismissRequest = { filterMenuOpen = false }) {
                     DropdownMenuItem(
-                        text = { Text(categoryLabel(categoryUi.category)) },
+                        text = { Text(stringResource(R.string.dua_filter_all)) },
                         onClick = {
-                            categoryFilter = categoryUi.category
+                            categoryFilter = null
                             filterMenuOpen = false
                         },
                     )
+                    state.categories.forEach { categoryUi ->
+                        DropdownMenuItem(
+                            text = { Text(categoryLabel(categoryUi.category)) },
+                            onClick = {
+                                categoryFilter = categoryUi.category
+                                filterMenuOpen = false
+                            },
+                        )
+                    }
                 }
             }
         }
