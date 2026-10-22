@@ -49,7 +49,7 @@ class TasbihCounter(lapTarget: Int, private val totalLaps: Int) {
         val prior = history.removeLastOrNull() ?: return snapshot()
         count = prior.first
         lap = prior.second
-        complete = false
+        complete = lap > totalLaps || (lap >= totalLaps && count >= lapTarget)
         return snapshot()
     }
 

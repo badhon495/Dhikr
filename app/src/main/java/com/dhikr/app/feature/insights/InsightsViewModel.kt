@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import com.dhikr.app.core.utilities.Consistency
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -72,13 +73,15 @@ class InsightsViewModel(
         ) { today, week, month, allTime, lang -> InsightsTotals(today, week, month, allTime, lang) }
             .distinctUntilChanged()
             .mapLatest { totals ->
-                _uiState.value = _uiState.value.copy(
-                    today = totals.today,
-                    week = totals.week,
-                    month = totals.month,
-                    allTime = totals.allTime,
-                    isEmpty = totals.allTime == 0,
-                )
+                _uiState.update {
+                    it.copy(
+                        today = totals.today,
+                        week = totals.week,
+                        month = totals.month,
+                        allTime = totals.allTime,
+                        isEmpty = totals.allTime == 0,
+                    )
+                }
                 if (totals.allTime == 0) return@mapLatest
 
                 coroutineScope {
@@ -91,20 +94,28 @@ class InsightsViewModel(
                     val previousMonth = async { repository.previousMonthSummary() }
                     val dailyGoalTarget = async { preferencesRepository.dailyGoalTarget.first() }
                     val consistency = async { repository.consistency() }
-                    _uiState.value = _uiState.value.copy(
-                        last7Days = last7Days.await(),
-                        calendarIntensity = calendar.await(),
-                        historyByTasbih = history.await(),
-                        previousMonth = previousMonth.await(),
-                        dailyGoalTarget = dailyGoalTarget.await(),
-                        consistency = consistency.await(),
-                    )
+                    val resolvedLast7Days = last7Days.await()
+                    val resolvedCalendar = calendar.await()
+                    val resolvedHistory = history.await()
+                    val resolvedPreviousMonth = previousMonth.await()
+                    val resolvedDailyGoalTarget = dailyGoalTarget.await()
+                    val resolvedConsistency = consistency.await()
+                    _uiState.update {
+                        it.copy(
+                            last7Days = resolvedLast7Days,
+                            calendarIntensity = resolvedCalendar,
+                            historyByTasbih = resolvedHistory,
+                            previousMonth = resolvedPreviousMonth,
+                            dailyGoalTarget = resolvedDailyGoalTarget,
+                            consistency = resolvedConsistency,
+                        )
+                    }
                 }
             }
             .launchIn(viewModelScope)
 
         preferencesRepository.weeklyGoalTarget
-            .onEach { _uiState.value = _uiState.value.copy(weeklyGoalTarget = it) }
+            .onEach { target -> _uiState.update { it.copy(weeklyGoalTarget = target) } }
             .launchIn(viewModelScope)
     }
 

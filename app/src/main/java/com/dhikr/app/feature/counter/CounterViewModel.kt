@@ -602,9 +602,11 @@ class CounterViewModel(
         engine = TasbihCounter(newTasbih.lapTarget, newTasbih.lapCount)
         val savedProgress = tasbihRepository.getSessionProgress(newTasbih.id)
         if (savedProgress != null) {
-            val restoredLap = savedProgress.lap.coerceIn(1, newTasbih.lapCount + 1)
-            val restoredCount = savedProgress.count
-                .coerceIn(0, (newTasbih.lapTarget - 1).coerceAtLeast(0))
+            val (restoredCount, restoredLap) = restoredPosition(
+                count = savedProgress.count,
+                lap = savedProgress.lap,
+                lapTarget = newTasbih.lapTarget,
+            )
             engine.restore(count = restoredCount, lap = restoredLap, previous = null)
             loggedTotal = savedProgress.loggedInSession.coerceAtLeast(0)
         } else {

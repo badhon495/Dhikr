@@ -96,6 +96,9 @@ interface RoutineDao {
 
     @Query("SELECT * FROM routine WHERE id = :id LIMIT 1")
     suspend fun getRoutineRaw(id: String): RoutineEntity?
+
+    @Query("SELECT id FROM routine")
+    suspend fun getAllIds(): List<String>
 }
 
 /** Projection for [RoutineDao.routineNamesUsingTasbih] — both name columns so

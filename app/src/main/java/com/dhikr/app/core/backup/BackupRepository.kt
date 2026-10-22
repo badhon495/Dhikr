@@ -7,6 +7,7 @@ import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.CounterTextSize
 import com.dhikr.app.core.datastore.HapticMode
+import com.dhikr.app.core.database.entity.SessionEntity
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.displayName
@@ -81,6 +82,9 @@ class BackupRepository(
                     steps = rws.steps
                         .sortedBy { it.stepOrder }
                         .map(BackupRoutineStep::from),
+                    reminderEnabled = rws.routine.reminderEnabled,
+                    reminderMinuteOfDay = rws.routine.reminderMinuteOfDay,
+                    reminderDays = rws.routine.reminderDays,
                 )
             },
             sessions = sessionDao.getAll().map(BackupSession::from),
@@ -137,9 +141,11 @@ class BackupRepository(
             }
 
             val validTasbihIds = tasbihDao.getAllIds().toHashSet()
+            val validRoutineIds = routineDao.getAllIds().toHashSet()
             file.sessions.forEach { session ->
                 if (session.tasbihId in validTasbihIds) {
-                    sessionDao.insert(session.toEntity())
+                    val safeEntity = sanitizeSessionRoutineId(session.toEntity(), validRoutineIds)
+                    sessionDao.insert(safeEntity)
                     sessionsRestored++
                 } else {
                     sessionsSkipped++
@@ -225,3 +231,20 @@ class BackupRepository(
         else -> null
     }
 }
+
+/**
+ * A restored session whose [SessionEntity.routineId] points at a routine not
+ * present on this device (deleted locally, or a retired built-in) would trip
+ * the FK constraint on insert and roll back the whole restore transaction.
+ * Null it out instead — the same outcome `onDelete = SET_NULL` would have
+ * produced had the routine been deleted locally after the session was logged.
+ */
+internal fun sanitizeSessionRoutineId(
+    session: SessionEntity,
+    validRoutineIds: Set<String>,
+): SessionEntity =
+    if (session.routineId != null && session.routineId !in validRoutineIds) {
+        session.copy(routineId = null)
+    } else {
+        session
+    }

@@ -45,6 +45,12 @@ data class BackupTasbih(
     val isFavorite: Boolean = false,
     val createdAt: Long,
     val updatedAt: Long,
+    // Defaults keep older backup files (made before these existed) readable.
+    val benefitsText: String? = null,
+    val benefitsGeneratedAt: Long? = null,
+    val reminderEnabled: Boolean = false,
+    val reminderMinuteOfDay: Int = 0,
+    val reminderDays: Int = 0,
 ) {
     /** Restored rows are always custom, regardless of what device they came from. */
     fun toEntity() = TasbihEntity(
@@ -62,6 +68,11 @@ data class BackupTasbih(
         isBuiltIn = false,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        benefitsText = benefitsText,
+        benefitsGeneratedAt = benefitsGeneratedAt,
+        reminderEnabled = reminderEnabled,
+        reminderMinuteOfDay = reminderMinuteOfDay,
+        reminderDays = reminderDays,
     )
 
     companion object {
@@ -79,6 +90,11 @@ data class BackupTasbih(
             isFavorite = e.isFavorite,
             createdAt = e.createdAt,
             updatedAt = e.updatedAt,
+            benefitsText = e.benefitsText,
+            benefitsGeneratedAt = e.benefitsGeneratedAt,
+            reminderEnabled = e.reminderEnabled,
+            reminderMinuteOfDay = e.reminderMinuteOfDay,
+            reminderDays = e.reminderDays,
         )
     }
 }
@@ -89,9 +105,12 @@ data class BackupRoutine(
     val name: String,
     val createdAt: Long,
     val updatedAt: Long,
-    // Default keeps older backup files readable.
+    // Defaults keep older backup files readable.
     val isFavorite: Boolean = false,
     val steps: List<BackupRoutineStep> = emptyList(),
+    val reminderEnabled: Boolean = false,
+    val reminderMinuteOfDay: Int = 0,
+    val reminderDays: Int = 0,
 ) {
     fun toEntity() = RoutineEntity(
         id = id,
@@ -100,6 +119,9 @@ data class BackupRoutine(
         isFavorite = isFavorite,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        reminderEnabled = reminderEnabled,
+        reminderMinuteOfDay = reminderMinuteOfDay,
+        reminderDays = reminderDays,
     )
 }
 
