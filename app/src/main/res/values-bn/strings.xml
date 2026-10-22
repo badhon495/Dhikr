@@ -415,6 +415,8 @@
     <string name="prayer_isha">ইশা</string>
     <string name="prayer_notification_title">%1$s-এর পর</string>
     <string name="prayer_notification_body">সালাতের পরের যিকরের জন্য কয়েক মিনিট</string>
+    <string name="home_current_waqt_kicker">%1$s ওয়াক্ত</string>
+    <string name="home_current_waqt_next">পরবর্তী %1$s, %2$s-এ</string>
     <string name="settings_hijri_adjust">হিজরি তারিখ সমন্বয়</string>
     <string name="settings_hijri_adjust_desc">স্থানীয় চাঁদ দেখার সাথে মেলাতে হোমের হিজরি তারিখ এক-দুই দিন সরান</string>
     <string name="settings_weekly_goal">সাপ্তাহিক লক্ষ্য</string>

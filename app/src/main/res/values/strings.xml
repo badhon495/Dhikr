@@ -416,6 +416,8 @@
     <string name="prayer_isha">Isha</string>
     <string name="prayer_notification_title">After %1$s</string>
     <string name="prayer_notification_body">A few minutes for the after-salah dhikr</string>
+    <string name="home_current_waqt_kicker">%1$s waqt</string>
+    <string name="home_current_waqt_next">next %1$s at %2$s</string>
     <string name="settings_hijri_adjust">Hijri date adjustment</string>
     <string name="settings_hijri_adjust_desc">Shift the Hijri date on Home by a day or two to match your local moon sighting</string>
     <string name="settings_weekly_goal">Weekly goal</string>

@@ -80,4 +80,43 @@ class PrayerTimesTest {
         assertEquals(2, cal.get(Calendar.DAY_OF_MONTH))
         assertNear(5 * 60 + 28, minuteOfDay(next, dhaka))
     }
+
+    @Test
+    fun currentWaqt_isAsrBetweenAsrAndMaghrib_withMaghribAsNext() {
+        val times = PrayerTimes.forDay(
+            dhakaDay(2024, 1, 1), 23.8103, 90.4125,
+            CalculationMethod.KARACHI, AsrMethod.HANAFI, dhaka,
+        )
+        val midAfternoon = times.getValue(Prayer.ASR) + 30 * 60_000
+        val waqt = PrayerTimes.currentWaqt(
+            midAfternoon, 23.8103, 90.4125, CalculationMethod.KARACHI, AsrMethod.HANAFI, dhaka,
+        )!!
+        assertEquals(Prayer.ASR, waqt.prayer)
+        assertEquals(times.getValue(Prayer.ASR), waqt.startMillis)
+        assertEquals(times.getValue(Prayer.MAGHRIB), waqt.nextStartMillis)
+    }
+
+    @Test
+    fun currentWaqt_afterIsha_rollsNextToTomorrowsFajr() {
+        val today = dhakaDay(2024, 1, 1)
+        val times = PrayerTimes.forDay(today, 23.8103, 90.4125, CalculationMethod.KARACHI, AsrMethod.HANAFI, dhaka)
+        val lateNight = times.getValue(Prayer.ISHA) + 60 * 60_000
+        val waqt = PrayerTimes.currentWaqt(
+            lateNight, 23.8103, 90.4125, CalculationMethod.KARACHI, AsrMethod.HANAFI, dhaka,
+        )!!
+        val tomorrow = PrayerTimes.forDay(
+            today + 24 * 3_600_000, 23.8103, 90.4125, CalculationMethod.KARACHI, AsrMethod.HANAFI, dhaka,
+        )
+        assertEquals(Prayer.ISHA, waqt.prayer)
+        assertEquals(tomorrow.getValue(Prayer.FAJR), waqt.nextStartMillis)
+    }
+
+    @Test
+    fun currentWaqt_beforeFajr_isNull() {
+        val midnight = Calendar.getInstance(dhaka).apply { clear(); set(2024, 0, 1, 0, 30) }.timeInMillis
+        val waqt = PrayerTimes.currentWaqt(
+            midnight, 23.8103, 90.4125, CalculationMethod.KARACHI, AsrMethod.HANAFI, dhaka,
+        )
+        assertNull(waqt)
+    }
 }

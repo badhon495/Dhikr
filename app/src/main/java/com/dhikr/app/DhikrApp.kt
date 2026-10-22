@@ -316,10 +316,10 @@ fun DhikrApp(
                 navController = navController,
                 startDestination = ROUTE_HOME,
                 modifier = Modifier.padding(padding).consumeWindowInsets(padding),
-                enterTransition = { navEnter(reducedMotion, isTabSwitch(), forward = true) },
-                exitTransition = { navExit(reducedMotion, isTabSwitch(), forward = true) },
-                popEnterTransition = { navEnter(reducedMotion, isTabSwitch(), forward = false) },
-                popExitTransition = { navExit(reducedMotion, isTabSwitch(), forward = false) },
+                enterTransition = { navEnter(reducedMotion, tabSwitchForward(), forward = true) },
+                exitTransition = { navExit(reducedMotion, tabSwitchForward(), forward = true) },
+                popEnterTransition = { navEnter(reducedMotion, tabSwitchForward(), forward = false) },
+                popExitTransition = { navExit(reducedMotion, tabSwitchForward(), forward = false) },
             ) {
                 composable(ROUTE_HOME) {
                     val viewModel: HomeViewModel = viewModel(
@@ -550,7 +550,9 @@ fun DhikrApp(
     }
 }
 
-private val TAB_BASE_ROUTES = setOf(
+/** Bottom-nav tab order, left to right, as shown in [DhikrBottomNav]. Drives
+ *  slide direction on tab switches — later tab slides in from the end. */
+private val TAB_BASE_ROUTES = listOf(
     ROUTE_HOME,
     ROUTE_TASBIH_LIBRARY,
     ROUTE_COUNTER.substringBefore("?"),
@@ -558,23 +560,26 @@ private val TAB_BASE_ROUTES = setOf(
     ROUTE_SETTINGS,
 )
 
-/** True when both ends of the transition are top-level bottom-nav destinations —
- *  those get a plain fade, no directional slide. */
-private fun AnimatedContentTransitionScope<NavBackStackEntry>.isTabSwitch(): Boolean {
+/** Null when this isn't a switch between two top-level bottom-nav
+ *  destinations. Otherwise true if moving to a tab to the right (forward). */
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.tabSwitchForward(): Boolean? {
     val from = initialState.destination.route?.substringBefore("?")
     val to = targetState.destination.route?.substringBefore("?")
-    return from in TAB_BASE_ROUTES && to in TAB_BASE_ROUTES
+    val fromIndex = TAB_BASE_ROUTES.indexOf(from)
+    val toIndex = TAB_BASE_ROUTES.indexOf(to)
+    if (fromIndex < 0 || toIndex < 0) return null
+    return toIndex > fromIndex
 }
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.navEnter(
     reduced: Boolean,
-    tabSwitch: Boolean,
+    tabSwitchForward: Boolean?,
     forward: Boolean,
 ): EnterTransition {
     if (reduced) return EnterTransition.None
     val fade = fadeIn(tween(Motion.FAST_MS))
-    if (tabSwitch) return fade
-    val direction = if (forward) {
+    val goingForward = tabSwitchForward ?: forward
+    val direction = if (goingForward) {
         AnimatedContentTransitionScope.SlideDirection.Start
     } else {
         AnimatedContentTransitionScope.SlideDirection.End
@@ -588,13 +593,13 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.navEnter(
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.navExit(
     reduced: Boolean,
-    tabSwitch: Boolean,
+    tabSwitchForward: Boolean?,
     forward: Boolean,
 ): ExitTransition {
     if (reduced) return ExitTransition.None
     val fade = fadeOut(tween(Motion.FAST_MS))
-    if (tabSwitch) return fade
-    val direction = if (forward) {
+    val goingForward = tabSwitchForward ?: forward
+    val direction = if (goingForward) {
         AnimatedContentTransitionScope.SlideDirection.Start
     } else {
         AnimatedContentTransitionScope.SlideDirection.End

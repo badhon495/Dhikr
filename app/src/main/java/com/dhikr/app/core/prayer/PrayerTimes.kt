@@ -146,6 +146,32 @@ object PrayerTimes {
         return null
     }
 
+    /**
+     * The prayer whose waqt [nowMillis] falls in, with that waqt's start and
+     * the next prayer's start (for a countdown). Null before Fajr (still in
+     * yesterday's Isha) or if today's times are incomplete (polar day).
+     */
+    data class CurrentWaqt(val prayer: Prayer, val startMillis: Long, val nextStartMillis: Long?)
+
+    fun currentWaqt(
+        nowMillis: Long,
+        latitude: Double,
+        longitude: Double,
+        method: CalculationMethod,
+        asr: AsrMethod,
+        zone: TimeZone = TimeZone.getDefault(),
+    ): CurrentWaqt? {
+        val today = forDay(nowMillis, latitude, longitude, method, asr, zone)
+        val ordered = Prayer.entries.mapNotNull { p -> today[p]?.let { p to it } }.sortedBy { it.second }
+        val current = ordered.lastOrNull { (_, start) -> start <= nowMillis } ?: return null
+        val next = ordered.firstOrNull { (_, start) -> start > nowMillis }?.second
+            ?: run {
+                val tomorrowCal = Calendar.getInstance(zone).apply { timeInMillis = nowMillis; add(Calendar.DAY_OF_MONTH, 1) }
+                forDay(tomorrowCal.timeInMillis, latitude, longitude, method, asr, zone)[Prayer.FAJR]
+            }
+        return CurrentWaqt(current.first, current.second, next)
+    }
+
     private data class SunPosition(val declination: Double, val equation: Double)
 
     private fun sunPosition(jd: Double): SunPosition {

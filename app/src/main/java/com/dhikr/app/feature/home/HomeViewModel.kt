@@ -14,11 +14,15 @@ import com.dhikr.app.core.datastore.SessionRepository
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.model.CounterSessionState
+import com.dhikr.app.core.prayer.Prayer
+import com.dhikr.app.core.prayer.PrayerTimes
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
@@ -33,11 +37,14 @@ import java.util.Locale
 
 data class ContinueSessionInfo(val tasbihName: String, val count: Int, val target: Int)
 
+data class CurrentWaqtInfo(val prayer: Prayer, val startMillis: Long, val nextStartMillis: Long?)
+
 data class HomeUiState(
     val dateLabel: String = "",
     // Null if the platform calendar can't produce one (never expected on API 24+).
     val hijriDate: HijriDate? = null,
     val season: IslamicSeason? = null,
+    val currentWaqt: CurrentWaqtInfo? = null,
     // Tasbih the seasonal banner opens, when that built-in still exists.
     val seasonTasbihId: String? = null,
     val dailyGoalTarget: Int = 500,
@@ -78,6 +85,15 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
+    // Ticks every 30s so currentWaqt (Fajr/Dhuhr/.../Maghrib label) flips on
+    // time instead of waiting for an unrelated DB/DataStore emission.
+    private val clockTick = flow {
+        while (true) {
+            emit(Unit)
+            delay(30_000)
+        }
+    }
+
     init {
         combine(
             preferencesRepository.dailyGoalTarget,
@@ -101,7 +117,10 @@ class HomeViewModel(
             // are rebuilt — nothing upstream fires on a locale switch.
             .combine(AppLanguage.state) { combined, lang -> combined to lang }
             .combine(preferencesRepository.hijriAdjustDays) { pair, adjust -> Triple(pair.first, pair.second, adjust) }
-            .mapLatest { (combined, lang, hijriAdjust) ->
+            .combine(preferencesRepository.prayerSettings) { triple, prayerSettings -> triple to prayerSettings }
+            .combine(clockTick) { pair, _ -> pair }
+            .mapLatest { (triple, prayerSettings) ->
+                val (combined, lang, hijriAdjust) = triple
                 val (inputs, dayProgress, tasbihProgress, allTasbihs) = combined
                 val tasbihNamesById = allTasbihs.associate { it.id to it.displayName(lang) }
                 val continueInfo = inputs.session?.let { s ->
@@ -127,10 +146,19 @@ class HomeViewModel(
                     null
                 }
                 val seasonTasbihId = SEASON_TASBIH[season]?.takeIf { id -> allTasbihs.any { it.id == id } }
+                val currentWaqt = if (prayerSettings.hasLocation) {
+                    PrayerTimes.currentWaqt(
+                        now, prayerSettings.latitude!!, prayerSettings.longitude!!,
+                        prayerSettings.method, prayerSettings.asr,
+                    )?.let { CurrentWaqtInfo(it.prayer, it.startMillis, it.nextStartMillis) }
+                } else {
+                    null
+                }
                 HomeUiState(
                     dateLabel = SimpleDateFormat("EEEE, d MMMM", Locale.getDefault()).format(Date(now)),
                     hijriDate = hijri,
                     season = season,
+                    currentWaqt = currentWaqt,
                     seasonTasbihId = seasonTasbihId,
                     dailyGoalTarget = inputs.dailyGoal,
                     todayTotal = inputs.todayTotal,

@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +53,10 @@ import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.core.localization.localizedDigits
+import com.dhikr.app.core.notifications.ReminderNotifications
 import com.dhikr.app.core.utilities.IslamicSeason
+import java.text.DateFormat
+import java.util.Date
 import com.dhikr.app.ui.HOME_SCREEN_TEST_TAG
 import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.Motion
@@ -122,6 +126,7 @@ fun HomeScreen(
                         modifier = Modifier.padding(top = 1.dp),
                     )
                 }
+                CurrentWaqtLine(waqt = state.currentWaqt)
             }
             GoalRing(
                 progress = if (state.dailyGoalTarget > 0) state.todayTotal.toFloat() / state.dailyGoalTarget else 0f,
@@ -293,6 +298,32 @@ fun HomeScreen(
             }
         }
     }
+}
+
+/** Current waqt + next prayer time, one line under the Hijri date. Hidden
+ *  when no location is set (Settings → Prayer times). */
+@Composable
+private fun CurrentWaqtLine(waqt: CurrentWaqtInfo?) {
+    if (waqt == null) return
+    val colors = DhikrTheme.colors
+    val timeFormat = remember { DateFormat.getTimeInstance(DateFormat.SHORT) }
+    val prayerName = stringResource(ReminderNotifications.prayerNameRes(waqt.prayer))
+    val next = waqt.nextStartMillis?.let { next ->
+        val prayers = com.dhikr.app.core.prayer.Prayer.entries
+        val nextPrayer = prayers[(waqt.prayer.ordinal + 1) % prayers.size]
+        val nextName = stringResource(ReminderNotifications.prayerNameRes(nextPrayer))
+        stringResource(R.string.home_current_waqt_next, nextName, timeFormat.format(Date(next)))
+    }
+    Text(
+        stringResource(R.string.home_current_waqt_kicker, prayerName) +
+            (next?.let { " · $it" } ?: ""),
+        fontSize = 12.5.sp,
+        color = colors.sage,
+        fontWeight = FontWeight.SemiBold,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.padding(top = 3.dp),
+    )
 }
 
 /**

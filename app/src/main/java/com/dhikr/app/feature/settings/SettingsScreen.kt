@@ -508,7 +508,10 @@ internal fun <T> ChoiceRow(
     onLongPress: ((T) -> Unit)? = null,
 ) {
     val colors = DhikrTheme.colors
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         options.forEach { (value, label) ->
             val isSelected = value == selected
             Box(
@@ -559,7 +562,10 @@ private fun DailyGoalPicker(
     var customActive by rememberSaveable { mutableStateOf(isCustom) }
     var customText by rememberSaveable { mutableStateOf(if (isCustom) target.toString() else "") }
 
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         presets.forEach { option ->
             GoalPill(
                 label = option.localizedDigits(lang),
