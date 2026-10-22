@@ -354,15 +354,16 @@ private fun DuaRow(
                     entry.displayPronunciation(lang)?.let { pronunciation ->
                         Text(
                             text = pronunciation,
-                            fontSize = 12.sp,
-                            color = colors.faint,
-                            modifier = Modifier.padding(top = 2.dp),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = colors.dim,
+                            modifier = Modifier.padding(top = 3.dp),
                         )
                     }
                     Text(
                         text = entry.displayTranslation(lang),
-                        fontSize = 13.sp,
-                        color = colors.dim,
+                        fontSize = 12.5.sp,
+                        color = colors.faint,
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .testTag("dua_translation_${entry.id}"),
