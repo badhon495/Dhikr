@@ -3,6 +3,7 @@ package com.dhikr.app
 import android.app.Application
 import androidx.room.Room
 import com.dhikr.app.core.database.AppDatabase
+import com.dhikr.app.core.database.DuaRepository
 import com.dhikr.app.core.database.seed.SeedData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,8 @@ class DhikrApplication : Application() {
                 database.routineDao().insertRoutines(SeedData.presetRoutines)
                 database.routineDao().insertSteps(SeedData.presetRoutineSteps)
             }
+            // Seed daily-life dua entries on first run.
+            DuaRepository(database.duaDao()).seedIfEmpty()
             syncRoutineStepAdditions()
             purgeRetiredTasbih()
         }
