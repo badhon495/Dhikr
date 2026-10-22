@@ -72,6 +72,9 @@
     <string name="home_routine_step_chip">%1$d steps · %2$d</string>
     <!-- Home routine card step preview when there are more steps than shown, e.g. "SubhanAllah · Alhamdulillah +2 more" -->
     <string name="home_routine_step_preview_more">%1$s  +%2$d more</string>
+    <!-- Home screen card opening the Dua screen -->
+    <string name="home_dua_card_title">Dua</string>
+    <string name="home_dua_card_subtitle">Daily duas for everyday moments</string>
 
     <!-- Dua screen -->
     <string name="dua_screen_title">Dua</string>
@@ -88,6 +91,19 @@
     <string name="dua_delete_confirm_body">This cannot be undone.</string>
     <string name="dua_delete_confirm_action">Delete</string>
     <string name="dua_delete_cancel_action">Cancel</string>
+
+    <!-- Dua editor screen -->
+    <string name="dua_add_title">Add Dua</string>
+    <string name="dua_edit_title">Edit Dua</string>
+    <string name="dua_editor_category_label">Category</string>
+    <string name="dua_editor_name_label">Name</string>
+    <string name="dua_editor_arabic_label">Arabic</string>
+    <string name="dua_editor_pronunciation_label">Pronunciation</string>
+    <string name="dua_editor_translation_label">Translation</string>
+    <string name="dua_editor_source_label">Source</string>
+    <string name="dua_editor_repeat_count_label">Repeat count</string>
+    <string name="dua_editor_add_bangla_toggle">Add Bangla</string>
+    <string name="dua_editor_save">Save</string>
 
     <!-- Tasbih library screen -->
     <string name="tasbih_library_title">Tasbih</string>
@@ -507,6 +523,7 @@
     <!-- 1.4: per-prayer routines, Qibla, special days, fasting reminder -->
     <string name="settings_qibla">Qibla direction</string>
     <string name="settings_qibla_open">Open</string>
+    <string name="settings_dua_open">Open</string>
     <string name="settings_prayer_routine">Opens: %1$s</string>
     <string name="settings_prayer_routine_missing">After Salah</string>
     <string name="settings_prayer_routine_dialog">After %1$s, open</string>

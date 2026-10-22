@@ -74,6 +74,7 @@ fun HomeScreen(
     onOpenLibrary: () -> Unit,
     onStartRoutine: (String) -> Unit,
     onOpenRoutines: () -> Unit,
+    onOpenDua: () -> Unit,
     scrollToTopSignal: Int = 0,
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -295,6 +296,33 @@ fun HomeScreen(
                         )
                     }
                 }
+            }
+        }
+
+        // Dua — a single card linking to the full Dua screen, matching the
+        // Season banner's card treatment.
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(22.dp))
+                .background(colors.card)
+                .border(1.dp, colors.line, RoundedCornerShape(22.dp))
+                .clickable(role = Role.Button) { onOpenDua() }
+                .padding(16.dp),
+        ) {
+            Column {
+                Text(
+                    stringResource(R.string.home_dua_card_title),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.text,
+                )
+                Text(
+                    stringResource(R.string.home_dua_card_subtitle),
+                    fontSize = 12.5.sp,
+                    color = colors.dim,
+                    modifier = Modifier.padding(top = 3.dp),
+                )
             }
         }
     }

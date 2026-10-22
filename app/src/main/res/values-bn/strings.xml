@@ -69,6 +69,9 @@
     <string name="home_routines_empty_hint">এখানে যোগ করতে রুটিন পেজে গিয়ে রুটিনে তারা চিহ্ন দিন।</string>
     <string name="home_routine_step_chip">%1$d ধাপ · %2$d</string>
     <string name="home_routine_step_preview_more">%1$s  +%2$d আরও</string>
+    <!-- Home screen card opening the Dua screen -->
+    <string name="home_dua_card_title">দোয়া</string>
+    <string name="home_dua_card_subtitle">প্রতিদিনের মুহূর্তের জন্য দোয়া</string>
 
     <!-- Dua screen -->
     <string name="dua_screen_title">দোয়া</string>
@@ -85,6 +88,19 @@
     <string name="dua_delete_confirm_body">এটি পূর্বাবস্থায় ফেরানো যাবে না।</string>
     <string name="dua_delete_confirm_action">মুছুন</string>
     <string name="dua_delete_cancel_action">বাতিল</string>
+
+    <!-- Dua editor screen -->
+    <string name="dua_add_title">দোয়া যোগ করুন</string>
+    <string name="dua_edit_title">দোয়া সম্পাদনা</string>
+    <string name="dua_editor_category_label">বিভাগ</string>
+    <string name="dua_editor_name_label">নাম</string>
+    <string name="dua_editor_arabic_label">আরবি</string>
+    <string name="dua_editor_pronunciation_label">উচ্চারণ</string>
+    <string name="dua_editor_translation_label">অনুবাদ</string>
+    <string name="dua_editor_source_label">সূত্র</string>
+    <string name="dua_editor_repeat_count_label">পুনরাবৃত্তি সংখ্যা</string>
+    <string name="dua_editor_add_bangla_toggle">বাংলা যোগ করুন</string>
+    <string name="dua_editor_save">সংরক্ষণ করুন</string>
 
     <!-- Tasbih library screen -->
     <string name="tasbih_library_title">তাসবিহ</string>
@@ -506,6 +522,7 @@
     <!-- 1.4: per-prayer routines, Qibla, special days, fasting reminder -->
     <string name="settings_qibla">কিবলার দিক</string>
     <string name="settings_qibla_open">খুলুন</string>
+    <string name="settings_dua_open">খুলুন</string>
     <string name="settings_prayer_routine">খুলবে: %1$s</string>
     <string name="settings_prayer_routine_missing">সালাতের পর</string>
     <string name="settings_prayer_routine_dialog">%1$s-এর পর যা খুলবে</string>
