@@ -1,6 +1,7 @@
 package com.dhikr.app.core.localization
 
 import androidx.compose.runtime.staticCompositionLocalOf
+import com.dhikr.app.core.database.entity.DuaEntity
 import com.dhikr.app.core.database.entity.RoutineEntity
 import com.dhikr.app.core.database.entity.TasbihEntity
 
@@ -27,6 +28,13 @@ fun TasbihEntity.displayTranslation(lang: AppLanguage): String =
 fun TasbihEntity.displayNote(lang: AppLanguage): String = pick(noteBn, note, lang)
 
 fun RoutineEntity.displayName(lang: AppLanguage): String = pick(nameBn, name, lang)
+
+fun DuaEntity.displayName(lang: AppLanguage): String = pick(nameBn, name, lang)
+
+fun DuaEntity.displayPronunciation(lang: AppLanguage): String? =
+    pronunciation?.let { pick(pronunciationBn, it, lang) }
+
+fun DuaEntity.displayTranslation(lang: AppLanguage): String = pick(translationBn, translation, lang)
 
 private val BANGLA_DIGITS = charArrayOf('০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯')
 

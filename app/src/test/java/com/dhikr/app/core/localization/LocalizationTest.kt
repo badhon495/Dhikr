@@ -1,8 +1,10 @@
 package com.dhikr.app.core.localization
 
+import com.dhikr.app.core.database.entity.DuaEntity
 import com.dhikr.app.core.database.entity.RoutineEntity
 import com.dhikr.app.core.database.entity.TasbihEntity
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LocalizationTest {
@@ -75,5 +77,17 @@ class LocalizationTest {
         assertEquals("১২ / ৩৪", "12 / 34".localizedDigits(AppLanguage.BANGLA))
         assertEquals("-৫", (-5).localizedDigits(AppLanguage.BANGLA))
         assertEquals("০", 0.localizedDigits(AppLanguage.BANGLA))
+    }
+
+    @Test
+    fun displayName_fallsBackToEnglishWhenBanglaBlank() {
+        val entry = DuaEntity(id = "x", category = "c", categoryOrder = 1, order = 1, name = "English", nameBn = null, arabic = "ع", translation = "t")
+        assertEquals("English", entry.displayName(AppLanguage.BANGLA))
+    }
+
+    @Test
+    fun displayPronunciation_returnsNullWhenBothBlank() {
+        val entry = DuaEntity(id = "x", category = "c", categoryOrder = 1, order = 1, name = "N", arabic = "ع", translation = "t", pronunciation = null)
+        assertNull(entry.displayPronunciation(AppLanguage.ENGLISH))
     }
 }
