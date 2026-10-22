@@ -78,7 +78,6 @@ fun SettingsScreen(
     backupViewModel: BackupViewModel,
     scrollToTopSignal: Int = 0,
     onOpenQibla: () -> Unit = {},
-    onOpenDua: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
@@ -309,30 +308,6 @@ fun SettingsScreen(
             }
             Column(modifier = Modifier.padding(top = 14.dp)) {
                 FastingReminderRow(state, viewModel)
-            }
-        }
-
-        // ---- Dua ----
-        SettingsSection(stringResource(R.string.dua_screen_title)) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(role = Role.Button, onClick = onOpenDua)
-                    .minTapTarget(),
-            ) {
-                Text(
-                    stringResource(R.string.dua_screen_title),
-                    fontSize = 14.sp,
-                    color = colors.text,
-                    modifier = Modifier.weight(1f),
-                )
-                Text(
-                    stringResource(R.string.settings_dua_open),
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = colors.sage,
-                )
             }
         }
 

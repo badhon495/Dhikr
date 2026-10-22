@@ -525,7 +525,6 @@ fun DhikrApp(
                         backupViewModel = backupViewModel,
                         scrollToTopSignal = signalOf(ROUTE_SETTINGS),
                         onOpenQibla = { navController.navigate(ROUTE_QIBLA) },
-                        onOpenDua = { navController.navigate(ROUTE_DUA) },
                     )
                 }
                 composable(ROUTE_QIBLA) {
