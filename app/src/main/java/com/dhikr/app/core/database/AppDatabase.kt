@@ -2,12 +2,14 @@ package com.dhikr.app.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.dhikr.app.core.database.dao.DuaDao
 import com.dhikr.app.core.database.dao.RoutineCompletionDao
 import com.dhikr.app.core.database.dao.RoutineDao
 import com.dhikr.app.core.database.dao.RoutineProgressDao
 import com.dhikr.app.core.database.dao.SessionDao
 import com.dhikr.app.core.database.dao.TasbihDao
 import com.dhikr.app.core.database.dao.TasbihProgressDao
+import com.dhikr.app.core.database.entity.DuaEntity
 import com.dhikr.app.core.database.entity.RoutineCompletionEntity
 import com.dhikr.app.core.database.entity.RoutineEntity
 import com.dhikr.app.core.database.entity.RoutineProgressEntity
@@ -25,6 +27,7 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
         RoutineCompletionEntity::class,
         RoutineProgressEntity::class,
         TasbihProgressEntity::class,
+        DuaEntity::class,
     ],
     // v2: no schema change from v1, but the version had been left at 1 across
     // several real schema edits (session/routine tables added without a bump).
@@ -120,7 +123,10 @@ import com.dhikr.app.core.database.entity.TasbihProgressEntity
     // v29: Roman-script pronunciation filled in for the situational-dhikr
     // batches (previously the Bangla rendering); pronunciationBn keeps the
     // Bangla script. No schema change; bump reseeds. fallbackToDestructiveMigration.
-    version = 29,
+    // v30: added dua table + 20 daily-life dua seeded on first run, fully
+    // editable/deletable by user. No hand migration — fallbackToDestructiveMigration
+    // rebuilds + reseeds.
+    version = 30,
     exportSchema = false,
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -130,4 +136,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun routineCompletionDao(): RoutineCompletionDao
     abstract fun routineProgressDao(): RoutineProgressDao
     abstract fun tasbihProgressDao(): TasbihProgressDao
+    abstract fun duaDao(): DuaDao
 }
