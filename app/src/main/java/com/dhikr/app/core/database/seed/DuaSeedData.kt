@@ -140,7 +140,7 @@ object DuaSeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি আত'আমানি হাযা, ওয়া রাজাক্বানিহি মিন গাইরি হাওলিন মিন্নি ওয়া লা কুওয়াহ",
             translation = "All praise is for Allah who gave me this food to eat, and provided it for me without any strength or power from me",
             translationBn = "সমস্ত প্রশংসা আল্লাহর যিনি আমাকে এই খাবার খাইয়েছেন, এবং আমার শক্তি বা ক্ষমতা ছাড়াই এটি আমাকে দিয়েছেন",
-            source = "Abu Dawud 4023, Tirmidhi 3458",
+            source = "Abu Dawud 3850, Tirmidhi 3458",
             repeatCount = 1,
         ),
         // Category "bathroom" (categoryOrder=5)
