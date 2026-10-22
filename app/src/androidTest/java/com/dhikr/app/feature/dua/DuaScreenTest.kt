@@ -134,4 +134,54 @@ class DuaScreenTest {
         composeTestRule.onNodeWithTag("dua_translation_marriage_wedding", useUnmergedTree = true)
             .assertTextEquals(longest.translation)
     }
+
+    @Test
+    fun categoryFilter_selectingCategory_showsOnlyThatCategorysEntries() {
+        seed(listOf(
+            DuaEntity(
+                id = "house_entry",
+                category = "house",
+                categoryOrder = 1,
+                order = 1,
+                name = "House Entry",
+                arabic = "ب",
+                translation = "translation house",
+            ),
+            DuaEntity(
+                id = "travel_entry",
+                category = "travel",
+                categoryOrder = 2,
+                order = 1,
+                name = "Travel Entry",
+                arabic = "ج",
+                translation = "translation travel",
+            ),
+        ))
+        val viewModel = DuaViewModel(repository)
+        composeTestRule.setContent {
+            DuaScreen(viewModel = viewModel, onBack = {}, onAddDua = {}, onEditDua = {})
+        }
+        composeTestRule.waitForIdle()
+
+        // Both visible with no filter applied.
+        composeTestRule.onNodeWithText("House Entry").assertExists()
+        composeTestRule.onNodeWithText("Travel Entry").assertExists()
+
+        // Open the filter dropdown and select the "Travel" category (exact match,
+        // to avoid colliding with "Travel Entry"'s row text which also contains "Travel").
+        composeTestRule.onNodeWithTag("dua_filter_button").performClick()
+        composeTestRule.onNodeWithText("Travel", substring = false).performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithText("Travel Entry").assertExists()
+        composeTestRule.onAllNodesWithTag("dua_row_house_entry").assertCountEquals(0)
+
+        // Selecting "All" again restores both.
+        composeTestRule.onNodeWithTag("dua_filter_button").performClick()
+        composeTestRule.onNodeWithText("All", substring = false).performClick()
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithText("House Entry").assertExists()
+        composeTestRule.onNodeWithText("Travel Entry").assertExists()
+    }
 }

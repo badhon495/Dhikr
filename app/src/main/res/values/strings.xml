@@ -87,6 +87,8 @@
     <string name="dua_category_nature">Nature</string>
     <string name="dua_category_seeing">Seeing</string>
     <string name="dua_category_travel">Travel</string>
+    <string name="dua_filter_all">All</string>
+    <string name="dua_filter_content_description">Filter by category</string>
     <string name="dua_delete_confirm_title">Delete this dua?</string>
     <string name="dua_delete_confirm_body">This cannot be undone.</string>
     <string name="dua_delete_confirm_action">Delete</string>

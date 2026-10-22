@@ -18,7 +18,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -64,6 +67,14 @@ fun DuaScreen(
     val lang = LocalAppLanguage.current
 
     var deleteConfirmTarget by remember { mutableStateOf<DuaEntity?>(null) }
+    var categoryFilter by remember { mutableStateOf<String?>(null) }
+    var filterMenuOpen by remember { mutableStateOf(false) }
+
+    val visibleCategories = if (categoryFilter == null) {
+        state.categories
+    } else {
+        state.categories.filter { it.category == categoryFilter }
+    }
 
     Column(
         modifier = Modifier
@@ -123,13 +134,65 @@ fun DuaScreen(
             }
         }
 
+        // ---- Category filter dropdown ----
+        Box(modifier = Modifier.padding(top = 12.dp)) {
+            Box(
+                modifier = Modifier
+                    .clip(PillShape)
+                    .background(colors.surface)
+                    .clickable(
+                        role = Role.Button,
+                        onClickLabel = stringResource(R.string.dua_filter_content_description),
+                    ) { filterMenuOpen = true }
+                    .minTapTarget()
+                    .testTag("dua_filter_button")
+                    .padding(horizontal = 14.dp, vertical = 10.dp),
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = categoryFilter?.let { categoryLabel(it) }
+                            ?: stringResource(R.string.dua_filter_all),
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colors.text,
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = colors.faint,
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .size(16.dp),
+                    )
+                }
+            }
+            DropdownMenu(expanded = filterMenuOpen, onDismissRequest = { filterMenuOpen = false }) {
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.dua_filter_all)) },
+                    onClick = {
+                        categoryFilter = null
+                        filterMenuOpen = false
+                    },
+                )
+                state.categories.forEach { categoryUi ->
+                    DropdownMenuItem(
+                        text = { Text(categoryLabel(categoryUi.category)) },
+                        onClick = {
+                            categoryFilter = categoryUi.category
+                            filterMenuOpen = false
+                        },
+                    )
+                }
+            }
+        }
+
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = 12.dp),
         ) {
-            state.categories.forEach { categoryUi ->
+            visibleCategories.forEach { categoryUi ->
                 item(key = "header_${categoryUi.category}") {
                     Text(
                         text = categoryLabel(categoryUi.category),

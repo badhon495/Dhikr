@@ -84,6 +84,8 @@
     <string name="dua_category_nature">প্রকৃতি</string>
     <string name="dua_category_seeing">দেখা</string>
     <string name="dua_category_travel">যাত্রা</string>
+    <string name="dua_filter_all">সব</string>
+    <string name="dua_filter_content_description">বিভাগ অনুযায়ী ফিল্টার করুন</string>
     <string name="dua_delete_confirm_title">এই দোয়া মুছবেন?</string>
     <string name="dua_delete_confirm_body">এটি পূর্বাবস্থায় ফেরানো যাবে না।</string>
     <string name="dua_delete_confirm_action">মুছুন</string>
