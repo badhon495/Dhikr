@@ -12,6 +12,7 @@ import com.dhikr.app.core.ai.BenefitsLanguage
 import com.dhikr.app.core.prayer.AsrMethod
 import com.dhikr.app.core.prayer.CalculationMethod
 import com.dhikr.app.core.prayer.DEFAULT_PRAYER_OFFSET_MINUTES
+import com.dhikr.app.core.prayer.Prayer
 import com.dhikr.app.core.prayer.PrayerSettings
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -71,6 +72,8 @@ class AppPreferencesRepository(private val context: Context) {
     private val prayerAsrKey = stringPreferencesKey("prayer_asr")
     private val prayerMaskKey = intPreferencesKey("prayer_reminders_mask")
     private val prayerOffsetKey = intPreferencesKey("prayer_offset_minutes")
+    private val fastingReminderKey = booleanPreferencesKey("fasting_reminder_enabled")
+    private fun prayerRoutineKey(prayer: Prayer) = stringPreferencesKey("prayer_routine_${prayer.name}")
     private val hasSeenOnboardingKey = booleanPreferencesKey("has_seen_onboarding")
     private val dimScreenEnabledKey = booleanPreferencesKey("dim_screen_enabled")
     private val dimBrightnessLevelKey = floatPreferencesKey("dim_brightness_level")
@@ -230,7 +233,12 @@ class AppPreferencesRepository(private val context: Context) {
             asr = AsrMethod.entries.firstOrNull { it.name == prefs[prayerAsrKey] } ?: AsrMethod.HANAFI,
             remindersMask = prefs[prayerMaskKey] ?: 0,
             offsetMinutes = prefs[prayerOffsetKey] ?: DEFAULT_PRAYER_OFFSET_MINUTES,
+            routineIds = Prayer.entries.mapNotNull { p -> prefs[prayerRoutineKey(p)]?.let { p to it } }.toMap(),
         )
+    }
+
+    suspend fun setPrayerRoutine(prayer: Prayer, routineId: String) {
+        context.preferencesDataStore.edit { it[prayerRoutineKey(prayer)] = routineId }
     }
 
     suspend fun setPrayerLocation(latitude: Double, longitude: Double, name: String?) {
@@ -255,6 +263,13 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setPrayerOffsetMinutes(value: Int) {
         context.preferencesDataStore.edit { it[prayerOffsetKey] = value.coerceIn(0, 120) }
+    }
+
+    /** Evening-before reminder for Sunnah fasts; off by default. */
+    val fastingReminderEnabled = context.preferencesDataStore.data.map { it[fastingReminderKey] ?: false }
+
+    suspend fun setFastingReminderEnabled(value: Boolean) {
+        context.preferencesDataStore.edit { it[fastingReminderKey] = value }
     }
 
     /** Language the AI benefits write-up is generated in. Absent/unknown falls
@@ -340,6 +355,7 @@ class AppPreferencesRepository(private val context: Context) {
             counterTextSize = counterTextSize.first(),
             hijriAdjustDays = hijriAdjustDays.first(),
             prayerSettings = prayerSettings.first(),
+            fastingReminderEnabled = fastingReminderEnabled.first(),
             benefitsLanguage = benefitsLanguage.first(),
             benefitsPromptOverride = benefitsPromptOverride.first(),
         )
@@ -356,6 +372,15 @@ class AppPreferencesRepository(private val context: Context) {
         counterScript = counterScript.first(),
         benefitsLanguage = benefitsLanguage.first(),
         benefitsPromptOverride = benefitsPromptOverride.first(),
+        autoLightStart = autoLightStart.first(),
+        autoDarkStart = autoDarkStart.first(),
+        keepScreenOn = keepScreenOn.first(),
+        volumeKeyCounting = volumeKeyCounting.first(),
+        weeklyGoalTarget = weeklyGoalTarget.first(),
+        counterTextSize = counterTextSize.first(),
+        hijriAdjustDays = hijriAdjustDays.first(),
+        prayerSettings = prayerSettings.first(),
+        fastingReminderEnabled = fastingReminderEnabled.first(),
     )
 
     /**
@@ -373,8 +398,40 @@ class AppPreferencesRepository(private val context: Context) {
         counterScript: CounterScript?,
         benefitsLanguage: BenefitsLanguage?,
         benefitsPromptOverride: String?,
+        autoLightStart: Int? = null,
+        autoDarkStart: Int? = null,
+        keepScreenOn: Boolean? = null,
+        volumeKeyCounting: Boolean? = null,
+        weeklyGoalTarget: Int? = null,
+        counterTextSize: CounterTextSize? = null,
+        hijriAdjustDays: Int? = null,
+        prayerSettings: PrayerSettings? = null,
+        fastingReminderEnabled: Boolean? = null,
     ) {
         context.preferencesDataStore.edit { prefs ->
+            fastingReminderEnabled?.let { prefs[fastingReminderKey] = it }
+            autoLightStart?.let { prefs[autoLightStartKey] = it.coerceIn(0, 1439) }
+            autoDarkStart?.let { prefs[autoDarkStartKey] = it.coerceIn(0, 1439) }
+            keepScreenOn?.let { prefs[keepScreenOnKey] = it }
+            volumeKeyCounting?.let { prefs[volumeKeyCountingKey] = it }
+            weeklyGoalTarget?.let { prefs[weeklyGoalKey] = it.coerceAtLeast(0) }
+            counterTextSize?.let { prefs[counterTextSizeKey] = it.name }
+            hijriAdjustDays?.let { prefs[hijriAdjustKey] = it.coerceIn(-2, 2) }
+            prayerSettings?.let { p ->
+                val lat = p.latitude
+                val lng = p.longitude
+                if (lat != null && lng != null) {
+                    prefs[prayerLatKey] = lat.coerceIn(-90.0, 90.0)
+                    prefs[prayerLngKey] = lng.coerceIn(-180.0, 180.0)
+                    val name = p.locationName
+                    if (name == null) prefs.remove(prayerLocationNameKey) else prefs[prayerLocationNameKey] = name
+                }
+                prefs[prayerMethodKey] = p.method.name
+                prefs[prayerAsrKey] = p.asr.name
+                prefs[prayerMaskKey] = p.remindersMask and 0x1F
+                prefs[prayerOffsetKey] = p.offsetMinutes.coerceIn(0, 120)
+                p.routineIds.forEach { (prayer, id) -> prefs[prayerRoutineKey(prayer)] = id }
+            }
             dailyGoalTarget?.let { prefs[dailyGoalKey] = it }
             themeMode?.let { prefs[themeModeKey] = it.name }
             hapticMode?.let { prefs[hapticModeKey] = it.name }
@@ -405,6 +462,7 @@ data class SettingsInitialValues(
     val counterTextSize: CounterTextSize,
     val hijriAdjustDays: Int,
     val prayerSettings: PrayerSettings,
+    val fastingReminderEnabled: Boolean,
     val benefitsLanguage: BenefitsLanguage,
     val benefitsPromptOverride: String?,
 )
@@ -419,4 +477,13 @@ data class PreferencesSnapshot(
     val counterScript: CounterScript,
     val benefitsLanguage: BenefitsLanguage,
     val benefitsPromptOverride: String?,
+    val autoLightStart: Int,
+    val autoDarkStart: Int,
+    val keepScreenOn: Boolean,
+    val volumeKeyCounting: Boolean,
+    val weeklyGoalTarget: Int,
+    val counterTextSize: CounterTextSize,
+    val hijriAdjustDays: Int,
+    val prayerSettings: PrayerSettings,
+    val fastingReminderEnabled: Boolean,
 )

@@ -296,16 +296,21 @@ fun HomeScreen(
 }
 
 /**
- * A gentle note for special times — Ramadan, the days of Dhul Hijjah, Friday —
+ * A gentle note for special times (see [IslamicSeason]) —
  * with a shortcut to the fitting dhikr when there is one.
  */
 @Composable
 private fun SeasonBanner(season: IslamicSeason, onOpen: (() -> Unit)?) {
     val colors = DhikrTheme.colors
     val (title, body) = when (season) {
+        IslamicSeason.LAST_TEN_NIGHTS -> R.string.home_season_last_ten_title to R.string.home_season_last_ten_body
         IslamicSeason.RAMADAN -> R.string.home_season_ramadan_title to R.string.home_season_ramadan_body
+        IslamicSeason.ARAFAH -> R.string.home_season_arafah_title to R.string.home_season_arafah_body
         IslamicSeason.DHUL_HIJJAH -> R.string.home_season_dhul_hijjah_title to R.string.home_season_dhul_hijjah_body
+        IslamicSeason.ASHURA -> R.string.home_season_ashura_title to R.string.home_season_ashura_body
         IslamicSeason.FRIDAY -> R.string.home_season_friday_title to R.string.home_season_friday_body
+        IslamicSeason.WHITE_DAYS -> R.string.home_season_white_days_title to R.string.home_season_white_days_body
+        IslamicSeason.FAST_TOMORROW -> R.string.home_season_fast_tomorrow_title to R.string.home_season_fast_tomorrow_body
     }
     Column(
         modifier = Modifier

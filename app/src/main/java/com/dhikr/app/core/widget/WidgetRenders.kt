@@ -73,6 +73,9 @@ object WidgetRenders {
         session: CounterSessionState?,
         tasbihName: String?,
         target: Int,
+        // What the "x / y" shows; differs from session.count for a one-tap
+        // dhikr (see CounterDisplay). Defaults to the raw in-lap count.
+        count: Int = session?.count ?: 0,
     ): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_counter)
         val isRoutine = session?.routineId != null
@@ -92,9 +95,9 @@ object WidgetRenders {
         views.setTextViewText(R.id.widget_counter_name, tasbihName)
         views.setTextViewText(
             R.id.widget_counter_value,
-            formatCountOfTarget(session.count, target),
+            formatCountOfTarget(count, target),
         )
-        val p = clampProgress(session.count, target)
+        val p = clampProgress(count, target)
         views.setProgressBar(R.id.widget_counter_progress, p.max, p.progress, false)
 
         val bodyIntent = if (isRoutine) {

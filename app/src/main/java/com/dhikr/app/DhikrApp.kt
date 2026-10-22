@@ -56,7 +56,9 @@ import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.CounterTextSize
+import com.dhikr.app.core.prayer.PrayerSettings
 import com.dhikr.app.core.shortcuts.AppShortcuts
+import com.dhikr.app.feature.qibla.QiblaScreen
 import kotlinx.coroutines.flow.combine
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
 import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
@@ -116,6 +118,7 @@ private const val ROUTE_ROUTINES = "routines"
 private const val ROUTE_ROUTINES_IMPORT = "routines/import"
 private const val ROUTE_ROUTINE_EDITOR = "routines/editor?id={id}"
 private const val ROUTE_SETTINGS = "settings"
+private const val ROUTE_QIBLA = "qibla"
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -512,6 +515,17 @@ fun DhikrApp(
                         viewModel = viewModel,
                         backupViewModel = backupViewModel,
                         scrollToTopSignal = signalOf(ROUTE_SETTINGS),
+                        onOpenQibla = { navController.navigate(ROUTE_QIBLA) },
+                    )
+                }
+                composable(ROUTE_QIBLA) {
+                    val prayerSettings by preferencesRepository.prayerSettings
+                        .collectAsState(initial = PrayerSettings())
+                    QiblaScreen(
+                        latitude = prayerSettings.latitude,
+                        longitude = prayerSettings.longitude,
+                        locationName = prayerSettings.locationName,
+                        onBack = { navController.popBackStack() },
                     )
                 }
             }

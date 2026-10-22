@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import com.dhikr.app.DhikrApplication
+import com.dhikr.app.core.counter.CounterDisplay
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.SessionRepository
@@ -50,10 +51,14 @@ class CounterWidgetProvider : AppWidgetProvider() {
                 } else {
                     null
                 }
-                val target = when {
-                    session == null -> 0
-                    session.routineId != null -> routineStepTarget ?: 0
-                    else -> tasbih?.lapTarget ?: 0
+                // Plain sessions show what the counter screen shows
+                // (CounterDisplay); a routine step is a single-lap engine, so
+                // its raw count against the step target is already right.
+                val (shownCount, target) = when {
+                    session == null -> 0 to 0
+                    session.routineId != null -> session.count to (routineStepTarget ?: 0)
+                    tasbih == null -> session.count to 0
+                    else -> CounterDisplay.progress(session.count, session.lap, tasbih.lapTarget, tasbih.lapCount)
                 }
                 // A routine session whose routine/step can't be resolved falls
                 // back to the no-session state (null name -> "no session" body).
@@ -67,6 +72,7 @@ class CounterWidgetProvider : AppWidgetProvider() {
                     session = session,
                     tasbihName = resolvedName,
                     target = target,
+                    count = shownCount,
                 )
                 ids.forEach { manager.updateAppWidget(it, views) }
             } finally {

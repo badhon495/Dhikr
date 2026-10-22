@@ -90,7 +90,8 @@ class CounterTileService : TileService() {
         ).getById(session.activeDhikrId) ?: return null
         return LiveCounter.Status(
             title = tasbih.displayName(AppLanguage.current),
-            subtitle = "${session.count}/${tasbih.lapTarget}",
+            subtitle = CounterDisplay.progress(session.count, session.lap, tasbih.lapTarget, tasbih.lapCount)
+                .let { (count, target) -> "$count/$target" },
         )
     }
 

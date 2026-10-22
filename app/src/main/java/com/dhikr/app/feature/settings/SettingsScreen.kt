@@ -77,6 +77,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel,
     backupViewModel: BackupViewModel,
     scrollToTopSignal: Int = 0,
+    onOpenQibla: () -> Unit = {},
 ) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
@@ -301,9 +302,12 @@ fun SettingsScreen(
 
         // ---- Prayer reminders + Hijri date ----
         SettingsSection(stringResource(R.string.settings_prayer)) {
-            PrayerSettingsSection(state, viewModel)
+            PrayerSettingsSection(state, viewModel, onOpenQibla)
             Column(modifier = Modifier.padding(top = 18.dp)) {
                 HijriAdjustRow(state, viewModel)
+            }
+            Column(modifier = Modifier.padding(top = 14.dp)) {
+                FastingReminderRow(state, viewModel)
             }
         }
 

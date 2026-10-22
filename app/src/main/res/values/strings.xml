@@ -477,7 +477,7 @@
     <string name="home_season_dhul_hijjah_title">The days of Dhul Hijjah</string>
     <string name="home_season_dhul_hijjah_body">Increase in tahlil, takbir and tahmid in these blessed days.</string>
     <string name="home_season_friday_title">Jumu\'ah Mubarak</string>
-    <string name="home_season_friday_body">Send plenty of salawat upon the Prophet ﷺ today.</string>
+    <string name="home_season_friday_body">Send plenty of salawat upon the Prophet ﷺ and read Surah al-Kahf today.</string>
     <string name="home_season_action">Start counting</string>
 
     <!-- Launcher shortcuts -->
@@ -485,4 +485,39 @@
     <string name="shortcut_counter_long">Continue counting</string>
     <string name="shortcut_insights_short">Insights</string>
     <string name="shortcut_insights_long">Open insights</string>
+
+    <!-- 1.4: per-prayer routines, Qibla, special days, fasting reminder -->
+    <string name="settings_qibla">Qibla direction</string>
+    <string name="settings_qibla_open">Open</string>
+    <string name="settings_prayer_routine">Opens: %1$s</string>
+    <string name="settings_prayer_routine_missing">After Salah</string>
+    <string name="settings_prayer_routine_dialog">After %1$s, open</string>
+    <string name="settings_fasting_reminder">Sunnah fasting reminder</string>
+    <string name="settings_fasting_reminder_desc">At 8 pm, a reminder when tomorrow is Monday, Thursday, a white day, Arafah or Ashura</string>
+    <string name="fasting_notification_title">Sunnah fast tomorrow</string>
+    <string name="fasting_reason_arafah">Tomorrow is the Day of Arafah.</string>
+    <string name="fasting_reason_ashura">Tomorrow is one of the days of Ashura.</string>
+    <string name="fasting_reason_white_days">Tomorrow is one of the white days (13th–15th).</string>
+    <string name="fasting_reason_monday">Tomorrow is Monday.</string>
+    <string name="fasting_reason_thursday">Tomorrow is Thursday.</string>
+    <string name="home_season_last_ten_title">The last ten nights</string>
+    <string name="home_season_last_ten_body">Seek Laylat al-Qadr — ask Allah for His pardon in these nights.</string>
+    <string name="home_season_arafah_title">The Day of Arafah</string>
+    <string name="home_season_arafah_body">The best dua is the dua of Arafah. Fasting today is Sunnah for those not on Hajj.</string>
+    <string name="home_season_ashura_title">Ashura</string>
+    <string name="home_season_ashura_body">Fasting the 9th and 10th of Muharram is Sunnah.</string>
+    <string name="home_season_white_days_title">The white days</string>
+    <string name="home_season_white_days_body">The 13th, 14th and 15th of the month — days of Sunnah fasting.</string>
+    <string name="home_season_fast_tomorrow_title">Sunnah fast tomorrow</string>
+    <string name="home_season_fast_tomorrow_body">Tomorrow is a day of Sunnah fasting, if you are able.</string>
+    <string name="qibla_title">Qibla</string>
+    <string name="qibla_no_location">Set a location under Settings → Prayer reminders to see the Qibla direction.</string>
+    <string name="qibla_bearing">%1$s° from true north</string>
+    <string name="qibla_no_sensor">This phone has no compass sensor. Use the bearing above with any compass.</string>
+    <string name="qibla_waiting">Reading the compass…</string>
+    <string name="qibla_on_target">Facing the Qibla</string>
+    <string name="qibla_turn_right">Turn right %1$s°</string>
+    <string name="qibla_turn_left">Turn left %1$s°</string>
+    <string name="qibla_calibrate">Compass accuracy is low — move the phone in a figure-of-eight to calibrate.</string>
+    <string name="qibla_note">Hold the phone flat, away from metal and magnets. Phone compasses can be off by several degrees.</string>
 </resources>

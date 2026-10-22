@@ -4,6 +4,10 @@ import com.dhikr.app.core.database.entity.RoutineEntity
 import com.dhikr.app.core.database.entity.RoutineStepEntity
 import com.dhikr.app.core.database.entity.SessionEntity
 import com.dhikr.app.core.database.entity.TasbihEntity
+import com.dhikr.app.core.prayer.AsrMethod
+import com.dhikr.app.core.prayer.CalculationMethod
+import com.dhikr.app.core.prayer.Prayer
+import com.dhikr.app.core.prayer.PrayerSettings
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -163,7 +167,68 @@ data class BackupPreferences(
     @SerialName("counterScript") val counterScript: String? = null,
     @SerialName("benefitsLanguage") val benefitsLanguage: String? = null,
     @SerialName("benefitsPromptOverride") val benefitsPromptOverride: String? = null,
+    // Added in app 1.4. All optional: older backups simply lack them, and older
+    // app versions ignore them (ignoreUnknownKeys), so no format version bump.
+    @SerialName("autoLightStart") val autoLightStart: Int? = null,
+    @SerialName("autoDarkStart") val autoDarkStart: Int? = null,
+    @SerialName("keepScreenOn") val keepScreenOn: Boolean? = null,
+    @SerialName("volumeKeyCounting") val volumeKeyCounting: Boolean? = null,
+    @SerialName("weeklyGoalTarget") val weeklyGoalTarget: Int? = null,
+    @SerialName("counterTextSize") val counterTextSize: String? = null,
+    @SerialName("hijriAdjustDays") val hijriAdjustDays: Int? = null,
+    @SerialName("prayer") val prayer: BackupPrayerSettings? = null,
+    @SerialName("fastingReminder") val fastingReminder: Boolean? = null,
 )
+
+@Serializable
+data class BackupPrayerSettings(
+    @SerialName("latitude") val latitude: Double? = null,
+    @SerialName("longitude") val longitude: Double? = null,
+    @SerialName("locationName") val locationName: String? = null,
+    @SerialName("method") val method: String? = null,
+    @SerialName("asr") val asr: String? = null,
+    @SerialName("remindersMask") val remindersMask: Int? = null,
+    @SerialName("offsetMinutes") val offsetMinutes: Int? = null,
+    /** Prayer name -> routine id. */
+    @SerialName("routines") val routines: Map<String, String>? = null,
+) {
+    /** Null when there's nothing worth restoring (no location set). Unknown
+     *  method/asr names fall back to the app defaults. */
+    fun toPrayerSettings(): PrayerSettings? {
+        if (latitude == null || longitude == null) return null
+        val defaults = PrayerSettings()
+        return PrayerSettings(
+            latitude = latitude,
+            longitude = longitude,
+            locationName = locationName,
+            method = CalculationMethod.entries.firstOrNull { it.name == method } ?: defaults.method,
+            asr = AsrMethod.entries.firstOrNull { it.name == asr } ?: defaults.asr,
+            remindersMask = remindersMask ?: 0,
+            offsetMinutes = offsetMinutes ?: defaults.offsetMinutes,
+            routineIds = routines.orEmpty().mapNotNull { (name, id) ->
+                Prayer.entries.firstOrNull { it.name == name }?.let { it to id }
+            }.toMap(),
+        )
+    }
+
+    companion object {
+        fun from(settings: PrayerSettings): BackupPrayerSettings? =
+            if (!settings.hasLocation) {
+                null
+            } else {
+                BackupPrayerSettings(
+                    latitude = settings.latitude,
+                    longitude = settings.longitude,
+                    locationName = settings.locationName,
+                    method = settings.method.name,
+                    asr = settings.asr.name,
+                    remindersMask = settings.remindersMask,
+                    offsetMinutes = settings.offsetMinutes,
+                    routines = settings.routineIds.mapKeys { it.key.name }.takeIf { it.isNotEmpty() },
+                )
+            }
+    }
+}
 
 /** Summary of what a restore actually wrote, surfaced to the user. */
 data class RestoreResult(

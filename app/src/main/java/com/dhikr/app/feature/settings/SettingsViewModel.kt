@@ -8,7 +8,10 @@ import com.dhikr.app.core.ai.BenefitsLanguage
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.ai.SecureKeyStore
 import com.dhikr.app.core.ai.defaultBenefitsTemplate
+import com.dhikr.app.DhikrApplication
 import com.dhikr.app.core.counter.AutoCounterSensorListener
+import com.dhikr.app.core.fasting.FastingReminder
+import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.datastore.CounterTextSize
 import com.dhikr.app.core.prayer.AsrMethod
 import com.dhikr.app.core.prayer.CalculationMethod
@@ -57,6 +60,9 @@ data class SettingsUiState(
     val prayerSettings: PrayerSettings = PrayerSettings(),
     // Today's computed prayer times, shown beside each reminder toggle.
     val prayerTimesToday: Map<Prayer, Long> = emptyMap(),
+    // (routine id, display name) choices for each prayer's reminder.
+    val routineOptions: List<Pair<String, String>> = emptyList(),
+    val fastingReminderEnabled: Boolean = false,
     val benefitsLanguage: BenefitsLanguage = BenefitsLanguage.ENGLISH,
     // null = no user override; the built-in template for [benefitsLanguage] is used.
     val benefitsPromptOverride: String? = null,
@@ -116,6 +122,7 @@ class SettingsViewModel(
                 hijriAdjustDays = p.hijriAdjustDays,
                 prayerSettings = p.prayerSettings,
                 prayerTimesToday = todayTimes(p.prayerSettings),
+                fastingReminderEnabled = p.fastingReminderEnabled,
                 benefitsLanguage = p.benefitsLanguage,
                 benefitsPromptOverride = p.benefitsPromptOverride,
                 appVersion = appVersion,
@@ -165,6 +172,10 @@ class SettingsViewModel(
             .combine(preferencesRepository.prayerSettings) { state, v ->
                 state.copy(prayerSettings = v, prayerTimesToday = todayTimes(v))
             }
+            .combine(preferencesRepository.fastingReminderEnabled) { state, v ->
+                state.copy(fastingReminderEnabled = v)
+            }
+            .combine(routineOptionsFlow()) { state, v -> state.copy(routineOptions = v) }
             .combine(preferencesRepository.benefitsLanguage) { state, benefitsLanguage ->
                 state.copy(benefitsLanguage = benefitsLanguage)
             }
@@ -183,6 +194,24 @@ class SettingsViewModel(
             .distinctUntilChanged()
             .onEach { prayerScheduler.apply(it) }
             .launchIn(viewModelScope)
+        preferencesRepository.fastingReminderEnabled
+            .distinctUntilChanged()
+            .onEach { FastingReminder.apply(appContext, it) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun routineOptionsFlow() =
+        (appContext as DhikrApplication).database.routineDao().observeAllWithSteps()
+            .combine(AppLanguage.state) { routines, lang ->
+                routines.map { it.routine.id to it.routine.displayName(lang) }
+            }
+
+    fun onPrayerRoutineChange(prayer: Prayer, routineId: String) {
+        viewModelScope.launch { preferencesRepository.setPrayerRoutine(prayer, routineId) }
+    }
+
+    fun onFastingReminderChange(enabled: Boolean) {
+        viewModelScope.launch { preferencesRepository.setFastingReminderEnabled(enabled) }
     }
 
     private val prayerScheduler get() = PrayerReminderScheduler(appContext)

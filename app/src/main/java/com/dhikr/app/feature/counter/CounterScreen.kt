@@ -83,6 +83,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.dhikr.app.MainActivity
 import com.dhikr.app.R
 import com.dhikr.app.core.counter.AutoCounterSensorListener
+import com.dhikr.app.core.counter.CounterDisplay
 import com.dhikr.app.core.counter.LiveCounter
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.CounterTextSize
@@ -268,7 +269,8 @@ fun CounterScreen(
                 val s = liveState
                 LiveCounter.Status(
                     title = s.dhikr.displayName(liveLang),
-                    subtitle = "${s.count}/${s.dhikr.lapTarget}",
+                    subtitle = CounterDisplay.progress(s.count, s.lap, s.dhikr.lapTarget, s.totalLaps)
+                        .let { (count, target) -> "$count/$target" },
                 )
             },
         )

@@ -7,6 +7,7 @@ import com.dhikr.app.DhikrApplication
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
+import com.dhikr.app.core.fasting.FastingReminder
 import com.dhikr.app.core.prayer.PrayerReminderScheduler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,9 +46,9 @@ class BootReceiver : BroadcastReceiver() {
         scope.launch {
             try {
                 scheduler.rescheduleAll(routineRepository, tasbihRepository)
-                PrayerReminderScheduler(context.applicationContext).apply(
-                    AppPreferencesRepository(context.applicationContext).prayerSettings.first(),
-                )
+                val prefs = AppPreferencesRepository(context.applicationContext)
+                PrayerReminderScheduler(context.applicationContext).apply(prefs.prayerSettings.first())
+                FastingReminder.apply(context.applicationContext, prefs.fastingReminderEnabled.first())
             } finally {
                 pending.finish()
             }

@@ -5,6 +5,7 @@ import com.dhikr.app.core.database.AppDatabase
 import com.dhikr.app.core.ai.BenefitsLanguage
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
+import com.dhikr.app.core.datastore.CounterTextSize
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.core.localization.AppLanguage
@@ -93,6 +94,15 @@ class BackupRepository(
                 counterScript = prefs.counterScript.name,
                 benefitsLanguage = prefs.benefitsLanguage.name,
                 benefitsPromptOverride = prefs.benefitsPromptOverride,
+                autoLightStart = prefs.autoLightStart,
+                autoDarkStart = prefs.autoDarkStart,
+                keepScreenOn = prefs.keepScreenOn,
+                volumeKeyCounting = prefs.volumeKeyCounting,
+                weeklyGoalTarget = prefs.weeklyGoalTarget,
+                counterTextSize = prefs.counterTextSize.name,
+                hijriAdjustDays = prefs.hijriAdjustDays,
+                prayer = BackupPrayerSettings.from(prefs.prayerSettings),
+                fastingReminder = prefs.fastingReminderEnabled,
             ),
         )
         return json.encodeToString(BackupFile.serializer(), file)
@@ -149,6 +159,16 @@ class BackupRepository(
                 counterScript = file.preferences.counterScript.toCounterScript(),
                 benefitsLanguage = file.preferences.benefitsLanguage.toBenefitsLanguage(),
                 benefitsPromptOverride = file.preferences.benefitsPromptOverride?.takeIf { it.isNotBlank() },
+                autoLightStart = file.preferences.autoLightStart,
+                autoDarkStart = file.preferences.autoDarkStart,
+                keepScreenOn = file.preferences.keepScreenOn,
+                volumeKeyCounting = file.preferences.volumeKeyCounting,
+                weeklyGoalTarget = file.preferences.weeklyGoalTarget,
+                counterTextSize = CounterTextSize.entries
+                    .firstOrNull { it.name == file.preferences.counterTextSize },
+                hijriAdjustDays = file.preferences.hijriAdjustDays,
+                prayerSettings = file.preferences.prayer?.toPrayerSettings(),
+                fastingReminderEnabled = file.preferences.fastingReminder,
             )
         }.isSuccess
 
@@ -182,6 +202,7 @@ class BackupRepository(
         ThemeMode.LIGHT.name -> ThemeMode.LIGHT
         ThemeMode.DARK.name -> ThemeMode.DARK
         ThemeMode.SYSTEM.name -> ThemeMode.SYSTEM
+        ThemeMode.AUTO_TIME.name -> ThemeMode.AUTO_TIME
         else -> null
     }
 

@@ -56,11 +56,16 @@ import java.util.Locale
  * times are computed on-device.
  */
 @Composable
-internal fun PrayerSettingsSection(state: SettingsUiState, viewModel: SettingsViewModel) {
+internal fun PrayerSettingsSection(
+    state: SettingsUiState,
+    viewModel: SettingsViewModel,
+    onOpenQibla: () -> Unit,
+) {
     val colors = DhikrTheme.colors
     val context = LocalContext.current
     val settings = state.prayerSettings
     var showLocationDialog by rememberSaveable { mutableStateOf(false) }
+    var routinePickerFor by rememberSaveable { mutableStateOf<Prayer?>(null) }
     var permissionDenied by remember { mutableStateOf(false) }
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -109,6 +114,29 @@ internal fun PrayerSettingsSection(state: SettingsUiState, viewModel: SettingsVi
             )
         }
         return
+    }
+
+    // Qibla direction (needs the location above, nothing else).
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+            .clickable(role = Role.Button, onClick = onOpenQibla)
+            .minTapTarget(),
+    ) {
+        Text(
+            stringResource(R.string.settings_qibla),
+            fontSize = 14.sp,
+            color = colors.text,
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            stringResource(R.string.settings_qibla_open),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = colors.sage,
+        )
     }
 
     SubLabel(stringResource(R.string.settings_prayer_method))
@@ -162,6 +190,22 @@ internal fun PrayerSettingsSection(state: SettingsUiState, viewModel: SettingsVi
                     viewModel.onPrayerReminderToggle(prayer, enabled)
                 },
             )
+            if (settings.isEnabled(prayer)) {
+                val routineId = settings.routineFor(prayer)
+                val routineName = state.routineOptions.firstOrNull { it.first == routineId }?.second
+                    ?: stringResource(R.string.settings_prayer_routine_missing)
+                Text(
+                    stringResource(R.string.settings_prayer_routine, routineName),
+                    fontSize = 12.5.sp,
+                    color = colors.sage,
+                    // No rounded clip: on a single short line it bites into the
+                    // first letter (same issue SwitchRow documents).
+                    modifier = Modifier
+                        .clickable(role = Role.Button) { routinePickerFor = prayer }
+                        .minTapTarget()
+                        .padding(vertical = 4.dp),
+                )
+            }
         }
         if (permissionDenied) {
             Text(
@@ -188,6 +232,71 @@ internal fun PrayerSettingsSection(state: SettingsUiState, viewModel: SettingsVi
             onDismiss = { showLocationDialog = false },
         )
     }
+
+    routinePickerFor?.let { prayer ->
+        RoutinePickerDialog(
+            title = stringResource(ReminderNotifications.prayerNameRes(prayer)),
+            options = state.routineOptions,
+            selectedId = settings.routineFor(prayer),
+            onPick = { id ->
+                viewModel.onPrayerRoutineChange(prayer, id)
+                routinePickerFor = null
+            },
+            onDismiss = { routinePickerFor = null },
+        )
+    }
+}
+
+/** Evening-before reminder for Sunnah fasts; independent of the location. */
+@Composable
+internal fun FastingReminderRow(state: SettingsUiState, viewModel: SettingsViewModel) {
+    val context = LocalContext.current
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) {}
+    SwitchRow(
+        title = stringResource(R.string.settings_fasting_reminder),
+        description = stringResource(R.string.settings_fasting_reminder_desc),
+        checked = state.fastingReminderEnabled,
+        onCheckedChange = { enabled ->
+            if (enabled && !ReminderNotifications.hasPermission(context)) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+            viewModel.onFastingReminderChange(enabled)
+        },
+    )
+}
+
+@Composable
+private fun RoutinePickerDialog(
+    title: String,
+    options: List<Pair<String, String>>,
+    selectedId: String,
+    onPick: (String) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.settings_prayer_routine_dialog, title)) },
+        containerColor = colors.card,
+        titleContentColor = colors.text,
+        textContentColor = colors.dim,
+        shape = DialogShape,
+        text = {
+            LazyColumn(modifier = Modifier.heightIn(max = 360.dp)) {
+                items(options, key = { it.first }) { (id, name) ->
+                    LocationOption(name, accent = id == selectedId) { onPick(id) }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.settings_prayer_location_cancel), color = colors.dim)
+            }
+        },
+    )
 }
 
 /** Hijri date offset, -2..+2 days, to match local moon sighting. */

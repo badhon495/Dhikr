@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 /**
  * Fires shortly after a prayer: posts the "after <prayer>" notification
- * (opening the After Salah routine when it still exists) and re-arms that
+ * (opening that prayer's chosen routine when it still exists) and re-arms that
  * prayer's next occurrence.
  */
 class PrayerReminderReceiver : BroadcastReceiver() {
@@ -29,8 +29,11 @@ class PrayerReminderReceiver : BroadcastReceiver() {
                 val settings = AppPreferencesRepository(context.applicationContext).prayerSettings.first()
                 if (settings.hasLocation && settings.isEnabled(prayer)) {
                     val app = context.applicationContext as DhikrApplication
-                    val routineId = AFTER_SALAH_ROUTINE_ID
-                        .takeIf { app.database.routineDao().getRoutineRaw(it) != null }
+                    // The chosen routine, else After Salah, else (both
+                    // deleted) just open the app.
+                    val dao = app.database.routineDao()
+                    val routineId = listOf(settings.routineFor(prayer), DEFAULT_PRAYER_ROUTINE_ID)
+                        .firstOrNull { dao.getRoutineRaw(it) != null }
                     ReminderNotifications.postPrayer(context, prayer, routineId)
                 }
                 // Re-arm (or cancel, if the reminder was switched off meanwhile).
@@ -43,7 +46,5 @@ class PrayerReminderReceiver : BroadcastReceiver() {
 
     companion object {
         const val EXTRA_PRAYER = "com.dhikr.app.extra.PRAYER"
-        /** Preset routine seeded in SeedData. */
-        const val AFTER_SALAH_ROUTINE_ID = "after_salah"
     }
 }

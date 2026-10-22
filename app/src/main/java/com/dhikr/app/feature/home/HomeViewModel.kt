@@ -3,6 +3,7 @@ package com.dhikr.app.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.dhikr.app.core.counter.CounterDisplay
 import com.dhikr.app.core.database.HistoryRepository
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
@@ -105,17 +106,25 @@ class HomeViewModel(
                 val tasbihNamesById = allTasbihs.associate { it.id to it.displayName(lang) }
                 val continueInfo = inputs.session?.let { s ->
                     tasbihRepository.getById(s.activeDhikrId)?.let { tasbih ->
+                        val (count, target) = CounterDisplay.progress(s.count, s.lap, tasbih.lapTarget, tasbih.lapCount)
                         ContinueSessionInfo(
                             tasbihName = tasbih.displayName(lang),
-                            count = s.count,
-                            target = tasbih.lapTarget,
+                            count = count,
+                            target = target,
                         )
                     }
                 }
                 val now = System.currentTimeMillis()
                 val hijri = runCatching { HijriCalendar.of(now, hijriAdjust) }.getOrNull()
-                val season = hijri?.let {
-                    IslamicSeasons.detect(it, Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+                val tomorrowMillis = now + java.util.concurrent.TimeUnit.DAYS.toMillis(1)
+                val tomorrowHijri = runCatching { HijriCalendar.of(tomorrowMillis, hijriAdjust) }.getOrNull()
+                val season = if (hijri != null && tomorrowHijri != null) {
+                    val cal = Calendar.getInstance()
+                    val dow = cal.get(Calendar.DAY_OF_WEEK)
+                    cal.add(Calendar.DAY_OF_MONTH, 1)
+                    IslamicSeasons.detect(hijri, dow, tomorrowHijri, cal.get(Calendar.DAY_OF_WEEK))
+                } else {
+                    null
                 }
                 val seasonTasbihId = SEASON_TASBIH[season]?.takeIf { id -> allTasbihs.any { it.id == id } }
                 HomeUiState(
@@ -142,9 +151,11 @@ class HomeViewModel(
     }
 
     private companion object {
-        // Built-in tasbih ids from SeedData: salawat on Friday, takbir in the
-        // days of Dhul Hijjah. Ramadan's banner is a reminder only.
+        // Built-in tasbih ids from SeedData for the banners that have a
+        // fitting dhikr; the rest (Ramadan, Ashura, fasting) are reminders only.
         val SEASON_TASBIH = mapOf(
+            IslamicSeason.LAST_TEN_NIGHTS to "afuww",
+            IslamicSeason.ARAFAH to "tahlil_wahdahu",
             IslamicSeason.FRIDAY to "short_salawat",
             IslamicSeason.DHUL_HIJJAH to "akbar",
         )

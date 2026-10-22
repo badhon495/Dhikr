@@ -476,7 +476,7 @@
     <string name="home_season_dhul_hijjah_title">জিলহজের দিনগুলো</string>
     <string name="home_season_dhul_hijjah_body">এই বরকতময় দিনগুলোতে তাহলিল, তাকবির ও তাহমিদ বেশি বেশি করুন।</string>
     <string name="home_season_friday_title">জুমা মোবারক</string>
-    <string name="home_season_friday_body">আজ নবী ﷺ-এর উপর বেশি বেশি দরুদ পাঠ করুন।</string>
+    <string name="home_season_friday_body">আজ নবী ﷺ-এর উপর বেশি বেশি দরুদ পাঠ করুন এবং সূরা কাহফ পড়ুন।</string>
     <string name="home_season_action">গণনা শুরু করুন</string>
 
     <!-- Launcher shortcuts -->
@@ -484,4 +484,39 @@
     <string name="shortcut_counter_long">গণনা চালিয়ে যান</string>
     <string name="shortcut_insights_short">ইনসাইটস</string>
     <string name="shortcut_insights_long">ইনসাইটস খুলুন</string>
+
+    <!-- 1.4: per-prayer routines, Qibla, special days, fasting reminder -->
+    <string name="settings_qibla">কিবলার দিক</string>
+    <string name="settings_qibla_open">খুলুন</string>
+    <string name="settings_prayer_routine">খুলবে: %1$s</string>
+    <string name="settings_prayer_routine_missing">সালাতের পর</string>
+    <string name="settings_prayer_routine_dialog">%1$s-এর পর যা খুলবে</string>
+    <string name="settings_fasting_reminder">সুন্নত রোজার রিমাইন্ডার</string>
+    <string name="settings_fasting_reminder_desc">রাত ৮টায়, পরের দিন সোমবার, বৃহস্পতিবার, আইয়ামে বীজ, আরাফা বা আশুরা হলে রিমাইন্ডার</string>
+    <string name="fasting_notification_title">আগামীকাল সুন্নত রোজা</string>
+    <string name="fasting_reason_arafah">আগামীকাল আরাফার দিন।</string>
+    <string name="fasting_reason_ashura">আগামীকাল আশুরার একটি দিন।</string>
+    <string name="fasting_reason_white_days">আগামীকাল আইয়ামে বীজের একটি দিন (১৩–১৫ তারিখ)।</string>
+    <string name="fasting_reason_monday">আগামীকাল সোমবার।</string>
+    <string name="fasting_reason_thursday">আগামীকাল বৃহস্পতিবার।</string>
+    <string name="home_season_last_ten_title">শেষ দশ রাত</string>
+    <string name="home_season_last_ten_body">লাইলাতুল কদর তালাশ করুন — এই রাতগুলোতে আল্লাহর কাছে ক্ষমা চান।</string>
+    <string name="home_season_arafah_title">আরাফার দিন</string>
+    <string name="home_season_arafah_body">সর্বোত্তম দোয়া আরাফার দিনের দোয়া। হজে না থাকলে আজ রোজা রাখা সুন্নত।</string>
+    <string name="home_season_ashura_title">আশুরা</string>
+    <string name="home_season_ashura_body">মুহাররমের ৯ ও ১০ তারিখ রোজা রাখা সুন্নত।</string>
+    <string name="home_season_white_days_title">আইয়ামে বীজ</string>
+    <string name="home_season_white_days_body">মাসের ১৩, ১৪ ও ১৫ তারিখ — সুন্নত রোজার দিন।</string>
+    <string name="home_season_fast_tomorrow_title">আগামীকাল সুন্নত রোজা</string>
+    <string name="home_season_fast_tomorrow_body">আগামীকাল সুন্নত রোজার দিন, সামর্থ্য থাকলে রাখুন।</string>
+    <string name="qibla_title">কিবলা</string>
+    <string name="qibla_no_location">কিবলার দিক দেখতে সেটিংস → নামাজের রিমাইন্ডারে লোকেশন সেট করুন।</string>
+    <string name="qibla_bearing">প্রকৃত উত্তর থেকে %1$s°</string>
+    <string name="qibla_no_sensor">এই ফোনে কম্পাস সেন্সর নেই। উপরের কোণটি যেকোনো কম্পাসের সাথে ব্যবহার করুন।</string>
+    <string name="qibla_waiting">কম্পাস পড়া হচ্ছে…</string>
+    <string name="qibla_on_target">কিবলামুখী</string>
+    <string name="qibla_turn_right">ডানে %1$s° ঘুরুন</string>
+    <string name="qibla_turn_left">বামে %1$s° ঘুরুন</string>
+    <string name="qibla_calibrate">কম্পাসের নির্ভুলতা কম — ক্যালিব্রেট করতে ফোনটি ইংরেজি ৮-এর মতো ঘোরান।</string>
+    <string name="qibla_note">ফোনটি সমতলে, ধাতু ও চুম্বক থেকে দূরে রাখুন। ফোনের কম্পাসে কয়েক ডিগ্রি ভুল হতে পারে।</string>
 </resources>

@@ -69,6 +69,10 @@
             android:name=".core.prayer.PrayerReminderReceiver"
             android:exported="false" />
 
+        <receiver
+            android:name=".core.fasting.FastingReminderReceiver"
+            android:exported="false" />
+
         <!-- TIMEZONE_CHANGED: prayer reminders are computed for the local zone,
              so a zone change (travel) re-arms them along with everything else. -->
         <receiver
