@@ -126,6 +126,45 @@ class DuaEditorViewModelTest {
     }
 
     @Test
+    fun save_editMode_categoryUnchanged_keepsOriginalOrderAndCategoryOrder() = runTest {
+        val existing = DuaEntity(id = "x", category = "house", categoryOrder = 1, order = 1, name = "X", arabic = "x", translation = "xt")
+        val other = DuaEntity(id = "y", category = "house", categoryOrder = 1, order = 2, name = "Y", arabic = "y", translation = "yt")
+        val repo = FakeDuaRepository(listOf(existing, other))
+        val viewModel = DuaEditorViewModel(repo.repository, duaId = "x")
+        viewModel.uiState.first { it.name == "X" }
+        viewModel.onNameChange("X renamed")
+        viewModel.save {}
+        advanceUntilIdle()
+        val saved = repo.upsertedEntities.first()
+        assertEquals("X renamed", saved.name)
+        assertEquals(existing.categoryOrder, saved.categoryOrder)
+        assertEquals(existing.order, saved.order)
+
+        // Saving again should not keep bumping the order either.
+        viewModel.onNameChange("X renamed twice")
+        viewModel.save {}
+        advanceUntilIdle()
+        val savedAgain = repo.upsertedEntities.last()
+        assertEquals(existing.categoryOrder, savedAgain.categoryOrder)
+        assertEquals(existing.order, savedAgain.order)
+    }
+
+    @Test
+    fun save_editMode_categoryChanged_appendsToNewCategoryLikeCreate() = runTest {
+        val existing = DuaEntity(id = "x", category = "house", categoryOrder = 1, order = 1, name = "X", arabic = "x", translation = "xt")
+        val travel = DuaEntity(id = "t", category = "travel", categoryOrder = 2, order = 1, name = "T", arabic = "t", translation = "tt")
+        val repo = FakeDuaRepository(listOf(existing, travel))
+        val viewModel = DuaEditorViewModel(repo.repository, duaId = "x")
+        viewModel.uiState.first { it.name == "X" }
+        viewModel.onCategoryChange("travel")
+        viewModel.save {}
+        advanceUntilIdle()
+        val saved = repo.upsertedEntities.first()
+        assertEquals(2, saved.categoryOrder)
+        assertEquals(2, saved.order)
+    }
+
+    @Test
     fun delete_editMode_callsRepositoryDeleteWithDuaId() = runTest {
         val existing = DuaEntity(id = "x", category = "house", categoryOrder = 1, order = 1, name = "X", arabic = "x", translation = "xt")
         val repo = FakeDuaRepository(listOf(existing))

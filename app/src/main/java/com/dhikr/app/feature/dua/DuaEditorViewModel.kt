@@ -37,10 +37,13 @@ class DuaEditorViewModel(
     private val _uiState = MutableStateFlow(DuaEditorUiState(isEditMode = duaId != null))
     val uiState: StateFlow<DuaEditorUiState> = _uiState.asStateFlow()
 
+    private var originalEntity: DuaEntity? = null
+
     init {
         if (duaId != null) {
             viewModelScope.launch {
                 repository.getById(duaId)?.let { entity ->
+                    originalEntity = entity
                     update {
                         it.copy(
                             category = entity.category,
@@ -82,16 +85,23 @@ class DuaEditorViewModel(
         val s = _uiState.value
         if (!s.isSaveEnabled) return
         viewModelScope.launch {
-            val snapshot = repository.observeAll().first()
-            val sameCategory = snapshot.filter { it.category == s.category }
+            val original = originalEntity
             val categoryOrder: Int
             val order: Int
-            if (sameCategory.isNotEmpty()) {
-                categoryOrder = sameCategory.first().categoryOrder
-                order = sameCategory.maxOf { it.order } + 1
+            if (original != null && original.category == s.category) {
+                // Edit mode, category unchanged: keep existing position.
+                categoryOrder = original.categoryOrder
+                order = original.order
             } else {
-                categoryOrder = (snapshot.maxOfOrNull { it.categoryOrder } ?: -1) + 1
-                order = 0
+                val snapshot = repository.observeAll().first()
+                val sameCategory = snapshot.filter { it.category == s.category }
+                if (sameCategory.isNotEmpty()) {
+                    categoryOrder = sameCategory.first().categoryOrder
+                    order = sameCategory.maxOf { it.order } + 1
+                } else {
+                    categoryOrder = (snapshot.maxOfOrNull { it.categoryOrder } ?: -1) + 1
+                    order = 0
+                }
             }
             val id = duaId ?: UUID.randomUUID().toString()
             val entity = DuaEntity(
