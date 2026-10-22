@@ -40,3 +40,12 @@ val ScheduleIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
 val CheckIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
     miscIcon("Check", "M5 13l5 5 9-12")
 }
+
+/** Open book — marks the Dua reference feature's Home card. */
+val BookIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
+    miscIcon(
+        "Book",
+        "M4 5.5C5.5 4.5 7.8 4 12 4s6.5 0.5 8 1.5v13c-1.5-1-3.8-1.5-8-1.5s-6.5 0.5-8 1.5z" +
+            "M12 4v14.5",
+    )
+}
