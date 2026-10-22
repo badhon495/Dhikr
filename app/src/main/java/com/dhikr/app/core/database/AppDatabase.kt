@@ -2,6 +2,8 @@ package com.dhikr.app.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.dhikr.app.core.database.dao.DuaDao
 import com.dhikr.app.core.database.dao.RoutineCompletionDao
 import com.dhikr.app.core.database.dao.RoutineDao
@@ -137,4 +139,44 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun routineProgressDao(): RoutineProgressDao
     abstract fun tasbihProgressDao(): TasbihProgressDao
     abstract fun duaDao(): DuaDao
+
+    companion object {
+        /**
+         * v29 -> v30 added the `dua` table (see the `version = 30` note
+         * above). Every prior bump relied on `fallbackToDestructiveMigration`
+         * because it only touched rebuildable seed content (built-in dhikr,
+         * presets, history). This one is different: by the time a device
+         * upgrades past v30, it may hold user-authored dua rows (added or
+         * edited through the Dua editor) that cannot be reseeded. This hand
+         * migration creates the new table in place so the destructive
+         * fallback doesn't fire on this bump and drop the OTHER tables
+         * (session history, custom tasbih, routines) — those stay intact.
+         * The `dua` table itself starts empty; `DuaRepository.seedIfEmpty()`
+         * fills it on next launch, same as a fresh install.
+         */
+        val MIGRATION_29_30 = object : Migration(29, 30) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `dua` (
+                        `id` TEXT NOT NULL,
+                        `category` TEXT NOT NULL,
+                        `categoryOrder` INTEGER NOT NULL,
+                        `order` INTEGER NOT NULL,
+                        `name` TEXT NOT NULL,
+                        `nameBn` TEXT,
+                        `arabic` TEXT NOT NULL,
+                        `pronunciation` TEXT,
+                        `pronunciationBn` TEXT,
+                        `translation` TEXT NOT NULL,
+                        `translationBn` TEXT,
+                        `source` TEXT,
+                        `repeatCount` INTEGER NOT NULL,
+                        PRIMARY KEY(`id`)
+                    )
+                    """.trimIndent(),
+                )
+            }
+        }
+    }
 }

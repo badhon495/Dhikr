@@ -102,7 +102,18 @@
     <string name="dua_editor_translation_label">Translation</string>
     <string name="dua_editor_source_label">Source</string>
     <string name="dua_editor_repeat_count_label">Repeat count</string>
+    <string name="dua_editor_category_placeholder">e.g. house, travel</string>
+    <string name="dua_editor_name_placeholder">Name</string>
+    <string name="dua_editor_arabic_placeholder">Arabic</string>
+    <string name="dua_editor_pronunciation_placeholder">Pronunciation</string>
+    <string name="dua_editor_translation_placeholder">Translation</string>
+    <string name="dua_editor_source_placeholder">Source (optional)</string>
+    <string name="dua_editor_name_bn_label">Name (Bangla)</string>
+    <string name="dua_editor_pronunciation_bn_label">Pronunciation (Bangla)</string>
+    <string name="dua_editor_translation_bn_label">Translation (Bangla)</string>
+    <string name="dua_editor_delete">Delete</string>
     <string name="dua_editor_add_bangla_toggle">Add Bangla</string>
+    <string name="dua_editor_hide_bangla">Hide Bangla</string>
     <string name="dua_editor_save">Save</string>
 
     <!-- Tasbih library screen -->

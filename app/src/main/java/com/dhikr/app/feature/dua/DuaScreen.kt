@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -211,42 +210,65 @@ private fun DuaRow(
             .testTag("dua_row_${entry.id}")
             .combinedClickable(onClick = onEdit, onLongClick = onLongPress),
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(14.dp),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = entry.displayName(lang),
-                    fontSize = 14.5.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = colors.text,
-                )
-                entry.displayPronunciation(lang)?.let { pronunciation ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = pronunciation,
-                        fontSize = 12.sp,
-                        color = colors.faint,
-                        modifier = Modifier.padding(top = 2.dp),
+                        text = entry.displayName(lang),
+                        fontSize = 14.5.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colors.text,
                     )
+                    entry.displayPronunciation(lang)?.let { pronunciation ->
+                        Text(
+                            text = pronunciation,
+                            fontSize = 12.sp,
+                            color = colors.faint,
+                            modifier = Modifier.padding(top = 2.dp),
+                        )
+                    }
+                    Text(
+                        text = entry.displayTranslation(lang),
+                        fontSize = 13.sp,
+                        color = colors.dim,
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .testTag("dua_translation_${entry.id}"),
+                    )
+                    entry.source?.let { source ->
+                        Text(
+                            text = source,
+                            fontSize = 11.sp,
+                            color = colors.faint,
+                            modifier = Modifier.padding(top = 4.dp),
+                        )
+                    }
                 }
-                Text(
-                    text = entry.displayTranslation(lang),
-                    fontSize = 13.sp,
-                    color = colors.dim,
-                    modifier = Modifier
-                        .padding(top = 4.dp)
-                        .testTag("dua_translation_${entry.id}"),
-                )
-                entry.source?.let { source ->
-                    Text(
-                        text = source,
-                        fontSize = 11.sp,
-                        color = colors.faint,
-                        modifier = Modifier.padding(top = 4.dp),
-                    )
+                if (entry.repeatCount > 1) {
+                    var count by remember(entry.id) { mutableStateOf(0) }
+                    Box(
+                        modifier = Modifier
+                            .clip(PillShape)
+                            .background(colors.sageSoft)
+                            .testTag("dua_counter_pill")
+                            .clickable(role = Role.Button) {
+                                count = (count + 1).coerceAtMost(entry.repeatCount)
+                            }
+                            .minTapTarget()
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = "$count/${entry.repeatCount}",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = colors.sage,
+                        )
+                    }
                 }
             }
             Text(
@@ -255,31 +277,9 @@ private fun DuaRow(
                 color = colors.dim,
                 textAlign = TextAlign.End,
                 modifier = Modifier
-                    .widthIn(max = 96.dp)
-                    .padding(horizontal = 8.dp),
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
             )
-            if (entry.repeatCount > 1) {
-                var count by remember(entry.id) { mutableStateOf(0) }
-                Box(
-                    modifier = Modifier
-                        .clip(PillShape)
-                        .background(colors.sageSoft)
-                        .testTag("dua_counter_pill")
-                        .clickable(role = Role.Button) {
-                            count = (count + 1).coerceAtMost(entry.repeatCount)
-                        }
-                        .minTapTarget()
-                        .padding(horizontal = 10.dp, vertical = 6.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "$count/${entry.repeatCount}",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colors.sage,
-                    )
-                }
-            }
         }
     }
 }

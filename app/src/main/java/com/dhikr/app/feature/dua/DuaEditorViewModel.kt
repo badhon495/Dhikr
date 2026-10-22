@@ -86,15 +86,20 @@ class DuaEditorViewModel(
         if (!s.isSaveEnabled) return
         viewModelScope.launch {
             val original = originalEntity
+            val snapshotForNormalize = repository.observeAll().first()
+            val category = DuaCategories.normalize(
+                s.category,
+                snapshotForNormalize.map { it.category },
+            )
             val categoryOrder: Int
             val order: Int
-            if (original != null && original.category == s.category) {
+            if (original != null && original.category == category) {
                 // Edit mode, category unchanged: keep existing position.
                 categoryOrder = original.categoryOrder
                 order = original.order
             } else {
-                val snapshot = repository.observeAll().first()
-                val sameCategory = snapshot.filter { it.category == s.category }
+                val snapshot = snapshotForNormalize
+                val sameCategory = snapshot.filter { it.category == category }
                 if (sameCategory.isNotEmpty()) {
                     categoryOrder = sameCategory.first().categoryOrder
                     order = sameCategory.maxOf { it.order } + 1
@@ -106,7 +111,7 @@ class DuaEditorViewModel(
             val id = duaId ?: UUID.randomUUID().toString()
             val entity = DuaEntity(
                 id = id,
-                category = s.category,
+                category = category,
                 categoryOrder = categoryOrder,
                 order = order,
                 name = s.name,
@@ -140,7 +145,8 @@ class DuaEditorViewModel(
     private fun recomputeSaveEnabled() {
         update { s ->
             s.copy(
-                isSaveEnabled = s.name.isNotBlank() && s.arabic.isNotBlank() && s.translation.isNotBlank(),
+                isSaveEnabled = s.category.isNotBlank() && s.name.isNotBlank() &&
+                    s.arabic.isNotBlank() && s.translation.isNotBlank(),
             )
         }
     }

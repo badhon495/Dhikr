@@ -99,7 +99,18 @@
     <string name="dua_editor_translation_label">অনুবাদ</string>
     <string name="dua_editor_source_label">সূত্র</string>
     <string name="dua_editor_repeat_count_label">পুনরাবৃত্তি সংখ্যা</string>
+    <string name="dua_editor_category_placeholder">যেমন house, travel</string>
+    <string name="dua_editor_name_placeholder">নাম</string>
+    <string name="dua_editor_arabic_placeholder">আরবি</string>
+    <string name="dua_editor_pronunciation_placeholder">উচ্চারণ</string>
+    <string name="dua_editor_translation_placeholder">অনুবাদ</string>
+    <string name="dua_editor_source_placeholder">সূত্র (ঐচ্ছিক)</string>
+    <string name="dua_editor_name_bn_label">নাম (বাংলা)</string>
+    <string name="dua_editor_pronunciation_bn_label">উচ্চারণ (বাংলা)</string>
+    <string name="dua_editor_translation_bn_label">অনুবাদ (বাংলা)</string>
+    <string name="dua_editor_delete">মুছুন</string>
     <string name="dua_editor_add_bangla_toggle">বাংলা যোগ করুন</string>
+    <string name="dua_editor_hide_bangla">বাংলা লুকান</string>
     <string name="dua_editor_save">সংরক্ষণ করুন</string>
 
     <!-- Tasbih library screen -->

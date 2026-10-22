@@ -22,8 +22,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -38,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -46,8 +49,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dhikr.app.R
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
+import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.ListRowShape
 import com.dhikr.app.ui.theme.NotoNaskhArabic
 import com.dhikr.app.ui.theme.PillShape
@@ -57,6 +62,7 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
     var showBangla by rememberSaveable { mutableStateOf(false) }
+    var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -85,13 +91,17 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
+                        contentDescription = stringResource(R.string.action_back),
                         tint = colors.text,
                         modifier = Modifier.size(20.dp),
                     )
                 }
                 Text(
-                    text = if (state.isEditMode) "Edit Dua" else "Add Dua",
+                    text = if (state.isEditMode) {
+                        stringResource(R.string.dua_edit_title)
+                    } else {
+                        stringResource(R.string.dua_add_title)
+                    },
                     fontSize = 23.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = colors.text,
@@ -102,7 +112,7 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .clickable(role = Role.Button) { viewModel.delete(onBack) }
+                        .clickable(role = Role.Button) { showDeleteConfirm = true }
                         .minTapTarget()
                         .testTag("dua_editor_delete")
                         .padding(6.dp),
@@ -110,7 +120,7 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete",
+                        contentDescription = stringResource(R.string.dua_editor_delete),
                         tint = colors.terra,
                         modifier = Modifier.size(20.dp),
                     )
@@ -118,30 +128,30 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
             }
         }
 
-        LabeledField("Category") {
+        LabeledField(stringResource(R.string.dua_editor_category_label)) {
             PillTextField(
                 value = state.category,
                 onValueChange = viewModel::onCategoryChange,
-                placeholder = "e.g. house, travel",
+                placeholder = stringResource(R.string.dua_editor_category_placeholder),
                 testTag = "dua_editor_category",
             )
         }
 
-        LabeledField("Name") {
+        LabeledField(stringResource(R.string.dua_editor_name_label)) {
             PillTextField(
                 value = state.name,
                 onValueChange = viewModel::onNameChange,
-                placeholder = "Name",
+                placeholder = stringResource(R.string.dua_editor_name_placeholder),
                 testTag = "dua_editor_name",
             )
         }
 
-        LabeledField("Arabic") {
+        LabeledField(stringResource(R.string.dua_editor_arabic_label)) {
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
                 PillTextField(
                     value = state.arabic,
                     onValueChange = viewModel::onArabicChange,
-                    placeholder = "Arabic",
+                    placeholder = stringResource(R.string.dua_editor_arabic_placeholder),
                     testTag = "dua_editor_arabic",
                     textStyle = TextStyle(
                         fontFamily = NotoNaskhArabic,
@@ -152,34 +162,34 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
             }
         }
 
-        LabeledField("Pronunciation") {
+        LabeledField(stringResource(R.string.dua_editor_pronunciation_label)) {
             PillTextField(
                 value = state.pronunciation,
                 onValueChange = viewModel::onPronunciationChange,
-                placeholder = "Pronunciation",
+                placeholder = stringResource(R.string.dua_editor_pronunciation_placeholder),
                 testTag = "dua_editor_pronunciation",
             )
         }
 
-        LabeledField("Translation") {
+        LabeledField(stringResource(R.string.dua_editor_translation_label)) {
             PillTextField(
                 value = state.translation,
                 onValueChange = viewModel::onTranslationChange,
-                placeholder = "Translation",
+                placeholder = stringResource(R.string.dua_editor_translation_placeholder),
                 testTag = "dua_editor_translation",
             )
         }
 
-        LabeledField("Source") {
+        LabeledField(stringResource(R.string.dua_editor_source_label)) {
             PillTextField(
                 value = state.source,
                 onValueChange = viewModel::onSourceChange,
-                placeholder = "Source (optional)",
+                placeholder = stringResource(R.string.dua_editor_source_placeholder),
                 testTag = "dua_editor_source",
             )
         }
 
-        LabeledField("Repeat count") {
+        LabeledField(stringResource(R.string.dua_editor_repeat_count_label)) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -211,7 +221,11 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
             Text(
-                text = if (showBangla) "Hide Bangla" else "Add Bangla",
+                text = if (showBangla) {
+                    stringResource(R.string.dua_editor_hide_bangla)
+                } else {
+                    stringResource(R.string.dua_editor_add_bangla_toggle)
+                },
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = colors.text,
@@ -219,27 +233,27 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
         }
 
         if (showBangla) {
-            LabeledField("Name (Bangla)") {
+            LabeledField(stringResource(R.string.dua_editor_name_bn_label)) {
                 PillTextField(
                     value = state.nameBn,
                     onValueChange = { viewModel.onBanglaFieldChange(DuaBanglaField.NAME, it) },
-                    placeholder = "Name (Bangla)",
+                    placeholder = stringResource(R.string.dua_editor_name_bn_label),
                     testTag = "dua_editor_name_bn",
                 )
             }
-            LabeledField("Pronunciation (Bangla)") {
+            LabeledField(stringResource(R.string.dua_editor_pronunciation_bn_label)) {
                 PillTextField(
                     value = state.pronunciationBn,
                     onValueChange = { viewModel.onBanglaFieldChange(DuaBanglaField.PRONUNCIATION, it) },
-                    placeholder = "Pronunciation (Bangla)",
+                    placeholder = stringResource(R.string.dua_editor_pronunciation_bn_label),
                     testTag = "dua_editor_pronunciation_bn",
                 )
             }
-            LabeledField("Translation (Bangla)") {
+            LabeledField(stringResource(R.string.dua_editor_translation_bn_label)) {
                 PillTextField(
                     value = state.translationBn,
                     onValueChange = { viewModel.onBanglaFieldChange(DuaBanglaField.TRANSLATION, it) },
-                    placeholder = "Translation (Bangla)",
+                    placeholder = stringResource(R.string.dua_editor_translation_bn_label),
                     testTag = "dua_editor_translation_bn",
                 )
             }
@@ -258,12 +272,45 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = "Save",
+                text = stringResource(R.string.dua_editor_save),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = colors.card,
             )
         }
+    }
+
+    if (showDeleteConfirm) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirm = false },
+            title = { Text(stringResource(R.string.dua_delete_confirm_title)) },
+            text = { Text(stringResource(R.string.dua_delete_confirm_body)) },
+            containerColor = colors.card,
+            titleContentColor = colors.text,
+            textContentColor = colors.dim,
+            shape = DialogShape,
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteConfirm = false
+                    viewModel.delete(onBack)
+                }) {
+                    Text(
+                        text = stringResource(R.string.dua_delete_confirm_action),
+                        color = colors.terra,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirm = false }) {
+                    Text(
+                        text = stringResource(R.string.dua_delete_cancel_action),
+                        color = colors.dim,
+                        fontWeight = FontWeight.SemiBold,
+                    )
+                }
+            },
+        )
     }
 }
 

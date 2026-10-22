@@ -53,13 +53,25 @@ class DuaEditorViewModelTest {
     @After fun tearDown() = Dispatchers.resetMain()
 
     @Test
-    fun isSaveEnabled_falseUntilNameArabicTranslationAllNonBlank() = runTest {
+    fun isSaveEnabled_falseUntilCategoryNameArabicTranslationAllNonBlank() = runTest {
         val viewModel = DuaEditorViewModel(FakeDuaRepository(emptyList()).repository, duaId = null)
         assertFalse(viewModel.uiState.value.isSaveEnabled)
+        viewModel.onCategoryChange("house")
         viewModel.onNameChange("Name")
         viewModel.onArabicChange("ع")
         assertFalse(viewModel.uiState.value.isSaveEnabled) // translation still blank
         viewModel.onTranslationChange("Translation")
+        assertTrue(viewModel.uiState.value.isSaveEnabled)
+    }
+
+    @Test
+    fun isSaveEnabled_falseWhenCategoryBlankEvenIfOtherFieldsFilled() = runTest {
+        val viewModel = DuaEditorViewModel(FakeDuaRepository(emptyList()).repository, duaId = null)
+        viewModel.onNameChange("Name")
+        viewModel.onArabicChange("ع")
+        viewModel.onTranslationChange("Translation")
+        assertFalse(viewModel.uiState.value.isSaveEnabled) // category still blank
+        viewModel.onCategoryChange("house")
         assertTrue(viewModel.uiState.value.isSaveEnabled)
     }
 
