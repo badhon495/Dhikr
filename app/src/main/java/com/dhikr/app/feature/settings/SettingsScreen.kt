@@ -1191,7 +1191,8 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
         }
         DriveSyncViewModel.Status.NoBackupFound -> stringResource(R.string.settings_backup_drive_no_backup_found)
         is DriveSyncViewModel.Status.AuthorizationResolutionRequired -> null
-        is DriveSyncViewModel.Status.Error -> s.message
+        is DriveSyncViewModel.Status.Error ->
+            if (s.isNetworkError) stringResource(R.string.settings_backup_drive_error_network) else s.message
     }
     if (driveMessage != null) {
         val isError = status is DriveSyncViewModel.Status.Error

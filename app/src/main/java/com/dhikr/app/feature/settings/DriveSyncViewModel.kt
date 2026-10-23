@@ -35,7 +35,7 @@ class DriveSyncViewModel(
         data class RestoreDone(val result: RestoreResult) : Status
         data object NoBackupFound : Status
         data class AuthorizationResolutionRequired(val pendingIntent: PendingIntent) : Status
-        data class Error(val message: String) : Status
+        data class Error(val message: String, val isNetworkError: Boolean = false) : Status
     }
 
     val signedInAccount: StateFlow<SignedInAccount?> = authManager.signedInAccount
@@ -79,7 +79,10 @@ class DriveSyncViewModel(
                 is DriveBackupRepository.BackupOutcome.Success -> Status.BackupDone(outcome.bytes)
                 is DriveBackupRepository.BackupOutcome.AuthFailed -> authFailureStatus(outcome.cause)
                 is DriveBackupRepository.BackupOutcome.NetworkFailed ->
-                    Status.Error(outcome.cause.message ?: "Backup failed. Check your connection.")
+                    Status.Error(
+                        outcome.cause.message ?: "Backup failed. Check your connection.",
+                        isNetworkError = true,
+                    )
             }
         }
     }
@@ -95,7 +98,10 @@ class DriveSyncViewModel(
                 is DriveBackupRepository.RestoreOutcome.NoBackupFound -> Status.NoBackupFound
                 is DriveBackupRepository.RestoreOutcome.AuthFailed -> authFailureStatus(outcome.cause)
                 is DriveBackupRepository.RestoreOutcome.NetworkFailed ->
-                    Status.Error(outcome.cause.message ?: "Restore failed. Check your connection.")
+                    Status.Error(
+                        outcome.cause.message ?: "Restore failed. Check your connection.",
+                        isNetworkError = true,
+                    )
                 is DriveBackupRepository.RestoreOutcome.FormatInvalid -> Status.Error(outcome.message)
             }
         }
