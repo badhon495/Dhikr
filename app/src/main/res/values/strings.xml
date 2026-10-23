@@ -72,6 +72,53 @@
     <string name="home_routine_step_chip">%1$d steps · %2$d</string>
     <!-- Home routine card step preview when there are more steps than shown, e.g. "SubhanAllah · Alhamdulillah +2 more" -->
     <string name="home_routine_step_preview_more">%1$s  +%2$d more</string>
+    <!-- Home screen card opening the Dua screen -->
+    <string name="home_dua_card_title">Dua</string>
+    <string name="home_dua_card_subtitle">Daily duas for everyday moments</string>
+
+    <!-- Dua screen -->
+    <string name="dua_screen_title">Dua</string>
+    <string name="dua_screen_add">Add</string>
+    <string name="dua_category_bathroom">Bathroom</string>
+    <string name="dua_category_eating">Eating</string>
+    <string name="dua_category_hardship">Hardship</string>
+    <string name="dua_category_house">House</string>
+    <string name="dua_category_mosque">Mosque</string>
+    <string name="dua_category_nature">Nature</string>
+    <string name="dua_category_seeing">Seeing</string>
+    <string name="dua_category_travel">Travel</string>
+    <string name="dua_filter_all">All</string>
+    <string name="dua_filter_content_description">Filter by category</string>
+    <string name="dua_search_placeholder">Search dua</string>
+    <string name="dua_search_content_description">Search dua</string>
+    <string name="dua_delete_confirm_title">Delete this dua?</string>
+    <string name="dua_delete_confirm_body">This cannot be undone.</string>
+    <string name="dua_delete_confirm_action">Delete</string>
+    <string name="dua_delete_cancel_action">Cancel</string>
+
+    <!-- Dua editor screen -->
+    <string name="dua_add_title">Add Dua</string>
+    <string name="dua_edit_title">Edit Dua</string>
+    <string name="dua_editor_category_label">Category</string>
+    <string name="dua_editor_name_label">Name</string>
+    <string name="dua_editor_arabic_label">Arabic</string>
+    <string name="dua_editor_pronunciation_label">Pronunciation</string>
+    <string name="dua_editor_translation_label">Translation</string>
+    <string name="dua_editor_source_label">Source</string>
+    <string name="dua_editor_repeat_count_label">Repeat count</string>
+    <string name="dua_editor_category_placeholder">e.g. house, travel</string>
+    <string name="dua_editor_name_placeholder">Name</string>
+    <string name="dua_editor_arabic_placeholder">Arabic</string>
+    <string name="dua_editor_pronunciation_placeholder">Pronunciation</string>
+    <string name="dua_editor_translation_placeholder">Translation</string>
+    <string name="dua_editor_source_placeholder">Source (optional)</string>
+    <string name="dua_editor_name_bn_label">Name (Bangla)</string>
+    <string name="dua_editor_pronunciation_bn_label">Pronunciation (Bangla)</string>
+    <string name="dua_editor_translation_bn_label">Translation (Bangla)</string>
+    <string name="dua_editor_delete">Delete</string>
+    <string name="dua_editor_add_bangla_toggle">Add Bangla</string>
+    <string name="dua_editor_hide_bangla">Hide Bangla</string>
+    <string name="dua_editor_save">Save</string>
 
     <!-- Tasbih library screen -->
     <string name="tasbih_library_title">Tasbih</string>
@@ -507,6 +554,7 @@
     <!-- 1.4: per-prayer routines, Qibla, special days, fasting reminder -->
     <string name="settings_qibla">Qibla direction</string>
     <string name="settings_qibla_open">Open</string>
+    <string name="settings_dua_open">Open</string>
     <string name="settings_prayer_routine">Opens: %1$s</string>
     <string name="settings_prayer_routine_missing">After Salah</string>
     <string name="settings_prayer_routine_dialog">After %1$s, open</string>

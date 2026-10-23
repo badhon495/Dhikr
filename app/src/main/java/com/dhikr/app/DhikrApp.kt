@@ -50,6 +50,7 @@ import com.dhikr.app.core.ai.BenefitsRepository
 import com.dhikr.app.core.ai.GeminiClient
 import com.dhikr.app.core.ai.SecureKeyStore
 import com.dhikr.app.core.backup.BackupRepository
+import com.dhikr.app.core.database.DuaRepository
 import com.dhikr.app.core.database.HistoryRepository
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
@@ -80,6 +81,10 @@ import com.dhikr.app.core.share.RoutineShareCodec
 import com.dhikr.app.core.share.RoutineShareRepository
 import com.dhikr.app.feature.counter.CounterScreen
 import com.dhikr.app.feature.counter.CounterViewModel
+import com.dhikr.app.feature.dua.DuaEditorScreen
+import com.dhikr.app.feature.dua.DuaEditorViewModel
+import com.dhikr.app.feature.dua.DuaScreen
+import com.dhikr.app.feature.dua.DuaViewModel
 import com.dhikr.app.feature.home.HomeScreen
 import com.dhikr.app.feature.home.HomeViewModel
 import com.dhikr.app.feature.insights.AllDhikrScreen
@@ -126,6 +131,8 @@ private const val ROUTE_ROUTINES_IMPORT = "routines/import"
 private const val ROUTE_ROUTINE_EDITOR = "routines/editor?id={id}"
 private const val ROUTE_SETTINGS = "settings"
 private const val ROUTE_QIBLA = "qibla"
+private const val ROUTE_DUA = "dua"
+private const val ROUTE_DUA_EDITOR = "dua/edit?duaId={duaId}"
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -172,6 +179,7 @@ fun DhikrApp(
             )
         }
         val historyRepository = remember { HistoryRepository(app.database.sessionDao(), tasbihRepository) }
+        val duaRepository = remember { DuaRepository(app.database.duaDao()) }
         val preferencesRepository = remember { AppPreferencesRepository(context.applicationContext) }
         val appVersionName = remember {
             runCatching {
@@ -340,6 +348,7 @@ fun DhikrApp(
                         onOpenLibrary = { navController.navigate(ROUTE_TASBIH_LIBRARY) },
                         onStartRoutine = { id -> navController.navigate("counter?routineId=$id") },
                         onOpenRoutines = { navController.navigate(ROUTE_ROUTINES) },
+                        onOpenDua = { navController.navigate(ROUTE_DUA) },
                     )
                 }
                 composable(ROUTE_TASBIH_LIBRARY) {
@@ -559,6 +568,27 @@ fun DhikrApp(
                         locationName = prayerSettings.locationName,
                         onBack = { navController.popBackStack() },
                     )
+                }
+                composable(ROUTE_DUA) {
+                    val viewModel: DuaViewModel = viewModel(
+                        factory = DuaViewModel.Factory(duaRepository),
+                    )
+                    DuaScreen(
+                        viewModel = viewModel,
+                        onBack = { navController.popBackStack() },
+                        onAddDua = { navController.navigate("dua/edit") },
+                        onEditDua = { id -> navController.navigate("dua/edit?duaId=$id") },
+                    )
+                }
+                composable(
+                    ROUTE_DUA_EDITOR,
+                    arguments = listOf(navArgument("duaId") { type = NavType.StringType; nullable = true; defaultValue = null }),
+                ) { backStackEntry ->
+                    val duaId = backStackEntry.arguments?.getString("duaId")
+                    val viewModel: DuaEditorViewModel = viewModel(
+                        factory = DuaEditorViewModel.Factory(duaRepository, duaId),
+                    )
+                    DuaEditorScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
                 }
             }
         }

@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -57,6 +58,7 @@ import com.dhikr.app.core.notifications.ReminderNotifications
 import com.dhikr.app.core.utilities.IslamicSeason
 import java.text.DateFormat
 import java.util.Date
+import com.dhikr.app.ui.BookIcon
 import com.dhikr.app.ui.HOME_SCREEN_TEST_TAG
 import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.Motion
@@ -74,6 +76,7 @@ fun HomeScreen(
     onOpenLibrary: () -> Unit,
     onStartRoutine: (String) -> Unit,
     onOpenRoutines: () -> Unit,
+    onOpenDua: () -> Unit,
     scrollToTopSignal: Int = 0,
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -295,6 +298,60 @@ fun HomeScreen(
                         )
                     }
                 }
+            }
+        }
+
+        // Dua — its own section, set apart from Favourites above: a sage icon
+        // badge (same accent used by the counter/add affordances elsewhere)
+        // and a trailing chevron mark this as a link into a whole separate
+        // screen, not another countable favorite card.
+        Column {
+            Text(
+                stringResource(R.string.home_dua_card_title),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.3.sp,
+                color = colors.text,
+                modifier = Modifier.headingSemantics(),
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+                    .clip(RoundedCornerShape(22.dp))
+                    .background(colors.card)
+                    .clickable(role = Role.Button) { onOpenDua() }
+                    .padding(14.dp),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(colors.sageSoft),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = BookIcon,
+                        contentDescription = null,
+                        tint = colors.sage,
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
+                Text(
+                    stringResource(R.string.home_dua_card_subtitle),
+                    fontSize = 13.sp,
+                    color = colors.dim,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 12.dp),
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = colors.faint,
+                    modifier = Modifier.size(20.dp),
+                )
             }
         }
     }

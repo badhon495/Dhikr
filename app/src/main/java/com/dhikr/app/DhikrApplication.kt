@@ -3,6 +3,7 @@ package com.dhikr.app
 import android.app.Application
 import androidx.room.Room
 import com.dhikr.app.core.database.AppDatabase
+import com.dhikr.app.core.database.DuaRepository
 import com.dhikr.app.core.database.seed.SeedData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,10 +20,17 @@ class DhikrApplication : Application() {
 
     val database: AppDatabase by lazy {
         Room.databaseBuilder(applicationContext, AppDatabase::class.java, "dhikr.db")
-            // The DB carries only seeded/derived data (built-in dhikr, presets,
-            // session history) — all rebuildable. If a restored backup or an
-            // old install leaves a schema Room can't reconcile, wipe and
-            // reseed rather than crash on launch.
+            // v29->v30 added the `dua` table, which can hold genuinely
+            // user-authored rows (added/edited through the Dua editor) by the
+            // time a device upgrades past it — unlike every earlier bump,
+            // those rows aren't reseedable. The hand migration creates the
+            // table in place so this specific bump doesn't fall through to
+            // the destructive path below and drop the other tables.
+            .addMigrations(AppDatabase.MIGRATION_29_30)
+            // The DB otherwise carries only seeded/derived data (built-in
+            // dhikr, presets, session history) — all rebuildable. If a
+            // restored backup or an old install leaves a schema Room can't
+            // reconcile, wipe and reseed rather than crash on launch.
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
     }
@@ -46,6 +54,8 @@ class DhikrApplication : Application() {
                 database.routineDao().insertRoutines(SeedData.presetRoutines)
                 database.routineDao().insertSteps(SeedData.presetRoutineSteps)
             }
+            // Seed daily-life dua entries on first run.
+            DuaRepository(database.duaDao()).seedIfEmpty()
             syncRoutineStepAdditions()
             purgeRetiredTasbih()
         }
