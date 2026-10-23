@@ -1,6 +1,6 @@
 # Privacy Policy for Dhikr
 
-**Last updated:** 4 September 2026
+**Last updated:** 23 October 2026
 
 Dhikr ("the app") is a native Android Tasbih / Dhikr counter developed by the
 Dhikr developer ("we", "us"). This policy explains what data the app handles and
@@ -72,11 +72,34 @@ When enabled and used:
 Removing the API key in Settings disables the feature. Clearing the cached
 benefits text removes it from your device.
 
+## Optional Google Drive backup
+
+The app can back up your data to your own Google Drive. This feature is **off
+until you turn it on** by signing in with your Google account in Settings →
+Backup.
+
+When enabled and used:
+
+- The app requests only the `drive.file` scope, which means it can see and edit
+  only files it creates itself, never the rest of your Drive.
+- When you tap "Backup to Drive," the same backup content described in "Data you
+  choose to export" is sent directly from your device to a single file
+  (`dhikr_backup.json`) in your own Google Drive — not to us.
+- "Restore from Drive" downloads and applies that same backup file.
+- Your Google sign-in uses Google's Credential Manager and Consent flow. Google's
+  handling of your data is governed by
+  <https://policies.google.com/privacy>.
+- Signing out removes the app's local sign-in state but does not delete the
+  backup file from your Drive.
+
+Disabling the feature or signing out prevents future backups and restores;
+existing backups remain on your Drive until you delete them.
+
 ## Permissions the app requests
 
 | Permission | Why |
 |------------|-----|
-| `INTERNET` | Only for the optional AI benefits feature described above. With that feature off, the app makes no network connections. |
+| `INTERNET` | For the optional AI benefits feature and the optional Google Drive backup feature, both described above. With both features off, the app makes no network connections. |
 | `VIBRATE` | Haptic feedback on counting. |
 | `POST_NOTIFICATIONS` | Showing the local reminder notifications you schedule. |
 | `RECEIVE_BOOT_COMPLETED` | Re-registering your reminders after the device restarts. |
