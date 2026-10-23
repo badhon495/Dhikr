@@ -191,7 +191,9 @@ class DriveAuthManager(
         val request = requestBuilder.build()
 
         return try {
-            val result = awaitAuthorization(activityContext, request)
+            val result = awaitAuthorization(activityContext, request).getOrElse {
+                return Result.failure(it)
+            }
             if (result.hasResolution()) {
                 // First-time consent for this scope: a PendingIntent must be
                 // launched from an Activity's ActivityResultLauncher to show
@@ -216,13 +218,29 @@ class DriveAuthManager(
     private suspend fun awaitAuthorization(
         activityContext: Context,
         request: AuthorizationRequest,
-    ): AuthorizationResult = suspendCancellableCoroutine { continuation ->
+    ): Result<AuthorizationResult> = suspendCancellableCoroutine { continuation ->
         val task: Task<AuthorizationResult> =
             Identity.getAuthorizationClient(activityContext).authorize(request)
-        task.addOnSuccessListener { result -> continuation.resume(result) }
-        task.addOnFailureListener { exception -> continuation.resumeWithException(exception) }
+        task.addOnSuccessListener { result -> continuation.resume(Result.success(result)) }
+        task.addOnFailureListener { exception -> continuation.resume(Result.failure(exception)) }
         task.addOnCanceledListener {
-            continuation.resumeWithException(java.util.concurrent.CancellationException("Authorization cancelled"))
+            // The Play Services Task's own cancellation signal is reported as
+            // a java.util.concurrent.CancellationException — a different
+            // class from kotlinx.coroutines.CancellationException that
+            // merely shares its simple name. Resuming the coroutine with a
+            // *thrown* exception of that type would let it be caught by any
+            // `catch (e: kotlinx.coroutines.CancellationException)` guard
+            // further up the call chain (e.g. in DriveBackupRepository,
+            // which deliberately rethrows real coroutine cancellation so
+            // structured concurrency isn't broken). That would make a user
+            // backing out of the consent screen look like the *coroutine*
+            // was cancelled, leaving the caller's Status stuck at Working
+            // forever. Converting it to a plain Result.failure here, with an
+            // ordinary exception type, keeps it flowing through the normal
+            // success/failure path instead.
+            continuation.resume(
+                Result.failure(driveAuthorizationCancelledFailure()),
+            )
         }
     }
 
@@ -296,3 +314,27 @@ class DriveAuthManager(
 class DriveAuthorizationResolutionRequired(
     val pendingIntent: android.app.PendingIntent?,
 ) : Exception("Drive authorization requires user consent")
+
+/**
+ * Thrown (wrapped in [Result.failure]) when the user backs out of the Drive
+ * consent screen, cancelling the underlying Play Services `Task`. This is a
+ * plain exception, deliberately *not* a [kotlinx.coroutines.CancellationException]
+ * — the `Task`'s own cancellation signal arrives as a
+ * `java.util.concurrent.CancellationException`, an unrelated class that only
+ * shares its simple name with the coroutines one. Converting it to this type
+ * as early as possible (inside `awaitAuthorization`'s `addOnCanceledListener`)
+ * stops it from being caught by `catch (e: kotlinx.coroutines.CancellationException)`
+ * guards elsewhere in the call chain (e.g. in `DriveBackupRepository.backup`/
+ * `restore`, which rethrow real coroutine cancellation on purpose) — a bug
+ * that previously made cancelling the consent screen look like the coroutine
+ * itself had been cancelled, leaving the caller's `Status` stuck at `Working`
+ * forever.
+ */
+class DriveAuthorizationCancelled :
+    Exception("Drive authorization was cancelled")
+
+/** Builds the [Result.failure] used when the Authorization `Task` reports
+ *  cancellation. Extracted as a top-level function so a plain JVM test can
+ *  exercise the exact conversion logic `awaitAuthorization`'s cancel
+ *  listener relies on, without needing a real Android `Task`. */
+internal fun driveAuthorizationCancelledFailure(): Throwable = DriveAuthorizationCancelled()
