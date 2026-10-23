@@ -9,13 +9,16 @@ Google Play.
 
 ## Summary
 
-- The app has **no account system** and **no login**.
+- The app does **not require an account**. Every core feature — counting,
+  routines, history, reminders — works fully offline with no sign-in.
 - We do **not** collect, transmit, or sell any personal data.
 - We do **not** use analytics, advertising, tracking, or crash-reporting SDKs.
 - All of your data — counts, sessions, custom dhikr, routines, history,
   reminders, goals, and settings — is stored **only on your device**.
-- The single optional feature that contacts the internet is the AI benefits
-  feature, and only when you enable it with your own API key (see below).
+- There are two **optional** features that contact the internet, each off
+  until you turn it on: the AI benefits feature (with your own API key) and
+  Google Drive backup (by signing in with your own Google account). See
+  below for both.
 
 ## Data the app stores on your device
 
@@ -36,6 +39,9 @@ preferences). None of it leaves your device except as described in
 | Theme, language, onboarding, and other app settings | App preferences |
 | Your Google Gemini API key (if you enter one) | Optional AI benefits feature; stored with Android `EncryptedSharedPreferences` |
 | Cached AI-generated "virtues / benefits" text per Tasbih | Avoids repeat network requests |
+| Your Google account email and display name (if you sign in with Google) | Optional Google Drive backup feature; shows which account is signed in |
+| Your Google Drive access token (if you sign in with Google) | Optional Google Drive backup feature; stored with Android `EncryptedSharedPreferences`, used only to call Google Drive on your behalf |
+| The Drive file id of your backup file (if you use Drive backup) | Optional Google Drive backup feature; avoids searching Drive on every backup/restore |
 
 You can erase all of this at any time by clearing the app's storage in Android
 Settings or uninstalling the app.

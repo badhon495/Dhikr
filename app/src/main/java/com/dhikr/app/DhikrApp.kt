@@ -525,6 +525,7 @@ fun DhikrApp(
                         DriveAuthManager(
                             context = context.applicationContext,
                             tokenStore = driveTokenStore,
+                            fileIdStore = driveFileIdStore,
                             webClientId = BuildConfig.DRIVE_WEB_CLIENT_ID,
                             androidClientId = BuildConfig.DRIVE_ANDROID_CLIENT_ID,
                         )

@@ -324,6 +324,8 @@
     <string name="settings_backup_drive_no_backup_found">No backup found on this Google account yet.</string>
     <string name="settings_backup_drive_error_auth">Couldn\'t verify your Google account. Try signing in again.</string>
     <string name="settings_backup_drive_error_network">No connection. Check your internet and try again.</string>
+    <string name="settings_backup_drive_error_server">Google Drive had a problem. Try again later.</string>
+    <string name="settings_backup_drive_not_configured">Drive backup isn\'t configured yet.</string>
     <string name="settings_about">About</string>
     <string name="settings_about_offline">Works fully offline.</string>
     <string name="settings_about_no_account">No account needed.</string>

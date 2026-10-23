@@ -1,5 +1,6 @@
 package com.dhikr.app.core.drivesync
 
+import android.accounts.Account
 import android.content.Context
 import android.util.Base64
 import androidx.credentials.ClearCredentialStateRequest
@@ -7,6 +8,7 @@ import androidx.credentials.Credential
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialException
 import androidx.datastore.preferences.core.edit
@@ -50,6 +52,11 @@ data class SignedInAccount(val email: String?, val displayName: String?)
  */
 interface DriveTokenProvider {
     suspend fun getValidAccessToken(activityContext: Context): Result<String>
+
+    /** Clears any cached access token so the next [getValidAccessToken] call
+     *  mints a fresh one instead of reusing one the server has rejected
+     *  (e.g. after a 401/403 from a Drive API call). */
+    suspend fun invalidate()
 }
 
 /**
@@ -76,8 +83,14 @@ interface DriveTokenProvider {
 class DriveAuthManager(
     private val context: Context,
     private val tokenStore: DriveTokenStore,
+    private val fileIdStore: DriveFileIdStore,
     private val webClientId: String,
-    private val androidClientId: String,
+    // Android-type OAuth client ids are matched automatically by Google via
+    // the app's package name + signing SHA-1, never passed explicitly in
+    // code. Kept as a constructor parameter (rather than removed) so the
+    // call site mirrors both BuildConfig fields symmetrically and the field
+    // is available if a future API surface needs it explicitly.
+    @Suppress("unused") private val androidClientId: String,
 ) : DriveTokenProvider {
 
     private val appContext = context.applicationContext
@@ -103,15 +116,21 @@ class DriveAuthManager(
      * Activity-backed [activityContext] since it shows system UI.
      */
     suspend fun signIn(activityContext: Context): Result<SignedInAccount> {
-        val nonce = UUID.randomUUID().toString()
-        val signInOption = GetSignInWithGoogleOption.Builder(webClientId)
-            .setNonce(nonce)
-            .build()
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(signInOption)
-            .build()
-
         return try {
+            val nonce = UUID.randomUUID().toString()
+            // GetSignInWithGoogleOption.Builder validates webClientId is
+            // non-empty and throws synchronously (not a GetCredentialException)
+            // when it's blank, e.g. before the project owner has configured
+            // real Google Cloud Console OAuth client ids. The broad catch
+            // below covers this and any other unmapped exception from this
+            // whole flow.
+            val signInOption = GetSignInWithGoogleOption.Builder(webClientId)
+                .setNonce(nonce)
+                .build()
+            val request = GetCredentialRequest.Builder()
+                .addCredentialOption(signInOption)
+                .build()
+
             val response = credentialManager.getCredential(activityContext, request)
             val account = parseSignedInAccount(response.credential)
                 ?: return Result.failure(IllegalStateException("Unexpected credential type returned by Credential Manager"))
@@ -120,7 +139,16 @@ class DriveAuthManager(
             Result.success(account)
         } catch (e: GetCredentialException) {
             Result.failure(e)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
+    }
+
+    /** Clears the cached Drive access token, forcing the next
+     *  [getValidAccessToken] call to re-authorize instead of reusing a token
+     *  the server has already rejected (401/403). */
+    override suspend fun invalidate() {
+        tokenStore.clear()
     }
 
     /** Clears local sign-in state, the cached Drive token, and Credential
@@ -128,6 +156,7 @@ class DriveAuthManager(
     suspend fun signOut() {
         _signedInAccount.value = null
         tokenStore.clear()
+        fileIdStore.clear()
         persistAccount(null)
         try {
             credentialManager.clearCredentialState(ClearCredentialStateRequest())
@@ -150,9 +179,16 @@ class DriveAuthManager(
     }
 
     private suspend fun authorizeDriveFileScope(activityContext: Context): Result<String> {
-        val request = AuthorizationRequest.builder()
+        val requestBuilder = AuthorizationRequest.builder()
             .setRequestedScopes(listOf(Scope(DRIVE_FILE_SCOPE)))
-            .build()
+        // Pin authorization to the signed-in account on a multi-Google-account
+        // device, so this step can't silently authorize a different account
+        // than the one shown as "Signed in as X". setAccount(Account) is
+        // available on this project's play-services-auth version (21.1.1).
+        _signedInAccount.value?.email?.let { email ->
+            requestBuilder.setAccount(Account(email, "com.google"))
+        }
+        val request = requestBuilder.build()
 
         return try {
             val result = awaitAuthorization(activityContext, request)
@@ -222,6 +258,11 @@ class DriveAuthManager(
     } catch (e: org.json.JSONException) {
         null
     }
+
+    /** True when [e] represents the user backing out of the Credential
+     *  Manager sign-in dialog rather than a real failure, so callers can map
+     *  it to an idle/no-op state instead of showing an error. */
+    fun isSignInCancellation(e: Throwable): Boolean = e is GetCredentialCancellationException
 
     private suspend fun persistAccount(account: SignedInAccount?) = withContext(Dispatchers.IO) {
         appContext.driveSyncDataStore.edit { prefs ->

@@ -16,6 +16,22 @@ val keystoreProperties = Properties().apply {
     }
 }
 
+// OAuth client ids for the optional Google Drive backup feature. These come
+// from a project owner's own Google Cloud Console setup, not from source
+// control: read from local.properties (gitignored), same pattern as
+// keystoreProperties/keystore.properties above, with an empty-string default
+// when the property or file is absent so the app still builds (and the
+// Drive sign-in UI stays gated off — see DriveSyncControls) before that
+// setup exists.
+val localPropertiesFile = rootProject.file("local.properties")
+val localProperties = Properties().apply {
+    if (localPropertiesFile.exists()) {
+        load(FileInputStream(localPropertiesFile))
+    }
+}
+val driveWebClientId = (localProperties.getProperty("DRIVE_WEB_CLIENT_ID") ?: "")
+val driveAndroidClientId = (localProperties.getProperty("DRIVE_ANDROID_CLIENT_ID") ?: "")
+
 android {
     namespace = "com.dhikr.app"
     compileSdk = 37
@@ -44,10 +60,11 @@ android {
         // AppCompat/lib locale resources.
         androidResources.localeFilters += listOf("en", "bn")
 
-        // Placeholders: real OAuth client ids come from Google Cloud Console
-        // setup the project owner does separately, outside this codebase.
-        buildConfigField("String", "DRIVE_WEB_CLIENT_ID", "\"\"")
-        buildConfigField("String", "DRIVE_ANDROID_CLIENT_ID", "\"\"")
+        // Real OAuth client ids come from Google Cloud Console setup the
+        // project owner does separately, placed in local.properties (never
+        // committed) — see driveWebClientId/driveAndroidClientId above.
+        buildConfigField("String", "DRIVE_WEB_CLIENT_ID", "\"$driveWebClientId\"")
+        buildConfigField("String", "DRIVE_ANDROID_CLIENT_ID", "\"$driveAndroidClientId\"")
     }
 
     buildTypes {

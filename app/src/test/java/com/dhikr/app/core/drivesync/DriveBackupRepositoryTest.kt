@@ -18,8 +18,24 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 
-private class FakeTokenProvider(private val result: Result<String>) : DriveTokenProvider {
-    override suspend fun getValidAccessToken(activityContext: Context) = result
+private class FakeTokenProvider(
+    private val results: List<Result<String>>,
+) : DriveTokenProvider {
+    constructor(result: Result<String>) : this(listOf(result))
+
+    var invalidateCalled = false
+        private set
+    private var callIndex = 0
+
+    override suspend fun getValidAccessToken(activityContext: Context): Result<String> {
+        val result = results.getOrElse(callIndex) { results.last() }
+        callIndex++
+        return result
+    }
+
+    override suspend fun invalidate() {
+        invalidateCalled = true
+    }
 }
 
 /**
@@ -33,25 +49,41 @@ private class FakeDriveApi(
     uploadOrUpdateResult: String = "newid",
     downloadContentResult: String = "{}",
     private val failWith: DriveApi.DriveApiException? = null,
+    /** Number of leading non-search calls (PATCH/POST/download) that should
+     *  throw [failWith] before succeeding normally — lets tests simulate a
+     *  failure on the first attempt only, so a retry succeeds. */
+    private val failFirstNCalls: Int = Int.MAX_VALUE,
 ) {
     var findFileIdCalled = false
         private set
+    var findFileIdCallCount = 0
+        private set
+    var nonSearchCallCount = 0
+        private set
 
     val delegate = DriveApi(httpClient = { request ->
-        failWith?.let { throw it }
         when {
             request.method == "GET" && request.url.contains("/files?q=") -> {
                 findFileIdCalled = true
+                findFileIdCallCount++
                 if (findFileIdResult != null) {
                     DriveApi.Response(200, """{"files":[{"id":"$findFileIdResult"}]}""")
                 } else {
                     DriveApi.Response(200, """{"files":[]}""")
                 }
             }
-            request.method == "POST" -> DriveApi.Response(200, """{"id":"$uploadOrUpdateResult"}""")
-            request.method == "PATCH" -> DriveApi.Response(200, "{}")
-            request.method == "GET" -> DriveApi.Response(200, downloadContentResult)
-            else -> error("unexpected request: $request")
+            else -> {
+                nonSearchCallCount++
+                if (failWith != null && nonSearchCallCount <= failFirstNCalls) {
+                    throw failWith
+                }
+                when {
+                    request.method == "POST" -> DriveApi.Response(200, """{"id":"$uploadOrUpdateResult"}""")
+                    request.method == "PATCH" -> DriveApi.Response(200, "{}")
+                    request.method == "GET" -> DriveApi.Response(200, downloadContentResult)
+                    else -> error("unexpected request: $request")
+                }
+            }
         }
     })
 }
@@ -155,7 +187,7 @@ class DriveBackupRepositoryTest {
     }
 
     @Test
-    fun `backup returns NetworkFailed when upload fails with 500`() = runTest {
+    fun `backup returns ServerFailed when upload fails with 500`() = runTest {
         val api = FakeDriveApi(
             findFileIdResult = null,
             failWith = DriveApi.DriveApiException(500, "server error"),
@@ -168,7 +200,69 @@ class DriveBackupRepositoryTest {
             fakeRestoreJson,
         )
         val outcome = repo.backup(context)
-        assertTrue(outcome is DriveBackupRepository.BackupOutcome.NetworkFailed)
+        assertTrue(outcome is DriveBackupRepository.BackupOutcome.ServerFailed)
+    }
+
+    @Test
+    fun `backup with 401 on first attempt invalidates token and retries successfully`() = runTest {
+        val api = FakeDriveApi(
+            findFileIdResult = null,
+            uploadOrUpdateResult = "newid",
+            failWith = DriveApi.DriveApiException(401, "unauthorized"),
+            failFirstNCalls = 1,
+        )
+        val tokenProvider = FakeTokenProvider(listOf(Result.success("stale-tok"), Result.success("fresh-tok")))
+        val repo = DriveBackupRepository(
+            tokenProvider,
+            api.delegate,
+            newFileIdStore(),
+            fakeExportJson,
+            fakeRestoreJson,
+        )
+        val outcome = repo.backup(context)
+        assertTrue(outcome is DriveBackupRepository.BackupOutcome.Success)
+        assertTrue(tokenProvider.invalidateCalled)
+    }
+
+    @Test
+    fun `backup with 401 twice returns AuthFailed`() = runTest {
+        val api = FakeDriveApi(
+            findFileIdResult = null,
+            failWith = DriveApi.DriveApiException(401, "unauthorized"),
+        )
+        val tokenProvider = FakeTokenProvider(listOf(Result.success("stale-tok"), Result.success("still-bad-tok")))
+        val repo = DriveBackupRepository(
+            tokenProvider,
+            api.delegate,
+            newFileIdStore(),
+            fakeExportJson,
+            fakeRestoreJson,
+        )
+        val outcome = repo.backup(context)
+        assertTrue(outcome is DriveBackupRepository.BackupOutcome.AuthFailed)
+        assertTrue(tokenProvider.invalidateCalled)
+    }
+
+    @Test
+    fun `backup with 404 on cached file id falls back to search then creates new file`() = runTest {
+        val fileIdStore = newFileIdStore().also { it.set("stale-id") }
+        val api = FakeDriveApi(
+            findFileIdResult = null, // search also finds nothing -> create new
+            uploadOrUpdateResult = "brand-new-id",
+            failWith = DriveApi.DriveApiException(404, "not found"),
+            failFirstNCalls = 1,
+        )
+        val repo = DriveBackupRepository(
+            FakeTokenProvider(Result.success("tok")),
+            api.delegate,
+            fileIdStore,
+            fakeExportJson,
+            fakeRestoreJson,
+        )
+        val outcome = repo.backup(context)
+        assertTrue(outcome is DriveBackupRepository.BackupOutcome.Success)
+        assertTrue(api.findFileIdCalled)
+        assertEquals("brand-new-id", fileIdStore.get())
     }
 
     @Test
@@ -246,7 +340,7 @@ class DriveBackupRepositoryTest {
     }
 
     @Test
-    fun `restore returns NetworkFailed when download fails with non-auth error`() = runTest {
+    fun `restore returns ServerFailed when download fails with non-auth error`() = runTest {
         val fileIdStore = newFileIdStore().also { it.set("id1") }
         val api = FakeDriveApi(failWith = DriveApi.DriveApiException(500, "server error"))
         val repo = DriveBackupRepository(
@@ -257,6 +351,86 @@ class DriveBackupRepositoryTest {
             fakeRestoreJson,
         )
         val outcome = repo.restore(context)
-        assertTrue(outcome is DriveBackupRepository.RestoreOutcome.NetworkFailed)
+        assertTrue(outcome is DriveBackupRepository.RestoreOutcome.ServerFailed)
+    }
+
+    @Test
+    fun `restore with 401 on first attempt invalidates token and retries successfully`() = runTest {
+        val fileIdStore = newFileIdStore().also { it.set("id1") }
+        val api = FakeDriveApi(
+            downloadContentResult = "{}",
+            failWith = DriveApi.DriveApiException(401, "unauthorized"),
+            failFirstNCalls = 1,
+        )
+        val tokenProvider = FakeTokenProvider(listOf(Result.success("stale-tok"), Result.success("fresh-tok")))
+        val repo = DriveBackupRepository(
+            tokenProvider,
+            api.delegate,
+            fileIdStore,
+            fakeExportJson,
+            fakeRestoreJson,
+        )
+        val outcome = repo.restore(context)
+        assertTrue(outcome is DriveBackupRepository.RestoreOutcome.Success)
+        assertTrue(tokenProvider.invalidateCalled)
+    }
+
+    @Test
+    fun `restore with 401 twice returns AuthFailed`() = runTest {
+        val fileIdStore = newFileIdStore().also { it.set("id1") }
+        val api = FakeDriveApi(failWith = DriveApi.DriveApiException(401, "unauthorized"))
+        val tokenProvider = FakeTokenProvider(listOf(Result.success("stale-tok"), Result.success("still-bad-tok")))
+        val repo = DriveBackupRepository(
+            tokenProvider,
+            api.delegate,
+            fileIdStore,
+            fakeExportJson,
+            fakeRestoreJson,
+        )
+        val outcome = repo.restore(context)
+        assertTrue(outcome is DriveBackupRepository.RestoreOutcome.AuthFailed)
+        assertTrue(tokenProvider.invalidateCalled)
+    }
+
+    @Test
+    fun `restore with 404 on cached file id falls back to search and finds the real file`() = runTest {
+        val fileIdStore = newFileIdStore().also { it.set("stale-id") }
+        val api = FakeDriveApi(
+            findFileIdResult = "real-id",
+            downloadContentResult = """{"valid":true}""",
+            failWith = DriveApi.DriveApiException(404, "not found"),
+            failFirstNCalls = 1,
+        )
+        val repo = DriveBackupRepository(
+            FakeTokenProvider(Result.success("tok")),
+            api.delegate,
+            fileIdStore,
+            fakeExportJson,
+            fakeRestoreJson,
+        )
+        val outcome = repo.restore(context)
+        assertTrue(outcome is DriveBackupRepository.RestoreOutcome.Success)
+        assertTrue(api.findFileIdCalled)
+        assertEquals("real-id", fileIdStore.get())
+    }
+
+    @Test
+    fun `restore with 404 on cached file id and search finds nothing returns NoBackupFound`() = runTest {
+        val fileIdStore = newFileIdStore().also { it.set("stale-id") }
+        val api = FakeDriveApi(
+            findFileIdResult = null,
+            failWith = DriveApi.DriveApiException(404, "not found"),
+            failFirstNCalls = 1,
+        )
+        val repo = DriveBackupRepository(
+            FakeTokenProvider(Result.success("tok")),
+            api.delegate,
+            fileIdStore,
+            fakeExportJson,
+            fakeRestoreJson,
+        )
+        val outcome = repo.restore(context)
+        assertEquals(DriveBackupRepository.RestoreOutcome.NoBackupFound, outcome)
+        assertEquals(null, fileIdStore.get())
     }
 }

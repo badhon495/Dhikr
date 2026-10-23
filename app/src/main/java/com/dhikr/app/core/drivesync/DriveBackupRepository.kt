@@ -36,6 +36,7 @@ class DriveBackupRepository(
         data class Success(val bytes: Int) : BackupOutcome
         data class AuthFailed(val cause: Throwable) : BackupOutcome
         data class NetworkFailed(val cause: Throwable) : BackupOutcome
+        data class ServerFailed(val cause: Throwable) : BackupOutcome
     }
 
     sealed interface RestoreOutcome {
@@ -43,30 +44,79 @@ class DriveBackupRepository(
         data object NoBackupFound : RestoreOutcome
         data class AuthFailed(val cause: Throwable) : RestoreOutcome
         data class NetworkFailed(val cause: Throwable) : RestoreOutcome
+        data class ServerFailed(val cause: Throwable) : RestoreOutcome
         data class FormatInvalid(val message: String) : RestoreOutcome
     }
 
     suspend fun backup(activityContext: Context): BackupOutcome {
         val tokenResult = tokenProvider.getValidAccessToken(activityContext)
-        val token = tokenResult.getOrElse { return BackupOutcome.AuthFailed(it) }
+        var token = tokenResult.getOrElse { return BackupOutcome.AuthFailed(it) }
 
         val content = exportJson()
 
         return try {
-            val fileId = resolveFileId(token)
-            val resultId = driveApi.uploadOrUpdate(
+            uploadBackup(token, content, allowFileIdFallback = true)
+        } catch (e: DriveApi.DriveApiException) {
+            if (e.statusCode in AUTH_FAILURE_STATUS_CODES) {
+                // Token the provider handed us was rejected (expired/revoked
+                // server-side even though our locally-computed TTL hadn't
+                // elapsed yet). Clear it and retry once with a fresh one
+                // before giving up.
+                tokenProvider.invalidate()
+                val retryToken = tokenProvider.getValidAccessToken(activityContext)
+                    .getOrElse { return BackupOutcome.AuthFailed(it) }
+                token = retryToken
+                try {
+                    uploadBackup(token, content, allowFileIdFallback = true)
+                } catch (e2: DriveApi.DriveApiException) {
+                    toBackupFailure(e2)
+                } catch (e2: IOException) {
+                    BackupOutcome.NetworkFailed(e2)
+                }
+            } else {
+                toBackupFailure(e)
+            }
+        } catch (e: IOException) {
+            BackupOutcome.NetworkFailed(e)
+        }
+    }
+
+    private suspend fun uploadBackup(
+        token: String,
+        content: String,
+        allowFileIdFallback: Boolean,
+    ): BackupOutcome.Success {
+        val fileId = resolveFileId(token)
+        val resultId = try {
+            driveApi.uploadOrUpdate(
                 accessToken = token,
                 existingFileId = fileId,
                 fileName = BACKUP_FILE_NAME,
                 jsonContent = content,
             )
-            fileIdStore.set(resultId)
-            BackupOutcome.Success(bytes = content.toByteArray(Charsets.UTF_8).size)
         } catch (e: DriveApi.DriveApiException) {
-            toBackupFailure(e)
-        } catch (e: IOException) {
-            BackupOutcome.NetworkFailed(e)
+            if (allowFileIdFallback && fileId != null && e.statusCode == STALE_FILE_ID_STATUS_CODE) {
+                // The cached id pointed at a file that's gone (deleted/moved
+                // in Drive) — clear it and fall back to a search by name
+                // rather than misreporting this as a network failure.
+                fileIdStore.clear()
+                val found = driveApi.findFileId(token, BACKUP_FILE_NAME)
+                if (found != null) {
+                    fileIdStore.set(found)
+                }
+                val retryId = driveApi.uploadOrUpdate(
+                    accessToken = token,
+                    existingFileId = found,
+                    fileName = BACKUP_FILE_NAME,
+                    jsonContent = content,
+                )
+                fileIdStore.set(retryId)
+                return BackupOutcome.Success(bytes = content.toByteArray(Charsets.UTF_8).size)
+            }
+            throw e
         }
+        fileIdStore.set(resultId)
+        return BackupOutcome.Success(bytes = content.toByteArray(Charsets.UTF_8).size)
     }
 
     suspend fun restore(activityContext: Context): RestoreOutcome {
@@ -74,17 +124,59 @@ class DriveBackupRepository(
         val token = tokenResult.getOrElse { return RestoreOutcome.AuthFailed(it) }
 
         return try {
-            val fileId = resolveFileId(token) ?: return RestoreOutcome.NoBackupFound
-            val content = driveApi.downloadContent(token, fileId)
-            val result = restoreJson(content)
-            RestoreOutcome.Success(result)
+            downloadBackup(token)
+        } catch (e: DriveApi.DriveApiException) {
+            if (e.statusCode in AUTH_FAILURE_STATUS_CODES) {
+                tokenProvider.invalidate()
+                val retryToken = tokenProvider.getValidAccessToken(activityContext)
+                    .getOrElse { return RestoreOutcome.AuthFailed(it) }
+                try {
+                    downloadBackup(retryToken)
+                } catch (e2: BackupFormatException) {
+                    RestoreOutcome.FormatInvalid(e2.message ?: "This isn't a valid Dhikr backup file.")
+                } catch (e2: DriveApi.DriveApiException) {
+                    toRestoreFailure(e2)
+                } catch (e2: IOException) {
+                    RestoreOutcome.NetworkFailed(e2)
+                }
+            } else {
+                toRestoreFailure(e)
+            }
         } catch (e: BackupFormatException) {
             RestoreOutcome.FormatInvalid(e.message ?: "This isn't a valid Dhikr backup file.")
-        } catch (e: DriveApi.DriveApiException) {
-            toRestoreFailure(e)
         } catch (e: IOException) {
             RestoreOutcome.NetworkFailed(e)
         }
+    }
+
+    private suspend fun downloadBackup(token: String): RestoreOutcome {
+        val cached = fileIdStore.get()
+        val fileId = cached ?: run {
+            val found = driveApi.findFileId(token, BACKUP_FILE_NAME)
+            if (found != null) {
+                fileIdStore.set(found)
+            }
+            found
+        } ?: return RestoreOutcome.NoBackupFound
+
+        val content = try {
+            driveApi.downloadContent(token, fileId)
+        } catch (e: DriveApi.DriveApiException) {
+            if (cached != null && e.statusCode == STALE_FILE_ID_STATUS_CODE) {
+                // Cached id is stale (file deleted/moved in Drive) — clear it
+                // and fall back to a fresh search instead of reporting a
+                // misleading network failure.
+                fileIdStore.clear()
+                val found = driveApi.findFileId(token, BACKUP_FILE_NAME)
+                    ?: return RestoreOutcome.NoBackupFound
+                fileIdStore.set(found)
+                driveApi.downloadContent(token, found)
+            } else {
+                throw e
+            }
+        }
+        val result = restoreJson(content)
+        return RestoreOutcome.Success(result)
     }
 
     /** Returns the file id to use: the cached one if present, otherwise a
@@ -105,16 +197,23 @@ class DriveBackupRepository(
     }
 
     private fun toBackupFailure(e: DriveApi.DriveApiException): BackupOutcome =
-        if (e.statusCode in AUTH_FAILURE_STATUS_CODES) {
-            BackupOutcome.AuthFailed(e)
-        } else {
-            BackupOutcome.NetworkFailed(e)
+        when {
+            e.statusCode in AUTH_FAILURE_STATUS_CODES -> BackupOutcome.AuthFailed(e)
+            e.statusCode == -1 -> BackupOutcome.NetworkFailed(e)
+            else -> BackupOutcome.ServerFailed(e)
         }
 
     private fun toRestoreFailure(e: DriveApi.DriveApiException): RestoreOutcome =
-        if (e.statusCode in AUTH_FAILURE_STATUS_CODES) {
-            RestoreOutcome.AuthFailed(e)
-        } else {
-            RestoreOutcome.NetworkFailed(e)
+        when {
+            e.statusCode in AUTH_FAILURE_STATUS_CODES -> RestoreOutcome.AuthFailed(e)
+            e.statusCode == -1 -> RestoreOutcome.NetworkFailed(e)
+            else -> RestoreOutcome.ServerFailed(e)
         }
+
+    private companion object {
+        /** `DriveApi` reports a connectivity-level `IOException` as status
+         *  -1 (see `defaultHttpCall`); treat only that as "no connection",
+         *  distinct from a genuine HTTP error status from Drive. */
+        const val STALE_FILE_ID_STATUS_CODE = 404
+    }
 }

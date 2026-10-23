@@ -54,6 +54,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dhikr.app.BuildConfig
 import com.dhikr.app.R
 import com.dhikr.app.core.ai.BenefitsLanguage
 import com.dhikr.app.core.datastore.CounterScript
@@ -1093,13 +1094,13 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
 
     // Tracks which action was in flight when the Drive Authorization API
     // demanded a consent screen, so it can be retried once that consent
-    // PendingIntent returns successfully.
-    var pendingAction by remember { mutableStateOf<DrivePendingAction?>(null) }
+    // PendingIntent returns successfully. rememberSaveable so a configuration
+    // change (rotation) during the consent screen doesn't lose track of it.
+    var pendingAction by rememberSaveable { mutableStateOf<DrivePendingAction?>(null) }
 
     val authorizationLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult(),
     ) { result ->
-        viewModel.clearStatus()
         if (result.resultCode == android.app.Activity.RESULT_OK) {
             when (pendingAction) {
                 DrivePendingAction.SIGN_IN -> viewModel.signIn(context)
@@ -1114,6 +1115,12 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
     val currentStatus = status
     if (currentStatus is DriveSyncViewModel.Status.AuthorizationResolutionRequired) {
         LaunchedEffect(currentStatus.pendingIntent) {
+            // Clear status to Idle before launching the intent sender, not
+            // after the result comes back: if the Activity recreates while
+            // status is still AuthorizationResolutionRequired, this effect
+            // would otherwise re-launch the consent screen a second time
+            // once the recomposition replays with the same pendingIntent key.
+            viewModel.clearStatus()
             authorizationLauncher.launch(
                 IntentSenderRequest.Builder(currentStatus.pendingIntent.intentSender).build(),
             )
@@ -1126,6 +1133,17 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
         color = colors.faint,
         modifier = Modifier.padding(top = 18.dp, bottom = 12.dp),
     )
+
+    val driveConfigured = BuildConfig.DRIVE_WEB_CLIENT_ID.isNotBlank() &&
+        BuildConfig.DRIVE_ANDROID_CLIENT_ID.isNotBlank()
+    if (!driveConfigured) {
+        Text(
+            stringResource(R.string.settings_backup_drive_not_configured),
+            fontSize = 12.sp,
+            color = colors.dim,
+        )
+        return
+    }
 
     val working = status is DriveSyncViewModel.Status.Working
     val signedInAccount = account
@@ -1191,8 +1209,12 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
         }
         DriveSyncViewModel.Status.NoBackupFound -> stringResource(R.string.settings_backup_drive_no_backup_found)
         is DriveSyncViewModel.Status.AuthorizationResolutionRequired -> null
-        is DriveSyncViewModel.Status.Error ->
-            if (s.isNetworkError) stringResource(R.string.settings_backup_drive_error_network) else s.message
+        is DriveSyncViewModel.Status.Error -> when (s.kind) {
+            DriveSyncViewModel.ErrorKind.NETWORK -> stringResource(R.string.settings_backup_drive_error_network)
+            DriveSyncViewModel.ErrorKind.AUTH -> stringResource(R.string.settings_backup_drive_error_auth)
+            DriveSyncViewModel.ErrorKind.SERVER -> stringResource(R.string.settings_backup_drive_error_server)
+            DriveSyncViewModel.ErrorKind.GENERIC -> s.message
+        }
     }
     if (driveMessage != null) {
         val isError = status is DriveSyncViewModel.Status.Error
