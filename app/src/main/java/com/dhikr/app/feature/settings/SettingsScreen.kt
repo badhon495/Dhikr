@@ -3,6 +3,7 @@ package com.dhikr.app.feature.settings
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -76,6 +78,7 @@ import java.util.Locale
 fun SettingsScreen(
     viewModel: SettingsViewModel,
     backupViewModel: BackupViewModel,
+    driveSyncViewModel: DriveSyncViewModel,
     scrollToTopSignal: Int = 0,
     onOpenQibla: () -> Unit = {},
 ) {
@@ -380,6 +383,7 @@ fun SettingsScreen(
         // ---- Backup ----
         SettingsSection(stringResource(R.string.settings_backup)) {
             BackupControls(backupViewModel)
+            DriveSyncControls(driveSyncViewModel)
         }
 
         // ---- About ----
@@ -1074,6 +1078,128 @@ private fun BackupActionRow(label: String, enabled: Boolean, onClick: () -> Unit
             fontSize = 13.5.sp,
             fontWeight = FontWeight.SemiBold,
             color = if (enabled) colors.onSage else colors.faint,
+        )
+    }
+}
+
+private enum class DrivePendingAction { SIGN_IN, BACKUP, RESTORE }
+
+@Composable
+private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
+    val colors = DhikrTheme.colors
+    val context = LocalContext.current
+    val account by viewModel.signedInAccount.collectAsState()
+    val status by viewModel.status.collectAsState()
+
+    // Tracks which action was in flight when the Drive Authorization API
+    // demanded a consent screen, so it can be retried once that consent
+    // PendingIntent returns successfully.
+    var pendingAction by remember { mutableStateOf<DrivePendingAction?>(null) }
+
+    val authorizationLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult(),
+    ) { result ->
+        viewModel.clearStatus()
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            when (pendingAction) {
+                DrivePendingAction.SIGN_IN -> viewModel.signIn(context)
+                DrivePendingAction.BACKUP -> viewModel.backup(context)
+                DrivePendingAction.RESTORE -> viewModel.restore(context)
+                null -> {}
+            }
+        }
+        pendingAction = null
+    }
+
+    val currentStatus = status
+    if (currentStatus is DriveSyncViewModel.Status.AuthorizationResolutionRequired) {
+        LaunchedEffect(currentStatus.pendingIntent) {
+            authorizationLauncher.launch(
+                IntentSenderRequest.Builder(currentStatus.pendingIntent.intentSender).build(),
+            )
+        }
+    }
+
+    Text(
+        stringResource(R.string.settings_backup_drive_desc),
+        fontSize = 12.sp,
+        color = colors.faint,
+        modifier = Modifier.padding(top = 18.dp, bottom = 12.dp),
+    )
+
+    val working = status is DriveSyncViewModel.Status.Working
+    val signedInAccount = account
+    if (signedInAccount == null) {
+        BackupActionRow(
+            label = stringResource(R.string.settings_backup_drive_sign_in),
+            enabled = !working,
+            onClick = {
+                pendingAction = DrivePendingAction.SIGN_IN
+                viewModel.signIn(context)
+            },
+        )
+    } else {
+        Text(
+            stringResource(
+                R.string.settings_backup_drive_signed_in_as,
+                signedInAccount.email ?: signedInAccount.displayName.orEmpty(),
+            ),
+            fontSize = 12.sp,
+            color = colors.dim,
+            modifier = Modifier.padding(bottom = 4.dp),
+        )
+        BackupActionRow(
+            label = stringResource(R.string.settings_backup_drive_backup),
+            enabled = !working,
+            onClick = {
+                pendingAction = DrivePendingAction.BACKUP
+                viewModel.backup(context)
+            },
+        )
+        BackupActionRow(
+            label = stringResource(R.string.settings_backup_drive_restore),
+            enabled = !working,
+            onClick = {
+                pendingAction = DrivePendingAction.RESTORE
+                viewModel.restore(context)
+            },
+        )
+        BackupActionRow(
+            label = stringResource(R.string.settings_backup_drive_sign_out),
+            enabled = !working,
+            onClick = { viewModel.signOut() },
+        )
+    }
+
+    val driveMessage: String? = when (val s = status) {
+        DriveSyncViewModel.Status.Idle -> null
+        DriveSyncViewModel.Status.Working -> stringResource(R.string.settings_backup_drive_working)
+        is DriveSyncViewModel.Status.BackupDone -> stringResource(R.string.settings_backup_drive_backup_done)
+        is DriveSyncViewModel.Status.RestoreDone -> {
+            val r = s.result
+            if (r.sessionsSkipped > 0) {
+                stringResource(
+                    R.string.settings_backup_drive_restore_done_skipped,
+                    r.tasbihRestored, r.routinesRestored, r.sessionsRestored, r.sessionsSkipped,
+                )
+            } else {
+                stringResource(
+                    R.string.settings_backup_drive_restore_done,
+                    r.tasbihRestored, r.routinesRestored, r.sessionsRestored,
+                )
+            }
+        }
+        DriveSyncViewModel.Status.NoBackupFound -> stringResource(R.string.settings_backup_drive_no_backup_found)
+        is DriveSyncViewModel.Status.AuthorizationResolutionRequired -> null
+        is DriveSyncViewModel.Status.Error -> s.message
+    }
+    if (driveMessage != null) {
+        val isError = status is DriveSyncViewModel.Status.Error
+        Text(
+            driveMessage,
+            fontSize = 12.sp,
+            color = if (isError) colors.text else colors.dim,
+            modifier = Modifier.padding(top = 10.dp),
         )
     }
 }

@@ -43,6 +43,11 @@ android {
         // language picker (locales_config.xml) honest and trims unused
         // AppCompat/lib locale resources.
         androidResources.localeFilters += listOf("en", "bn")
+
+        // Placeholders: real OAuth client ids come from Google Cloud Console
+        // setup the project owner does separately, outside this codebase.
+        buildConfigField("String", "DRIVE_WEB_CLIENT_ID", "\"\"")
+        buildConfigField("String", "DRIVE_ANDROID_CLIENT_ID", "\"\"")
     }
 
     buildTypes {
@@ -80,6 +85,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     // ABI splits produce the per-architecture APKs (+ a universal APK) for

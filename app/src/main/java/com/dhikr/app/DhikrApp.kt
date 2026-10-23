@@ -56,9 +56,16 @@ import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.CounterTextSize
+import com.dhikr.app.core.drivesync.DriveApi
+import com.dhikr.app.core.drivesync.DriveAuthManager
+import com.dhikr.app.core.drivesync.DriveBackupRepository
+import com.dhikr.app.core.drivesync.DriveFileIdStore
+import com.dhikr.app.core.drivesync.DriveTokenStore
+import com.dhikr.app.core.drivesync.driveSyncDataStore
 import com.dhikr.app.core.prayer.PrayerSettings
 import com.dhikr.app.core.shortcuts.AppShortcuts
 import com.dhikr.app.feature.qibla.QiblaScreen
+import com.dhikr.app.feature.settings.DriveSyncViewModel
 import kotlinx.coroutines.flow.combine
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
 import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
@@ -511,9 +518,33 @@ fun DhikrApp(
                     val backupViewModel: BackupViewModel = viewModel(
                         factory = BackupViewModel.Factory(backupRepository, appVersionName),
                     )
+                    val driveTokenStore = remember { DriveTokenStore(context.applicationContext) }
+                    val driveFileIdStore = remember { DriveFileIdStore(context.applicationContext.driveSyncDataStore) }
+                    val driveApi = remember { DriveApi() }
+                    val driveAuthManager = remember {
+                        DriveAuthManager(
+                            context = context.applicationContext,
+                            tokenStore = driveTokenStore,
+                            webClientId = BuildConfig.DRIVE_WEB_CLIENT_ID,
+                            androidClientId = BuildConfig.DRIVE_ANDROID_CLIENT_ID,
+                        )
+                    }
+                    val driveBackupRepository = remember {
+                        DriveBackupRepository(
+                            tokenProvider = driveAuthManager,
+                            driveApi = driveApi,
+                            fileIdStore = driveFileIdStore,
+                            exportJson = { backupRepository.export(appVersionName) },
+                            restoreJson = backupRepository::restore,
+                        )
+                    }
+                    val driveSyncViewModel: DriveSyncViewModel = viewModel(
+                        factory = DriveSyncViewModel.Factory(driveAuthManager, driveBackupRepository),
+                    )
                     SettingsScreen(
                         viewModel = viewModel,
                         backupViewModel = backupViewModel,
+                        driveSyncViewModel = driveSyncViewModel,
                         scrollToTopSignal = signalOf(ROUTE_SETTINGS),
                         onOpenQibla = { navController.navigate(ROUTE_QIBLA) },
                     )
