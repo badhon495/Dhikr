@@ -246,16 +246,23 @@ fun DhikrApp(
         }
 
         // Reminder-notification tap: deep-link into the routine's counter. The
-        // existing CounterViewModel routineId path handles the rest.
-        LaunchedEffect(pendingRoutineId) {
+        // existing CounterViewModel routineId path handles the rest. Gated on
+        // hasSeenOnboarding == true: NavHost (below) doesn't exist — and
+        // hasn't set its graph — until then, so navigate() on a cold start
+        // from the notification (before DataStore's onboarding flag loads)
+        // crashes with "You must call setGraph() before calling getGraph()".
+        LaunchedEffect(pendingRoutineId, hasSeenOnboarding) {
             val id = pendingRoutineId ?: return@LaunchedEffect
+            if (hasSeenOnboarding != true) return@LaunchedEffect
             navController.navigate("counter?routineId=$id")
             onPendingRoutineConsumed()
         }
 
-        // Per-tasbih reminder-notification tap: deep-link into that tasbih's counter.
-        LaunchedEffect(pendingTasbihId) {
+        // Per-tasbih reminder-notification tap: deep-link into that tasbih's
+        // counter. Same NavHost-not-ready guard as above.
+        LaunchedEffect(pendingTasbihId, hasSeenOnboarding) {
             val id = pendingTasbihId ?: return@LaunchedEffect
+            if (hasSeenOnboarding != true) return@LaunchedEffect
             navController.navigate("counter?dhikrId=$id")
             onPendingTasbihConsumed()
         }
@@ -263,8 +270,10 @@ fun DhikrApp(
         // Widget body tap: open the counter or insights tab. routineId (from a
         // reminder notification or a routine-state widget) takes precedence, so
         // when both are set this effect defers and lets the routine effect run.
-        LaunchedEffect(pendingOpen) {
+        // Same NavHost-not-ready guard as above.
+        LaunchedEffect(pendingOpen, hasSeenOnboarding) {
             val target = pendingOpen ?: return@LaunchedEffect
+            if (hasSeenOnboarding != true) return@LaunchedEffect
             if (pendingRoutineId == null) {
                 val route = when (target) {
                     MainActivity.OPEN_INSIGHTS -> ROUTE_INSIGHTS
