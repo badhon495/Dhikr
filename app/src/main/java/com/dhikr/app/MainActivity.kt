@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.platform.LocalContext
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
@@ -66,6 +67,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Paired with the fade-out SettingsScreen plays before AppLanguage.apply()
+        // triggers this recreate: starting transparent and fading in here (once
+        // the first frame is actually drawn, below) turns the recreate into one
+        // continuous cross-fade instead of a hard cut to a blank/stale frame.
+        window.decorView.alpha = 0f
         pendingRoutineId = intent?.getStringExtra(ReminderNotifications.EXTRA_ROUTINE_ID)
         pendingTasbihId = intent?.getStringExtra(ReminderNotifications.EXTRA_TASBIH_ID)
         pendingOpen = intent?.getStringExtra(EXTRA_OPEN)
@@ -154,6 +160,19 @@ class MainActivity : AppCompatActivity() {
                 pendingShareUri = pendingShareUri,
                 onPendingShareConsumed = { pendingShareUri = null },
             )
+            // Fires once this first composition has actually drawn (two frames
+            // deep, so Compose's own initial layout/draw isn't racing the fade),
+            // completing the cross-fade kicked off by the alpha = 0f above.
+            LaunchedEffect(Unit) {
+                withFrameNanos { }
+                withFrameNanos { }
+                window.decorView
+                    .animate()
+                    .alpha(1f)
+                    .setDuration(220L)
+                    .setInterpolator(android.view.animation.DecelerateInterpolator())
+                    .start()
+            }
         }
     }
 

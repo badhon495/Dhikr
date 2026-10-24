@@ -1,5 +1,6 @@
 package com.dhikr.app.feature.settings
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -114,13 +115,30 @@ fun SettingsScreen(
                 color = colors.faint,
                 modifier = Modifier.padding(bottom = 10.dp),
             )
+            val activity = LocalContext.current as? Activity
             ChoiceRow(
                 options = listOf(
                     AppLanguage.ENGLISH to stringResource(R.string.settings_language_english),
                     AppLanguage.BANGLA to stringResource(R.string.settings_language_bangla),
                 ),
                 selected = state.appLanguage,
-                onSelect = viewModel::onAppLanguageChange,
+                onSelect = { value ->
+                    // AppLanguage.apply() triggers an Activity recreate (system-driven
+                    // on API 33+, AppCompat-driven below it). Fading the window out
+                    // first hides that recreate's blank/flash frame behind black
+                    // instead of showing it directly; MainActivity.onCreate starts
+                    // its decorView transparent and fades it back in (see there),
+                    // so the whole switch reads as one deliberate cross-fade
+                    // instead of a hard cut.
+                    activity?.window?.decorView
+                        ?.animate()
+                        ?.alpha(0f)
+                        ?.setDuration(220L)
+                        ?.setInterpolator(android.view.animation.AccelerateInterpolator())
+                        ?.withEndAction { viewModel.onAppLanguageChange(value) }
+                        ?.start()
+                        ?: viewModel.onAppLanguageChange(value)
+                },
             )
         }
 
