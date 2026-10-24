@@ -1,6 +1,9 @@
 package com.dhikr.app.feature.dua
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -179,7 +182,11 @@ fun DuaScreen(
                     modifier = Modifier.size(16.dp),
                 )
                 Box(modifier = Modifier.weight(1f)) {
-                    if (searchQuery.isEmpty()) {
+                    androidx.compose.animation.AnimatedVisibility(
+                        visible = searchQuery.isEmpty(),
+                        enter = fadeIn(),
+                        exit = fadeOut(),
+                    ) {
                         Text(
                             text = stringResource(R.string.dua_search_placeholder),
                             fontSize = 13.sp,

@@ -1,10 +1,17 @@
 package com.dhikr.app.feature.counter
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -600,7 +607,10 @@ fun CounterScreen(
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
             ) {
-                itemsIndexed(state.routineSteps) { index, step ->
+                itemsIndexed(
+                    state.routineSteps,
+                    key = { _, step -> step.stepOrder },
+                ) { index, step ->
                     val isCurrent = index == state.currentRoutineStepIndex
                     val isCompleted = index < state.currentRoutineStepIndex
                     val isViewed = index == state.viewingRoutineStepIndex
@@ -776,11 +786,30 @@ fun CounterScreen(
                                 state.dhikr.lapTarget == 1 -> (state.lap - 1).coerceAtLeast(0)
                                 else -> state.count
                             }
-                            Text(
-                                text = shownCount.localizedDigits(lang),
-                                style = countStyle,
-                                color = colors.text,
-                            )
+                            // The ring/Box already pops on every tap (countScale,
+                            // above); this adds a small slide+fade on the digits
+                            // themselves so the new value reads as arriving, not
+                            // just appearing — kept brief so it doesn't fight that
+                            // bounce or lag behind fast repeated taps.
+                            AnimatedContent(
+                                targetState = shownCount,
+                                transitionSpec = {
+                                    if (reducedMotion) {
+                                        EnterTransition.None togetherWith ExitTransition.None
+                                    } else {
+                                        (slideInVertically(tween(Motion.FAST_MS, easing = Motion.StandardEasing)) { it / 3 } +
+                                            fadeIn(tween(Motion.FAST_MS)))
+                                            .togetherWith(fadeOut(tween(Motion.FAST_MS)))
+                                    }
+                                },
+                                label = "counterDigits",
+                            ) { value ->
+                                Text(
+                                    text = value.localizedDigits(lang),
+                                    style = countStyle,
+                                    color = colors.text,
+                                )
+                            }
                         }
                         Text(
                             // A 1-per-lap dhikr counts whole laps, so its target

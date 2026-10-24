@@ -1,5 +1,6 @@
 package com.dhikr.app.feature.routines
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -143,14 +144,15 @@ fun RoutineEditorScreen(
             modifier = Modifier.padding(top = 20.dp),
         )
 
-        if (state.steps.isEmpty()) {
+        AnimatedVisibility(visible = state.steps.isEmpty()) {
             Text(
                 text = stringResource(R.string.routine_editor_no_steps),
                 fontSize = 13.sp,
                 color = colors.faint,
                 modifier = Modifier.padding(vertical = 8.dp),
             )
-        } else {
+        }
+        if (state.steps.isNotEmpty()) {
             // A plain Column (not LazyColumn) — the whole screen already
             // scrolls, and routines are short (a handful of steps).
             state.steps.forEachIndexed { index, step ->

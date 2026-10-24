@@ -168,7 +168,7 @@ class CounterViewModel(
                 }
                 sortedRoutineSteps = sortedSteps
                 cachedRoutineStepDisplays = sortedSteps.mapIndexed { i, step ->
-                    RoutineStepDisplay(routineStepNames[i], step.targetCount)
+                    RoutineStepDisplay(routineStepNames[i], step.targetCount, step.stepOrder)
                 }
                 // Per-routine saved position for today (survives opening other
                 // routines, cleared at local midnight). Authoritative for

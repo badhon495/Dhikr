@@ -101,9 +101,22 @@ class SettingsViewModel(
     private val autoCounterSupported = AutoCounterSensorListener(appContext).isSupported
 
     // Seed the state with the persisted values read synchronously, so the first
-    // frame the screen paints already shows the saved choices. A default-valued
-    // SettingsUiState here would make every pill, toggle and value-sized section
-    // snap to its real state one frame later, reflowing the page on each visit.
+    // frame the screen paints already shows the saved choices — a default-valued
+    // SettingsUiState here visibly flashes (every pill, toggle and value-sized
+    // section snaps to its real state a frame later, reflowing the page). The
+    // 17 reads run concurrently (not one after another): sequential `.first()`
+    // calls inside a single runBlocking was a jank contributor (each is a
+    // coroutine suspend-resume hop even on a warm in-memory cache, and 17 of
+    // them in series added up) — firing them as 17 parallel `async`s collapses
+    // that to the cost of the slowest one instead of the sum of all of them.
+    //
+    // hasGeminiKey is deliberately NOT read here (nor passed to this seed):
+    // SecureKeyStore.hasKey touches EncryptedSharedPreferences, which on first
+    // access does real Android Keystore / Tink crypto setup — tens of ms, not
+    // the near-free DataStore read this comment used to assume. Reading it
+    // synchronously in the constructor was the actual cause of the ~100ms
+    // frame during the Settings nav-transition; it's loaded asynchronously
+    // just below instead and starts as false until that resolves.
     private val _uiState = MutableStateFlow(
         preferencesRepository.settingsInitialValues().let { p ->
             SettingsUiState(
@@ -126,7 +139,6 @@ class SettingsViewModel(
                 benefitsLanguage = p.benefitsLanguage,
                 benefitsPromptOverride = p.benefitsPromptOverride,
                 appVersion = appVersion,
-                hasGeminiKey = secureKeyStore.hasKey,
                 autoCounterSupported = autoCounterSupported,
                 appLanguage = AppLanguage.current,
             )
@@ -135,6 +147,11 @@ class SettingsViewModel(
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            val hasKey = secureKeyStore.hasKey
+            _uiState.value = _uiState.value.copy(hasGeminiKey = hasKey)
+        }
+
         combine(
             preferencesRepository.themeMode,
             preferencesRepository.hapticMode,
@@ -149,7 +166,7 @@ class SettingsViewModel(
                 dailyGoalTarget = dailyGoal,
                 dynamicColorEnabled = dynamicColor,
                 appVersion = appVersion,
-                hasGeminiKey = secureKeyStore.hasKey,
+                hasGeminiKey = _uiState.value.hasGeminiKey,
                 autoCounterSupported = autoCounterSupported,
             )
         }

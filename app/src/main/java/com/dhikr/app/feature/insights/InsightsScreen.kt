@@ -213,10 +213,10 @@ fun InsightsScreen(
                 format.format(cal.time)
             }
         }
-        val barChartDescription = stringResource(
-            R.string.insights_bar_chart_description,
-            state.last7Days.mapIndexed { i, (_, value) -> "${dayLabels[i]} $value" }.joinToString(", "),
-        )
+        val barChartSummary = remember(state.last7Days, dayLabels) {
+            state.last7Days.mapIndexed { i, (_, value) -> "${dayLabels[i]} $value" }.joinToString(", ")
+        }
+        val barChartDescription = stringResource(R.string.insights_bar_chart_description, barChartSummary)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -227,7 +227,9 @@ fun InsightsScreen(
                 .clearAndSetSemantics { contentDescription = barChartDescription },
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            val maxValue = (state.last7Days.maxOfOrNull { it.second } ?: 1).coerceAtLeast(1)
+            val maxValue = remember(state.last7Days) {
+                (state.last7Days.maxOfOrNull { it.second } ?: 1).coerceAtLeast(1)
+            }
             state.last7Days.forEachIndexed { index, (_, value) ->
                 val isToday = index == state.last7Days.lastIndex
                 Column(
@@ -294,7 +296,9 @@ fun InsightsScreen(
                 .background(colors.card)
                 .padding(12.dp),
         ) {
-            val sortedEntries = state.calendarIntensity.entries.sortedBy { it.key }
+            val sortedEntries = remember(state.calendarIntensity) {
+                state.calendarIntensity.entries.sortedBy { it.key }
+            }
             sortedEntries.chunked(7).forEach { week ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     week.forEach { (day, count) ->
@@ -508,6 +512,11 @@ fun DhikrHistoryCard(
     }
 }
 
+// Built once per process rather than per row: formatDayLabel runs inside a
+// per-day loop over a LazyColumn-rendered breakdown, and SimpleDateFormat's
+// own parse-pattern setup showed up as a scroll-jank contributor there.
+private val dayLabelFormat = SimpleDateFormat("EEE d MMM", Locale.getDefault())
+
 private fun formatDayLabel(dayStartMillis: Long, todayLabel: String, yesterdayLabel: String): String {
     val target = Calendar.getInstance().apply { timeInMillis = dayStartMillis }
     val today = Calendar.getInstance()
@@ -515,7 +524,7 @@ private fun formatDayLabel(dayStartMillis: Long, todayLabel: String, yesterdayLa
     return when {
         isSameDay(target, today) -> todayLabel
         isSameDay(target, yesterday) -> yesterdayLabel
-        else -> SimpleDateFormat("EEE d MMM", Locale.getDefault()).format(Date(dayStartMillis))
+        else -> dayLabelFormat.format(Date(dayStartMillis))
     }
 }
 

@@ -14,6 +14,7 @@ import com.dhikr.app.core.prayer.CalculationMethod
 import com.dhikr.app.core.prayer.DEFAULT_PRAYER_OFFSET_MINUTES
 import com.dhikr.app.core.prayer.Prayer
 import com.dhikr.app.core.prayer.PrayerSettings
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -335,29 +336,50 @@ class AppPreferencesRepository(private val context: Context) {
      * and toggle (and the sections whose height depends on a value) visibly
      * snaps once the Flows emit, reflowing the page on each visit.
      *
-     * Safe to block here: by the time Settings is reachable the DataStore file
-     * has already been read (MainActivity opens the same store on launch), so
-     * every `first()` returns from the in-memory cache without disk I/O.
+     * The 17 reads fire as concurrent `async`s rather than sequential
+     * `.first()` calls: by the time Settings is reachable the DataStore file
+     * is already warm (MainActivity opens the same store on launch) so none
+     * of them hit disk, but each `.first()` is still its own coroutine
+     * suspend-resume hop, and 17 of those back-to-back was enough to blow the
+     * frame budget during the nav-transition slide-in. Running them
+     * concurrently collapses the wall time to roughly the slowest one.
      */
     fun settingsInitialValues(): SettingsInitialValues = runBlocking {
+        val themeMode = async { themeMode.first() }
+        val hapticMode = async { hapticMode.first() }
+        val reducedMotion = async { reducedMotion.first() }
+        val strongBorders = async { strongBorders.first() }
+        val dailyGoalTarget = async { dailyGoalTarget.first() }
+        val dynamicColorEnabled = async { dynamicColorEnabled.first() }
+        val counterScript = async { counterScript.first() }
+        val autoCounterEnabled = async { autoCounterEnabled.first() }
+        val keepScreenOn = async { keepScreenOn.first() }
+        val volumeKeyCounting = async { volumeKeyCounting.first() }
+        val weeklyGoalTarget = async { weeklyGoalTarget.first() }
+        val counterTextSize = async { counterTextSize.first() }
+        val hijriAdjustDays = async { hijriAdjustDays.first() }
+        val prayerSettings = async { prayerSettings.first() }
+        val fastingReminderEnabled = async { fastingReminderEnabled.first() }
+        val benefitsLanguage = async { benefitsLanguage.first() }
+        val benefitsPromptOverride = async { benefitsPromptOverride.first() }
         SettingsInitialValues(
-            themeMode = themeMode.first(),
-            hapticMode = hapticMode.first(),
-            reducedMotion = reducedMotion.first(),
-            strongBorders = strongBorders.first(),
-            dailyGoalTarget = dailyGoalTarget.first(),
-            dynamicColorEnabled = dynamicColorEnabled.first(),
-            counterScript = counterScript.first(),
-            autoCounterEnabled = autoCounterEnabled.first(),
-            keepScreenOn = keepScreenOn.first(),
-            volumeKeyCounting = volumeKeyCounting.first(),
-            weeklyGoalTarget = weeklyGoalTarget.first(),
-            counterTextSize = counterTextSize.first(),
-            hijriAdjustDays = hijriAdjustDays.first(),
-            prayerSettings = prayerSettings.first(),
-            fastingReminderEnabled = fastingReminderEnabled.first(),
-            benefitsLanguage = benefitsLanguage.first(),
-            benefitsPromptOverride = benefitsPromptOverride.first(),
+            themeMode = themeMode.await(),
+            hapticMode = hapticMode.await(),
+            reducedMotion = reducedMotion.await(),
+            strongBorders = strongBorders.await(),
+            dailyGoalTarget = dailyGoalTarget.await(),
+            dynamicColorEnabled = dynamicColorEnabled.await(),
+            counterScript = counterScript.await(),
+            autoCounterEnabled = autoCounterEnabled.await(),
+            keepScreenOn = keepScreenOn.await(),
+            volumeKeyCounting = volumeKeyCounting.await(),
+            weeklyGoalTarget = weeklyGoalTarget.await(),
+            counterTextSize = counterTextSize.await(),
+            hijriAdjustDays = hijriAdjustDays.await(),
+            prayerSettings = prayerSettings.await(),
+            fastingReminderEnabled = fastingReminderEnabled.await(),
+            benefitsLanguage = benefitsLanguage.await(),
+            benefitsPromptOverride = benefitsPromptOverride.await(),
         )
     }
 

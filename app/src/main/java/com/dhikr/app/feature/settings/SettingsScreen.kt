@@ -6,6 +6,9 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -162,7 +165,7 @@ fun SettingsScreen(
                     }
                 },
             )
-            if (state.themeMode == ThemeMode.AUTO_TIME) {
+            AnimatedVisibility(visible = state.themeMode == ThemeMode.AUTO_TIME) {
                 Text(
                     stringResource(R.string.settings_theme_auto_hint),
                     fontSize = 11.5.sp,
@@ -419,7 +422,7 @@ fun SettingsScreen(
                 "mailto:badhon495@gmail.com",
             )
             AboutLine(stringResource(R.string.settings_about_disclaimer))
-            if (state.appVersion.isNotEmpty()) {
+            AnimatedVisibility(visible = state.appVersion.isNotEmpty()) {
                 Text(
                     stringResource(R.string.settings_version, state.appVersion),
                     fontSize = 12.sp,
@@ -623,7 +626,11 @@ private fun DailyGoalPicker(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
-            if (customText.isEmpty()) {
+            AnimatedVisibility(
+                visible = customText.isEmpty(),
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
                 Text(
                     stringResource(R.string.settings_daily_goal_custom_placeholder),
                     fontSize = 14.sp,

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import com.dhikr.app.core.database.entity.TasbihEntity
 
 @Immutable
-data class RoutineStepDisplay(val tasbihName: String, val targetCount: Int)
+data class RoutineStepDisplay(val tasbihName: String, val targetCount: Int, val stepOrder: Int = 0)
 
 // Elapsed session time is deliberately NOT a field here — the 1s timer tick
 // would otherwise rebuild this whole object every second and recompose the

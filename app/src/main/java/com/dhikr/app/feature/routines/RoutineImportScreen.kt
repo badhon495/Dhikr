@@ -86,7 +86,7 @@ fun RoutineImportScreen(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    items(s.preview.routines) { routine -> PreviewCard(routine) }
+                    items(s.preview.routines, key = { it.name }) { routine -> PreviewCard(routine) }
                     item {
                         Text(
                             text = if (s.preview.newTasbihCount > 0) {

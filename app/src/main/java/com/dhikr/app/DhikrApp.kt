@@ -151,15 +151,23 @@ fun DhikrApp(
     pendingShareUri: Uri? = null,
     onPendingShareConsumed: () -> Unit = {},
 ) {
+    // Hoisted above DhikrTheme (rather than declared in its content lambda,
+    // where the rest of this function's locals live) so DhikrTheme can read
+    // reducedMotion itself and crossfade color changes instead of snapping —
+    // LocalReducedMotion is provided further down, inside this same content
+    // lambda, so DhikrTheme can't see it unless it's passed in explicitly.
+    val context = LocalContext.current
+    val preferencesRepository = remember { AppPreferencesRepository(context.applicationContext) }
+    val reducedMotion by preferencesRepository.reducedMotion.collectAsState(initial = false)
     DhikrTheme(
         themeMode = themeMode,
         dynamicColor = dynamicColor,
         strongBorders = strongBorders,
         autoLightStart = autoLightStart,
         autoDarkStart = autoDarkStart,
+        reducedMotion = reducedMotion,
     ) {
         val navController = rememberNavController()
-        val context = LocalContext.current
         val app = context.applicationContext as DhikrApplication
 
         val sessionRepository = remember { SessionRepository(context.applicationContext) }
@@ -180,7 +188,6 @@ fun DhikrApp(
         }
         val historyRepository = remember { HistoryRepository(app.database.sessionDao(), tasbihRepository) }
         val duaRepository = remember { DuaRepository(app.database.duaDao()) }
-        val preferencesRepository = remember { AppPreferencesRepository(context.applicationContext) }
         val appVersionName = remember {
             runCatching {
                 context.packageManager.getPackageInfo(context.packageName, 0).versionName
@@ -198,7 +205,6 @@ fun DhikrApp(
             com.dhikr.app.core.notifications.ReminderScheduler(context.applicationContext)
         }
         val hapticMode by preferencesRepository.hapticMode.collectAsState(initial = HapticMode.EVERY_TAP)
-        val reducedMotion by preferencesRepository.reducedMotion.collectAsState(initial = false)
         val counterScript by preferencesRepository.counterScript.collectAsState(initial = CounterScript.PRONUNCIATION)
         val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsState(initial = false)
         val keepScreenOn by preferencesRepository.keepScreenOn.collectAsState(initial = false)

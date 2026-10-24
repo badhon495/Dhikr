@@ -1,5 +1,6 @@
 package com.dhikr.app.ui.theme
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -9,10 +10,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
 import com.dhikr.app.core.datastore.ThemeMode
+import com.dhikr.app.ui.Motion
+import com.dhikr.app.ui.motionSpec
 import java.util.Calendar
 import kotlinx.coroutines.delay
 
@@ -65,16 +69,37 @@ fun DhikrTheme(
     strongBorders: Boolean = false,
     autoLightStart: Int = DEFAULT_AUTO_LIGHT_START,
     autoDarkStart: Int = DEFAULT_AUTO_DARK_START,
+    reducedMotion: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val darkTheme = themeMode.resolveIsDark(autoLightStart, autoDarkStart)
     val useDynamic = dynamicColor && supportsDynamicColor()
     val context = LocalContext.current
-    val tokens = when {
+    val rawTokens = when {
         useDynamic -> dynamicDhikrColors(context, darkTheme, strongBorders)
         darkTheme -> DarkDhikrColors.let { if (strongBorders) it.withStrongBorders() else it }
         else -> LightDhikrColors.let { if (strongBorders) it.withStrongBorders() else it }
     }
+    // Crossfades every token when the palette switches (manual toggle, the
+    // AUTO_TIME boundary, system dark-mode, dynamic-color on/off) instead of
+    // every themed color snapping to its new value on the next frame.
+    val spec = motionSpec<Color>(reducedMotion, Motion.STANDARD_MS)
+    val tokens = DhikrColorTokens(
+        bg = animateColorAsState(rawTokens.bg, spec).value,
+        surface = animateColorAsState(rawTokens.surface, spec).value,
+        card = animateColorAsState(rawTokens.card, spec).value,
+        text = animateColorAsState(rawTokens.text, spec).value,
+        dim = animateColorAsState(rawTokens.dim, spec).value,
+        faint = animateColorAsState(rawTokens.faint, spec).value,
+        line = animateColorAsState(rawTokens.line, spec).value,
+        sage = animateColorAsState(rawTokens.sage, spec).value,
+        sageSoft = animateColorAsState(rawTokens.sageSoft, spec).value,
+        sageMid = animateColorAsState(rawTokens.sageMid, spec).value,
+        terra = animateColorAsState(rawTokens.terra, spec).value,
+        terraSoft = animateColorAsState(rawTokens.terraSoft, spec).value,
+        track = animateColorAsState(rawTokens.track, spec).value,
+        onSage = animateColorAsState(rawTokens.onSage, spec).value,
+    )
     // Material3's default colorScheme (background ~white, surface ~white) is
     // otherwise left untouched by DhikrColorTokens — components that read it
     // directly instead of DhikrTheme.colors (Scaffold's containerColor,
