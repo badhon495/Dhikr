@@ -70,6 +70,16 @@ class MainActivity : AppCompatActivity() {
         pendingTasbihId = intent?.getStringExtra(ReminderNotifications.EXTRA_TASBIH_ID)
         pendingOpen = intent?.getStringExtra(EXTRA_OPEN)
         pendingShareUri = if (intent?.action == Intent.ACTION_VIEW) intent?.data else null
+        // Strip the one-shot extras from the retained Intent so an Activity
+        // recreate (e.g. AppLanguage.apply's locale change) re-reads them as
+        // null instead of re-navigating to whatever screen they originally
+        // pointed at.
+        intent?.apply {
+            removeExtra(ReminderNotifications.EXTRA_ROUTINE_ID)
+            removeExtra(ReminderNotifications.EXTRA_TASBIH_ID)
+            removeExtra(EXTRA_OPEN)
+            if (action == Intent.ACTION_VIEW) action = null
+        }
         setContent {
             val context = LocalContext.current
             val preferencesRepository = remember {
