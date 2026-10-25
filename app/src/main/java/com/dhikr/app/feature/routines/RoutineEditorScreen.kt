@@ -50,6 +50,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
+import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.localizedDigits
@@ -68,6 +69,10 @@ fun RoutineEditorScreen(
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
     var showPicker by remember { mutableStateOf(false) }
+    val bn = LocalAppLanguage.current == AppLanguage.BANGLA
+    var showOther by rememberSaveable { mutableStateOf(false) }
+    val hasOther = if (bn) state.name.isNotBlank() else state.nameBn.isNotBlank()
+    LaunchedEffect(hasOther) { if (hasOther) showOther = true }
 
     Column(
         modifier = Modifier
@@ -122,7 +127,7 @@ fun RoutineEditorScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
-            if (state.name.isEmpty()) {
+            if ((if (bn) state.nameBn else state.name).isEmpty()) {
                 Text(
                     text = stringResource(R.string.routine_editor_name_placeholder),
                     fontSize = 14.sp,
@@ -130,8 +135,8 @@ fun RoutineEditorScreen(
                 )
             }
             BasicTextField(
-                value = state.name,
-                onValueChange = viewModel::onNameChange,
+                value = (if (bn) state.nameBn else state.name),
+                onValueChange = { if (bn) viewModel.onNameBnChange(it) else viewModel.onNameChange(it) },
                 singleLine = true,
                 textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                 cursorBrush = SolidColor(colors.text),
@@ -139,10 +144,35 @@ fun RoutineEditorScreen(
             )
         }
 
-        FieldLabel(
-            text = stringResource(R.string.dua_editor_name_bn_label),
-            modifier = Modifier.padding(top = 20.dp),
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp)
+                .clip(ListRowShape)
+                .background(colors.surface)
+                .clickable(role = Role.Button) { showOther = !showOther }
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+        ) {
+            Text(
+                text = stringResource(
+                    when {
+                        bn && showOther -> R.string.editor_hide_english
+                        bn -> R.string.editor_add_english_toggle
+                        showOther -> R.string.dua_editor_hide_bangla
+                        else -> R.string.dua_editor_add_bangla_toggle
+                    },
+                ),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colors.text,
+            )
+        }
+
+        if (showOther) {
+            val otherLabel = stringResource(
+                if (bn) R.string.editor_name_en_label else R.string.dua_editor_name_bn_label,
+            )
+            FieldLabel(text = otherLabel, modifier = Modifier.padding(top = 12.dp))
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -153,21 +183,22 @@ fun RoutineEditorScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             contentAlignment = Alignment.CenterStart,
         ) {
-            if (state.nameBn.isEmpty()) {
+            if ((if (bn) state.name else state.nameBn).isEmpty()) {
                 Text(
-                    text = stringResource(R.string.dua_editor_name_bn_label),
+                    text = otherLabel,
                     fontSize = 14.sp,
                     color = colors.faint,
                 )
             }
             BasicTextField(
-                value = state.nameBn,
-                onValueChange = viewModel::onNameBnChange,
+                value = (if (bn) state.name else state.nameBn),
+                onValueChange = { if (bn) viewModel.onNameChange(it) else viewModel.onNameBnChange(it) },
                 singleLine = true,
                 textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                 cursorBrush = SolidColor(colors.text),
                 modifier = Modifier.fillMaxWidth(),
             )
+        }
         }
 
         FieldLabel(

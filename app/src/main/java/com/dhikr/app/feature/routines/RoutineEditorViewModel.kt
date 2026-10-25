@@ -124,11 +124,12 @@ class RoutineEditorViewModel(
         viewModelScope.launch {
             val steps = s.steps.map { it.tasbihId to it.targetCount }
             val nameBn = s.nameBn.trim().ifBlank { null }
+            val nameEn = s.name.trim().ifBlank { nameBn.orEmpty() }
             val id = if (editingRoutineId != null) {
-                routineRepository.updateRoutine(editingRoutineId, s.name.trim(), steps, nameBn)
+                routineRepository.updateRoutine(editingRoutineId, nameEn, steps, nameBn)
                 editingRoutineId
             } else {
-                routineRepository.createRoutine(name = s.name.trim(), steps = steps, nameBn = nameBn)
+                routineRepository.createRoutine(name = nameEn, steps = steps, nameBn = nameBn)
             }
             val daysMask = s.reminderDays and 0x7F
             routineRepository.setReminder(id, s.reminderEnabled, s.reminderMinuteOfDay, daysMask)
@@ -142,7 +143,7 @@ class RoutineEditorViewModel(
     }
 
     private fun RoutineEditorUiState.withCanSave(): RoutineEditorUiState =
-        copy(canSave = name.isNotBlank() && steps.isNotEmpty())
+        copy(canSave = (name.isNotBlank() || nameBn.isNotBlank()) && steps.isNotEmpty())
 
     private inline fun update(block: (RoutineEditorUiState) -> RoutineEditorUiState) {
         _uiState.value = block(_uiState.value)

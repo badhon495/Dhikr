@@ -57,6 +57,9 @@ data class TasbihEditorUiState(
 ) {
     val arabicRequired: Boolean get() = requiredScript == CounterScript.ARABIC
     val pronunciationRequired: Boolean get() = requiredScript == CounterScript.PRONUNCIATION
+    val hasEnglish: Boolean
+        get() = name.isNotBlank() || pronunciation.isNotBlank() ||
+            translation.isNotBlank() || note.isNotBlank()
     val hasBangla: Boolean
         get() = nameBn.isNotBlank() || pronunciationBn.isNotBlank() ||
             translationBn.isNotBlank() || noteBn.isNotBlank()
@@ -152,11 +155,11 @@ class TasbihEditorViewModel(
                 id = existing.id
                 repository.update(
                     existing.copy(
-                        name = s.name,
+                        name = s.name.ifBlank { s.nameBn },
                         arabic = s.arabic,
-                        pronunciation = s.pronunciation,
-                        translation = s.translation,
-                        note = s.note,
+                        pronunciation = s.pronunciation.ifBlank { s.pronunciationBn },
+                        translation = s.translation.ifBlank { s.translationBn },
+                        note = s.note.ifBlank { s.noteBn },
                         nameBn = s.nameBn.ifBlank { null },
                         pronunciationBn = s.pronunciationBn.ifBlank { null },
                         translationBn = s.translationBn.ifBlank { null },
@@ -174,11 +177,11 @@ class TasbihEditorViewModel(
                 repository.insert(
                     TasbihEntity(
                         id = id,
-                        name = s.name,
+                        name = s.name.ifBlank { s.nameBn },
                         arabic = s.arabic,
-                        pronunciation = s.pronunciation,
-                        translation = s.translation,
-                        note = s.note,
+                        pronunciation = s.pronunciation.ifBlank { s.pronunciationBn },
+                        translation = s.translation.ifBlank { s.translationBn },
+                        note = s.note.ifBlank { s.noteBn },
                         nameBn = s.nameBn.ifBlank { null },
                         pronunciationBn = s.pronunciationBn.ifBlank { null },
                         translationBn = s.translationBn.ifBlank { null },
@@ -237,9 +240,12 @@ class TasbihEditorViewModel(
         update { s ->
             val scriptFilled = when (s.requiredScript) {
                 CounterScript.ARABIC -> s.arabic.isNotBlank()
-                CounterScript.PRONUNCIATION -> s.pronunciation.isNotBlank()
+                CounterScript.PRONUNCIATION ->
+                    s.pronunciation.isNotBlank() || s.pronunciationBn.isNotBlank()
             }
-            s.copy(canSave = s.name.isNotBlank() && scriptFilled)
+            // The app-language side is the primary form, so either language's
+            // name satisfies the requirement; save copies it to the empty side.
+            s.copy(canSave = (s.name.isNotBlank() || s.nameBn.isNotBlank()) && scriptFilled)
         }
     }
 

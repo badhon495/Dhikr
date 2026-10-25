@@ -595,4 +595,10 @@
     <string name="qibla_turn_left">Turn left %1$s°</string>
     <string name="qibla_calibrate">Compass accuracy is low — move the phone in a figure-of-eight to calibrate.</string>
     <string name="qibla_note">Hold the phone flat, away from metal and magnets. Phone compasses can be off by several degrees.</string>
+    <string name="editor_add_english_toggle">Add English</string>
+    <string name="editor_hide_english">Hide English</string>
+    <string name="editor_name_en_label">Name (English)</string>
+    <string name="editor_pronunciation_en_label">Pronunciation (English)</string>
+    <string name="editor_translation_en_label">Translation (English)</string>
+    <string name="editor_note_en_label">Personal note (English)</string>
 </resources>

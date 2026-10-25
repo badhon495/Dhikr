@@ -114,12 +114,12 @@ class DuaEditorViewModel(
                 category = category,
                 categoryOrder = categoryOrder,
                 order = order,
-                name = s.name,
+                name = s.name.ifBlank { s.nameBn },
                 nameBn = s.nameBn.ifBlank { null },
                 arabic = s.arabic,
                 pronunciation = s.pronunciation.ifBlank { null },
                 pronunciationBn = s.pronunciationBn.ifBlank { null },
-                translation = s.translation,
+                translation = s.translation.ifBlank { s.translationBn },
                 translationBn = s.translationBn.ifBlank { null },
                 source = s.source.ifBlank { null },
                 repeatCount = s.repeatCount,
@@ -145,8 +145,10 @@ class DuaEditorViewModel(
     private fun recomputeSaveEnabled() {
         update { s ->
             s.copy(
-                isSaveEnabled = s.category.isNotBlank() && s.name.isNotBlank() &&
-                    s.arabic.isNotBlank() && s.translation.isNotBlank(),
+                isSaveEnabled = s.category.isNotBlank() &&
+                    (s.name.isNotBlank() || s.nameBn.isNotBlank()) &&
+                    s.arabic.isNotBlank() &&
+                    (s.translation.isNotBlank() || s.translationBn.isNotBlank()),
             )
         }
     }

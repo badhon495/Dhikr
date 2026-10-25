@@ -51,6 +51,8 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
+import com.dhikr.app.core.localization.AppLanguage
+import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.DialogShape
@@ -62,12 +64,17 @@ import com.dhikr.app.ui.theme.PillShape
 fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
+    val bn = LocalAppLanguage.current == AppLanguage.BANGLA
+    // showBangla is the collapsible secondary-language section (English when the app is Bangla).
     var showBangla by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
     // Existing entries that already carry Bangla open the section on load.
-    val hasBangla = state.nameBn.isNotBlank() || state.pronunciationBn.isNotBlank() ||
-        state.translationBn.isNotBlank()
-    LaunchedEffect(hasBangla) { if (hasBangla) showBangla = true }
+    val hasOther = if (bn) {
+        state.name.isNotBlank() || state.pronunciation.isNotBlank() || state.translation.isNotBlank()
+    } else {
+        state.nameBn.isNotBlank() || state.pronunciationBn.isNotBlank() || state.translationBn.isNotBlank()
+    }
+    LaunchedEffect(hasOther) { if (hasOther) showBangla = true }
 
     Column(
         modifier = Modifier
@@ -144,8 +151,11 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
 
         LabeledField(stringResource(R.string.dua_editor_name_label)) {
             PillTextField(
-                value = state.name,
-                onValueChange = viewModel::onNameChange,
+                value = if (bn) state.nameBn else state.name,
+                onValueChange = {
+                    if (bn) viewModel.onBanglaFieldChange(DuaBanglaField.NAME, it)
+                    else viewModel.onNameChange(it)
+                },
                 placeholder = stringResource(R.string.dua_editor_name_placeholder),
                 testTag = "dua_editor_name",
             )
@@ -169,8 +179,11 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
 
         LabeledField(stringResource(R.string.dua_editor_pronunciation_label)) {
             PillTextField(
-                value = state.pronunciation,
-                onValueChange = viewModel::onPronunciationChange,
+                value = if (bn) state.pronunciationBn else state.pronunciation,
+                onValueChange = {
+                    if (bn) viewModel.onBanglaFieldChange(DuaBanglaField.PRONUNCIATION, it)
+                    else viewModel.onPronunciationChange(it)
+                },
                 placeholder = stringResource(R.string.dua_editor_pronunciation_placeholder),
                 testTag = "dua_editor_pronunciation",
             )
@@ -178,8 +191,11 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
 
         LabeledField(stringResource(R.string.dua_editor_translation_label)) {
             PillTextField(
-                value = state.translation,
-                onValueChange = viewModel::onTranslationChange,
+                value = if (bn) state.translationBn else state.translation,
+                onValueChange = {
+                    if (bn) viewModel.onBanglaFieldChange(DuaBanglaField.TRANSLATION, it)
+                    else viewModel.onTranslationChange(it)
+                },
                 placeholder = stringResource(R.string.dua_editor_translation_placeholder),
                 testTag = "dua_editor_translation",
             )
@@ -226,11 +242,14 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                 .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
             Text(
-                text = if (showBangla) {
-                    stringResource(R.string.dua_editor_hide_bangla)
-                } else {
-                    stringResource(R.string.dua_editor_add_bangla_toggle)
-                },
+                text = stringResource(
+                    when {
+                        bn && showBangla -> R.string.editor_hide_english
+                        bn -> R.string.editor_add_english_toggle
+                        showBangla -> R.string.dua_editor_hide_bangla
+                        else -> R.string.dua_editor_add_bangla_toggle
+                    },
+                ),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = colors.text,
@@ -238,28 +257,43 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
         }
 
         if (showBangla) {
-            LabeledField(stringResource(R.string.dua_editor_name_bn_label)) {
+            LabeledField(
+                stringResource(if (bn) R.string.editor_name_en_label else R.string.dua_editor_name_bn_label),
+            ) {
                 PillTextField(
-                    value = state.nameBn,
-                    onValueChange = { viewModel.onBanglaFieldChange(DuaBanglaField.NAME, it) },
-                    placeholder = stringResource(R.string.dua_editor_name_bn_label),
-                    testTag = "dua_editor_name_bn",
+                    value = if (bn) state.name else state.nameBn,
+                    onValueChange = {
+                        if (bn) viewModel.onNameChange(it)
+                        else viewModel.onBanglaFieldChange(DuaBanglaField.NAME, it)
+                    },
+                    placeholder = stringResource(if (bn) R.string.editor_name_en_label else R.string.dua_editor_name_bn_label),
+                    testTag = "dua_editor_name_other",
                 )
             }
-            LabeledField(stringResource(R.string.dua_editor_pronunciation_bn_label)) {
+            LabeledField(
+                stringResource(if (bn) R.string.editor_pronunciation_en_label else R.string.dua_editor_pronunciation_bn_label),
+            ) {
                 PillTextField(
-                    value = state.pronunciationBn,
-                    onValueChange = { viewModel.onBanglaFieldChange(DuaBanglaField.PRONUNCIATION, it) },
-                    placeholder = stringResource(R.string.dua_editor_pronunciation_bn_label),
-                    testTag = "dua_editor_pronunciation_bn",
+                    value = if (bn) state.pronunciation else state.pronunciationBn,
+                    onValueChange = {
+                        if (bn) viewModel.onPronunciationChange(it)
+                        else viewModel.onBanglaFieldChange(DuaBanglaField.PRONUNCIATION, it)
+                    },
+                    placeholder = stringResource(if (bn) R.string.editor_pronunciation_en_label else R.string.dua_editor_pronunciation_bn_label),
+                    testTag = "dua_editor_pronunciation_other",
                 )
             }
-            LabeledField(stringResource(R.string.dua_editor_translation_bn_label)) {
+            LabeledField(
+                stringResource(if (bn) R.string.editor_translation_en_label else R.string.dua_editor_translation_bn_label),
+            ) {
                 PillTextField(
-                    value = state.translationBn,
-                    onValueChange = { viewModel.onBanglaFieldChange(DuaBanglaField.TRANSLATION, it) },
-                    placeholder = stringResource(R.string.dua_editor_translation_bn_label),
-                    testTag = "dua_editor_translation_bn",
+                    value = if (bn) state.translation else state.translationBn,
+                    onValueChange = {
+                        if (bn) viewModel.onTranslationChange(it)
+                        else viewModel.onBanglaFieldChange(DuaBanglaField.TRANSLATION, it)
+                    },
+                    placeholder = stringResource(if (bn) R.string.editor_translation_en_label else R.string.dua_editor_translation_bn_label),
+                    testTag = "dua_editor_translation_other",
                 )
             }
         }

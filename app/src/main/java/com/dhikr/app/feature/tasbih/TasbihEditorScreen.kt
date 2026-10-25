@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
+import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.ReminderSection
@@ -65,9 +66,11 @@ import com.dhikr.app.ui.theme.PillShape
 fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
-    var showBangla by rememberSaveable { mutableStateOf(false) }
-    // Existing entries that already carry Bangla open the section on load.
-    LaunchedEffect(state.hasBangla) { if (state.hasBangla) showBangla = true }
+    val bn = LocalAppLanguage.current == AppLanguage.BANGLA
+    var showOther by rememberSaveable { mutableStateOf(false) }
+    // Existing entries that already carry the other language open the section on load.
+    val hasOther = if (bn) state.hasEnglish else state.hasBangla
+    LaunchedEffect(hasOther) { if (hasOther) showOther = true }
 
     Column(
         modifier = Modifier
@@ -111,13 +114,7 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
             )
         }
 
-        LabeledField(stringResource(R.string.tasbih_editor_name_label)) {
-            PillTextField(
-                value = state.name,
-                onValueChange = viewModel::onNameChange,
-                placeholder = stringResource(R.string.tasbih_editor_name_placeholder),
-            )
-        }
+        PrimaryFields(bn = bn, secondary = false, state = state, viewModel = viewModel, part = Part.NAME)
 
         LabeledField(
             maybeRequired(
@@ -139,53 +136,7 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
             }
         }
 
-        LabeledField(
-            maybeRequired(
-                stringResource(R.string.tasbih_editor_pronunciation_label),
-                state.pronunciationRequired,
-            ),
-        ) {
-            PillTextField(
-                value = state.pronunciation,
-                onValueChange = viewModel::onPronunciationChange,
-                placeholder = stringResource(R.string.tasbih_editor_pronunciation_placeholder),
-            )
-        }
-
-        LabeledField(stringResource(R.string.tasbih_editor_translation_label)) {
-            PillTextField(
-                value = state.translation,
-                onValueChange = viewModel::onTranslationChange,
-                placeholder = stringResource(R.string.tasbih_editor_translation_placeholder),
-            )
-        }
-
-        LabeledField(stringResource(R.string.tasbih_editor_note_label)) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(ListRowShape)
-                    .background(colors.card)
-                    .border(1.dp, colors.line, ListRowShape)
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-            ) {
-                if (state.note.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.tasbih_editor_note_placeholder),
-                        fontSize = 14.sp,
-                        color = colors.faint,
-                    )
-                }
-                BasicTextField(
-                    value = state.note,
-                    onValueChange = viewModel::onNoteChange,
-                    minLines = 3,
-                    textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
-                    cursorBrush = SolidColor(colors.text),
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            }
-        }
+        PrimaryFields(bn = bn, secondary = false, state = state, viewModel = viewModel, part = Part.REST)
 
         Box(
             modifier = Modifier
@@ -193,13 +144,17 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
                 .padding(bottom = 15.dp)
                 .clip(ListRowShape)
                 .background(colors.surface)
-                .clickable(role = Role.Button) { showBangla = !showBangla }
+                .clickable(role = Role.Button) { showOther = !showOther }
                 .padding(horizontal = 16.dp, vertical = 12.dp),
         ) {
             Text(
                 text = stringResource(
-                    if (showBangla) R.string.dua_editor_hide_bangla
-                    else R.string.dua_editor_add_bangla_toggle,
+                    when {
+                        bn && showOther -> R.string.editor_hide_english
+                        bn -> R.string.editor_add_english_toggle
+                        showOther -> R.string.dua_editor_hide_bangla
+                        else -> R.string.dua_editor_add_bangla_toggle
+                    },
                 ),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -207,35 +162,9 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
             )
         }
 
-        if (showBangla) {
-            LabeledField(stringResource(R.string.dua_editor_name_bn_label)) {
-                PillTextField(
-                    value = state.nameBn,
-                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.NAME, it) },
-                    placeholder = stringResource(R.string.dua_editor_name_bn_label),
-                )
-            }
-            LabeledField(stringResource(R.string.dua_editor_pronunciation_bn_label)) {
-                PillTextField(
-                    value = state.pronunciationBn,
-                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.PRONUNCIATION, it) },
-                    placeholder = stringResource(R.string.dua_editor_pronunciation_bn_label),
-                )
-            }
-            LabeledField(stringResource(R.string.dua_editor_translation_bn_label)) {
-                PillTextField(
-                    value = state.translationBn,
-                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.TRANSLATION, it) },
-                    placeholder = stringResource(R.string.dua_editor_translation_bn_label),
-                )
-            }
-            LabeledField(stringResource(R.string.tasbih_editor_note_bn_label)) {
-                PillTextField(
-                    value = state.noteBn,
-                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.NOTE, it) },
-                    placeholder = stringResource(R.string.tasbih_editor_note_bn_label),
-                )
-            }
+        if (showOther) {
+            PrimaryFields(bn = bn, secondary = true, state = state, viewModel = viewModel, part = Part.NAME)
+            PrimaryFields(bn = bn, secondary = true, state = state, viewModel = viewModel, part = Part.REST)
         }
 
         LabeledField(stringResource(R.string.tasbih_editor_lap_target_label)) {
@@ -322,6 +251,99 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
     }
 }
 
+
+private enum class Part { NAME, REST }
+
+/**
+ * The name / pronunciation / translation / note fields for one language side.
+ * [bn] says the app language is Bangla; [secondary] flips to the other side, so
+ * the app language is always the primary (top) set and the other is the
+ * collapsible one. [Part.REST] holds everything that sits below the Arabic field.
+ */
+@Composable
+private fun PrimaryFields(
+    bn: Boolean,
+    secondary: Boolean,
+    state: TasbihEditorUiState,
+    viewModel: TasbihEditorViewModel,
+    part: Part,
+) {
+    val bnSide = bn != secondary
+    if (part == Part.NAME) {
+        LangField(
+            label = stringResource(
+                if (!secondary) R.string.tasbih_editor_name_label
+                else if (bn) R.string.editor_name_en_label else R.string.dua_editor_name_bn_label,
+            ),
+            placeholder = if (secondary) null else stringResource(R.string.tasbih_editor_name_placeholder),
+            value = if (bnSide) state.nameBn else state.name,
+            onValueChange = {
+                if (bnSide) viewModel.onBanglaFieldChange(TasbihBanglaField.NAME, it)
+                else viewModel.onNameChange(it)
+            },
+        )
+        return
+    }
+    val pronLabel = stringResource(
+        if (!secondary) R.string.tasbih_editor_pronunciation_label
+        else if (bn) R.string.editor_pronunciation_en_label else R.string.dua_editor_pronunciation_bn_label,
+    )
+    LangField(
+        label = if (!secondary && state.pronunciationRequired) {
+            stringResource(R.string.tasbih_editor_required_suffix, pronLabel)
+        } else pronLabel,
+        placeholder = if (secondary) null else stringResource(R.string.tasbih_editor_pronunciation_placeholder),
+        value = if (bnSide) state.pronunciationBn else state.pronunciation,
+        onValueChange = {
+            if (bnSide) viewModel.onBanglaFieldChange(TasbihBanglaField.PRONUNCIATION, it)
+            else viewModel.onPronunciationChange(it)
+        },
+    )
+    LangField(
+        label = stringResource(
+            if (!secondary) R.string.tasbih_editor_translation_label
+            else if (bn) R.string.editor_translation_en_label else R.string.dua_editor_translation_bn_label,
+        ),
+        placeholder = if (secondary) null else stringResource(R.string.tasbih_editor_translation_placeholder),
+        value = if (bnSide) state.translationBn else state.translation,
+        onValueChange = {
+            if (bnSide) viewModel.onBanglaFieldChange(TasbihBanglaField.TRANSLATION, it)
+            else viewModel.onTranslationChange(it)
+        },
+    )
+    LangField(
+        label = stringResource(
+            if (!secondary) R.string.tasbih_editor_note_label
+            else if (bn) R.string.editor_note_en_label else R.string.tasbih_editor_note_bn_label,
+        ),
+        placeholder = if (secondary) null else stringResource(R.string.tasbih_editor_note_placeholder),
+        value = if (bnSide) state.noteBn else state.note,
+        onValueChange = {
+            if (bnSide) viewModel.onBanglaFieldChange(TasbihBanglaField.NOTE, it)
+            else viewModel.onNoteChange(it)
+        },
+        minLines = 3,
+    )
+}
+
+@Composable
+private fun LangField(
+    label: String,
+    placeholder: String?,
+    value: String,
+    onValueChange: (String) -> Unit,
+    minLines: Int = 1,
+) {
+    LabeledField(label) {
+        PillTextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = placeholder ?: label,
+            minLines = minLines,
+        )
+    }
+}
+
 /** Appends a " · required" suffix to [label] when [required], for the one of
  *  Arabic / Pronunciation that the current counter-script setting demands. */
 @Composable
@@ -350,6 +372,7 @@ private fun PillTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     textStyle: TextStyle? = null,
+    minLines: Int = 1,
 ) {
     val colors = DhikrTheme.colors
     val style = textStyle ?: TextStyle(fontSize = 14.sp, color = colors.text)
@@ -370,6 +393,7 @@ private fun PillTextField(
             value = value,
             onValueChange = onValueChange,
             singleLine = false,
+            minLines = minLines,
             textStyle = style,
             cursorBrush = SolidColor(colors.text),
             modifier = Modifier.fillMaxWidth(),
