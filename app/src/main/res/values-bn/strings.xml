@@ -68,7 +68,6 @@
     <string name="home_routines_title">রুটিন</string>
     <string name="home_routines_manage">পরিচালনা</string>
     <string name="home_routines_empty_hint">এখানে যোগ করতে রুটিন পেজে গিয়ে রুটিনে তারা চিহ্ন দিন।</string>
-    <string name="home_dua_of_the_day_kicker">আজকের দোয়া</string>
     <string name="home_backup_nudge_title">আপনার যিকির সুরক্ষিত রাখুন</string>
     <string name="home_backup_nudge_body">অনেকদিন ব্যাকআপ নেওয়া হয়নি। দ্রুত একটি ব্যাকআপ নিলে আপনার ইতিহাস কখনো হারাবে না।</string>
     <string name="home_backup_nudge_action">ব্যাকআপ নিন</string>

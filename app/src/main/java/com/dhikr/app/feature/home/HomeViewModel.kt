@@ -4,10 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.counter.CounterDisplay
-import com.dhikr.app.core.database.DuaRepository
 import com.dhikr.app.core.database.HistoryRepository
-import com.dhikr.app.core.database.entity.DuaEntity
-import com.dhikr.app.core.utilities.DuaOfTheDay
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.database.dao.RoutineWithSteps
@@ -71,7 +68,6 @@ data class HomeUiState(
     val tasbihProgress: Map<String, Float> = emptyMap(),
     // Gentle "back up your data" card — see BackupNudge for the rule.
     val showBackupNudge: Boolean = false,
-    val duaOfTheDay: DuaEntity? = null,
 )
 
 /**
@@ -90,7 +86,6 @@ class HomeViewModel(
     private val historyRepository: HistoryRepository,
     private val sessionRepository: SessionRepository,
     private val preferencesRepository: AppPreferencesRepository,
-    private val duaRepository: DuaRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -186,20 +181,7 @@ class HomeViewModel(
                 )
             }
             // The nudge is collected separately below; carry its latest value over.
-            .onEach {
-                val current = _uiState.value
-                _uiState.value = it.copy(
-                    showBackupNudge = current.showBackupNudge,
-                    duaOfTheDay = current.duaOfTheDay,
-                )
-            }
-            .launchIn(viewModelScope)
-
-        combine(duaRepository.observeAll(), clockTick) { duas, _ ->
-            DuaOfTheDay.pick(duas, DuaOfTheDay.localEpochDay(System.currentTimeMillis()))
-        }
-            .distinctUntilChanged()
-            .onEach { dua -> _uiState.update { it.copy(duaOfTheDay = dua) } }
+            .onEach { _uiState.value = it.copy(showBackupNudge = _uiState.value.showBackupNudge) }
             .launchIn(viewModelScope)
 
         combine(
@@ -254,10 +236,9 @@ class HomeViewModel(
         private val historyRepository: HistoryRepository,
         private val sessionRepository: SessionRepository,
         private val preferencesRepository: AppPreferencesRepository,
-        private val duaRepository: DuaRepository,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            HomeViewModel(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository, duaRepository) as T
+            HomeViewModel(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository) as T
     }
 }

@@ -353,7 +353,7 @@ fun DhikrApp(
             ) {
                 composable(ROUTE_HOME) {
                     val viewModel: HomeViewModel = viewModel(
-                        factory = HomeViewModel.Factory(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository, duaRepository),
+                        factory = HomeViewModel.Factory(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository),
                     )
                     HomeScreen(
                         viewModel = viewModel,

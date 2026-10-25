@@ -69,7 +69,6 @@
     <string name="home_routines_manage">Manage</string>
     <!-- Shown in the Home routines section when no routine is favorited -->
     <string name="home_routines_empty_hint">Star a routine on the Routines page to pin it here.</string>
-    <string name="home_dua_of_the_day_kicker">DUA OF THE DAY</string>
     <string name="home_backup_nudge_title">Keep your dhikr safe</string>
     <string name="home_backup_nudge_body">You haven’t backed up in a while. A quick backup means you never lose your history.</string>
     <string name="home_backup_nudge_action">Back up</string>
