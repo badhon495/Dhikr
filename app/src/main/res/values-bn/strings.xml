@@ -166,7 +166,6 @@
     <string name="tasbih_editor_required_suffix">%1$s · আবশ্যক</string>
     <string name="tasbih_editor_note_label">ব্যক্তিগত নোট</string>
     <string name="tasbih_editor_note_placeholder">আপনি কেন এটি পাঠ করছেন</string>
-    <string name="tasbih_editor_note_bn_label">ব্যক্তিগত নোট (বাংলা)</string>
     <string name="tasbih_editor_lap_target_label">ল্যাপ লক্ষ্য</string>
     <string name="tasbih_editor_daily_goal_label">দৈনিক লক্ষ্য</string>
     <string name="tasbih_editor_save">তাসবিহ সংরক্ষণ</string>
@@ -594,10 +593,4 @@
     <string name="qibla_turn_left">বামে %1$s° ঘুরুন</string>
     <string name="qibla_calibrate">কম্পাসের নির্ভুলতা কম — ক্যালিব্রেট করতে ফোনটি ইংরেজি ৮-এর মতো ঘোরান।</string>
     <string name="qibla_note">ফোনটি সমতলে, ধাতু ও চুম্বক থেকে দূরে রাখুন। ফোনের কম্পাসে কয়েক ডিগ্রি ভুল হতে পারে।</string>
-    <string name="editor_add_english_toggle">ইংরেজি যোগ করুন</string>
-    <string name="editor_hide_english">ইংরেজি লুকান</string>
-    <string name="editor_name_en_label">নাম (ইংরেজি)</string>
-    <string name="editor_pronunciation_en_label">উচ্চারণ (ইংরেজি)</string>
-    <string name="editor_translation_en_label">অনুবাদ (ইংরেজি)</string>
-    <string name="editor_note_en_label">ব্যক্তিগত নোট (ইংরেজি)</string>
 </resources>

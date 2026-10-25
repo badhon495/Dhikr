@@ -57,12 +57,6 @@ data class TasbihEditorUiState(
 ) {
     val arabicRequired: Boolean get() = requiredScript == CounterScript.ARABIC
     val pronunciationRequired: Boolean get() = requiredScript == CounterScript.PRONUNCIATION
-    val hasEnglish: Boolean
-        get() = name.isNotBlank() || pronunciation.isNotBlank() ||
-            translation.isNotBlank() || note.isNotBlank()
-    val hasBangla: Boolean
-        get() = nameBn.isNotBlank() || pronunciationBn.isNotBlank() ||
-            translationBn.isNotBlank() || noteBn.isNotBlank()
 }
 
 enum class TasbihBanglaField { NAME, PRONUNCIATION, TRANSLATION, NOTE }

@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -65,16 +64,7 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
     val bn = LocalAppLanguage.current == AppLanguage.BANGLA
-    // showBangla is the collapsible secondary-language section (English when the app is Bangla).
-    var showBangla by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
-    // Existing entries that already carry Bangla open the section on load.
-    val hasOther = if (bn) {
-        state.name.isNotBlank() || state.pronunciation.isNotBlank() || state.translation.isNotBlank()
-    } else {
-        state.nameBn.isNotBlank() || state.pronunciationBn.isNotBlank() || state.translationBn.isNotBlank()
-    }
-    LaunchedEffect(hasOther) { if (hasOther) showBangla = true }
 
     Column(
         modifier = Modifier
@@ -228,73 +218,6 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                         viewModel.onRepeatCountChange(state.repeatCount + 1)
                     }
                 }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
-                .clip(ListRowShape)
-                .background(colors.surface)
-                .clickable(role = Role.Button) { showBangla = !showBangla }
-                .testTag("dua_editor_toggle_bangla")
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-        ) {
-            Text(
-                text = stringResource(
-                    when {
-                        bn && showBangla -> R.string.editor_hide_english
-                        bn -> R.string.editor_add_english_toggle
-                        showBangla -> R.string.dua_editor_hide_bangla
-                        else -> R.string.dua_editor_add_bangla_toggle
-                    },
-                ),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = colors.text,
-            )
-        }
-
-        if (showBangla) {
-            LabeledField(
-                stringResource(if (bn) R.string.editor_name_en_label else R.string.dua_editor_name_bn_label),
-            ) {
-                PillTextField(
-                    value = if (bn) state.name else state.nameBn,
-                    onValueChange = {
-                        if (bn) viewModel.onNameChange(it)
-                        else viewModel.onBanglaFieldChange(DuaBanglaField.NAME, it)
-                    },
-                    placeholder = stringResource(if (bn) R.string.editor_name_en_label else R.string.dua_editor_name_bn_label),
-                    testTag = "dua_editor_name_other",
-                )
-            }
-            LabeledField(
-                stringResource(if (bn) R.string.editor_pronunciation_en_label else R.string.dua_editor_pronunciation_bn_label),
-            ) {
-                PillTextField(
-                    value = if (bn) state.pronunciation else state.pronunciationBn,
-                    onValueChange = {
-                        if (bn) viewModel.onPronunciationChange(it)
-                        else viewModel.onBanglaFieldChange(DuaBanglaField.PRONUNCIATION, it)
-                    },
-                    placeholder = stringResource(if (bn) R.string.editor_pronunciation_en_label else R.string.dua_editor_pronunciation_bn_label),
-                    testTag = "dua_editor_pronunciation_other",
-                )
-            }
-            LabeledField(
-                stringResource(if (bn) R.string.editor_translation_en_label else R.string.dua_editor_translation_bn_label),
-            ) {
-                PillTextField(
-                    value = if (bn) state.translation else state.translationBn,
-                    onValueChange = {
-                        if (bn) viewModel.onTranslationChange(it)
-                        else viewModel.onBanglaFieldChange(DuaBanglaField.TRANSLATION, it)
-                    },
-                    placeholder = stringResource(if (bn) R.string.editor_translation_en_label else R.string.dua_editor_translation_bn_label),
-                    testTag = "dua_editor_translation_other",
-                )
             }
         }
 
