@@ -65,6 +65,9 @@ import com.dhikr.app.ui.theme.PillShape
 fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
+    var showBangla by rememberSaveable { mutableStateOf(false) }
+    // Existing entries that already carry Bangla open the section on load.
+    LaunchedEffect(state.hasBangla) { if (state.hasBangla) showBangla = true }
 
     Column(
         modifier = Modifier
@@ -180,6 +183,57 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
                     textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                     cursorBrush = SolidColor(colors.text),
                     modifier = Modifier.fillMaxWidth(),
+                )
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 15.dp)
+                .clip(ListRowShape)
+                .background(colors.surface)
+                .clickable(role = Role.Button) { showBangla = !showBangla }
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+        ) {
+            Text(
+                text = stringResource(
+                    if (showBangla) R.string.dua_editor_hide_bangla
+                    else R.string.dua_editor_add_bangla_toggle,
+                ),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colors.text,
+            )
+        }
+
+        if (showBangla) {
+            LabeledField(stringResource(R.string.dua_editor_name_bn_label)) {
+                PillTextField(
+                    value = state.nameBn,
+                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.NAME, it) },
+                    placeholder = stringResource(R.string.dua_editor_name_bn_label),
+                )
+            }
+            LabeledField(stringResource(R.string.dua_editor_pronunciation_bn_label)) {
+                PillTextField(
+                    value = state.pronunciationBn,
+                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.PRONUNCIATION, it) },
+                    placeholder = stringResource(R.string.dua_editor_pronunciation_bn_label),
+                )
+            }
+            LabeledField(stringResource(R.string.dua_editor_translation_bn_label)) {
+                PillTextField(
+                    value = state.translationBn,
+                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.TRANSLATION, it) },
+                    placeholder = stringResource(R.string.dua_editor_translation_bn_label),
+                )
+            }
+            LabeledField(stringResource(R.string.tasbih_editor_note_bn_label)) {
+                PillTextField(
+                    value = state.noteBn,
+                    onValueChange = { viewModel.onBanglaFieldChange(TasbihBanglaField.NOTE, it) },
+                    placeholder = stringResource(R.string.tasbih_editor_note_bn_label),
                 )
             }
         }

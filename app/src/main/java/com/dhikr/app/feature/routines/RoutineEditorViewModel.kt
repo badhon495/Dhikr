@@ -19,6 +19,7 @@ data class StepDraft(val tasbihId: String, val targetCount: Int)
 
 data class RoutineEditorUiState(
     val name: String = "",
+    val nameBn: String = "",
     val steps: List<StepDraft> = emptyList(),
     // Every Tasbih the user can add as a step (built-in + custom).
     val availableTasbih: List<TasbihEntity> = emptyList(),
@@ -63,6 +64,7 @@ class RoutineEditorViewModel(
                     update { state ->
                         state.copy(
                             name = existing.routine.name,
+                            nameBn = existing.routine.nameBn.orEmpty(),
                             steps = existing.steps
                                 .sortedBy { s -> s.stepOrder }
                                 .map { s -> StepDraft(s.tasbihId, s.targetCount) },
@@ -78,6 +80,8 @@ class RoutineEditorViewModel(
     }
 
     fun onNameChange(value: String) = update { it.copy(name = value).withCanSave() }
+
+    fun onNameBnChange(value: String) = update { it.copy(nameBn = value) }
 
     fun onReminderEnabledChange(value: Boolean) = update { it.copy(reminderEnabled = value) }
 
@@ -119,11 +123,12 @@ class RoutineEditorViewModel(
         if (!s.canSave) return
         viewModelScope.launch {
             val steps = s.steps.map { it.tasbihId to it.targetCount }
+            val nameBn = s.nameBn.trim().ifBlank { null }
             val id = if (editingRoutineId != null) {
-                routineRepository.updateRoutine(editingRoutineId, s.name.trim(), steps)
+                routineRepository.updateRoutine(editingRoutineId, s.name.trim(), steps, nameBn)
                 editingRoutineId
             } else {
-                routineRepository.createRoutine(name = s.name.trim(), steps = steps)
+                routineRepository.createRoutine(name = s.name.trim(), steps = steps, nameBn = nameBn)
             }
             val daysMask = s.reminderDays and 0x7F
             routineRepository.setReminder(id, s.reminderEnabled, s.reminderMinuteOfDay, daysMask)

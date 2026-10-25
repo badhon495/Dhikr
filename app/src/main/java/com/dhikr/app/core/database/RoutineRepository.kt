@@ -38,12 +38,12 @@ class RoutineRepository(
 
     suspend fun getWithSteps(id: String): RoutineWithSteps? = routineDao.getWithSteps(id)
 
-    suspend fun createRoutine(name: String, steps: List<Pair<String, Int>>): String {
+    suspend fun createRoutine(name: String, steps: List<Pair<String, Int>>, nameBn: String? = null): String {
         val id = newId()
         val now = System.currentTimeMillis()
         // Favorited on creation so it shows on Home right away; the user unstars
         // it on the Routines page to remove it from Home.
-        routineDao.insertRoutine(RoutineEntity(id = id, name = name, isPreset = false, isFavorite = true, createdAt = now, updatedAt = now))
+        routineDao.insertRoutine(RoutineEntity(id = id, name = name, nameBn = nameBn, isPreset = false, isFavorite = true, createdAt = now, updatedAt = now))
         routineDao.insertSteps(steps.mapIndexed { index, (tasbihId, targetCount) ->
             RoutineStepEntity(routineId = id, tasbihId = tasbihId, stepOrder = index, targetCount = targetCount)
         })
@@ -65,9 +65,9 @@ class RoutineRepository(
     }
 
     /** Rename a routine and replace its whole step list in one shot (routine editor, edit mode). */
-    suspend fun updateRoutine(routineId: String, name: String, steps: List<Pair<String, Int>>) {
+    suspend fun updateRoutine(routineId: String, name: String, steps: List<Pair<String, Int>>, nameBn: String? = null) {
         val current = routineDao.getWithSteps(routineId)?.routine ?: return
-        routineDao.updateRoutine(current.copy(name = name, updatedAt = System.currentTimeMillis()))
+        routineDao.updateRoutine(current.copy(name = name, nameBn = nameBn, updatedAt = System.currentTimeMillis()))
         updateSteps(routineId, steps)
     }
 

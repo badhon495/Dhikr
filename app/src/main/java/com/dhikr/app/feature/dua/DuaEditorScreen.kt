@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -63,6 +64,10 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
     val colors = DhikrTheme.colors
     var showBangla by rememberSaveable { mutableStateOf(false) }
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
+    // Existing entries that already carry Bangla open the section on load.
+    val hasBangla = state.nameBn.isNotBlank() || state.pronunciationBn.isNotBlank() ||
+        state.translationBn.isNotBlank()
+    LaunchedEffect(hasBangla) { if (hasBangla) showBangla = true }
 
     Column(
         modifier = Modifier

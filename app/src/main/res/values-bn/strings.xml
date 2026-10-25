@@ -166,6 +166,7 @@
     <string name="tasbih_editor_required_suffix">%1$s · আবশ্যক</string>
     <string name="tasbih_editor_note_label">ব্যক্তিগত নোট</string>
     <string name="tasbih_editor_note_placeholder">আপনি কেন এটি পাঠ করছেন</string>
+    <string name="tasbih_editor_note_bn_label">ব্যক্তিগত নোট (বাংলা)</string>
     <string name="tasbih_editor_lap_target_label">ল্যাপ লক্ষ্য</string>
     <string name="tasbih_editor_daily_goal_label">দৈনিক লক্ষ্য</string>
     <string name="tasbih_editor_save">তাসবিহ সংরক্ষণ</string>

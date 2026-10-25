@@ -36,6 +36,10 @@ data class TasbihEditorUiState(
     val pronunciation: String = "",
     val translation: String = "",
     val note: String = "",
+    val nameBn: String = "",
+    val pronunciationBn: String = "",
+    val translationBn: String = "",
+    val noteBn: String = "",
     val lapTarget: Int = 33,
     val dailyGoal: Int? = null,
     // The counter-script preference. Whichever script it names is the field the
@@ -53,7 +57,12 @@ data class TasbihEditorUiState(
 ) {
     val arabicRequired: Boolean get() = requiredScript == CounterScript.ARABIC
     val pronunciationRequired: Boolean get() = requiredScript == CounterScript.PRONUNCIATION
+    val hasBangla: Boolean
+        get() = nameBn.isNotBlank() || pronunciationBn.isNotBlank() ||
+            translationBn.isNotBlank() || noteBn.isNotBlank()
 }
+
+enum class TasbihBanglaField { NAME, PRONUNCIATION, TRANSLATION, NOTE }
 
 class TasbihEditorViewModel(
     private val repository: TasbihRepository,
@@ -80,6 +89,10 @@ class TasbihEditorViewModel(
                             pronunciation = entity.pronunciation,
                             translation = entity.translation,
                             note = entity.note,
+                            nameBn = entity.nameBn.orEmpty(),
+                            pronunciationBn = entity.pronunciationBn.orEmpty(),
+                            translationBn = entity.translationBn.orEmpty(),
+                            noteBn = entity.noteBn.orEmpty(),
                             lapTarget = entity.lapTarget,
                             dailyGoal = entity.dailyGoal,
                             canGenerateBenefits = benefitsRepository != null,
@@ -107,6 +120,14 @@ class TasbihEditorViewModel(
     fun onPronunciationChange(value: String) = updateField { it.copy(pronunciation = value) }
     fun onTranslationChange(value: String) = updateField { it.copy(translation = value) }
     fun onNoteChange(value: String) = updateField { it.copy(note = value) }
+    fun onBanglaFieldChange(field: TasbihBanglaField, value: String) = updateField {
+        when (field) {
+            TasbihBanglaField.NAME -> it.copy(nameBn = value)
+            TasbihBanglaField.PRONUNCIATION -> it.copy(pronunciationBn = value)
+            TasbihBanglaField.TRANSLATION -> it.copy(translationBn = value)
+            TasbihBanglaField.NOTE -> it.copy(noteBn = value)
+        }
+    }
     fun onLapTargetChange(value: Int) = updateField { it.copy(lapTarget = value.coerceAtLeast(1)) }
     fun onDailyGoalChange(value: Int?) = updateField { it.copy(dailyGoal = value) }
 
@@ -136,6 +157,10 @@ class TasbihEditorViewModel(
                         pronunciation = s.pronunciation,
                         translation = s.translation,
                         note = s.note,
+                        nameBn = s.nameBn.ifBlank { null },
+                        pronunciationBn = s.pronunciationBn.ifBlank { null },
+                        translationBn = s.translationBn.ifBlank { null },
+                        noteBn = s.noteBn.ifBlank { null },
                         lapTarget = s.lapTarget,
                         dailyGoal = s.dailyGoal,
                         updatedAt = now,
@@ -154,6 +179,10 @@ class TasbihEditorViewModel(
                         pronunciation = s.pronunciation,
                         translation = s.translation,
                         note = s.note,
+                        nameBn = s.nameBn.ifBlank { null },
+                        pronunciationBn = s.pronunciationBn.ifBlank { null },
+                        translationBn = s.translationBn.ifBlank { null },
+                        noteBn = s.noteBn.ifBlank { null },
                         lapTarget = s.lapTarget,
                         lapCount = 1,
                         dailyGoal = s.dailyGoal,

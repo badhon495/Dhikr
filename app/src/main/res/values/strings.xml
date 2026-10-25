@@ -169,6 +169,7 @@
     <string name="tasbih_editor_required_suffix">%1$s · required</string>
     <string name="tasbih_editor_note_label">Personal note</string>
     <string name="tasbih_editor_note_placeholder">Why you are reciting it</string>
+    <string name="tasbih_editor_note_bn_label">Personal note (Bangla)</string>
     <string name="tasbih_editor_lap_target_label">Lap target</string>
     <string name="tasbih_editor_daily_goal_label">Daily goal</string>
     <string name="tasbih_editor_save">Save Tasbih</string>

@@ -140,6 +140,37 @@ fun RoutineEditorScreen(
         }
 
         FieldLabel(
+            text = stringResource(R.string.dua_editor_name_bn_label),
+            modifier = Modifier.padding(top = 20.dp),
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 48.dp)
+                .clip(PillShape)
+                .background(colors.card)
+                .border(1.dp, colors.line, PillShape)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            contentAlignment = Alignment.CenterStart,
+        ) {
+            if (state.nameBn.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.dua_editor_name_bn_label),
+                    fontSize = 14.sp,
+                    color = colors.faint,
+                )
+            }
+            BasicTextField(
+                value = state.nameBn,
+                onValueChange = viewModel::onNameBnChange,
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
+                cursorBrush = SolidColor(colors.text),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        FieldLabel(
             text = stringResource(R.string.routine_editor_steps_label),
             modifier = Modifier.padding(top = 20.dp),
         )
