@@ -68,6 +68,11 @@
     <string name="home_routines_title">রুটিন</string>
     <string name="home_routines_manage">পরিচালনা</string>
     <string name="home_routines_empty_hint">এখানে যোগ করতে রুটিন পেজে গিয়ে রুটিনে তারা চিহ্ন দিন।</string>
+    <string name="home_dua_of_the_day_kicker">আজকের দোয়া</string>
+    <string name="home_backup_nudge_title">আপনার যিকির সুরক্ষিত রাখুন</string>
+    <string name="home_backup_nudge_body">অনেকদিন ব্যাকআপ নেওয়া হয়নি। দ্রুত একটি ব্যাকআপ নিলে আপনার ইতিহাস কখনো হারাবে না।</string>
+    <string name="home_backup_nudge_action">ব্যাকআপ নিন</string>
+    <string name="home_backup_nudge_later">পরে</string>
     <string name="home_routine_step_chip">%1$d ধাপ · %2$d</string>
     <string name="home_routine_step_preview_more">%1$s  +%2$d আরও</string>
     <!-- Home screen card opening the Dua screen -->
@@ -349,6 +354,8 @@
     <string name="settings_backup_desc">সবকিছু — আপনার তাসবিহ, রুটিন, ইতিহাস ও সেটিংস — একটি ফাইলে সংরক্ষণ করুন যা আপনি রাখতে বা অন্য ডিভাইসে নিতে পারেন।</string>
     <string name="settings_backup_export">ব্যাকআপ এক্সপোর্ট</string>
     <string name="settings_backup_import">ব্যাকআপ ইমপোর্ট</string>
+    <string name="settings_backup_last">সর্বশেষ ব্যাকআপ: %1$s</string>
+    <string name="settings_backup_last_never">এখনো ব্যাকআপ নেওয়া হয়নি</string>
     <string name="settings_backup_import_note">ইমপোর্ট করলে ফাইলটি এখানে যা আছে তার সাথে মিশে যায়। একই পরিচয়ের আইটেম ফাইল দিয়ে প্রতিস্থাপিত হয়; বাকি সব রাখা হয়।</string>
     <string name="settings_backup_working">কাজ চলছে…</string>
     <string name="settings_backup_export_done">ব্যাকআপ সংরক্ষিত হয়েছে।</string>

@@ -353,7 +353,7 @@ fun DhikrApp(
             ) {
                 composable(ROUTE_HOME) {
                     val viewModel: HomeViewModel = viewModel(
-                        factory = HomeViewModel.Factory(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository),
+                        factory = HomeViewModel.Factory(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository, duaRepository),
                     )
                     HomeScreen(
                         viewModel = viewModel,
@@ -364,6 +364,7 @@ fun DhikrApp(
                         onStartRoutine = { id -> navController.navigate("counter?routineId=$id") },
                         onOpenRoutines = { navController.navigate(ROUTE_ROUTINES) },
                         onOpenDua = { navController.navigate(ROUTE_DUA) },
+                        onOpenSettings = { navController.navigate(ROUTE_SETTINGS) { launchSingleTop = true } },
                     )
                 }
                 composable(ROUTE_TASBIH_LIBRARY) {
@@ -540,7 +541,12 @@ fun DhikrApp(
                         ),
                     )
                     val backupViewModel: BackupViewModel = viewModel(
-                        factory = BackupViewModel.Factory(backupRepository, appVersionName),
+                        factory = BackupViewModel.Factory(
+                            backupRepository,
+                            appVersionName,
+                            lastBackupAtFlow = preferencesRepository.lastBackupAt,
+                            onBackedUp = { preferencesRepository.setLastBackupAt(System.currentTimeMillis()) },
+                        ),
                     )
                     val driveTokenStore = remember { DriveTokenStore(context.applicationContext) }
                     val driveFileIdStore = remember { DriveFileIdStore(context.applicationContext.driveSyncDataStore) }
@@ -564,7 +570,11 @@ fun DhikrApp(
                         )
                     }
                     val driveSyncViewModel: DriveSyncViewModel = viewModel(
-                        factory = DriveSyncViewModel.Factory(driveAuthManager, driveBackupRepository),
+                        factory = DriveSyncViewModel.Factory(
+                            driveAuthManager,
+                            driveBackupRepository,
+                            onBackedUp = { preferencesRepository.setLastBackupAt(System.currentTimeMillis()) },
+                        ),
                     )
                     SettingsScreen(
                         viewModel = viewModel,

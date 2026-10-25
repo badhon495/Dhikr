@@ -35,6 +35,40 @@ class ConsistencyTest {
     }
 
     @Test
+    fun singleMissedDayIsBridged() {
+        val s = Consistency.summarize(days(0, 1, 3, 4), today, day)
+        assertEquals(4, s.currentRun)
+        assertEquals(4, s.bestRun)
+    }
+
+    @Test
+    fun yesterdayMissedWhileTodayPending_isBridged() {
+        val s = Consistency.summarize(days(2, 3, 4), today, day)
+        assertEquals(3, s.currentRun)
+    }
+
+    @Test
+    fun twoMissedDaysInARowBreakTheRun() {
+        val s = Consistency.summarize(days(0, 1, 4, 5), today, day)
+        assertEquals(2, s.currentRun)
+        assertEquals(2, s.bestRun)
+    }
+
+    @Test
+    fun secondMissInsideWindowBreaksTheRun() {
+        // misses on day 1 and day 3 ago: two bridges inside 7 days.
+        val s = Consistency.summarize(days(0, 2, 4, 5), today, day)
+        assertEquals(2, s.currentRun)
+    }
+
+    @Test
+    fun graceRefreshesAfterWindow() {
+        // misses 1 and 9 days ago: 8 days apart, both bridged.
+        val s = Consistency.summarize(days(0, 2, 3, 4, 5, 6, 7, 8, 10), today, day)
+        assertEquals(9, s.currentRun)
+    }
+
+    @Test
     fun noActivity() {
         val s = Consistency.summarize(emptyList(), today, day)
         assertEquals(0, s.currentRun)

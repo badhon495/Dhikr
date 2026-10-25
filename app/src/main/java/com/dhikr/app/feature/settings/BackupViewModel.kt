@@ -7,9 +7,13 @@ import com.dhikr.app.core.backup.BackupFormatException
 import com.dhikr.app.core.backup.BackupRepository
 import com.dhikr.app.core.backup.RestoreResult
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -21,7 +25,14 @@ import kotlinx.coroutines.withContext
 class BackupViewModel(
     private val repository: BackupRepository,
     private val appVersionName: String,
+    lastBackupAtFlow: Flow<Long> = flowOf(0L),
+    /** Called after a full-backup file export succeeds (not the CSV one). */
+    private val onBackedUp: suspend () -> Unit = {},
 ) : ViewModel() {
+
+    /** Epoch millis of the last successful backup of any kind; 0 = never. */
+    val lastBackupAt: StateFlow<Long> =
+        lastBackupAtFlow.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
 
     sealed interface Status {
         data object Idle : Status
@@ -51,6 +62,7 @@ class BackupViewModel(
                     writeBytes(data)
                     data.size
                 }
+                runCatching { onBackedUp() }
                 Status.ExportDone(bytes)
             } catch (e: Exception) {
                 Status.Error("Couldn't write the backup file.")
@@ -97,9 +109,11 @@ class BackupViewModel(
     class Factory(
         private val repository: BackupRepository,
         private val appVersionName: String,
+        private val lastBackupAtFlow: Flow<Long> = flowOf(0L),
+        private val onBackedUp: suspend () -> Unit = {},
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            BackupViewModel(repository, appVersionName) as T
+            BackupViewModel(repository, appVersionName, lastBackupAtFlow, onBackedUp) as T
     }
 }

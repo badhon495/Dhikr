@@ -50,8 +50,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.database.dao.RoutineWithSteps
+import com.dhikr.app.core.database.entity.DuaEntity
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.displayName
+import com.dhikr.app.core.localization.displayTranslation
+import com.dhikr.app.ui.theme.ArabicLineStyle
 import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.core.notifications.ReminderNotifications
@@ -77,6 +80,7 @@ fun HomeScreen(
     onStartRoutine: (String) -> Unit,
     onOpenRoutines: () -> Unit,
     onOpenDua: () -> Unit,
+    onOpenSettings: () -> Unit = {},
     scrollToTopSignal: Int = 0,
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -198,6 +202,14 @@ fun HomeScreen(
                     color = colors.dim,
                 )
             }
+        }
+
+        state.duaOfTheDay?.let { dua ->
+            DuaOfTheDayCard(dua = dua, onOpen = onOpenDua)
+        }
+
+        if (state.showBackupNudge) {
+            BackupNudgeCard(onBackUp = onOpenSettings, onLater = viewModel::snoozeBackupNudge)
         }
 
         // Routines — the favorited ones. Full-width cards, one per row: matches
@@ -389,6 +401,108 @@ private fun CurrentWaqtLine(waqt: CurrentWaqtInfo?) {
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(top = 3.dp),
     )
+}
+
+/** One dua a day (see [com.dhikr.app.core.utilities.DuaOfTheDay]); tap opens the Dua library. */
+@Composable
+private fun DuaOfTheDayCard(dua: DuaEntity, onOpen: () -> Unit) {
+    val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(26.dp))
+            .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(26.dp))
+            .clickable(role = Role.Button, onClick = onOpen)
+            .padding(18.dp),
+    ) {
+        Text(
+            stringResource(R.string.home_dua_of_the_day_kicker),
+            fontSize = 11.sp,
+            letterSpacing = 1.sp,
+            color = colors.dim,
+        )
+        Text(
+            dua.displayName(lang),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = colors.text,
+            modifier = Modifier.padding(top = 3.dp),
+        )
+        Text(
+            dua.arabic,
+            style = ArabicLineStyle,
+            color = colors.text,
+            textAlign = TextAlign.Center,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp),
+        )
+        Text(
+            dua.displayTranslation(lang),
+            fontSize = 13.sp,
+            color = colors.dim,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(top = 8.dp),
+        )
+    }
+}
+
+/** Soft reminder to back up; see [com.dhikr.app.core.backup.BackupNudge]. */
+@Composable
+private fun BackupNudgeCard(onBackUp: () -> Unit, onLater: () -> Unit) {
+    val colors = DhikrTheme.colors
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(26.dp))
+            .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(26.dp))
+            .padding(18.dp),
+    ) {
+        Text(
+            stringResource(R.string.home_backup_nudge_title),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = colors.text,
+        )
+        Text(
+            stringResource(R.string.home_backup_nudge_body),
+            fontSize = 13.sp,
+            color = colors.dim,
+            modifier = Modifier.padding(top = 4.dp),
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(top = 10.dp),
+        ) {
+            Text(
+                stringResource(R.string.home_backup_nudge_action),
+                fontSize = 13.5.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colors.onSage,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .background(colors.sage)
+                    .clickable(role = Role.Button, onClick = onBackUp)
+                    .minTapTarget()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+            Text(
+                stringResource(R.string.home_backup_nudge_later),
+                fontSize = 13.5.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colors.dim,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(50))
+                    .clickable(role = Role.Button, onClick = onLater)
+                    .minTapTarget()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+        }
+    }
 }
 
 /**

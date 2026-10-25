@@ -972,6 +972,7 @@ private fun BackupControls(viewModel: BackupViewModel) {
     val colors = DhikrTheme.colors
     val context = LocalContext.current
     val status by viewModel.status.collectAsState()
+    val lastBackupAt by viewModel.lastBackupAt.collectAsState()
 
     val exportLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json"),
@@ -1017,6 +1018,20 @@ private fun BackupControls(viewModel: BackupViewModel) {
         stringResource(R.string.settings_backup_desc),
         fontSize = 12.sp,
         color = colors.faint,
+        modifier = Modifier.padding(bottom = 6.dp),
+    )
+    Text(
+        text = if (lastBackupAt > 0L) {
+            stringResource(
+                R.string.settings_backup_last,
+                java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(Date(lastBackupAt)),
+            )
+        } else {
+            stringResource(R.string.settings_backup_last_never)
+        },
+        fontSize = 12.sp,
+        fontWeight = FontWeight.SemiBold,
+        color = colors.dim,
         modifier = Modifier.padding(bottom = 12.dp),
     )
 

@@ -4,7 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dhikr.app.core.counter.CounterDisplay
+import com.dhikr.app.core.database.DuaRepository
 import com.dhikr.app.core.database.HistoryRepository
+import com.dhikr.app.core.database.entity.DuaEntity
+import com.dhikr.app.core.utilities.DuaOfTheDay
 import com.dhikr.app.core.database.RoutineRepository
 import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.database.dao.RoutineWithSteps
@@ -22,7 +25,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import com.dhikr.app.core.backup.BackupNudge
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
@@ -62,6 +69,9 @@ data class HomeUiState(
     // tasbihId -> 0f..1f of today's counting position toward its total goal;
     // drives the favourite row's green fill. Clears on its own the next day.
     val tasbihProgress: Map<String, Float> = emptyMap(),
+    // Gentle "back up your data" card — see BackupNudge for the rule.
+    val showBackupNudge: Boolean = false,
+    val duaOfTheDay: DuaEntity? = null,
 )
 
 /**
@@ -80,6 +90,7 @@ class HomeViewModel(
     private val historyRepository: HistoryRepository,
     private val sessionRepository: SessionRepository,
     private val preferencesRepository: AppPreferencesRepository,
+    private val duaRepository: DuaRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -174,8 +185,41 @@ class HomeViewModel(
                     tasbihProgress = tasbihProgress,
                 )
             }
-            .onEach { _uiState.value = it }
+            // The nudge is collected separately below; carry its latest value over.
+            .onEach {
+                val current = _uiState.value
+                _uiState.value = it.copy(
+                    showBackupNudge = current.showBackupNudge,
+                    duaOfTheDay = current.duaOfTheDay,
+                )
+            }
             .launchIn(viewModelScope)
+
+        combine(duaRepository.observeAll(), clockTick) { duas, _ ->
+            DuaOfTheDay.pick(duas, DuaOfTheDay.localEpochDay(System.currentTimeMillis()))
+        }
+            .distinctUntilChanged()
+            .onEach { dua -> _uiState.update { it.copy(duaOfTheDay = dua) } }
+            .launchIn(viewModelScope)
+
+        combine(
+            preferencesRepository.lastBackupAt,
+            preferencesRepository.backupNudgeSnoozedUntil,
+            historyRepository.allTimeTotalFlow(),
+            clockTick,
+        ) { lastBackupAt, snoozedUntil, allTime, _ ->
+            BackupNudge.shouldShow(System.currentTimeMillis(), lastBackupAt, snoozedUntil, hasHistory = allTime > 0)
+        }
+            .distinctUntilChanged()
+            .onEach { show -> _uiState.update { it.copy(showBackupNudge = show) } }
+            .launchIn(viewModelScope)
+    }
+
+    /** "Later" on the backup card: hide it for [BackupNudge.SNOOZE_DAYS] days. */
+    fun snoozeBackupNudge() {
+        viewModelScope.launch {
+            preferencesRepository.setBackupNudgeSnoozedUntil(BackupNudge.snoozeUntil(System.currentTimeMillis()))
+        }
     }
 
     private companion object {
@@ -210,9 +254,10 @@ class HomeViewModel(
         private val historyRepository: HistoryRepository,
         private val sessionRepository: SessionRepository,
         private val preferencesRepository: AppPreferencesRepository,
+        private val duaRepository: DuaRepository,
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            HomeViewModel(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository) as T
+            HomeViewModel(tasbihRepository, routineRepository, historyRepository, sessionRepository, preferencesRepository, duaRepository) as T
     }
 }

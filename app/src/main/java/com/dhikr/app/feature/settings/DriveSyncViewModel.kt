@@ -35,6 +35,8 @@ import kotlinx.coroutines.withContext
 class DriveSyncViewModel(
     private val authManager: DriveAuthManager,
     private val backupRepository: DriveBackupRepository,
+    /** Called after a Drive backup succeeds. */
+    private val onBackedUp: suspend () -> Unit = {},
 ) : ViewModel() {
 
     /** Why a [Status.Error] happened, so the UI can show a precise, distinct
@@ -108,7 +110,10 @@ class DriveSyncViewModel(
                 _status.value = when (val outcome = withContext(Dispatchers.IO) {
                     backupRepository.backup(activityContext)
                 }) {
-                    is DriveBackupRepository.BackupOutcome.Success -> Status.BackupDone(outcome.bytes)
+                    is DriveBackupRepository.BackupOutcome.Success -> {
+                        runCatching { onBackedUp() }
+                        Status.BackupDone(outcome.bytes)
+                    }
                     is DriveBackupRepository.BackupOutcome.AuthFailed -> authFailureStatus(outcome.cause)
                     is DriveBackupRepository.BackupOutcome.NetworkFailed ->
                         Status.Error(
@@ -191,9 +196,10 @@ class DriveSyncViewModel(
     class Factory(
         private val authManager: DriveAuthManager,
         private val backupRepository: DriveBackupRepository,
+        private val onBackedUp: suspend () -> Unit = {},
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            DriveSyncViewModel(authManager, backupRepository) as T
+            DriveSyncViewModel(authManager, backupRepository, onBackedUp) as T
     }
 }

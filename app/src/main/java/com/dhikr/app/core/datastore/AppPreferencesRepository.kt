@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.dhikr.app.core.ai.BenefitsLanguage
@@ -62,6 +63,8 @@ class AppPreferencesRepository(private val context: Context) {
     private val counterScriptKey = stringPreferencesKey("counter_script")
     private val autoCounterEnabledKey = booleanPreferencesKey("auto_counter_enabled")
     private val keepScreenOnKey = booleanPreferencesKey("keep_screen_on")
+    private val lastBackupAtKey = longPreferencesKey("last_backup_at")
+    private val backupNudgeSnoozedUntilKey = longPreferencesKey("backup_nudge_snoozed_until")
     private val volumeKeyCountingKey = booleanPreferencesKey("volume_key_counting")
     private val weeklyGoalKey = intPreferencesKey("weekly_goal_target")
     private val counterTextSizeKey = stringPreferencesKey("counter_text_size")
@@ -191,6 +194,21 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setKeepScreenOn(value: Boolean) {
         context.preferencesDataStore.edit { it[keepScreenOnKey] = value }
+    }
+
+    /** Epoch millis of the last successful backup (file or Drive); 0 = never.
+     *  Device-local bookkeeping — deliberately not part of the backup file. */
+    val lastBackupAt = context.preferencesDataStore.data.map { it[lastBackupAtKey] ?: 0L }
+
+    suspend fun setLastBackupAt(millis: Long) {
+        context.preferencesDataStore.edit { it[lastBackupAtKey] = millis }
+    }
+
+    /** Home's backup reminder stays hidden until this epoch millis. */
+    val backupNudgeSnoozedUntil = context.preferencesDataStore.data.map { it[backupNudgeSnoozedUntilKey] ?: 0L }
+
+    suspend fun setBackupNudgeSnoozedUntil(millis: Long) {
+        context.preferencesDataStore.edit { it[backupNudgeSnoozedUntilKey] = millis }
     }
 
     /** Hardware volume buttons count on the Counter screen instead of changing

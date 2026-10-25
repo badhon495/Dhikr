@@ -322,8 +322,14 @@ fun CounterScreen(
     val showArabic = counterScript == CounterScript.ARABIC
     val scriptText = if (showArabic) state.dhikr.arabic else state.dhikr.displayPronunciation(lang)
     val isLongText = scriptText.length > LONG_TEXT_THRESHOLD
-    val ringSize = if (isLongText) 178.dp else 252.dp
-    val countStyle = if (isLongText) CounterCountLongTextStyle else CounterCountStyle
+    // The "Counter text size" setting also grows the ring and the count number
+    // (never shrinks them), capped at 1.2x so the ring still fits a phone width.
+    val ringScale = counterTextSize.scale.coerceIn(1f, 1.2f)
+    val ringSize = (if (isLongText) 178.dp else 252.dp) * ringScale
+    val baseCountStyle = if (isLongText) CounterCountLongTextStyle else CounterCountStyle
+    val countStyle = if (ringScale == 1f) baseCountStyle else baseCountStyle.copy(
+        fontSize = baseCountStyle.fontSize * ringScale,
+    )
     val pronunciationStyle = when {
         isLongText -> PronunciationLongTextStyle
         else -> PronunciationPrimaryStyle

@@ -69,6 +69,11 @@
     <string name="home_routines_manage">Manage</string>
     <!-- Shown in the Home routines section when no routine is favorited -->
     <string name="home_routines_empty_hint">Star a routine on the Routines page to pin it here.</string>
+    <string name="home_dua_of_the_day_kicker">DUA OF THE DAY</string>
+    <string name="home_backup_nudge_title">Keep your dhikr safe</string>
+    <string name="home_backup_nudge_body">You haven’t backed up in a while. A quick backup means you never lose your history.</string>
+    <string name="home_backup_nudge_action">Back up</string>
+    <string name="home_backup_nudge_later">Later</string>
     <!-- Step-count chip on a Home routine card, e.g. "3 steps · 100" -->
     <string name="home_routine_step_chip">%1$d steps · %2$d</string>
     <!-- Home routine card step preview when there are more steps than shown, e.g. "SubhanAllah · Alhamdulillah +2 more" -->
@@ -352,6 +357,8 @@
     <string name="settings_backup_desc">Save everything — your tasbih, routines, history and settings — to a file you can keep or move to another device.</string>
     <string name="settings_backup_export">Export backup</string>
     <string name="settings_backup_import">Import backup</string>
+    <string name="settings_backup_last">Last backup: %1$s</string>
+    <string name="settings_backup_last_never">Not backed up yet</string>
     <string name="settings_backup_import_note">Importing merges the file into what’s already here. Items with the same identity are replaced by the file; anything else is kept.</string>
     <string name="settings_backup_working">Working…</string>
     <string name="settings_backup_export_done">Backup saved.</string>
