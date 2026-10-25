@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-enum class TasbihSortField { NONE, LENGTH, RECITE_COUNT, CUSTOM }
+enum class TasbihSortField { NONE, LENGTH, RECITE_COUNT, CUSTOM, FAVORITES }
 enum class SortDirection { ASC, DESC }
 
 data class TasbihSort(
@@ -36,6 +36,8 @@ private fun List<TasbihEntity>.sortedWith(sort: TasbihSort): List<TasbihEntity> 
         TasbihSortField.RECITE_COUNT -> compareBy { it.lapTarget }
         // ASC = custom on top (false sorts before true); sort is stable so order within groups holds.
         TasbihSortField.CUSTOM -> compareBy { it.isBuiltIn }
+        // ASC = favorites on top (not-favorite = false sorts after, so negate).
+        TasbihSortField.FAVORITES -> compareBy { !it.isFavorite }
     }
     val ordered = if (sort.direction == SortDirection.DESC) comparator.reversed() else comparator
     return this.sortedWith(ordered)

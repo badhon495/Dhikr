@@ -64,6 +64,7 @@
     <string name="home_continue_session_description">Continue %1$s, %2$d of %3$d</string>
     <string name="home_favorites_title">Favourites</string>
     <string name="home_favorites_all">All</string>
+    <string name="home_favorites_empty_hint">Star a tasbih in the Tasbih library to pin it here.</string>
     <string name="home_routines_title">Routines</string>
     <string name="home_routines_manage">Manage</string>
     <!-- Shown in the Home routines section when no routine is favorited -->
@@ -129,6 +130,7 @@
     <string name="tasbih_library_sort_option_length">Length</string>
     <string name="tasbih_library_sort_option_count">Recite count</string>
     <string name="tasbih_library_sort_option_custom">Custom (↑ top, ↓ bottom)</string>
+    <string name="tasbih_library_sort_option_favorites">Favorites (↑ top, ↓ bottom)</string>
     <string name="tasbih_library_result_count_all">%1$d built-in · %2$d custom</string>
     <string name="tasbih_library_result_count_filtered">%1$d of %2$d match \"%3$s\"</string>
     <string name="tasbih_library_empty">Nothing matches that. Create it as a custom Tasbih.</string>

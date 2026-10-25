@@ -226,6 +226,7 @@ fun TasbihLibraryScreen(
                             when (field) {
                                 TasbihSortField.LENGTH -> R.string.tasbih_library_sort_option_length
                                 TasbihSortField.CUSTOM -> R.string.tasbih_library_sort_option_custom
+                                TasbihSortField.FAVORITES -> R.string.tasbih_library_sort_option_favorites
                                 else -> R.string.tasbih_library_sort_option_count
                             },
                         )

@@ -239,6 +239,14 @@ fun HomeScreen(
                 actionLabel = stringResource(R.string.home_favorites_all),
                 onAction = onOpenLibrary,
             )
+            if (state.favorites.isEmpty()) {
+                Text(
+                    stringResource(R.string.home_favorites_empty_hint),
+                    fontSize = 13.sp,
+                    color = colors.faint,
+                    modifier = Modifier.padding(top = 4.dp),
+                )
+            }
             state.favorites.forEach { tasbih ->
                 val fill = (state.tasbihProgress[tasbih.id] ?: 0f).coerceIn(0f, 1f)
                 Box(

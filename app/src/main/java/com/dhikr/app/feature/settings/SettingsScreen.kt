@@ -405,7 +405,8 @@ fun SettingsScreen(
         // ---- Backup ----
         SettingsSection(stringResource(R.string.settings_backup)) {
             BackupControls(backupViewModel)
-            DriveSyncControls(driveSyncViewModel)
+            // Drive sync hidden until next release.
+            // DriveSyncControls(driveSyncViewModel)
         }
 
         // ---- About ----
