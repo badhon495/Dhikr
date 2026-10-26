@@ -22,11 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import com.dhikr.app.core.backup.BackupNudge
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
@@ -66,8 +62,6 @@ data class HomeUiState(
     // tasbihId -> 0f..1f of today's counting position toward its total goal;
     // drives the favourite row's green fill. Clears on its own the next day.
     val tasbihProgress: Map<String, Float> = emptyMap(),
-    // Gentle "back up your data" card — see BackupNudge for the rule.
-    val showBackupNudge: Boolean = false,
 )
 
 /**
@@ -180,28 +174,8 @@ class HomeViewModel(
                     tasbihProgress = tasbihProgress,
                 )
             }
-            // The nudge is collected separately below; carry its latest value over.
-            .onEach { _uiState.value = it.copy(showBackupNudge = _uiState.value.showBackupNudge) }
+            .onEach { _uiState.value = it }
             .launchIn(viewModelScope)
-
-        combine(
-            preferencesRepository.lastBackupAt,
-            preferencesRepository.backupNudgeSnoozedUntil,
-            historyRepository.allTimeTotalFlow(),
-            clockTick,
-        ) { lastBackupAt, snoozedUntil, allTime, _ ->
-            BackupNudge.shouldShow(System.currentTimeMillis(), lastBackupAt, snoozedUntil, hasHistory = allTime > 0)
-        }
-            .distinctUntilChanged()
-            .onEach { show -> _uiState.update { it.copy(showBackupNudge = show) } }
-            .launchIn(viewModelScope)
-    }
-
-    /** "Later" on the backup card: hide it for [BackupNudge.SNOOZE_DAYS] days. */
-    fun snoozeBackupNudge() {
-        viewModelScope.launch {
-            preferencesRepository.setBackupNudgeSnoozedUntil(BackupNudge.snoozeUntil(System.currentTimeMillis()))
-        }
     }
 
     private companion object {

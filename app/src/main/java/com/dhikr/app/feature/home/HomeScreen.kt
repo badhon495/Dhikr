@@ -201,10 +201,6 @@ fun HomeScreen(
             }
         }
 
-        if (state.showBackupNudge) {
-            BackupNudgeCard(onBackUp = onOpenSettings, onLater = viewModel::snoozeBackupNudge)
-        }
-
         // Routines — the favorited ones. Full-width cards, one per row: matches
         // the Favourites list width but reads heavier — a step-count chip leads
         // each card and the first step names preview the plan, so the two
@@ -394,61 +390,6 @@ private fun CurrentWaqtLine(waqt: CurrentWaqtInfo?) {
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.padding(top = 3.dp),
     )
-}
-
-/** Soft reminder to back up; see [com.dhikr.app.core.backup.BackupNudge]. */
-@Composable
-private fun BackupNudgeCard(onBackUp: () -> Unit, onLater: () -> Unit) {
-    val colors = DhikrTheme.colors
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(26.dp))
-            .background(colors.card)
-            .border(1.dp, colors.line, RoundedCornerShape(26.dp))
-            .padding(18.dp),
-    ) {
-        Text(
-            stringResource(R.string.home_backup_nudge_title),
-            fontSize = 15.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = colors.text,
-        )
-        Text(
-            stringResource(R.string.home_backup_nudge_body),
-            fontSize = 13.sp,
-            color = colors.dim,
-            modifier = Modifier.padding(top = 4.dp),
-        )
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(top = 10.dp),
-        ) {
-            Text(
-                stringResource(R.string.home_backup_nudge_action),
-                fontSize = 13.5.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = colors.onSage,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50))
-                    .background(colors.sage)
-                    .clickable(role = Role.Button, onClick = onBackUp)
-                    .minTapTarget()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-            )
-            Text(
-                stringResource(R.string.home_backup_nudge_later),
-                fontSize = 13.5.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = colors.dim,
-                modifier = Modifier
-                    .clip(RoundedCornerShape(50))
-                    .clickable(role = Role.Button, onClick = onLater)
-                    .minTapTarget()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-            )
-        }
-    }
 }
 
 /**
