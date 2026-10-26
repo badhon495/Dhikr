@@ -1,10 +1,12 @@
 package com.dhikr.app.ui
 
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Density
@@ -37,4 +39,14 @@ fun ClampedFontScale(max: Float = 1.3f, content: @Composable () -> Unit) {
             content = content,
         )
     }
+}
+
+/** Keyboard "Done"/"Search" key: closes the keyboard and drops focus instead of leaving the field armed. */
+@Composable
+fun doneKeyboardActions(): KeyboardActions {
+    val focusManager = LocalFocusManager.current
+    return KeyboardActions(
+        onDone = { focusManager.clearFocus() },
+        onSearch = { focusManager.clearFocus() },
+    )
 }

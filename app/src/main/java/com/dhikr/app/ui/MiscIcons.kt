@@ -49,3 +49,13 @@ val BookIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
             "M12 4v14.5",
     )
 }
+
+/** Three bulleted lines — marks the Routines quick action on Home. */
+val ListIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
+    miscIcon("List", "M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01")
+}
+
+/** Compass — marks the Qibla quick action on Home. */
+val CompassIcon: ImageVector by lazy(LazyThreadSafetyMode.NONE) {
+    miscIcon("Compass", "M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18M15.5 8.5l-2 5-5 2 2-5z")
+}

@@ -1,6 +1,8 @@
 package com.dhikr.app.feature.dua
 
 import androidx.compose.foundation.background
+import com.dhikr.app.ui.doneKeyboardActions
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,6 +56,7 @@ import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.minTapTarget
+import com.dhikr.app.ui.unsavedChangesGuard
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.ListRowShape
@@ -63,6 +66,12 @@ import com.dhikr.app.ui.theme.PillShape
 @Composable
 fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
+    val guardedBack = unsavedChangesGuard(
+        state = state,
+        ready = !state.isEditMode || state.name.isNotBlank() || state.arabic.isNotBlank(),
+        snapshot = { it.copy(isSaveEnabled = false) },
+        onBack = onBack,
+    )
     val colors = DhikrTheme.colors
     val snackbar = LocalSnackbar.current
     val savedText = stringResource(R.string.feedback_dua_saved)
@@ -90,7 +99,7 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                 Box(
                     modifier = Modifier
                         .clip(CircleShape)
-                        .clickable(role = Role.Button) { onBack() }
+                        .clickable(role = Role.Button) { guardedBack() }
                         .minTapTarget()
                         .padding(6.dp),
                     contentAlignment = Alignment.Center,
@@ -294,7 +303,7 @@ private fun LabeledField(label: String, content: @Composable () -> Unit) {
     Column(modifier = Modifier.padding(bottom = 15.dp)) {
         Text(
             text = label.uppercase(),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.dim,
             modifier = Modifier.padding(bottom = 4.dp),
@@ -378,7 +387,8 @@ private fun NumberField(value: Int, onValueChange: (Int) -> Unit) {
                 digits.toIntOrNull()?.let(onValueChange)
             },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardActions = doneKeyboardActions(),
             textStyle = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,

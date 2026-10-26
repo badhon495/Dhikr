@@ -1,6 +1,8 @@
 package com.dhikr.app.feature.settings
 
 import android.app.Activity
+import com.dhikr.app.ui.doneKeyboardActions
+import androidx.compose.ui.text.input.ImeAction
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -46,6 +48,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Icon
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -168,9 +175,15 @@ fun SettingsScreen(
             AnimatedVisibility(visible = state.themeMode == ThemeMode.AUTO_TIME) {
                 Text(
                     stringResource(R.string.settings_theme_auto_hint),
-                    fontSize = 11.5.sp,
-                    color = colors.faint,
-                    modifier = Modifier.padding(top = 8.dp),
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.sage,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .clip(RoundedCornerShape(999.dp))
+                        .clickable(role = Role.Button) { showAutoTimes = true }
+                        .minTapTarget()
+                        .padding(horizontal = 4.dp, vertical = 10.dp),
                 )
             }
             if (showAutoTimes) {
@@ -346,6 +359,18 @@ fun SettingsScreen(
             )
         }
 
+        // ---- Backup ----
+        SettingsSection(stringResource(R.string.settings_backup)) {
+            BackupControls(backupViewModel)
+            // Drive sync hidden until next release.
+            // DriveSyncControls(driveSyncViewModel)
+        }
+
+        // ---- Advanced (collapsed by default): experimental / power-user options ----
+        AdvancedGroup(
+            title = stringResource(R.string.settings_advanced),
+            description = stringResource(R.string.settings_advanced_desc),
+        ) {
         // ---- Auto counter (advanced, experimental, off by default) ----
         if (state.autoCounterSupported) {
             SettingsSection(stringResource(R.string.settings_auto_counter)) {
@@ -357,7 +382,7 @@ fun SettingsScreen(
                 )
                 Text(
                     stringResource(R.string.settings_auto_counter_limitation),
-                    fontSize = 11.5.sp,
+                    fontSize = 12.sp,
                     color = colors.faint,
                     modifier = Modifier.padding(top = 10.dp),
                 )
@@ -401,12 +426,6 @@ fun SettingsScreen(
                 onReset = viewModel::onResetBenefitsPrompt,
             )
         }
-
-        // ---- Backup ----
-        SettingsSection(stringResource(R.string.settings_backup)) {
-            BackupControls(backupViewModel)
-            // Drive sync hidden until next release.
-            // DriveSyncControls(driveSyncViewModel)
         }
 
         // ---- About ----
@@ -441,7 +460,7 @@ private fun SettingsSection(title: String, content: @Composable () -> Unit) {
     Column(modifier = Modifier.padding(bottom = 18.dp)) {
         Text(
             text = title.uppercase(),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.dim,
             modifier = Modifier
@@ -457,6 +476,47 @@ private fun SettingsSection(title: String, content: @Composable () -> Unit) {
                 .padding(16.dp),
         ) {
             content()
+        }
+    }
+}
+
+/**
+ * Collapsible group for experimental / power-user settings, closed by default
+ * so the main list stays short. Expanded state survives rotation.
+ */
+@Composable
+private fun AdvancedGroup(title: String, description: String, content: @Composable () -> Unit) {
+    val colors = DhikrTheme.colors
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    Column(modifier = Modifier.padding(bottom = 18.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(ListRowShape)
+                .background(colors.card)
+                .border(1.dp, colors.line, ListRowShape)
+                .clickable(
+                    role = Role.Button,
+                    onClickLabel = title,
+                ) { expanded = !expanded }
+                .minTapTarget()
+                .padding(16.dp),
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = colors.text)
+                Text(description, fontSize = 12.sp, color = colors.faint, modifier = Modifier.padding(top = 2.dp))
+            }
+            Icon(
+                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                contentDescription = null,
+                tint = colors.faint,
+            )
+        }
+        AnimatedVisibility(visible = expanded) {
+            Column(modifier = Modifier.padding(top = 18.dp)) {
+                content()
+            }
         }
     }
 }
@@ -646,7 +706,8 @@ private fun DailyGoalPicker(
                     digits.toIntOrNull()?.let(onSelect)
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardActions = doneKeyboardActions(),
                 textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                 cursorBrush = SolidColor(colors.text),
                 modifier = Modifier.fillMaxWidth(),
@@ -825,7 +886,7 @@ private fun GeminiKeyControls(
         val context = LocalContext.current
         Text(
             stringResource(R.string.settings_ai_key_hint),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             color = colors.sage,
             modifier = Modifier
                 .padding(top = 8.dp)
@@ -898,7 +959,7 @@ private fun BenefitsPromptEditor(
     if (isCustom) {
         Text(
             stringResource(R.string.settings_ai_prompt_custom),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             color = colors.dim,
             modifier = Modifier.padding(bottom = 8.dp),
         )
@@ -1062,7 +1123,7 @@ private fun BackupControls(viewModel: BackupViewModel) {
 
     Text(
         stringResource(R.string.settings_backup_import_note),
-        fontSize = 11.5.sp,
+        fontSize = 12.sp,
         color = colors.faint,
         modifier = Modifier.padding(top = 10.dp),
     )

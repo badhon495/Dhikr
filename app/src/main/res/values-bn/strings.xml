@@ -75,6 +75,11 @@
     <string name="home_routine_step_chip">%1$d ধাপ · %2$d</string>
     <string name="home_routine_step_preview_more">%1$s  +%2$d আরও</string>
     <!-- Home screen card opening the Dua screen -->
+    <string name="home_quick_routines">রুটিন</string>
+    <string name="home_quick_library">লাইব্রেরি</string>
+    <string name="home_quick_qibla">কিবলা</string>
+    <string name="home_routines_empty_action">রুটিন তৈরি করুন</string>
+    <string name="home_favorites_empty_action">লাইব্রেরি দেখুন</string>
     <string name="home_dua_card_title">দোয়া</string>
     <string name="home_dua_card_subtitle">প্রতিদিনের মুহূর্তের জন্য দোয়া</string>
 
@@ -293,7 +298,7 @@
     <string name="settings_theme_light">লাইট</string>
     <string name="settings_theme_dark">ডার্ক</string>
     <string name="settings_theme_auto_time">অটো</string>
-    <string name="settings_theme_auto_hint">লাইট ও ডার্ক কখন শুরু হবে তা ঠিক করতে অটো-তে চেপে ধরে রাখুন।</string>
+    <string name="settings_theme_auto_hint">লাইট ও ডার্ক কখন শুরু হবে তা ঠিক করুন</string>
     <string name="settings_theme_auto_light_title">লাইট মোড শুরু হবে</string>
     <string name="settings_theme_auto_dark_title">ডার্ক মোড শুরু হবে</string>
     <string name="settings_theme_auto_next">পরবর্তী</string>
@@ -306,6 +311,8 @@
     <string name="settings_volume_keys_desc">কাউন্টার স্ক্রিনে যেকোনো ভলিউম বাটন একটি গণনা যোগ করে, লক থাকলেও</string>
     <string name="tile_counter_label">Dhikr গণনা</string>
     <string name="tile_counter_no_session">খুলতে ট্যাপ করুন</string>
+    <string name="settings_advanced">উন্নত</string>
+    <string name="settings_advanced_desc">AI, অটো কাউন্টার</string>
     <string name="settings_accessibility">অ্যাক্সেসিবিলিটি</string>
     <string name="settings_reduce_motion">মোশন কমান</string>
     <string name="settings_reduce_motion_desc">অ্যাপ জুড়ে অ্যানিমেশন কমান</string>
@@ -593,6 +600,13 @@
     <string name="qibla_turn_left">বামে %1$s° ঘুরুন</string>
     <string name="qibla_calibrate">কম্পাসের নির্ভুলতা কম — ক্যালিব্রেট করতে ফোনটি ইংরেজি ৮-এর মতো ঘোরান।</string>
     <string name="qibla_note">ফোনটি সমতলে, ধাতু ও চুম্বক থেকে দূরে রাখুন। ফোনের কম্পাসে কয়েক ডিগ্রি ভুল হতে পারে।</string>
+    <string name="counter_locked_hint">কাউন্টার লক করা আছে। ব্যবহার করতে আনলক করুন।</string>
+    <string name="counter_reset_done">সেশন রিসেট হয়েছে।</string>
+    <string name="unsaved_title">পরিবর্তন বাতিল করবেন?</string>
+    <string name="unsaved_body">আপনার সম্পাদনা সংরক্ষিত হয়নি।</string>
+    <string name="unsaved_discard">বাতিল করুন</string>
+    <string name="unsaved_keep_editing">সম্পাদনা চালিয়ে যান</string>
+    <string name="feedback_undo">পূর্বাবস্থায় ফেরান</string>
     <string name="feedback_tasbih_deleted">তাসবিহ মুছে ফেলা হয়েছে।</string>
     <string name="feedback_routine_deleted">রুটিন মুছে ফেলা হয়েছে।</string>
     <string name="feedback_dua_deleted">দোয়া মুছে ফেলা হয়েছে।</string>

@@ -1,6 +1,8 @@
 package com.dhikr.app.feature.tasbih
 
 import androidx.compose.foundation.background
+import com.dhikr.app.ui.doneKeyboardActions
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +59,7 @@ import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.ReminderSection
 import com.dhikr.app.ui.minTapTarget
+import com.dhikr.app.ui.unsavedChangesGuard
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.ListRowShape
 import com.dhikr.app.ui.theme.NotoNaskhArabic
@@ -65,6 +68,17 @@ import com.dhikr.app.ui.theme.PillShape
 @Composable
 fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
+    val guardedBack = unsavedChangesGuard(
+        state = state,
+        ready = !state.isEditingExisting || state.name.isNotBlank() || state.pronunciation.isNotBlank() || state.arabic.isNotBlank(),
+        snapshot = {
+            it.copy(
+                canSave = false, canGenerateBenefits = false, benefitsText = null,
+                benefitsGeneratedAt = null, benefitsLoading = false, benefitsError = null,
+            )
+        },
+        onBack = onBack,
+    )
     val colors = DhikrTheme.colors
     val bn = LocalAppLanguage.current == AppLanguage.BANGLA
 
@@ -86,7 +100,7 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable(role = Role.Button) { onBack() }
+                    .clickable(role = Role.Button) { guardedBack() }
                     .minTapTarget()
                     .padding(6.dp),
                 contentAlignment = Alignment.Center,
@@ -209,7 +223,7 @@ fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
         }
         Text(
             text = stringResource(R.string.tasbih_editor_footer),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             color = colors.faint,
             modifier = Modifier
                 .fillMaxWidth()
@@ -316,7 +330,7 @@ private fun LabeledField(label: String, content: @Composable () -> Unit) {
     Column(modifier = Modifier.padding(bottom = 15.dp)) {
         Text(
             text = label.uppercase(),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.dim,
             modifier = Modifier.padding(bottom = 4.dp),
@@ -406,7 +420,8 @@ private fun NumberField(value: Int, onValueChange: (Int) -> Unit) {
                 digits.toIntOrNull()?.let(onValueChange)
             },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardActions = doneKeyboardActions(),
             textStyle = TextStyle(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
@@ -483,7 +498,8 @@ private fun DailyGoalPicker(selected: Int?, onSelect: (Int?) -> Unit) {
                     onSelect(digits.toIntOrNull())
                 },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardActions = doneKeyboardActions(),
                 textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                 cursorBrush = SolidColor(colors.text),
                 modifier = Modifier.fillMaxWidth(),
@@ -541,7 +557,7 @@ private fun BenefitsBlock(
                             R.string.tasbih_editor_benefits_generated_at,
                             relativeTimeLabel(generatedAt),
                         ),
-                        fontSize = 11.5.sp,
+                        fontSize = 12.sp,
                         color = colors.faint,
                         modifier = Modifier.padding(top = 6.dp),
                     )

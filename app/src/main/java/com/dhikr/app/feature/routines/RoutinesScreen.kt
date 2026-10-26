@@ -1,6 +1,10 @@
 package com.dhikr.app.feature.routines
 
+import com.dhikr.app.ui.LocalReducedMotion
 import android.content.ClipData
+import com.dhikr.app.ui.doneKeyboardActions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardOptions
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
@@ -93,7 +97,6 @@ fun RoutinesScreen(
     // Long-press action menu (Edit/Delete) target — which routine, if any, has
     // its menu open. Presets are included: the user can edit and delete them.
     var actionMenuTarget by remember { mutableStateOf<RoutineWithSteps?>(null) }
-    var deleteConfirmTarget by remember { mutableStateOf<RoutineWithSteps?>(null) }
 
     var shareDialogOpen by remember { mutableStateOf(false) }
     val shareStatus by shareViewModel.status.collectAsState()
@@ -108,6 +111,7 @@ fun RoutinesScreen(
     val shareFileErrorText = stringResource(R.string.routines_share_file_error)
     val shareCopiedText = stringResource(R.string.routines_share_copied)
     val snackbar = LocalSnackbar.current
+    val undoText = stringResource(R.string.feedback_undo)
     val deletedText = stringResource(R.string.feedback_routine_deleted)
     val favAddedText = stringResource(R.string.feedback_favorite_added)
     val favRemovedText = stringResource(R.string.feedback_favorite_removed)
@@ -209,6 +213,8 @@ fun RoutinesScreen(
                     value = state.query,
                     onValueChange = viewModel::onQueryChange,
                     singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = doneKeyboardActions(),
                     textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                     cursorBrush = SolidColor(colors.text),
                     modifier = Modifier.fillMaxWidth(),
@@ -228,7 +234,7 @@ fun RoutinesScreen(
                     state.query,
                 )
             },
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             color = colors.faint,
             modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
         )
@@ -246,7 +252,8 @@ fun RoutinesScreen(
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 items(state.routines, key = { it.routine.id }) { routineWithSteps ->
-                    RoutineCard(
+                    Box(modifier = if (LocalReducedMotion.current) Modifier else Modifier.animateItem()) {
+RoutineCard(
                         routineWithSteps = routineWithSteps,
                         tasbihNamesById = state.tasbihNamesById,
                         completedToday = routineWithSteps.routine.id in state.completedTodayIds,
@@ -263,6 +270,7 @@ fun RoutinesScreen(
                             )
                         },
                     )
+}
                 }
                 item { Box(modifier = Modifier.height(8.dp)) }
             }
@@ -285,41 +293,12 @@ fun RoutinesScreen(
             },
             onDelete = {
                 actionMenuTarget = null
-                deleteConfirmTarget = routineWithSteps
-            },
-        )
-    }
-
-    deleteConfirmTarget?.let { routineWithSteps ->
-        AlertDialog(
-            onDismissRequest = { deleteConfirmTarget = null },
-            title = { Text(stringResource(R.string.routines_delete_confirm_title)) },
-            text = { Text(stringResource(R.string.routines_delete_confirm_body)) },
-            containerColor = colors.card,
-            titleContentColor = colors.text,
-            textContentColor = colors.dim,
-            shape = DialogShape,
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.onDeleteRoutine(routineWithSteps.routine)
-                    deleteConfirmTarget = null
-                    snackbar?.show(deletedText)
-                }) {
-                    Text(
-                        text = stringResource(R.string.routines_delete_confirm_action),
-                        color = colors.terra,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { deleteConfirmTarget = null }) {
-                    Text(
-                        text = stringResource(R.string.routines_delete_cancel_action),
-                        color = colors.dim,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
+                viewModel.onDeleteRoutine(routineWithSteps.routine)
+                snackbar?.show(
+                    message = deletedText,
+                    actionLabel = undoText,
+                    onAction = { viewModel.onRestoreRoutine(routineWithSteps) },
+                )
             },
         )
     }
@@ -784,7 +763,7 @@ private fun ShareChecklistDialog(
                             if (row.isPreset) {
                                 Text(
                                     stringResource(R.string.routines_share_preset_tag),
-                                    fontSize = 11.sp,
+                                    fontSize = 12.sp,
                                     color = colors.faint,
                                 )
                             }

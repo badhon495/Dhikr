@@ -72,7 +72,7 @@ fun ReminderSection(
     Column(modifier = modifier) {
         Text(
             text = stringResource(R.string.reminder_section_title).uppercase(),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
             color = colors.dim,
             modifier = Modifier.padding(bottom = 6.dp),
@@ -96,7 +96,7 @@ fun ReminderSection(
                 )
                 Text(
                     text = stringResource(descriptionRes),
-                    fontSize = 11.5.sp,
+                    fontSize = 12.sp,
                     color = colors.faint,
                 )
             }
@@ -141,7 +141,7 @@ fun ReminderSection(
 
             Text(
                 text = stringResource(R.string.reminder_days_label).uppercase(),
-                fontSize = 11.5.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = colors.dim,
                 modifier = Modifier.padding(top = 12.dp, bottom = 6.dp),
@@ -177,7 +177,7 @@ fun ReminderSection(
             if (permissionDenied) {
                 Text(
                     text = stringResource(R.string.reminder_permission_hint),
-                    fontSize = 11.5.sp,
+                    fontSize = 12.sp,
                     color = colors.faint,
                     modifier = Modifier.padding(top = 8.dp),
                 )

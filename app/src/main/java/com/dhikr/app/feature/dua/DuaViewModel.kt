@@ -40,6 +40,11 @@ class DuaViewModel(private val repository: DuaRepository) : ViewModel() {
         viewModelScope.launch { repository.delete(id) }
     }
 
+    /** Undo of [deleteDua]. */
+    fun restoreDua(entity: DuaEntity) {
+        viewModelScope.launch { repository.upsert(entity) }
+    }
+
     class Factory(private val repository: DuaRepository) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =

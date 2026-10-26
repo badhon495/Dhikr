@@ -1,6 +1,8 @@
 package com.dhikr.app.feature.routines
 
 import androidx.compose.animation.AnimatedVisibility
+import com.dhikr.app.ui.doneKeyboardActions
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -56,6 +58,7 @@ import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.ReminderSection
 import com.dhikr.app.ui.minTapTarget
+import com.dhikr.app.ui.unsavedChangesGuard
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.ListRowShape
@@ -67,6 +70,12 @@ fun RoutineEditorScreen(
     onBack: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
+    val guardedBack = unsavedChangesGuard(
+        state = state,
+        ready = !state.isEditing || state.name.isNotBlank(),
+        snapshot = { it.copy(availableTasbih = emptyList(), tasbihNamesById = emptyMap(), canSave = false) },
+        onBack = onBack,
+    )
     val colors = DhikrTheme.colors
     var showPicker by remember { mutableStateOf(false) }
     val bn = LocalAppLanguage.current == AppLanguage.BANGLA
@@ -89,7 +98,7 @@ fun RoutineEditorScreen(
             Box(
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable(role = Role.Button) { onBack() }
+                    .clickable(role = Role.Button) { guardedBack() }
                     .minTapTarget()
                     .padding(6.dp),
                 contentAlignment = Alignment.Center,
@@ -135,6 +144,8 @@ fun RoutineEditorScreen(
                 value = (if (bn) state.nameBn else state.name),
                 onValueChange = { if (bn) viewModel.onNameBnChange(it) else viewModel.onNameChange(it) },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = doneKeyboardActions(),
                 textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                 cursorBrush = SolidColor(colors.text),
                 modifier = Modifier.fillMaxWidth(),
@@ -224,7 +235,7 @@ fun RoutineEditorScreen(
         }
         Text(
             text = stringResource(R.string.routine_editor_footer),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             color = colors.faint,
             modifier = Modifier
                 .fillMaxWidth()
@@ -277,7 +288,7 @@ fun RoutineEditorScreen(
 private fun FieldLabel(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text.uppercase(),
-        fontSize = 11.5.sp,
+        fontSize = 12.sp,
         fontWeight = FontWeight.SemiBold,
         color = DhikrTheme.colors.dim,
         modifier = modifier.padding(bottom = 6.dp),
@@ -324,7 +335,7 @@ private fun StepCard(
         ) {
             Text(
                 text = stringResource(R.string.routine_editor_step_count),
-                fontSize = 11.5.sp,
+                fontSize = 12.sp,
                 color = colors.dim,
                 modifier = Modifier.padding(end = 8.dp),
             )
@@ -382,7 +393,8 @@ private fun NumberField(value: Int, onValueChange: (Int) -> Unit, modifier: Modi
                 digits.toIntOrNull()?.let(onValueChange)
             },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+            keyboardActions = doneKeyboardActions(),
             textStyle = TextStyle(
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,

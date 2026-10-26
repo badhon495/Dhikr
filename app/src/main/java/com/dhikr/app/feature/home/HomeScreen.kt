@@ -33,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -59,6 +60,9 @@ import com.dhikr.app.core.utilities.IslamicSeason
 import java.text.DateFormat
 import java.util.Date
 import com.dhikr.app.ui.BookIcon
+import com.dhikr.app.ui.CompassIcon
+import com.dhikr.app.ui.ListIcon
+import com.dhikr.app.ui.NavTasbihIcon
 import com.dhikr.app.ui.HOME_SCREEN_TEST_TAG
 import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.Motion
@@ -77,6 +81,7 @@ fun HomeScreen(
     onStartRoutine: (String) -> Unit,
     onOpenRoutines: () -> Unit,
     onOpenDua: () -> Unit,
+    onOpenQibla: () -> Unit = {},
     onOpenSettings: () -> Unit = {},
     scrollToTopSignal: Int = 0,
 ) {
@@ -162,9 +167,13 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(30.dp))
-                    .background(colors.sageSoft)
+                    .background(colors.card)
+                    .drawBehind {
+                        val fraction = if (info.target > 0) (info.count.toFloat() / info.target).coerceIn(0f, 1f) else 0f
+                        drawRect(colors.sageSoft, size = Size(size.width * fraction, size.height))
+                    }
                     .border(1.dp, colors.line, RoundedCornerShape(30.dp))
-                    .clickable { onContinueSession() }
+                    .clickable(role = Role.Button) { onContinueSession() }
                     .semantics(mergeDescendants = true) { contentDescription = continueDescription }
                     .padding(20.dp),
             ) {
@@ -182,7 +191,7 @@ fun HomeScreen(
                 Column(modifier = Modifier.weight(1f).padding(horizontal = 14.dp)) {
                     Text(
                         stringResource(R.string.home_continue_session_kicker),
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         letterSpacing = 1.sp,
                         color = colors.dim,
                     )
@@ -201,6 +210,14 @@ fun HomeScreen(
             }
         }
 
+        // Quick actions: the features that otherwise sit behind a small link or
+        // inside Settings (Routines, the full Tasbih library, Qibla).
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+            QuickAction(ListIcon, stringResource(R.string.home_quick_routines), onOpenRoutines, Modifier.weight(1f))
+            QuickAction(NavTasbihIcon, stringResource(R.string.home_quick_library), onOpenLibrary, Modifier.weight(1f))
+            QuickAction(CompassIcon, stringResource(R.string.home_quick_qibla), onOpenQibla, Modifier.weight(1f))
+        }
+
         // Routines — the favorited ones. Full-width cards, one per row: matches
         // the Favourites list width but reads heavier — a step-count chip leads
         // each card and the first step names preview the plan, so the two
@@ -212,11 +229,10 @@ fun HomeScreen(
                 onAction = onOpenRoutines,
             )
             if (state.routines.isEmpty()) {
-                Text(
-                    stringResource(R.string.home_routines_empty_hint),
-                    fontSize = 13.sp,
-                    color = colors.faint,
-                    modifier = Modifier.padding(top = 4.dp),
+                EmptyHint(
+                    text = stringResource(R.string.home_routines_empty_hint),
+                    actionLabel = stringResource(R.string.home_routines_empty_action),
+                    onAction = onOpenRoutines,
                 )
             }
             state.routines.forEach { routineWithSteps ->
@@ -241,11 +257,10 @@ fun HomeScreen(
                 onAction = onOpenLibrary,
             )
             if (state.favorites.isEmpty()) {
-                Text(
-                    stringResource(R.string.home_favorites_empty_hint),
-                    fontSize = 13.sp,
-                    color = colors.faint,
-                    modifier = Modifier.padding(top = 4.dp),
+                EmptyHint(
+                    text = stringResource(R.string.home_favorites_empty_hint),
+                    actionLabel = stringResource(R.string.home_favorites_empty_action),
+                    onAction = onOpenLibrary,
                 )
             }
             state.favorites.forEach { tasbih ->
@@ -256,7 +271,7 @@ fun HomeScreen(
                         .padding(top = 8.dp)
                         .clip(RoundedCornerShape(22.dp))
                         .background(colors.card)
-                        .clickable { onOpenTasbih(tasbih.id) },
+                        .clickable(role = Role.Button) { onOpenTasbih(tasbih.id) },
                 ) {
                     // Green fill growing left-to-right with today's counting
                     // progress toward this Tasbih's total goal.
@@ -479,7 +494,7 @@ private fun RoutineHomeCard(
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                 Text(
                     stringResource(R.string.home_routine_step_chip, steps.size, totalCount),
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 0.5.sp,
                     color = colors.onSage,
@@ -594,6 +609,59 @@ private fun GoalRing(progress: Float, contentDescription: String) {
             "${(animatedProgress * 100).toInt().localizedDigits(LocalAppLanguage.current)}%",
             fontSize = 17.sp,
             color = colors.text,
+        )
+    }
+}
+
+/** Icon-over-label tile for the Home quick-actions row. */
+@Composable
+private fun QuickAction(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = DhikrTheme.colors
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(colors.card)
+            .clickable(role = Role.Button) { onClick() }
+            .minTapTarget()
+            .padding(vertical = 12.dp, horizontal = 6.dp),
+    ) {
+        Icon(imageVector = icon, contentDescription = null, tint = colors.sage, modifier = Modifier.size(22.dp))
+        Text(
+            label,
+            fontSize = 12.5.sp,
+            fontWeight = FontWeight.Medium,
+            color = colors.text,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+/** Empty-section placeholder with a one-tap way to fill it. */
+@Composable
+private fun EmptyHint(text: String, actionLabel: String, onAction: () -> Unit) {
+    val colors = DhikrTheme.colors
+    Column(modifier = Modifier.padding(top = 6.dp)) {
+        Text(text, fontSize = 13.sp, color = colors.dim)
+        Text(
+            actionLabel,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = colors.onSage,
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .clip(RoundedCornerShape(999.dp))
+                .background(colors.sage)
+                .clickable(role = Role.Button) { onAction() }
+                .minTapTarget()
+                .padding(horizontal = 16.dp, vertical = 10.dp),
         )
     }
 }

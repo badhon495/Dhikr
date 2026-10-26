@@ -61,6 +61,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
@@ -108,6 +109,7 @@ import com.dhikr.app.ui.COUNTER_TAP_AREA_TEST_TAG
 import com.dhikr.app.ui.ClampedFontScale
 import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.Motion
+import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.ArabicLineStyle
 import com.dhikr.app.ui.theme.CounterCountLongTextStyle
@@ -126,6 +128,8 @@ import kotlinx.coroutines.delay
 private const val LONG_TEXT_THRESHOLD = 90
 
 @OptIn(ExperimentalFoundationApi::class)
+private const val RAPID_TAP_MS = 220L
+
 @Composable
 fun CounterScreen(
     viewModel: CounterViewModel,
@@ -163,7 +167,11 @@ fun CounterScreen(
     val colors = DhikrTheme.colors
     val haptics = rememberHaptics()
     val reducedMotion = LocalReducedMotion.current
-    var showResetDialog by remember { mutableStateOf(false) }
+    val snackbar = LocalSnackbar.current
+    val lockedHint = stringResource(R.string.counter_locked_hint)
+    val resetDoneText = stringResource(R.string.counter_reset_done)
+    val undoText = stringResource(R.string.feedback_undo)
+    val showLockedHint = { snackbar?.show(lockedHint) }
     var showSessionSummary by remember { mutableStateOf(false) }
     var showNotesDialog by remember { mutableStateOf(false) }
     var showDimLevelDialog by remember { mutableStateOf(false) }
@@ -172,7 +180,7 @@ fun CounterScreen(
     // back gesture/button bypasses that entirely — it doesn't go through
     // the chevron's clickable at all. Intercept and swallow it here so a
     // pocket-touch (or the OS back gesture) can't leave a locked session.
-    BackHandler(enabled = state.locked) {}
+    BackHandler(enabled = state.locked) { showLockedHint() }
 
     // Locking the counter goes beyond this screen's own controls: it also
     // hides the app's bottom nav bar (DhikrApp owns that Scaffold, so it
@@ -338,8 +346,15 @@ fun CounterScreen(
     // Quick pop of the ring on every registered tap / lap rollover — skipped
     // entirely under Reduce motion.
     val countScale = remember { Animatable(1f) }
+    // Taps closer than RAPID_TAP_MS apart (a fast dhikr rhythm) skip the pop and
+    // the digit slide, which otherwise stack into constant jitter.
+    var rapidTaps by remember { mutableStateOf(false) }
+    var lastCountChangeMs by remember { mutableStateOf(0L) }
     LaunchedEffect(state.count, state.lap, reducedMotion) {
-        if (reducedMotion) {
+        val nowMs = android.os.SystemClock.elapsedRealtime()
+        rapidTaps = nowMs - lastCountChangeMs < RAPID_TAP_MS
+        lastCountChangeMs = nowMs
+        if (reducedMotion || rapidTaps) {
             countScale.snapTo(1f)
         } else {
             countScale.snapTo(1.07f)
@@ -469,7 +484,7 @@ fun CounterScreen(
                         .clip(CircleShape)
                         // Back navigation is blocked while the counter is locked, so a
                         // stray pocket-touch can't drop out of an active session.
-                        .clickable(enabled = !state.locked) { onBack() },
+                        .clickable { if (state.locked) showLockedHint() else onBack() },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -505,7 +520,7 @@ fun CounterScreen(
                     } else {
                         formatSessionLabel(elapsedSeconds, state.totalCount)
                     },
-                    fontSize = 11.5.sp,
+                    fontSize = 12.sp,
                     color = colors.faint,
                     maxLines = 1,
                     modifier = Modifier
@@ -528,7 +543,9 @@ fun CounterScreen(
                         // rest of the row rather than the note's own emptiness — an
                         // empty note still opens the dialog (with a placeholder line)
                         // rather than looking broken/unresponsive.
-                        .clickable(enabled = state.sessionReady && !state.locked) { showNotesDialog = true },
+                        .clickable(enabled = state.sessionReady) {
+                            if (state.locked) showLockedHint() else showNotesDialog = true
+                        },
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -632,6 +649,7 @@ fun CounterScreen(
                     // chip while previewing — returns to the live step.
                     // Future (not-yet-reached) steps stay inert.
                     val chipClickable = isCompleted || (isCurrent && state.isViewingPastStep)
+                    val chipAlpha = if (!isCurrent && !isCompleted) 0.55f else 1f
                     Box(
                         modifier = Modifier
                             .clip(PillShape)
@@ -643,10 +661,9 @@ fun CounterScreen(
                                     Modifier
                                 }
                             )
+                            .alpha(chipAlpha)
                             .clickable(enabled = chipClickable) {
-                                if (isCurrent) {
-                                    viewModel.onReturnToCurrentStep()
-                                } else if (isViewed) {
+                                if (isCurrent || isViewed) {
                                     viewModel.onReturnToCurrentStep()
                                 } else {
                                     viewModel.onSelectRoutineStep(index)
@@ -655,8 +672,8 @@ fun CounterScreen(
                             .padding(horizontal = 11.dp, vertical = 5.dp),
                     ) {
                         Text(
-                            "${step.tasbihName.substringBefore(' ')} ${step.targetCount}",
-                            fontSize = 11.5.sp,
+                            (if (isCompleted) "✓ " else "") + "${step.tasbihName.substringBefore(' ')} ${step.targetCount}",
+                            fontSize = 12.sp,
                             color = fg,
                             maxLines = 1,
                         )
@@ -800,7 +817,7 @@ fun CounterScreen(
                             AnimatedContent(
                                 targetState = shownCount,
                                 transitionSpec = {
-                                    if (reducedMotion) {
+                                    if (reducedMotion || rapidTaps) {
                                         EnterTransition.None togetherWith ExitTransition.None
                                     } else {
                                         (slideInVertically(tween(Motion.FAST_MS, easing = Motion.StandardEasing)) { it / 3 } +
@@ -879,7 +896,7 @@ fun CounterScreen(
                         state.locked -> stringResource(R.string.counter_tap_hint_locked)
                         else -> stringResource(R.string.counter_tap_hint)
                     },
-                    fontSize = 11.5.sp,
+                    fontSize = 12.sp,
                     color = colors.faint,
                     modifier = Modifier.padding(top = 16.dp),
                 )
@@ -912,7 +929,9 @@ fun CounterScreen(
                             .size(46.dp)
                             .clip(CircleShape)
                             .background(colors.surface)
-                            .clickable(enabled = state.canGoToPrevious && !state.locked) { viewModel.onPrevious() }
+                            .clickable(enabled = state.canGoToPrevious) {
+                                if (state.locked) showLockedHint() else viewModel.onPrevious()
+                            }
                             .minTapTarget(),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -934,7 +953,9 @@ fun CounterScreen(
                         .background(colors.surface)
                         // Undo is blocked while locked, same as reset — a pocket
                         // touch shouldn't be able to unwind counted taps either.
-                        .clickable(enabled = state.sessionReady && state.canUndo && !state.locked && !state.isViewingPastStep) { viewModel.onUndo() }
+                        .clickable(enabled = state.sessionReady && state.canUndo && !state.isViewingPastStep) {
+                            if (state.locked) showLockedHint() else viewModel.onUndo()
+                        }
                         .minTapTarget(),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -962,7 +983,9 @@ fun CounterScreen(
                         // whole point is a session that can't be knocked off
                         // course by a stray touch. Also blocked while
                         // previewing a completed routine step (read-only).
-                        .clickable(enabled = state.sessionReady && !state.locked && !state.isViewingPastStep) { viewModel.onTogglePause() }
+                        .clickable(enabled = state.sessionReady && !state.isViewingPastStep) {
+                            if (state.locked) showLockedHint() else viewModel.onTogglePause()
+                        }
                         .minTapTarget(),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -986,7 +1009,17 @@ fun CounterScreen(
                         // sessionReady (finding #2) — Room's seed data may not have
                         // loaded yet — and blocked while previewing a completed
                         // routine step (read-only).
-                        .clickable(enabled = state.sessionReady && !state.locked && !state.isViewingPastStep) { showResetDialog = true },
+                        .clickable(enabled = state.sessionReady && !state.isViewingPastStep) {
+                            if (state.locked) {
+                                showLockedHint()
+                            } else {
+                                val restore = viewModel.onReset()
+                                if (restore != null) {
+                                    snackbar?.show(resetDoneText, undoText) { restore() }
+                                }
+                            }
+                        }
+                        .minTapTarget(),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
@@ -1005,7 +1038,9 @@ fun CounterScreen(
                             .size(46.dp)
                             .clip(CircleShape)
                             .background(colors.surface)
-                            .clickable(enabled = state.canGoToNext && !state.locked) { viewModel.onNext() }
+                            .clickable(enabled = state.canGoToNext) {
+                                if (state.locked) showLockedHint() else viewModel.onNext()
+                            }
                             .minTapTarget(),
                         contentAlignment = Alignment.Center,
                     ) {
@@ -1019,39 +1054,6 @@ fun CounterScreen(
                 }
             }
         }
-    }
-
-    if (showResetDialog) {
-        AlertDialog(
-            onDismissRequest = { showResetDialog = false },
-            title = { Text(stringResource(R.string.reset_dialog_title)) },
-            text = { Text(stringResource(R.string.reset_dialog_body, state.totalCount)) },
-            containerColor = colors.card,
-            titleContentColor = colors.text,
-            textContentColor = colors.dim,
-            shape = DialogShape,
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.onReset()
-                    showResetDialog = false
-                }) {
-                    Text(
-                        text = stringResource(R.string.reset_dialog_confirm),
-                        color = colors.terra,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showResetDialog = false }) {
-                    Text(
-                        text = stringResource(R.string.reset_dialog_keep_counting),
-                        color = colors.dim,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            },
-        )
     }
 
     if (state.isRoutineComplete) {

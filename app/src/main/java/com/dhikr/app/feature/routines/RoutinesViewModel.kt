@@ -83,6 +83,17 @@ class RoutinesViewModel(
         }
     }
 
+    /** Undo of [onDeleteRoutine]: restores the routine and re-arms its reminder. */
+    fun onRestoreRoutine(snapshot: RoutineWithSteps) {
+        viewModelScope.launch {
+            repository.restoreRoutine(snapshot)
+            val r = snapshot.routine
+            if (r.reminderEnabled) {
+                reminderScheduler.schedule(r.id, r.reminderMinuteOfDay, r.reminderDays)
+            }
+        }
+    }
+
     fun onToggleFavorite(routineId: String, currentlyFavorite: Boolean) {
         viewModelScope.launch { repository.toggleFavorite(routineId, currentlyFavorite) }
     }

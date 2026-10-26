@@ -162,7 +162,7 @@ val DhikrTypography = Typography(
     labelSmall = TextStyle(
         fontFamily = Figtree,
         fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
+        fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.5.sp,
     ),

@@ -1,6 +1,10 @@
 package com.dhikr.app.feature.dua
 
+import com.dhikr.app.ui.LocalReducedMotion
 import androidx.compose.foundation.ExperimentalFoundationApi
+import com.dhikr.app.ui.doneKeyboardActions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -25,12 +29,10 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -60,7 +62,6 @@ import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
-import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.ListRowShape
 import com.dhikr.app.ui.theme.PillShape
 
@@ -74,10 +75,10 @@ fun DuaScreen(
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
     val snackbar = LocalSnackbar.current
+    val undoText = stringResource(R.string.feedback_undo)
     val deletedText = stringResource(R.string.feedback_dua_deleted)
     val lang = LocalAppLanguage.current
 
-    var deleteConfirmTarget by remember { mutableStateOf<DuaEntity?>(null) }
     var categoryFilter by remember { mutableStateOf<String?>(null) }
     var filterMenuOpen by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
@@ -200,6 +201,8 @@ fun DuaScreen(
                         value = searchQuery,
                         onValueChange = { searchQuery = it },
                         singleLine = true,
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = doneKeyboardActions(),
                         textStyle = TextStyle(fontSize = 13.sp, color = colors.text),
                         cursorBrush = SolidColor(colors.text),
                         modifier = Modifier
@@ -278,50 +281,25 @@ fun DuaScreen(
                     )
                 }
                 items(categoryUi.entries, key = { it.id }) { entry ->
-                    DuaRow(
+                    Box(modifier = if (LocalReducedMotion.current) Modifier else Modifier.animateItem()) {
+DuaRow(
                         entry = entry,
                         lang = lang,
                         onEdit = { onEditDua(entry.id) },
-                        onLongPress = { deleteConfirmTarget = entry },
+                        onLongPress = {
+                            viewModel.deleteDua(entry.id)
+                            snackbar?.show(
+                                message = deletedText,
+                                actionLabel = undoText,
+                                onAction = { viewModel.restoreDua(entry) },
+                            )
+                        },
                     )
+}
                 }
             }
             item { Box(modifier = Modifier.size(8.dp)) }
         }
-    }
-
-    deleteConfirmTarget?.let { dua ->
-        AlertDialog(
-            onDismissRequest = { deleteConfirmTarget = null },
-            title = { Text(stringResource(R.string.dua_delete_confirm_title)) },
-            text = { Text(stringResource(R.string.dua_delete_confirm_body)) },
-            containerColor = colors.card,
-            titleContentColor = colors.text,
-            textContentColor = colors.dim,
-            shape = DialogShape,
-            confirmButton = {
-                TextButton(onClick = {
-                    viewModel.deleteDua(dua.id)
-                    deleteConfirmTarget = null
-                    snackbar?.show(deletedText)
-                }) {
-                    Text(
-                        text = stringResource(R.string.dua_delete_confirm_action),
-                        color = colors.terra,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { deleteConfirmTarget = null }) {
-                    Text(
-                        text = stringResource(R.string.dua_delete_cancel_action),
-                        color = colors.dim,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            },
-        )
     }
 }
 
@@ -382,7 +360,7 @@ private fun DuaRow(
                     entry.source?.let { source ->
                         Text(
                             text = source,
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             color = colors.faint,
                             modifier = Modifier.padding(top = 4.dp),
                         )

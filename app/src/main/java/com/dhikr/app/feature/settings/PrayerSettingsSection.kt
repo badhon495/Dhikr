@@ -210,14 +210,14 @@ internal fun PrayerSettingsSection(
         if (permissionDenied) {
             Text(
                 stringResource(R.string.reminder_permission_hint),
-                fontSize = 11.5.sp,
+                fontSize = 12.sp,
                 color = colors.text,
                 modifier = Modifier.padding(top = 6.dp),
             )
         }
         Text(
             stringResource(R.string.settings_prayer_note),
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             color = colors.faint,
             modifier = Modifier.padding(top = 10.dp),
         )

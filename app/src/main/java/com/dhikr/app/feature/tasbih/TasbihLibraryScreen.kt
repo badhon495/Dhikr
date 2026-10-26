@@ -1,6 +1,10 @@
 package com.dhikr.app.feature.tasbih
 
+import com.dhikr.app.ui.LocalReducedMotion
 import androidx.compose.foundation.ExperimentalFoundationApi
+import com.dhikr.app.ui.doneKeyboardActions
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -193,6 +197,8 @@ fun TasbihLibraryScreen(
                     value = state.query,
                     onValueChange = viewModel::onQueryChange,
                     singleLine = true,
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = doneKeyboardActions(),
                     textStyle = TextStyle(fontSize = 14.sp, color = colors.text),
                     cursorBrush = SolidColor(colors.text),
                     modifier = Modifier.fillMaxWidth(),
@@ -268,7 +274,7 @@ fun TasbihLibraryScreen(
                     state.query,
                 )
             },
-            fontSize = 11.5.sp,
+            fontSize = 12.sp,
             color = colors.faint,
             modifier = Modifier.padding(top = 12.dp, bottom = 8.dp),
         )
@@ -290,7 +296,8 @@ fun TasbihLibraryScreen(
                 modifier = Modifier.fillMaxWidth().testTag(TASBIH_LIST_TEST_TAG),
             ) {
                 items(state.results, key = { it.id }) { tasbih ->
-                    TasbihRow(
+                    Box(modifier = if (LocalReducedMotion.current) Modifier else Modifier.animateItem()) {
+TasbihRow(
                         tasbih = tasbih,
                         progress = state.progressByTasbihId[tasbih.id] ?: 0f,
                         onClick = { onOpenTasbih(tasbih.id) },
@@ -303,6 +310,7 @@ fun TasbihLibraryScreen(
                         // Tasbih, built-in included.
                         onLongPress = { actionMenuTarget = tasbih },
                     )
+}
                 }
                 item { Box(modifier = Modifier.height(8.dp)) }
             }
@@ -524,7 +532,7 @@ private fun TasbihRow(
             )
             Text(
                 text = metaText(tasbih),
-                fontSize = 11.5.sp,
+                fontSize = 12.sp,
                 color = colors.dim,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

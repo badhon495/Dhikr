@@ -133,7 +133,7 @@ private fun MonthCard(month: MonthSummary, title: String) {
         }
         Text(
             activeLabel,
-            fontSize = 11.sp,
+            fontSize = 12.sp,
             color = colors.faint,
             modifier = Modifier.padding(top = 6.dp),
         )

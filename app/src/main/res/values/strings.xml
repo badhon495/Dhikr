@@ -78,6 +78,11 @@
     <!-- Home routine card step preview when there are more steps than shown, e.g. "SubhanAllah · Alhamdulillah +2 more" -->
     <string name="home_routine_step_preview_more">%1$s  +%2$d more</string>
     <!-- Home screen card opening the Dua screen -->
+    <string name="home_quick_routines">Routines</string>
+    <string name="home_quick_library">Library</string>
+    <string name="home_quick_qibla">Qibla</string>
+    <string name="home_routines_empty_action">Create a routine</string>
+    <string name="home_favorites_empty_action">Browse library</string>
     <string name="home_dua_card_title">Dua</string>
     <string name="home_dua_card_subtitle">Daily duas for everyday moments</string>
 
@@ -296,7 +301,7 @@
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_theme_auto_time">Auto</string>
-    <string name="settings_theme_auto_hint">Long-press Auto to set when light and dark start.</string>
+    <string name="settings_theme_auto_hint">Set when light and dark start</string>
     <string name="settings_theme_auto_light_title">Light mode starts at</string>
     <string name="settings_theme_auto_dark_title">Dark mode starts at</string>
     <string name="settings_theme_auto_next">Next</string>
@@ -309,6 +314,8 @@
     <string name="settings_volume_keys_desc">Either volume button adds one count on the counter screen, even while it is locked</string>
     <string name="tile_counter_label">Dhikr count</string>
     <string name="tile_counter_no_session">Tap to open</string>
+    <string name="settings_advanced">Advanced</string>
+    <string name="settings_advanced_desc">AI, auto counter</string>
     <string name="settings_accessibility">Accessibility</string>
     <string name="settings_reduce_motion">Reduce motion</string>
     <string name="settings_reduce_motion_desc">Minimise animations across the app</string>
@@ -594,6 +601,13 @@
     <string name="qibla_turn_left">Turn left %1$s°</string>
     <string name="qibla_calibrate">Compass accuracy is low — move the phone in a figure-of-eight to calibrate.</string>
     <string name="qibla_note">Hold the phone flat, away from metal and magnets. Phone compasses can be off by several degrees.</string>
+    <string name="counter_locked_hint">Counter is locked. Unlock to use this.</string>
+    <string name="counter_reset_done">Session reset.</string>
+    <string name="unsaved_title">Discard changes?</string>
+    <string name="unsaved_body">Your edits haven\'t been saved.</string>
+    <string name="unsaved_discard">Discard</string>
+    <string name="unsaved_keep_editing">Keep editing</string>
+    <string name="feedback_undo">Undo</string>
     <string name="feedback_tasbih_deleted">Tasbih deleted.</string>
     <string name="feedback_routine_deleted">Routine deleted.</string>
     <string name="feedback_dua_deleted">Dua deleted.</string>

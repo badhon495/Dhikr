@@ -537,10 +537,28 @@ class CounterViewModel(
         _uiState.value = buildState()
     }
 
-    fun onReset() {
+    /**
+     * Clears the session. Returns a one-shot undo that puts the count, lap,
+     * logged watermark and timer back as they were, or null when nothing was
+     * reset. The undo is only valid while the same engine is still live.
+     */
+    fun onReset(): (() -> Unit)? {
         // See onTap() — same not-ready-yet guard (finding #2), plus the
         // read-only past-step-preview guard.
-        if (!sessionReady || viewingStepIndex != null) return
+        if (!sessionReady || viewingStepIndex != null) return null
+        val resetEngine = engine
+        val before = engine.snapshot()
+        val wasRunning = engine.isRunning()
+        val priorLogged = loggedTotal
+        val priorElapsed = _elapsedSeconds.value
+        val undo: () -> Unit = undo@{
+            if (engine !== resetEngine) return@undo
+            engine.restore(before.count, before.lap, null)
+            if (wasRunning) engine.resume() else engine.pause()
+            loggedTotal = priorLogged
+            _elapsedSeconds.value = priorElapsed
+            _uiState.value = buildState()
+        }
         engine.reset()
         engine.resume()
         // Reset clears the count to 0, so anything logged so far this session
@@ -553,6 +571,7 @@ class CounterViewModel(
         // resume position at count 0. Today's already-logged History count is
         // intentionally kept — those reps still happened today, so the card's
         // progress fill stays where it is.
+        return undo
     }
 
     fun onTogglePause() {

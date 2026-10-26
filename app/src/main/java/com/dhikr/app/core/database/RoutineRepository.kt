@@ -73,6 +73,12 @@ class RoutineRepository(
 
     suspend fun deleteRoutine(routine: RoutineEntity) = routineDao.deleteRoutine(routine)
 
+    /** Undo of [deleteRoutine]: puts the routine and its steps back as they were. */
+    suspend fun restoreRoutine(snapshot: RoutineWithSteps) {
+        routineDao.upsertRoutine(snapshot.routine)
+        routineDao.insertSteps(snapshot.steps)
+    }
+
     suspend fun setReminder(routineId: String, enabled: Boolean, minuteOfDay: Int, daysMask: Int) {
         routineDao.setReminder(routineId, enabled, minuteOfDay, daysMask, System.currentTimeMillis())
     }

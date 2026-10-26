@@ -235,7 +235,7 @@ fun QiblaScreen(latitude: Double?, longitude: Double?, locationName: String?, on
             }
             Text(
                 stringResource(R.string.qibla_note),
-                fontSize = 11.5.sp,
+                fontSize = 12.sp,
                 color = colors.faint,
                 textAlign = TextAlign.Center,
             )

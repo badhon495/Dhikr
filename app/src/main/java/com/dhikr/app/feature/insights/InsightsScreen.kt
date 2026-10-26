@@ -240,7 +240,7 @@ fun InsightsScreen(
                 ) {
                     Text(
                         value.localizedDigits(appLanguage),
-                        fontSize = 10.5.sp,
+                        fontSize = 11.5.sp,
                         color = colors.dim,
                         maxLines = 1,
                         softWrap = false,
@@ -263,7 +263,7 @@ fun InsightsScreen(
                     }
                     Text(
                         dayLabels[index],
-                        fontSize = 10.5.sp,
+                        fontSize = 11.5.sp,
                         color = colors.faint,
                         maxLines = 1,
                         softWrap = false,
@@ -285,7 +285,7 @@ fun InsightsScreen(
         val activeDaysThisMonth = state.calendarIntensity.values.count { it > 0 }
         Text(
             stringResource(R.string.insights_consistency_meta, activeDaysThisMonth),
-            fontSize = 10.5.sp,
+            fontSize = 11.5.sp,
             color = colors.faint,
             modifier = Modifier.padding(bottom = 8.dp),
         )
@@ -336,13 +336,13 @@ fun InsightsScreen(
                 }
             }
             Row(modifier = Modifier.padding(top = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-                Text(stringResource(R.string.insights_legend_less), fontSize = 10.sp, color = colors.faint)
+                Text(stringResource(R.string.insights_legend_less), fontSize = 11.5.sp, color = colors.faint)
                 Row(modifier = Modifier.padding(horizontal = 6.dp), horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                     listOf(colors.track, colors.sageSoft, colors.sageMid, colors.sage).forEach { c ->
                         Box(modifier = Modifier.width(10.dp).height(10.dp).clip(RoundedCornerShape(3.dp)).background(c))
                     }
                 }
-                Text(stringResource(R.string.insights_legend_more), fontSize = 10.sp, color = colors.faint)
+                Text(stringResource(R.string.insights_legend_more), fontSize = 11.5.sp, color = colors.faint)
             }
         }
 
@@ -386,7 +386,7 @@ fun InsightsScreen(
                         previousMonth.consistentDays,
                         previousMonth.daysInMonth,
                     ),
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     color = colors.faint,
                     modifier = Modifier.padding(top = 6.dp),
                 )
@@ -419,7 +419,7 @@ fun InsightsScreen(
             )
             Text(
                 stringResource(R.string.insights_history_grouped),
-                fontSize = 10.5.sp,
+                fontSize = 11.5.sp,
                 color = colors.faint,
                 modifier = Modifier.padding(start = 6.dp),
             )
@@ -478,7 +478,7 @@ fun DhikrHistoryCard(
             }
             Text(
                 parts.joinToString("  ·  "),
-                fontSize = 11.sp,
+                fontSize = 12.sp,
                 color = colors.faint,
                 modifier = Modifier.padding(top = 6.dp),
             )
@@ -487,7 +487,7 @@ fun DhikrHistoryCard(
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth().padding(top = 6.dp)) {
                 Text(
                     formatDayLabel(dayStartMillis, todayLabel, yesterdayLabel),
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     color = colors.faint,
                     modifier = Modifier.width(72.dp),
                 )
@@ -632,7 +632,7 @@ private fun TotalTile(label: String, value: Int, modifier: Modifier = Modifier) 
             .background(colors.surface)
             .padding(14.dp),
     ) {
-        Text(label.uppercase(), fontSize = 10.5.sp, color = colors.dim)
+        Text(label.uppercase(), fontSize = 11.5.sp, color = colors.dim)
         Text(
             value.localizedDigits(LocalAppLanguage.current),
             fontSize = 24.sp,

@@ -373,6 +373,7 @@ fun DhikrApp(
                         onStartRoutine = { id -> navController.navigate("counter?routineId=$id") },
                         onOpenRoutines = { navController.navigate(ROUTE_ROUTINES) },
                         onOpenDua = { navController.navigate(ROUTE_DUA) },
+                        onOpenQibla = { navController.navigate(ROUTE_QIBLA) },
                         onOpenSettings = { navController.navigate(ROUTE_SETTINGS) { launchSingleTop = true } },
                     )
                 }
@@ -771,7 +772,7 @@ private fun DhikrBottomNav(
                     }
                 },
                 icon = { Icon(imageVector = icon, contentDescription = label) },
-                label = { Text(label, fontSize = 10.5.sp) },
+                label = { Text(label, fontSize = 11.5.sp) },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = colors.text,
                     selectedTextColor = colors.text,
