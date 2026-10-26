@@ -64,6 +64,7 @@ import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.displayNote
 import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.feature.counter.noteIcon
+import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.TASBIH_LIST_TEST_TAG
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
@@ -84,6 +85,10 @@ fun TasbihLibraryScreen(
     val colors = DhikrTheme.colors
     val lang = LocalAppLanguage.current
     val listState = rememberLazyListState()
+    val snackbar = LocalSnackbar.current
+    val deletedText = stringResource(R.string.feedback_tasbih_deleted)
+    val favAddedText = stringResource(R.string.feedback_favorite_added)
+    val favRemovedText = stringResource(R.string.feedback_favorite_removed)
 
     LaunchedEffect(scrollToTopSignal) {
         if (scrollToTopSignal > 0) listState.animateScrollToItem(0)
@@ -291,6 +296,7 @@ fun TasbihLibraryScreen(
                         onClick = { onOpenTasbih(tasbih.id) },
                         onToggleFavorite = {
                             viewModel.onToggleFavorite(tasbih.id, tasbih.isFavorite)
+                            snackbar?.show(if (tasbih.isFavorite) favRemovedText else favAddedText)
                         },
                         onOpenNotes = { notesTarget = tasbih },
                         // Long-press opens the Edit/Delete menu for every
@@ -329,7 +335,7 @@ fun TasbihLibraryScreen(
             shape = DialogShape,
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.onDeleteTasbih(tasbih)
+                    viewModel.onDeleteTasbih(tasbih) { snackbar?.show(deletedText) }
                     deleteConfirmTarget = null
                 }) {
                     Text(

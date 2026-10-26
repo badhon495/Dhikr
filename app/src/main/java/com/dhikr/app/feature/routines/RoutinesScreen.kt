@@ -69,6 +69,7 @@ import com.dhikr.app.core.database.dao.RoutineWithSteps
 import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.localizedDigits
+import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
@@ -95,7 +96,6 @@ fun RoutinesScreen(
     var deleteConfirmTarget by remember { mutableStateOf<RoutineWithSteps?>(null) }
 
     var shareDialogOpen by remember { mutableStateOf(false) }
-    var shareSnack by remember { mutableStateOf<String?>(null) }
     val shareStatus by shareViewModel.status.collectAsState()
     val shareSelectable by shareViewModel.selectable.collectAsState()
 
@@ -107,6 +107,10 @@ fun RoutinesScreen(
     // don't query resources off a bare Context.
     val shareFileErrorText = stringResource(R.string.routines_share_file_error)
     val shareCopiedText = stringResource(R.string.routines_share_copied)
+    val snackbar = LocalSnackbar.current
+    val deletedText = stringResource(R.string.feedback_routine_deleted)
+    val favAddedText = stringResource(R.string.feedback_favorite_added)
+    val favRemovedText = stringResource(R.string.feedback_favorite_removed)
 
     val pickFileLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument(),
@@ -254,6 +258,9 @@ fun RoutinesScreen(
                                 routineWithSteps.routine.id,
                                 routineWithSteps.routine.isFavorite,
                             )
+                            snackbar?.show(
+                                if (routineWithSteps.routine.isFavorite) favRemovedText else favAddedText,
+                            )
                         },
                     )
                 }
@@ -296,6 +303,7 @@ fun RoutinesScreen(
                 TextButton(onClick = {
                     viewModel.onDeleteRoutine(routineWithSteps.routine)
                     deleteConfirmTarget = null
+                    snackbar?.show(deletedText)
                 }) {
                     Text(
                         text = stringResource(R.string.routines_delete_confirm_action),
@@ -324,13 +332,13 @@ fun RoutinesScreen(
                     val ok = sendRoutineFile(context, status.payload)
                     shareDialogOpen = false
                     shareViewModel.dismiss()
-                    if (!ok) shareSnack = shareFileErrorText
+                    if (!ok) snackbar?.show(shareFileErrorText)
                 },
                 onCopyText = {
                     copyToClipboard(context, status.payload.clipboardText)
                     shareDialogOpen = false
                     shareViewModel.dismiss()
-                    shareSnack = shareCopiedText
+                    snackbar?.show(shareCopiedText)
                 },
                 onDismiss = {
                     shareDialogOpen = false
@@ -361,21 +369,6 @@ fun RoutinesScreen(
                 onDismiss = { shareDialogOpen = false; shareViewModel.dismiss() },
             )
         }
-    }
-
-    shareSnack?.let { msg ->
-        AlertDialog(
-            onDismissRequest = { shareSnack = null },
-            confirmButton = {
-                TextButton(onClick = { shareSnack = null }) {
-                    Text(stringResource(R.string.routines_import_done_button), color = colors.dim)
-                }
-            },
-            text = { Text(msg) },
-            containerColor = colors.card,
-            textContentColor = colors.text,
-            shape = DialogShape,
-        )
     }
 
     if (importMenuOpen) {

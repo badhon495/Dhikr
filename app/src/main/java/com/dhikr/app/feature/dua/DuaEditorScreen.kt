@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import com.dhikr.app.R
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
+import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.DialogShape
@@ -63,6 +64,9 @@ import com.dhikr.app.ui.theme.PillShape
 fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
+    val snackbar = LocalSnackbar.current
+    val savedText = stringResource(R.string.feedback_dua_saved)
+    val deletedText = stringResource(R.string.feedback_dua_deleted)
     val bn = LocalAppLanguage.current == AppLanguage.BANGLA
     var showDeleteConfirm by rememberSaveable { mutableStateOf(false) }
 
@@ -228,7 +232,12 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
                 .heightIn(min = 52.dp)
                 .clip(PillShape)
                 .background(if (state.isSaveEnabled) colors.terra else colors.track)
-                .clickable(enabled = state.isSaveEnabled, role = Role.Button) { viewModel.save(onBack) }
+                .clickable(enabled = state.isSaveEnabled, role = Role.Button) {
+                    viewModel.save {
+                        snackbar?.show(savedText)
+                        onBack()
+                    }
+                }
                 .testTag("dua_editor_save")
                 .padding(vertical = 8.dp),
             contentAlignment = Alignment.Center,
@@ -254,7 +263,10 @@ fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteConfirm = false
-                    viewModel.delete(onBack)
+                    viewModel.delete {
+                        snackbar?.show(deletedText)
+                        onBack()
+                    }
                 }) {
                     Text(
                         text = stringResource(R.string.dua_delete_confirm_action),

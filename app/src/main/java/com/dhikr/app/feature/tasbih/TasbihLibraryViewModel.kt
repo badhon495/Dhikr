@@ -130,10 +130,13 @@ class TasbihLibraryViewModel(
      * [DeleteResult.BlockedByRoutines] when a routine references the Tasbih,
      * which surfaces the "can't delete" dialog instead of removing it.
      */
-    fun onDeleteTasbih(tasbih: TasbihEntity) {
+    fun onDeleteTasbih(tasbih: TasbihEntity, onDeleted: () -> Unit = {}) {
         viewModelScope.launch {
             when (val result = repository.delete(tasbih)) {
-                is DeleteResult.Success -> reminderScheduler.cancelTasbih(tasbih.id)
+                is DeleteResult.Success -> {
+                    reminderScheduler.cancelTasbih(tasbih.id)
+                    onDeleted()
+                }
                 is DeleteResult.BlockedByRoutines -> {
                     _deleteBlocked.tryEmit(
                         TasbihDeleteBlocked(tasbih.displayName(AppLanguage.current), result.routineNames),

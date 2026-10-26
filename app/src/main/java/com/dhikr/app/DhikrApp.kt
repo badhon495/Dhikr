@@ -16,6 +16,8 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -113,7 +115,9 @@ import com.dhikr.app.ui.NavHomeIcon
 import com.dhikr.app.ui.NavInsightsIcon
 import com.dhikr.app.ui.NavSettingsIcon
 import com.dhikr.app.ui.NavTasbihIcon
+import com.dhikr.app.ui.AppSnackbar
 import com.dhikr.app.ui.LocalReducedMotion
+import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.Motion
 import com.dhikr.app.ui.theme.DhikrTheme
 import kotlinx.coroutines.flow.first
@@ -311,10 +315,14 @@ fun DhikrApp(
             onPendingShareConsumed()
         }
 
+        val snackbarHostState = remember { SnackbarHostState() }
+        val appSnackbar = remember(coroutineScope) { AppSnackbar(snackbarHostState, coroutineScope) }
+
         Box(modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }) {
         CompositionLocalProvider(
             LocalReducedMotion provides reducedMotion,
             LocalAppLanguage provides appLanguage,
+            LocalSnackbar provides appSnackbar,
         ) {
         // Gated on hasSeenOnboarding == true (not just "!= false"): a language
         // switch recreates the Activity (AppLanguage.apply -> AppCompatDelegate
@@ -326,6 +334,7 @@ fun DhikrApp(
         if (hasSeenOnboarding == true) {
         Scaffold(
             containerColor = DhikrTheme.colors.bg,
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             bottomBar = {
                 // Locking the counter hides the bottom nav entirely, on top
                 // of CounterScreen locking its own back/undo/pause/reset

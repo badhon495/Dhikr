@@ -593,4 +593,10 @@
     <string name="qibla_turn_left">বামে %1$s° ঘুরুন</string>
     <string name="qibla_calibrate">কম্পাসের নির্ভুলতা কম — ক্যালিব্রেট করতে ফোনটি ইংরেজি ৮-এর মতো ঘোরান।</string>
     <string name="qibla_note">ফোনটি সমতলে, ধাতু ও চুম্বক থেকে দূরে রাখুন। ফোনের কম্পাসে কয়েক ডিগ্রি ভুল হতে পারে।</string>
+    <string name="feedback_tasbih_deleted">তাসবিহ মুছে ফেলা হয়েছে।</string>
+    <string name="feedback_routine_deleted">রুটিন মুছে ফেলা হয়েছে।</string>
+    <string name="feedback_dua_deleted">দোয়া মুছে ফেলা হয়েছে।</string>
+    <string name="feedback_dua_saved">দোয়া সংরক্ষিত হয়েছে।</string>
+    <string name="feedback_favorite_added">প্রিয়তে যোগ করা হয়েছে।</string>
+    <string name="feedback_favorite_removed">প্রিয় থেকে সরানো হয়েছে।</string>
 </resources>

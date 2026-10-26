@@ -56,6 +56,7 @@ import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.core.localization.displayTranslation
+import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
@@ -72,6 +73,8 @@ fun DuaScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
+    val snackbar = LocalSnackbar.current
+    val deletedText = stringResource(R.string.feedback_dua_deleted)
     val lang = LocalAppLanguage.current
 
     var deleteConfirmTarget by remember { mutableStateOf<DuaEntity?>(null) }
@@ -300,6 +303,7 @@ fun DuaScreen(
                 TextButton(onClick = {
                     viewModel.deleteDua(dua.id)
                     deleteConfirmTarget = null
+                    snackbar?.show(deletedText)
                 }) {
                     Text(
                         text = stringResource(R.string.dua_delete_confirm_action),
