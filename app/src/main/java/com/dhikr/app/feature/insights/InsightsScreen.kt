@@ -1,7 +1,15 @@
 package com.dhikr.app.feature.insights
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -191,15 +199,19 @@ fun InsightsScreen(
             WeeklyGoalBar(state.week, state.weeklyGoalTarget)
         }
 
+        // Streak + milestone text stays on top; only the heatmap is collapsible.
+        state.consistency?.let { ConsistencyCard(it) }
+
+        // Everything below the totals is an accordion: headers only until tapped,
+        // one open at a time.
+        var openSection by rememberSaveable { mutableStateOf<String?>(null) }
+
         // Last 7 days
-        Text(
+        InsightsSection(
             stringResource(R.string.insights_last_7_days),
-            fontSize = 11.5.sp,
-            color = colors.dim,
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 8.dp)
-                .headingSemantics(),
-        )
+            openSection == "last7",
+            { openSection = if (openSection == "last7") null else "last7" },
+        ) {
         // Labels built here (not in the repository) so they follow the in-app
         // language and re-render when it changes.
         val appLanguage = LocalAppLanguage.current
@@ -271,17 +283,14 @@ fun InsightsScreen(
                 }
             }
         }
+        }
 
         // Consistency calendar
-        Text(
+        InsightsSection(
             stringResource(R.string.insights_consistency),
-            fontSize = 11.5.sp,
-            color = colors.dim,
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 2.dp)
-                .headingSemantics(),
-        )
-        state.consistency?.let { ConsistencyCard(it) }
+            openSection == "consistency",
+            { openSection = if (openSection == "consistency") null else "consistency" },
+        ) {
         val activeDaysThisMonth = state.calendarIntensity.values.count { it > 0 }
         Text(
             stringResource(R.string.insights_consistency_meta, activeDaysThisMonth),
@@ -345,21 +354,19 @@ fun InsightsScreen(
                 Text(stringResource(R.string.insights_legend_more), fontSize = 11.5.sp, color = colors.faint)
             }
         }
+        }
 
         // Previous month summary + link to the full month-by-month history
+        InsightsSection(
+            stringResource(R.string.insights_last_month),
+            openSection == "lastMonth",
+            { openSection = if (openSection == "lastMonth") null else "lastMonth" },
+        ) {
         val previousMonth = state.previousMonth
         if (previousMonth != null && previousMonth.total > 0) {
             val prevMonthName = remember(previousMonth.monthStartMillis) {
                 SimpleDateFormat("MMMM", Locale.getDefault()).format(Date(previousMonth.monthStartMillis))
             }
-            Text(
-                stringResource(R.string.insights_last_month),
-                fontSize = 11.5.sp,
-                color = colors.dim,
-                modifier = Modifier
-                    .padding(top = 20.dp, bottom = 8.dp)
-                    .headingSemantics(),
-            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -406,24 +413,17 @@ fun InsightsScreen(
                 color = colors.sage,
             )
         }
+        }
 
         // History grouped by Dhikr
         val todayLabel = stringResource(R.string.insights_day_today)
         val yesterdayLabel = stringResource(R.string.insights_day_yesterday)
-        Row(modifier = Modifier.padding(top = 20.dp, bottom = 8.dp), verticalAlignment = Alignment.Bottom) {
-            Text(
-                stringResource(R.string.insights_history_title),
-                fontSize = 11.5.sp,
-                color = colors.dim,
-                modifier = Modifier.headingSemantics(),
-            )
-            Text(
-                stringResource(R.string.insights_history_grouped),
-                fontSize = 11.5.sp,
-                color = colors.faint,
-                modifier = Modifier.padding(start = 6.dp),
-            )
-        }
+        InsightsSection(
+            stringResource(R.string.insights_history_title),
+            openSection == "history",
+            { openSection = if (openSection == "history") null else "history" },
+            subtitle = stringResource(R.string.insights_history_grouped),
+        ) {
         state.historyByTasbih.take(DHIKR_HISTORY_PREVIEW_LIMIT).forEach { group ->
             DhikrHistoryCard(group, todayLabel, yesterdayLabel)
         }
@@ -442,6 +442,52 @@ fun InsightsScreen(
                     color = colors.sage,
                 )
             }
+        }
+        }
+    }
+}
+
+/** Accordion header card; [content] shows beneath it while [expanded]. */
+@Composable
+private fun InsightsSection(
+    title: String,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    subtitle: String? = null,
+    content: @Composable () -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    Column(modifier = Modifier.padding(top = 12.dp).fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(20.dp))
+                .background(colors.card)
+                .clickable(role = Role.Button, onClickLabel = title, onClick = onToggle)
+                .minTapTarget()
+                .padding(16.dp),
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    title,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.text,
+                    modifier = Modifier.headingSemantics(),
+                )
+                if (subtitle != null) {
+                    Text(subtitle, fontSize = 12.sp, color = colors.faint, modifier = Modifier.padding(top = 2.dp))
+                }
+            }
+            Icon(
+                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                contentDescription = null,
+                tint = colors.faint,
+            )
+        }
+        AnimatedVisibility(visible = expanded) {
+            Column(modifier = Modifier.padding(top = 8.dp)) { content() }
         }
     }
 }
