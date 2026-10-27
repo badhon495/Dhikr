@@ -26,7 +26,10 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -66,6 +69,7 @@ import com.dhikr.app.ui.NavTasbihIcon
 import com.dhikr.app.ui.HOME_SCREEN_TEST_TAG
 import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.animatedFill
+import com.dhikr.app.ui.motionSpec
 import com.dhikr.app.ui.Motion
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
@@ -222,12 +226,9 @@ fun HomeScreen(
         // Routines — the favorited ones. Full-width cards, one per row: matches
         // the Favourites list width but reads heavier — a step-count chip leads
         // each card and the first step names preview the plan, so the two
-        // sections stay visually distinct. Empty = a hint pointing at Routines.
-        Column {
+        // sections stay visually distinct. Empty = section hidden.
+        if (state.routines.isNotEmpty()) Column {
             SectionHeader(stringResource(R.string.home_routines_title))
-            if (state.routines.isEmpty()) {
-                EmptyHint(stringResource(R.string.home_routines_empty_hint))
-            }
             state.routines.forEach { routineWithSteps ->
                 val done = routineWithSteps.routine.id in state.completedRoutineIds
                 val fraction = if (done) 0f
@@ -243,11 +244,8 @@ fun HomeScreen(
         }
 
         // Favourites
-        Column {
+        if (state.favorites.isNotEmpty()) Column {
             SectionHeader(stringResource(R.string.home_favorites_title))
-            if (state.favorites.isEmpty()) {
-                EmptyHint(stringResource(R.string.home_favorites_empty_hint))
-            }
             state.favorites.forEach { tasbih ->
                 val fill = (state.tasbihProgress[tasbih.id] ?: 0f).coerceIn(0f, 1f)
                 Box(
@@ -483,7 +481,28 @@ private fun GoalRing(progress: Float, contentDescription: String) {
     val reducedMotion = LocalReducedMotion.current
     // Sweep the arc up to a changed daily total instead of snapping, on the same
     // curve the counter ring uses.
-    val animatedProgress = animatedFill(min(1f, progress))
+    // Always replays from empty: on first show, on every return to the app, and
+    // whenever the total changes.
+    val target = min(1f, progress)
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+    var resumeCount by remember { mutableIntStateOf(0) }
+    DisposableEffect(lifecycleOwner) {
+        val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+            if (event == androidx.lifecycle.Lifecycle.Event.ON_START) resumeCount++
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+    val sweep = remember { androidx.compose.animation.core.Animatable(0f) }
+    LaunchedEffect(target, resumeCount, reducedMotion) {
+        if (reducedMotion) {
+            sweep.snapTo(target)
+        } else {
+            sweep.snapTo(0f)
+            sweep.animateTo(target, motionSpec(false, 1600))
+        }
+    }
+    val animatedProgress = sweep.value
     Box(
         modifier = Modifier
             .size(86.dp)
