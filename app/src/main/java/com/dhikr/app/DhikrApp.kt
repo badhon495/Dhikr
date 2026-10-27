@@ -674,7 +674,7 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.navEnter(
     forward: Boolean,
 ): EnterTransition {
     if (reduced) return EnterTransition.None
-    val fade = fadeIn(tween(Motion.FAST_MS))
+    val fade = fadeIn(tween(Motion.SCREEN_MS, delayMillis = 60, easing = Motion.StandardEasing))
     val goingForward = tabSwitchForward ?: forward
     val direction = if (goingForward) {
         AnimatedContentTransitionScope.SlideDirection.Start
@@ -683,8 +683,8 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.navEnter(
     }
     return fade + slideIntoContainer(
         direction,
-        tween(Motion.STANDARD_MS, easing = Motion.StandardEasing),
-        initialOffset = { it / 14 },
+        tween(Motion.SCREEN_MS, easing = Motion.StandardEasing),
+        initialOffset = { it / 5 },
     )
 }
 
@@ -694,7 +694,7 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.navExit(
     forward: Boolean,
 ): ExitTransition {
     if (reduced) return ExitTransition.None
-    val fade = fadeOut(tween(Motion.FAST_MS))
+    val fade = fadeOut(tween(Motion.SCREEN_MS / 2))
     val goingForward = tabSwitchForward ?: forward
     val direction = if (goingForward) {
         AnimatedContentTransitionScope.SlideDirection.Start
@@ -703,8 +703,8 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.navExit(
     }
     return fade + slideOutOfContainer(
         direction,
-        tween(Motion.STANDARD_MS, easing = Motion.StandardEasing),
-        targetOffset = { it / 14 },
+        tween(Motion.SCREEN_MS, easing = Motion.StandardEasing),
+        targetOffset = { it / 8 },
     )
 }
 

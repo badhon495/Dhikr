@@ -65,6 +65,7 @@ import com.dhikr.app.ui.ListIcon
 import com.dhikr.app.ui.NavTasbihIcon
 import com.dhikr.app.ui.HOME_SCREEN_TEST_TAG
 import com.dhikr.app.ui.LocalReducedMotion
+import com.dhikr.app.ui.animatedFill
 import com.dhikr.app.ui.Motion
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
@@ -410,12 +411,13 @@ private fun RoutineHomeCard(
     ) {
         // Green fill growing left-to-right with today's progress through the
         // routine; a completed routine uses the solid tint above instead.
-        if (fraction > 0f) {
+        val animatedFraction = animatedFill(fraction)
+        if (animatedFraction > 0f) {
             Box(modifier = Modifier.matchParentSize()) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .fillMaxWidth(fraction)
+                        .fillMaxWidth(animatedFraction)
                         .background(colors.sageSoft),
                 )
             }
@@ -481,15 +483,7 @@ private fun GoalRing(progress: Float, contentDescription: String) {
     val reducedMotion = LocalReducedMotion.current
     // Sweep the arc up to a changed daily total instead of snapping, on the same
     // curve the counter ring uses.
-    val animatedProgress by animateFloatAsState(
-        targetValue = min(1f, progress),
-        animationSpec = if (reducedMotion) {
-            snap()
-        } else {
-            tween(Motion.STANDARD_MS, easing = Motion.StandardEasing)
-        },
-        label = "goal-ring",
-    )
+    val animatedProgress = animatedFill(min(1f, progress))
     Box(
         modifier = Modifier
             .size(86.dp)

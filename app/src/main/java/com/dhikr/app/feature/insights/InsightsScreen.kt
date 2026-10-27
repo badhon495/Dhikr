@@ -1,6 +1,16 @@
 package com.dhikr.app.feature.insights
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import com.dhikr.app.ui.LocalReducedMotion
+import com.dhikr.app.ui.Motion
+import com.dhikr.app.ui.animatedFill
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
@@ -200,7 +210,23 @@ fun InsightsScreen(
         }
 
         // Streak + milestone text stays on top; only the heatmap is collapsible.
-        state.consistency?.let { ConsistencyCard(it) }
+        // The summary arrives a beat after the totals; animating it in (also on
+        // every return to this tab) stops the layout below from jumping.
+        val consistency = state.consistency
+        val reducedMotion = LocalReducedMotion.current
+        val consistencyVisible = remember { MutableTransitionState(false) }
+        consistencyVisible.targetState = consistency != null
+        var lastConsistency by remember { mutableStateOf(consistency) }
+        if (consistency != null) lastConsistency = consistency
+        AnimatedVisibility(
+            visibleState = consistencyVisible,
+            enter = if (reducedMotion) EnterTransition.None else
+                fadeIn(tween(350, easing = Motion.StandardEasing)) +
+                    expandVertically(tween(350, easing = Motion.StandardEasing)),
+            exit = ExitTransition.None,
+        ) {
+            lastConsistency?.let { ConsistencyCard(it) }
+        }
 
         // Everything below the totals is an accordion: headers only until tapped,
         // one open at a time.
@@ -257,6 +283,7 @@ fun InsightsScreen(
                         maxLines = 1,
                         softWrap = false,
                     )
+                    val barFraction = animatedFill(value.toFloat() / maxValue)
                     // Bar area takes the leftover height, so a tall bar can
                     // never push the day label out of the card.
                     BoxWithConstraints(
@@ -268,7 +295,7 @@ fun InsightsScreen(
                         Box(
                             modifier = Modifier
                                 .width(18.dp)
-                                .height((maxHeight * (value.toFloat() / maxValue)).coerceAtLeast(4.dp))
+                                .height((maxHeight * barFraction).coerceAtLeast(4.dp))
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(if (isToday) colors.terra else colors.sage),
                         )
@@ -551,7 +578,7 @@ fun DhikrHistoryCard(
                 ) {
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth((count.toFloat() / 200f).coerceIn(0f, 1f))
+                            .fillMaxWidth(animatedFill((count.toFloat() / 200f).coerceIn(0f, 1f), 500))
                             .height(7.dp)
                             .clip(PillShape)
                             .background(colors.sage),
@@ -588,7 +615,7 @@ private fun isSameDay(a: Calendar, b: Calendar): Boolean =
 private fun WeeklyGoalBar(week: Int, target: Int) {
     val colors = DhikrTheme.colors
     val lang = LocalAppLanguage.current
-    val fraction = (week.toFloat() / target).coerceIn(0f, 1f)
+    val fraction = animatedFill((week.toFloat() / target).coerceIn(0f, 1f))
     val description = stringResource(R.string.insights_weekly_goal_description, week, target)
     Column(
         modifier = Modifier
