@@ -33,7 +33,7 @@ data class InsightsUiState(
     val last7Days: List<Pair<String, Int>> = emptyList(),
     val calendarIntensity: Map<Int, Int> = emptyMap(),
     val historyByTasbih: List<TasbihHistoryGroup> = emptyList(),
-    val previousMonth: MonthSummary? = null,
+    val recentMonths: List<MonthSummary> = emptyList(),
     val dailyGoalTarget: Int = 500,
     // 0 = no weekly goal set.
     val weeklyGoalTarget: Int = 0,
@@ -91,13 +91,13 @@ class InsightsViewModel(
                         repository.calendarIntensity(now.get(Calendar.YEAR), now.get(Calendar.MONTH))
                     }
                     val history = async { repository.historyByTasbih() }
-                    val previousMonth = async { repository.previousMonthSummary() }
+                    val recentMonths = async { repository.recentMonthSummaries() }
                     val dailyGoalTarget = async { preferencesRepository.dailyGoalTarget.first() }
                     val consistency = async { repository.consistency() }
                     val resolvedLast7Days = last7Days.await()
                     val resolvedCalendar = calendar.await()
                     val resolvedHistory = history.await()
-                    val resolvedPreviousMonth = previousMonth.await()
+                    val resolvedRecentMonths = recentMonths.await()
                     val resolvedDailyGoalTarget = dailyGoalTarget.await()
                     val resolvedConsistency = consistency.await()
                     _uiState.update {
@@ -105,7 +105,7 @@ class InsightsViewModel(
                             last7Days = resolvedLast7Days,
                             calendarIntensity = resolvedCalendar,
                             historyByTasbih = resolvedHistory,
-                            previousMonth = resolvedPreviousMonth,
+                            recentMonths = resolvedRecentMonths,
                             dailyGoalTarget = resolvedDailyGoalTarget,
                             consistency = resolvedConsistency,
                         )

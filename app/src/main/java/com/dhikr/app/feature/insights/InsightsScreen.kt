@@ -356,20 +356,26 @@ fun InsightsScreen(
         }
         }
 
-        // Previous month summary + link to the full month-by-month history
+        // Last 3 months summary + link to the full month-by-month history
         InsightsSection(
             stringResource(R.string.insights_last_month),
             openSection == "lastMonth",
             { openSection = if (openSection == "lastMonth") null else "lastMonth" },
         ) {
-        val previousMonth = state.previousMonth
-        if (previousMonth != null && previousMonth.total > 0) {
-            val prevMonthName = remember(previousMonth.monthStartMillis) {
-                SimpleDateFormat("MMMM", Locale.getDefault()).format(Date(previousMonth.monthStartMillis))
-            }
+        val monthFormat = remember { SimpleDateFormat("MMMM", Locale.getDefault()) }
+        if (state.recentMonths.isEmpty()) {
+            Text(
+                stringResource(R.string.insights_all_months_empty),
+                fontSize = 13.sp,
+                color = colors.faint,
+                modifier = Modifier.padding(horizontal = 4.dp, vertical = 6.dp),
+            )
+        }
+        state.recentMonths.forEach { month ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(bottom = 10.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(colors.card)
                     .padding(16.dp),
@@ -379,9 +385,9 @@ fun InsightsScreen(
                     verticalAlignment = Alignment.Bottom,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(prevMonthName, fontSize = 14.5.sp, color = colors.text)
+                    Text(monthFormat.format(Date(month.monthStartMillis)), fontSize = 14.5.sp, color = colors.text)
                     Text(
-                        previousMonth.total.localizedDigits(LocalAppLanguage.current),
+                        month.total.localizedDigits(LocalAppLanguage.current),
                         fontSize = 20.sp,
                         fontFamily = Caprasimo,
                         color = colors.terra,
@@ -390,8 +396,8 @@ fun InsightsScreen(
                 Text(
                     stringResource(
                         R.string.insights_month_active_days,
-                        previousMonth.consistentDays,
-                        previousMonth.daysInMonth,
+                        month.consistentDays,
+                        month.daysInMonth,
                     ),
                     fontSize = 12.sp,
                     color = colors.faint,
@@ -401,7 +407,6 @@ fun InsightsScreen(
         }
         Box(
             modifier = Modifier
-                .padding(top = 10.dp)
                 .clip(PillShape)
                 .clickable(role = Role.Button) { onSeeAllMonths() }
                 .minTapTarget()

@@ -274,7 +274,7 @@
     <string name="insights_empty_body">আপনার প্রথম সেশন শেষ করার সাথে সাথেই গণনা এখানে দেখা যাবে।</string>
     <string name="insights_empty_cta">গণনা শুরু করুন</string>
     <string name="insights_empty_icon_content_description">এখনও কোনো সেশন নেই</string>
-    <string name="insights_last_month">গত মাস</string>
+    <string name="insights_last_month">গত ৩ মাস</string>
     <string name="insights_month_active_days">%2$d এর %1$d দিন সক্রিয়</string>
     <string name="insights_see_all_months">সব মাস দেখুন</string>
     <string name="insights_all_months_title">মাসিক ইতিহাস</string>

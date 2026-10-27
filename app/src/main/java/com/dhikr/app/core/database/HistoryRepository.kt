@@ -165,28 +165,41 @@ class HistoryRepository(
     }
 
     /**
-     * Summary of the previous calendar month only. Reads just that month's
+     * Summaries of the last [count] calendar months including the current one,
+     * newest first; months with no activity are omitted. Reads only those months'
      * day-buckets instead of bucketing all of history via `monthlySummaries()`.
      */
-    suspend fun previousMonthSummary(): MonthSummary? {
-        val prev = Calendar.getInstance().apply {
-            add(Calendar.MONTH, -1)
+    suspend fun recentMonthSummaries(count: Int = 3): List<MonthSummary> {
+        val first = Calendar.getInstance().apply {
+            add(Calendar.MONTH, -(count - 1))
             set(Calendar.DAY_OF_MONTH, 1)
             set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
         }
-        val prevStart = prev.timeInMillis
-        val thisMonthStart = DayBounds.startOfMonthMillis()
-        val buckets = sessionDao.allTasbihDailyTotalsSince(prevStart, dayMillis, localOffsetMillis())
-            .filter { it.dayStartMillis < thisMonthStart }
-        if (buckets.isEmpty()) return null
-        return MonthSummary(
-            year = prev.get(Calendar.YEAR),
-            month = prev.get(Calendar.MONTH),
-            monthStartMillis = prevStart,
-            total = buckets.sumOf { it.total },
-            consistentDays = buckets.count { it.total > 0 },
-            daysInMonth = prev.getActualMaximum(Calendar.DAY_OF_MONTH),
-        )
+        val buckets = sessionDao.allTasbihDailyTotalsSince(first.timeInMillis, dayMillis, localOffsetMillis())
+        if (buckets.isEmpty()) return emptyList()
+        val calendar = Calendar.getInstance()
+        return buckets
+            .groupBy { bucket ->
+                calendar.timeInMillis = bucket.dayStartMillis
+                calendar.get(Calendar.YEAR) to calendar.get(Calendar.MONTH)
+            }
+            .map { (yearMonth, rows) ->
+                val (year, month) = yearMonth
+                val monthCalendar = Calendar.getInstance().apply {
+                    clear()
+                    set(year, month, 1, 0, 0, 0)
+                }
+                MonthSummary(
+                    year = year,
+                    month = month,
+                    monthStartMillis = monthCalendar.timeInMillis,
+                    total = rows.sumOf { it.total },
+                    // Same tasbih-day rows can repeat a day; count distinct active days.
+                    consistentDays = rows.filter { it.total > 0 }.map { it.dayStartMillis }.distinct().size,
+                    daysInMonth = monthCalendar.getActualMaximum(Calendar.DAY_OF_MONTH),
+                )
+            }
+            .sortedByDescending { it.monthStartMillis }
     }
 
     /**
