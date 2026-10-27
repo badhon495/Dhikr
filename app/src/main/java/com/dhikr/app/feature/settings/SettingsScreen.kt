@@ -97,6 +97,9 @@ fun SettingsScreen(
     val state by viewModel.uiState.collectAsState()
     val colors = DhikrTheme.colors
     val scrollState = rememberScrollState()
+    // Accordion: only one top-level section open at a time; null = all collapsed.
+    var open by rememberSaveable { mutableStateOf<String?>(null) }
+    var openAdvanced by rememberSaveable { mutableStateOf<String?>(null) }
 
     LaunchedEffect(scrollToTopSignal) {
         if (scrollToTopSignal > 0) scrollState.animateScrollTo(0)
@@ -118,7 +121,11 @@ fun SettingsScreen(
         )
 
         // ---- Language ----
-        SettingsSection(stringResource(R.string.settings_language)) {
+        SettingsSection(
+            stringResource(R.string.settings_language),
+            open == "language",
+            { open = if (open == "language") null else "language" },
+        ) {
             Text(
                 stringResource(R.string.settings_language_desc),
                 fontSize = 12.sp,
@@ -153,7 +160,11 @@ fun SettingsScreen(
         }
 
         // ---- Appearance ----
-        SettingsSection(stringResource(R.string.settings_appearance)) {
+        SettingsSection(
+            stringResource(R.string.settings_appearance),
+            open == "appearance",
+            { open = if (open == "appearance") null else "appearance" },
+        ) {
             val themeLabels = listOf(
                 ThemeMode.SYSTEM to stringResource(R.string.settings_theme_system),
                 ThemeMode.LIGHT to stringResource(R.string.settings_theme_light),
@@ -219,7 +230,11 @@ fun SettingsScreen(
         }
 
         // ---- Counting ----
-        SettingsSection(stringResource(R.string.settings_counting)) {
+        SettingsSection(
+            stringResource(R.string.settings_counting),
+            open == "counting",
+            { open = if (open == "counting") null else "counting" },
+        ) {
             Text(
                 stringResource(R.string.settings_haptics),
                 fontSize = 14.sp,
@@ -339,7 +354,11 @@ fun SettingsScreen(
         }
 
         // ---- Prayer reminders + Hijri date ----
-        SettingsSection(stringResource(R.string.settings_prayer)) {
+        SettingsSection(
+            stringResource(R.string.settings_prayer),
+            open == "prayer",
+            { open = if (open == "prayer") null else "prayer" },
+        ) {
             PrayerSettingsSection(state, viewModel, onOpenQibla)
             Column(modifier = Modifier.padding(top = 18.dp)) {
                 HijriAdjustRow(state, viewModel)
@@ -350,7 +369,11 @@ fun SettingsScreen(
         }
 
         // ---- Accessibility ----
-        SettingsSection(stringResource(R.string.settings_accessibility)) {
+        SettingsSection(
+            stringResource(R.string.settings_accessibility),
+            open == "accessibility",
+            { open = if (open == "accessibility") null else "accessibility" },
+        ) {
             SwitchRow(
                 title = stringResource(R.string.settings_reduce_motion),
                 description = stringResource(R.string.settings_reduce_motion_desc),
@@ -360,20 +383,30 @@ fun SettingsScreen(
         }
 
         // ---- Backup ----
-        SettingsSection(stringResource(R.string.settings_backup)) {
+        SettingsSection(
+            stringResource(R.string.settings_backup),
+            open == "backup",
+            { open = if (open == "backup") null else "backup" },
+        ) {
             BackupControls(backupViewModel)
             // Drive sync hidden until next release.
             // DriveSyncControls(driveSyncViewModel)
         }
 
         // ---- Advanced (collapsed by default): experimental / power-user options ----
-        AdvancedGroup(
-            title = stringResource(R.string.settings_advanced),
+        SettingsSection(
+            stringResource(R.string.settings_advanced),
+            open == "advanced",
+            { open = if (open == "advanced") null else "advanced" },
             description = stringResource(R.string.settings_advanced_desc),
         ) {
         // ---- Auto counter (advanced, experimental, off by default) ----
         if (state.autoCounterSupported) {
-            SettingsSection(stringResource(R.string.settings_auto_counter)) {
+            SettingsSection(
+                stringResource(R.string.settings_auto_counter),
+                openAdvanced == "auto",
+                { openAdvanced = if (openAdvanced == "auto") null else "auto" },
+            ) {
                 SwitchRow(
                     title = stringResource(R.string.settings_auto_counter_toggle),
                     description = stringResource(R.string.settings_auto_counter_toggle_desc),
@@ -390,7 +423,11 @@ fun SettingsScreen(
         }
 
         // ---- AI features ----
-        SettingsSection(stringResource(R.string.settings_ai)) {
+        SettingsSection(
+            stringResource(R.string.settings_ai),
+            openAdvanced == "ai",
+            { openAdvanced = if (openAdvanced == "ai") null else "ai" },
+        ) {
             GeminiKeyControls(
                 hasKey = state.hasGeminiKey,
                 onSave = viewModel::saveGeminiKey,
@@ -429,7 +466,11 @@ fun SettingsScreen(
         }
 
         // ---- About ----
-        SettingsSection(stringResource(R.string.settings_about)) {
+        SettingsSection(
+            stringResource(R.string.settings_about),
+            open == "about",
+            { open = if (open == "about") null else "about" },
+        ) {
             AboutLine(stringResource(R.string.settings_about_offline))
             AboutLine(stringResource(R.string.settings_about_no_account))
             AboutLine(stringResource(R.string.settings_about_no_upload))
@@ -454,58 +495,52 @@ fun SettingsScreen(
     }
 }
 
-@Composable
-private fun SettingsSection(title: String, content: @Composable () -> Unit) {
-    val colors = DhikrTheme.colors
-    Column(modifier = Modifier.padding(bottom = 18.dp)) {
-        Text(
-            text = title.uppercase(),
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = colors.dim,
-            modifier = Modifier
-                .padding(bottom = 8.dp)
-                .headingSemantics(),
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(ListRowShape)
-                .background(colors.card)
-                .border(1.dp, colors.line, ListRowShape)
-                .padding(16.dp),
-        ) {
-            content()
-        }
-    }
-}
-
 /**
- * Collapsible group for experimental / power-user settings, closed by default
- * so the main list stays short. Expanded state survives rotation.
+ * Accordion section: a tappable header row (title + chevron) that reveals its
+ * content in the same card. Expanded state is owned by the caller so only one
+ * section stays open at a time.
  */
 @Composable
-private fun AdvancedGroup(title: String, description: String, content: @Composable () -> Unit) {
+private fun SettingsSection(
+    title: String,
+    expanded: Boolean,
+    onToggle: () -> Unit,
+    description: String? = null,
+    content: @Composable () -> Unit,
+) {
     val colors = DhikrTheme.colors
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    Column(modifier = Modifier.padding(bottom = 18.dp)) {
+    Column(
+        modifier = Modifier
+            .padding(bottom = 12.dp)
+            .fillMaxWidth()
+            .clip(ListRowShape)
+            .background(colors.card)
+            .border(1.dp, colors.line, ListRowShape),
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(ListRowShape)
-                .background(colors.card)
-                .border(1.dp, colors.line, ListRowShape)
-                .clickable(
-                    role = Role.Button,
-                    onClickLabel = title,
-                ) { expanded = !expanded }
+                .clickable(role = Role.Button, onClickLabel = title, onClick = onToggle)
                 .minTapTarget()
                 .padding(16.dp),
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(title, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = colors.text)
-                Text(description, fontSize = 12.sp, color = colors.faint, modifier = Modifier.padding(top = 2.dp))
+                Text(
+                    title,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.text,
+                    modifier = Modifier.headingSemantics(),
+                )
+                if (description != null) {
+                    Text(
+                        description,
+                        fontSize = 12.sp,
+                        color = colors.faint,
+                        modifier = Modifier.padding(top = 2.dp),
+                    )
+                }
             }
             Icon(
                 imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
@@ -514,7 +549,7 @@ private fun AdvancedGroup(title: String, description: String, content: @Composab
             )
         }
         AnimatedVisibility(visible = expanded) {
-            Column(modifier = Modifier.padding(top = 18.dp)) {
+            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
                 content()
             }
         }
