@@ -214,7 +214,7 @@ fun HomeScreen(
         // inside Settings (Routines, the full Tasbih library, Qibla).
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
             QuickAction(ListIcon, stringResource(R.string.home_quick_routines), onOpenRoutines, Modifier.weight(1f))
-            QuickAction(NavTasbihIcon, stringResource(R.string.home_quick_library), onOpenLibrary, Modifier.weight(1f))
+            QuickAction(BookIcon, stringResource(R.string.home_dua_card_title), onOpenDua, Modifier.weight(1f))
             QuickAction(CompassIcon, stringResource(R.string.home_quick_qibla), onOpenQibla, Modifier.weight(1f))
         }
 
@@ -223,17 +223,9 @@ fun HomeScreen(
         // each card and the first step names preview the plan, so the two
         // sections stay visually distinct. Empty = a hint pointing at Routines.
         Column {
-            SectionHeader(
-                title = stringResource(R.string.home_routines_title),
-                actionLabel = stringResource(R.string.home_routines_manage),
-                onAction = onOpenRoutines,
-            )
+            SectionHeader(stringResource(R.string.home_routines_title))
             if (state.routines.isEmpty()) {
-                EmptyHint(
-                    text = stringResource(R.string.home_routines_empty_hint),
-                    actionLabel = stringResource(R.string.home_routines_empty_action),
-                    onAction = onOpenRoutines,
-                )
+                EmptyHint(stringResource(R.string.home_routines_empty_hint))
             }
             state.routines.forEach { routineWithSteps ->
                 val done = routineWithSteps.routine.id in state.completedRoutineIds
@@ -251,17 +243,9 @@ fun HomeScreen(
 
         // Favourites
         Column {
-            SectionHeader(
-                title = stringResource(R.string.home_favorites_title),
-                actionLabel = stringResource(R.string.home_favorites_all),
-                onAction = onOpenLibrary,
-            )
+            SectionHeader(stringResource(R.string.home_favorites_title))
             if (state.favorites.isEmpty()) {
-                EmptyHint(
-                    text = stringResource(R.string.home_favorites_empty_hint),
-                    actionLabel = stringResource(R.string.home_favorites_empty_action),
-                    onAction = onOpenLibrary,
-                )
+                EmptyHint(stringResource(R.string.home_favorites_empty_hint))
             }
             state.favorites.forEach { tasbih ->
                 val fill = (state.tasbihProgress[tasbih.id] ?: 0f).coerceIn(0f, 1f)
@@ -322,60 +306,6 @@ fun HomeScreen(
                         )
                     }
                 }
-            }
-        }
-
-        // Dua — its own section, set apart from Favourites above: a sage icon
-        // badge (same accent used by the counter/add affordances elsewhere)
-        // and a trailing chevron mark this as a link into a whole separate
-        // screen, not another countable favorite card.
-        Column {
-            Text(
-                stringResource(R.string.home_dua_card_title),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 0.3.sp,
-                color = colors.text,
-                modifier = Modifier.headingSemantics(),
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp)
-                    .clip(RoundedCornerShape(22.dp))
-                    .background(colors.card)
-                    .clickable(role = Role.Button) { onOpenDua() }
-                    .padding(14.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                        .background(colors.sageSoft),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = BookIcon,
-                        contentDescription = null,
-                        tint = colors.sage,
-                        modifier = Modifier.size(20.dp),
-                    )
-                }
-                Text(
-                    stringResource(R.string.home_dua_card_subtitle),
-                    fontSize = 13.sp,
-                    color = colors.dim,
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 12.dp),
-                )
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null,
-                    tint = colors.faint,
-                    modifier = Modifier.size(20.dp),
-                )
             }
         }
     }
@@ -531,39 +461,18 @@ private fun RoutineHomeCard(
     }
 }
 
-/** Section label + trailing action link, shared by the Home sections. */
+/** Section label shared by the Home sections. */
 @Composable
-private fun SectionHeader(
-    title: String,
-    actionLabel: String,
-    onAction: () -> Unit,
-) {
+private fun SectionHeader(title: String) {
     val colors = DhikrTheme.colors
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Text(
-            title,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            letterSpacing = 0.3.sp,
-            color = colors.text,
-            modifier = Modifier.headingSemantics(),
-        )
-        Text(
-            actionLabel,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Medium,
-            color = colors.terra,
-            modifier = Modifier
-                .clip(RoundedCornerShape(999.dp))
-                .clickable(role = Role.Button) { onAction() }
-                .minTapTarget()
-                .padding(horizontal = 8.dp, vertical = 6.dp),
-        )
-    }
+    Text(
+        title,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold,
+        letterSpacing = 0.3.sp,
+        color = colors.text,
+        modifier = Modifier.padding(vertical = 8.dp).headingSemantics(),
+    )
 }
 
 @Composable
@@ -644,24 +553,9 @@ private fun QuickAction(
     }
 }
 
-/** Empty-section placeholder with a one-tap way to fill it. */
+/** Empty-section placeholder. */
 @Composable
-private fun EmptyHint(text: String, actionLabel: String, onAction: () -> Unit) {
+private fun EmptyHint(text: String) {
     val colors = DhikrTheme.colors
-    Column(modifier = Modifier.padding(top = 6.dp)) {
-        Text(text, fontSize = 13.sp, color = colors.dim)
-        Text(
-            actionLabel,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = colors.onSage,
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .clip(RoundedCornerShape(999.dp))
-                .background(colors.sage)
-                .clickable(role = Role.Button) { onAction() }
-                .minTapTarget()
-                .padding(horizontal = 16.dp, vertical = 10.dp),
-        )
-    }
+    Text(text, fontSize = 13.sp, color = colors.dim, modifier = Modifier.padding(top = 6.dp))
 }
