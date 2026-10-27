@@ -484,6 +484,7 @@
     <string name="settings_prayer_asr_hanafi">Hanafi</string>
     <string name="settings_prayer_offset">Remind me</string>
     <string name="settings_prayer_offset_minutes">%1$d min after</string>
+    <string name="settings_prayer_offset_hint">The reminder may arrive about 5 minutes earlier or later than the actual waqt.</string>
     <string name="settings_prayer_time_today">Today at %1$s</string>
     <string name="settings_prayer_time_unavailable">Not reached today at this latitude</string>
     <string name="settings_prayer_note">Times are estimates and may differ from your local mosque by a few minutes. Reminders can arrive a little late when the phone is saving battery.</string>

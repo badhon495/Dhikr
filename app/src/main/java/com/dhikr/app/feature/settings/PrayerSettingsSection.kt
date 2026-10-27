@@ -168,6 +168,12 @@ internal fun PrayerSettingsSection(
         selected = settings.offsetMinutes,
         onSelect = viewModel::onPrayerOffsetChange,
     )
+    Text(
+        stringResource(R.string.settings_prayer_offset_hint),
+        fontSize = 12.sp,
+        color = colors.faint,
+        modifier = Modifier.padding(top = 6.dp),
+    )
 
     Column(modifier = Modifier.padding(top = 14.dp)) {
         val timeFormat = remember { DateFormat.getTimeInstance(DateFormat.SHORT) }
