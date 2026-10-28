@@ -71,6 +71,11 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            // Native libs come from dependencies (e.g. sqlite, graphics-path);
+            // bundle their symbols so Play can symbolicate native crashes/ANRs.
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
