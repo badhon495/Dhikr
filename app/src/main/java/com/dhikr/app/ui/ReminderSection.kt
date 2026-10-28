@@ -64,10 +64,9 @@ fun ReminderSection(
     val colors = DhikrTheme.colors
     val context = LocalContext.current
     var showTimePicker by remember { mutableStateOf(false) }
-    var permissionDenied by remember { mutableStateOf(false) }
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
-    ) { granted -> permissionDenied = !granted }
+    ) {}
 
     Column(modifier = modifier) {
         Text(
@@ -174,14 +173,7 @@ fun ReminderSection(
                 }
             }
 
-            if (permissionDenied) {
-                Text(
-                    text = stringResource(R.string.reminder_permission_hint),
-                    fontSize = 12.sp,
-                    color = colors.faint,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
-            }
+            NotificationsOffHint(modifier = Modifier.padding(top = 8.dp))
         }
     }
 

@@ -42,6 +42,7 @@ import com.dhikr.app.core.prayer.CalculationMethod
 import com.dhikr.app.core.prayer.PRAYER_CITIES
 import com.dhikr.app.core.prayer.PRAYER_OFFSET_OPTIONS
 import com.dhikr.app.core.prayer.Prayer
+import com.dhikr.app.ui.NotificationsOffHint
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.DialogShape
@@ -66,10 +67,9 @@ internal fun PrayerSettingsSection(
     val settings = state.prayerSettings
     var showLocationDialog by rememberSaveable { mutableStateOf(false) }
     var routinePickerFor by rememberSaveable { mutableStateOf<Prayer?>(null) }
-    var permissionDenied by remember { mutableStateOf(false) }
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
-    ) { granted -> permissionDenied = !granted }
+    ) {}
 
     Text(
         stringResource(R.string.settings_prayer_desc),
@@ -213,13 +213,8 @@ internal fun PrayerSettingsSection(
                 )
             }
         }
-        if (permissionDenied) {
-            Text(
-                stringResource(R.string.reminder_permission_hint),
-                fontSize = 12.sp,
-                color = colors.text,
-                modifier = Modifier.padding(top = 6.dp),
-            )
+        if (settings.remindersMask != 0) {
+            NotificationsOffHint(modifier = Modifier.padding(top = 6.dp))
         }
         Text(
             stringResource(R.string.settings_prayer_note),
@@ -260,17 +255,20 @@ internal fun FastingReminderRow(state: SettingsUiState, viewModel: SettingsViewM
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) {}
-    SwitchRow(
-        title = stringResource(R.string.settings_fasting_reminder),
-        description = stringResource(R.string.settings_fasting_reminder_desc),
-        checked = state.fastingReminderEnabled,
-        onCheckedChange = { enabled ->
-            if (enabled && !ReminderNotifications.hasPermission(context)) {
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-            viewModel.onFastingReminderChange(enabled)
-        },
-    )
+    Column {
+        SwitchRow(
+            title = stringResource(R.string.settings_fasting_reminder),
+            description = stringResource(R.string.settings_fasting_reminder_desc),
+            checked = state.fastingReminderEnabled,
+            onCheckedChange = { enabled ->
+                if (enabled && !ReminderNotifications.hasPermission(context)) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+                viewModel.onFastingReminderChange(enabled)
+            },
+        )
+        if (state.fastingReminderEnabled) NotificationsOffHint()
+    }
 }
 
 @Composable

@@ -405,7 +405,9 @@
     <string name="reminder_notification_body">গণনা শুরু করতে ট্যাপ করুন।</string>
     <string name="reminder_snooze_action">১৫ মিনিট পরে</string>
     <string name="reminder_permission_hint">Dhikr এর জন্য নোটিফিকেশন বন্ধ আছে। রিমাইন্ডার পেতে সিস্টেম সেটিংসে চালু করুন।</string>
-    <string name="reminder_permission_rationale">আপনার বেছে নেওয়া সময়ে মনে করিয়ে দিতে Dhikr এর নোটিফিকেশন অ্যাক্সেস দরকার।</string>
+    <string name="reminder_permission_open_settings">সেটিংস খুলুন</string>
+    <string name="notification_channel_name">রিমাইন্ডার</string>
+    <string name="notification_channel_desc">অ্যাপে আপনার সেট করা রুটিনের রিমাইন্ডার</string>    <string name="reminder_permission_rationale">আপনার বেছে নেওয়া সময়ে মনে করিয়ে দিতে Dhikr এর নোটিফিকেশন অ্যাক্সেস দরকার।</string>
     <string name="reminder_day_sun">র</string>
     <string name="reminder_day_mon">সো</string>
     <string name="reminder_day_tue">ম</string>

@@ -51,8 +51,8 @@ android {
         applicationId = "com.badhon495.dhikr"
         minSdk = 24
         targetSdk = 37
-        versionCode = 9
-        versionName = "1.4.0"
+        versionCode = 11
+        versionName = "1.4.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Ship only the languages we actually translate. Keeps the per-app
@@ -71,11 +71,6 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            // Native libs come from dependencies (e.g. sqlite, graphics-path);
-            // bundle their symbols so Play can symbolicate native crashes/ANRs.
-            ndk {
-                debugSymbolLevel = "SYMBOL_TABLE"
-            }
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -125,6 +120,16 @@ android {
             reset()
             include("armeabi-v7a", "arm64-v8a")
             isUniversalApk = true
+        }
+    }
+
+    // Keep every language in the base install of a Play (.aab) build. By
+    // default Play ships only the device-language split, so an in-app switch to
+    // Bangla on an English device needs a download — offline, the strings stay
+    // English while DB-backed content (tasbih names) switches fine.
+    bundle {
+        language {
+            enableSplit = false
         }
     }
 

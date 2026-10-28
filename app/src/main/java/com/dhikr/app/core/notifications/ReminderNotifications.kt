@@ -41,8 +41,8 @@ object ReminderNotifications {
 
     fun ensureChannel(context: Context) {
         val channel = NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT)
-            .setName("Reminders")
-            .setDescription("Routine reminders you set in the app")
+            .setName(context.getString(R.string.notification_channel_name))
+            .setDescription(context.getString(R.string.notification_channel_desc))
             .build()
         NotificationManagerCompat.from(context).createNotificationChannel(channel)
     }

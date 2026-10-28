@@ -408,7 +408,9 @@
     <string name="reminder_notification_body">Tap to start counting.</string>
     <string name="reminder_snooze_action">Snooze 15 min</string>
     <string name="reminder_permission_hint">Notifications are turned off for Dhikr. Turn them on in system settings to get reminders.</string>
-    <string name="reminder_permission_rationale">Dhikr needs notification access to remind you at the time you pick.</string>
+    <string name="reminder_permission_open_settings">Open settings</string>
+    <string name="notification_channel_name">Reminders</string>
+    <string name="notification_channel_desc">Routine reminders you set in the app</string>    <string name="reminder_permission_rationale">Dhikr needs notification access to remind you at the time you pick.</string>
     <string name="reminder_day_sun">S</string>
     <string name="reminder_day_mon">M</string>
     <string name="reminder_day_tue">T</string>

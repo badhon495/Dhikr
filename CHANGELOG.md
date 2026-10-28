@@ -3,9 +3,27 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.4.1] - 2026-10-28
+
+versionCode 11
+
+### Changed
+- A new test fails the build if an English string has no Bangla translation.
+
+### Fixed
+- Switching language to Bangla offline on a Play Store install left the app
+  text in English while dhikr names changed. Both languages now ship in the
+  base install, so the switch no longer needs a download.
+- A reminder switched on while notifications were blocked gave no lasting
+  warning. Routine, tasbih, prayer and Sunnah-fasting reminders now show a
+  notice with an Open settings button, which clears itself once notifications
+  are allowed. The fasting reminder ignored a denied permission entirely.
+- The notification channel name and description in Android's settings were
+  always English; they now follow the app language.
+
 ## [1.4.0] - 2026-10-28
 
-versionCode 9
+versionCode 10
 
 ### Added
 - **Prayer-linked reminders** — a dhikr reminder a set time after any of the
