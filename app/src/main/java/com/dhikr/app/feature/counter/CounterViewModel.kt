@@ -586,7 +586,15 @@ class CounterViewModel(
      * current one in [tasbihOrder]. No-op past the first entry, during a
      * routine, or before a session has loaded (finding #2 guard). */
     fun onPrevious() {
-        if (!sessionReady || activeRoutine != null) return
+        if (!sessionReady) return
+        if (activeRoutine != null) {
+            // Routine: step back through completed steps, read-only. From the
+            // live step this previews the step before it; while already
+            // previewing, it moves one further back.
+            val target = (viewingStepIndex ?: routineStepIndex) - 1
+            if (target >= 0) onSelectRoutineStep(target)
+            return
+        }
         val index = tasbihOrder.indexOf(dhikr.id)
         if (index <= 0) return
         viewModelScope.launch {
@@ -597,7 +605,16 @@ class CounterViewModel(
 
     /** Control-row "next" — the mirror of [onPrevious]. */
     fun onNext() {
-        if (!sessionReady || activeRoutine != null) return
+        if (!sessionReady) return
+        if (activeRoutine != null) {
+            // Routine: only usable while previewing a completed step, moving
+            // toward the live step. Reaching it returns to live view; future
+            // steps are never reachable.
+            val viewing = viewingStepIndex ?: return
+            val target = viewing + 1
+            if (target >= routineStepIndex) onReturnToCurrentStep() else onSelectRoutineStep(target)
+            return
+        }
         val index = tasbihOrder.indexOf(dhikr.id)
         if (index < 0 || index >= tasbihOrder.lastIndex) return
         viewModelScope.launch {
@@ -678,8 +695,16 @@ class CounterViewModel(
             // set true (initializeSession()'s success path, or the handlers
             // above, all of which now guard on it first) — see finding #2.
             sessionReady = true,
-            canGoToPrevious = tasbihIndex > 0,
-            canGoToNext = tasbihIndex in 0 until tasbihOrder.lastIndex,
+            canGoToPrevious = if (routine != null) {
+                (viewing ?: routineStepIndex) > 0
+            } else {
+                tasbihIndex > 0
+            },
+            canGoToNext = if (routine != null) {
+                viewing != null
+            } else {
+                tasbihIndex in 0 until tasbihOrder.lastIndex
+            },
             isViewingPastStep = viewing != null,
             viewingRoutineStepIndex = viewing,
         )

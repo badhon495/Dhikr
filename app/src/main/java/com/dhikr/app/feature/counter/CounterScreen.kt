@@ -516,7 +516,7 @@ fun CounterScreen(
                         } else {
                             state.currentRoutineStepIndex.coerceIn(0, total)
                         }
-                        "$done/$total"
+                        "$done/$total  ·  ${formatDuration(elapsedSeconds)}"
                     } else {
                         formatSessionLabel(elapsedSeconds, state.totalCount)
                     },
@@ -908,12 +908,11 @@ fun CounterScreen(
         // action, not a counting control, and living here made the row
         // asymmetric once the top bar had a free slot for it.)
         // Icon-only throughout (no visible labels) — every button's meaning is
-        // still exposed to TalkBack via contentDescription. Prev/Next switch
-        // between tasbih in Tasbih-Library order and are only ever shown
-        // outside a routine — a routine already advances its own steps in
-        // sequence, so paging through unrelated tasbih there would be
-        // meaningless (and could desync the routine's step tracking).
-        val isRoutineActive = state.routineSteps.isNotEmpty()
+        // still exposed to TalkBack via contentDescription. Outside a routine,
+        // Prev/Next switch between tasbih in Tasbih-Library order. Inside a
+        // routine, Prev glances back at the previous completed step
+        // (read-only) and Next only works while previewing a completed step,
+        // walking back toward the live one — future steps stay locked.
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
@@ -921,7 +920,7 @@ fun CounterScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 16.dp),
         ) {
-            if (!isRoutineActive) {
+            run {
                 val previousLabel = stringResource(R.string.counter_previous_content_description)
                 IconButtonTooltip(label = previousLabel) {
                     Box(
@@ -1030,7 +1029,7 @@ fun CounterScreen(
                     )
                 }
             }
-            if (!isRoutineActive) {
+            run {
                 val nextLabel = stringResource(R.string.counter_next_content_description)
                 IconButtonTooltip(label = nextLabel) {
                     Box(

@@ -3,7 +3,7 @@
 All notable changes to this project are documented here.
 Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
-## [1.4.0] - 2026-10-22
+## [1.4.0] - 2026-10-28
 
 versionCode 9
 
@@ -33,10 +33,30 @@ versionCode 9
 - **Quick Settings tile** that counts the active tasbih.
 - **Launcher shortcuts** for Count, Insights and favourite routines.
 - Counter text size setting.
+- **Dua collection** — 20 seeded daily-life duas with add / edit / delete,
+  category filter dropdown and search. Has its own section on Home.
+- **Google Drive backup** (optional) — sign-in, encrypted token storage,
+  Drive v3 sync, and sync controls in Settings. Documented in the privacy policy.
+- **Current prayer waqt** shown on Home.
+- **Favorites** on Home, with an empty-state hint.
+- **Bangla fields** in the routine and tasbih editors.
+- **App-wide Snackbar** feedback with localized messages for actions.
+- Hint under the prayer offset setting.
+- **Routine step navigation** — Prev/Next now work inside a routine: Prev
+  previews earlier completed steps (read-only), Next walks back toward the live
+  step. Future steps stay locked.
+- Counter shows elapsed time next to routine progress (e.g. `3/7  ·  02:15`).
+- GNU GPL v3 license.
 
 ### Changed
 - Backups now include the new settings and the auto-theme times.
 - The widget's [+] counts into the open counter session when there is one.
+- Settings and Insights use accordion-style collapsible sections.
+- Insights shows summaries for the last 3 months.
+- Home layout simplified; routines and favorites display logic optimized.
+- Smoother animations across screens (new `animatedFill`, tuned transitions).
+- Backup models carry reminder and benefit fields.
+- Dua entry point removed from Settings (lives on Home).
 
 ### Fixed
 - Laps counted past a dhikr's goal were lost when the app was closed by the
@@ -46,6 +66,14 @@ versionCode 9
 - Home, widget and tile showed "0/1" for one-tap dhikr instead of laps done.
 - Home goal ring squeezed into an oval on narrow phones.
 - About disclaimer was missing in Bangla.
+- Tab-switch slide direction on Home.
+- Dua citation for after-eating (Abu Dawud 4023 → 3850).
+- Navigation crash on cold start before onboarding finished.
+- Stray navigation after Activity recreation (one-shot Intent extras now cleared).
+- Jarring cut on language change.
+- Drive authorization: Play Services Task cancellation now told apart from
+  coroutine cancellation; Drive network error mapped to a status string.
+- Dua edit kept order / category order unless the category changed.
 
 ## [1.3.0] - 2026-10-19
 
