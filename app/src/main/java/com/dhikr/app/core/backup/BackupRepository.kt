@@ -107,6 +107,7 @@ class BackupRepository(
                 hijriAdjustDays = prefs.hijriAdjustDays,
                 prayer = BackupPrayerSettings.from(prefs.prayerSettings),
                 fastingReminder = prefs.fastingReminderEnabled,
+                highContrast = prefs.highContrast,
             ),
         )
         return json.encodeToString(BackupFile.serializer(), file)
@@ -175,6 +176,7 @@ class BackupRepository(
                 hijriAdjustDays = file.preferences.hijriAdjustDays,
                 prayerSettings = file.preferences.prayer?.toPrayerSettings(),
                 fastingReminderEnabled = file.preferences.fastingReminder,
+                highContrast = file.preferences.highContrast,
             )
         }.isSuccess
 

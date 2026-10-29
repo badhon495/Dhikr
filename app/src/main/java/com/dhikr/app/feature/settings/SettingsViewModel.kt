@@ -43,6 +43,7 @@ data class SettingsUiState(
     val hapticMode: HapticMode = HapticMode.EVERY_TAP,
     val reducedMotion: Boolean = false,
     val strongBorders: Boolean = false,
+    val highContrast: Boolean = false,
     val dailyGoalTarget: Int = 500,
     val dynamicColorEnabled: Boolean = true,
     val dynamicColorSupported: Boolean = supportsDynamicColor(),
@@ -124,6 +125,7 @@ class SettingsViewModel(
                 hapticMode = p.hapticMode,
                 reducedMotion = p.reducedMotion,
                 strongBorders = p.strongBorders,
+                highContrast = p.highContrast,
                 dailyGoalTarget = p.dailyGoalTarget,
                 dynamicColorEnabled = p.dynamicColorEnabled,
                 counterScript = p.counterScript,
@@ -173,6 +175,7 @@ class SettingsViewModel(
             .combine(preferencesRepository.strongBorders) { state, strongBorders ->
                 state.copy(strongBorders = strongBorders)
             }
+            .combine(preferencesRepository.highContrast) { state, v -> state.copy(highContrast = v) }
             .combine(preferencesRepository.autoLightStart) { state, v -> state.copy(autoLightStart = v) }
             .combine(preferencesRepository.autoDarkStart) { state, v -> state.copy(autoDarkStart = v) }
             .combine(preferencesRepository.counterScript) { state, counterScript ->
@@ -293,6 +296,10 @@ class SettingsViewModel(
 
     fun onReducedMotionChange(enabled: Boolean) {
         viewModelScope.launch { preferencesRepository.setReducedMotion(enabled) }
+    }
+
+    fun onHighContrastChange(enabled: Boolean) {
+        viewModelScope.launch { preferencesRepository.setHighContrast(enabled) }
     }
 
     fun onStrongBordersChange(enabled: Boolean) {

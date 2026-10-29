@@ -209,6 +209,14 @@ fun SettingsScreen(
                     onDismiss = { showAutoTimes = false },
                 )
             }
+            Column(modifier = Modifier.padding(top = 14.dp)) {
+                SwitchRow(
+                    title = stringResource(R.string.settings_high_contrast),
+                    description = stringResource(R.string.settings_high_contrast_desc),
+                    checked = state.highContrast,
+                    onCheckedChange = viewModel::onHighContrastChange,
+                )
+            }
             if (state.dynamicColorSupported) {
                 Column(modifier = Modifier.padding(top = 14.dp)) {
                     SwitchRow(

@@ -59,6 +59,7 @@ class AppPreferencesRepository(private val context: Context) {
     private val hapticModeKey = stringPreferencesKey("haptic_mode")
     private val reducedMotionKey = booleanPreferencesKey("reduced_motion")
     private val strongBordersKey = booleanPreferencesKey("strong_borders")
+    private val highContrastKey = booleanPreferencesKey("high_contrast")
     private val dynamicColorKey = booleanPreferencesKey("dynamic_color")
     private val counterScriptKey = stringPreferencesKey("counter_script")
     private val autoCounterEnabledKey = booleanPreferencesKey("auto_counter_enabled")
@@ -156,6 +157,14 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setStrongBorders(value: Boolean) {
         context.preferencesDataStore.edit { it[strongBordersKey] = value }
+    }
+
+    /** Black/white high-contrast palette. Overrides Material You. Off by default;
+     *  applied in [com.dhikr.app.ui.theme.DhikrTheme]. */
+    val highContrast = context.preferencesDataStore.data.map { it[highContrastKey] ?: false }
+
+    suspend fun setHighContrast(value: Boolean) {
+        context.preferencesDataStore.edit { it[highContrastKey] = value }
     }
 
     /** Material You: derive the app palette from the device wallpaper. Only
@@ -367,6 +376,7 @@ class AppPreferencesRepository(private val context: Context) {
         val hapticMode = async { hapticMode.first() }
         val reducedMotion = async { reducedMotion.first() }
         val strongBorders = async { strongBorders.first() }
+        val highContrast = async { highContrast.first() }
         val dailyGoalTarget = async { dailyGoalTarget.first() }
         val dynamicColorEnabled = async { dynamicColorEnabled.first() }
         val counterScript = async { counterScript.first() }
@@ -385,6 +395,7 @@ class AppPreferencesRepository(private val context: Context) {
             hapticMode = hapticMode.await(),
             reducedMotion = reducedMotion.await(),
             strongBorders = strongBorders.await(),
+            highContrast = highContrast.await(),
             dailyGoalTarget = dailyGoalTarget.await(),
             dynamicColorEnabled = dynamicColorEnabled.await(),
             counterScript = counterScript.await(),
@@ -408,6 +419,7 @@ class AppPreferencesRepository(private val context: Context) {
         hapticMode = hapticMode.first(),
         reducedMotion = reducedMotion.first(),
         strongBorders = strongBorders.first(),
+        highContrast = highContrast.first(),
         dynamicColorEnabled = dynamicColorEnabled.first(),
         counterScript = counterScript.first(),
         benefitsLanguage = benefitsLanguage.first(),
@@ -447,8 +459,10 @@ class AppPreferencesRepository(private val context: Context) {
         hijriAdjustDays: Int? = null,
         prayerSettings: PrayerSettings? = null,
         fastingReminderEnabled: Boolean? = null,
+        highContrast: Boolean? = null,
     ) {
         context.preferencesDataStore.edit { prefs ->
+            highContrast?.let { prefs[highContrastKey] = it }
             fastingReminderEnabled?.let { prefs[fastingReminderKey] = it }
             autoLightStart?.let { prefs[autoLightStartKey] = it.coerceIn(0, 1439) }
             autoDarkStart?.let { prefs[autoDarkStartKey] = it.coerceIn(0, 1439) }
@@ -492,6 +506,7 @@ data class SettingsInitialValues(
     val hapticMode: HapticMode,
     val reducedMotion: Boolean,
     val strongBorders: Boolean,
+    val highContrast: Boolean,
     val dailyGoalTarget: Int,
     val dynamicColorEnabled: Boolean,
     val counterScript: CounterScript,
@@ -513,6 +528,7 @@ data class PreferencesSnapshot(
     val hapticMode: HapticMode,
     val reducedMotion: Boolean,
     val strongBorders: Boolean,
+    val highContrast: Boolean,
     val dynamicColorEnabled: Boolean,
     val counterScript: CounterScript,
     val benefitsLanguage: BenefitsLanguage,

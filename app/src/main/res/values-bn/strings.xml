@@ -316,6 +316,8 @@
     <string name="settings_accessibility">অ্যাক্সেসিবিলিটি</string>
     <string name="settings_reduce_motion">মোশন কমান</string>
     <string name="settings_reduce_motion_desc">অ্যাপ জুড়ে অ্যানিমেশন কমান</string>
+    <string name="settings_high_contrast">হাই কনট্রাস্ট</string>
+    <string name="settings_high_contrast_desc">সহজে পড়ার জন্য খাঁটি সাদা-কালো ও গাঢ় রঙ। ম্যাটেরিয়াল ইউ রঙের বদলে প্রযোজ্য হয়</string>
     <string name="settings_strong_borders">স্পষ্ট বর্ডার</string>
     <string name="settings_strong_borders_desc">কার্ডের কিনারা, বিভাজক ও প্রোগ্রেস রিং আরও স্পষ্ট করুন যাতে অংশগুলো আলাদা বোঝা যায়</string>
 

@@ -67,15 +67,17 @@ fun DhikrTheme(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
     strongBorders: Boolean = false,
+    highContrast: Boolean = false,
     autoLightStart: Int = DEFAULT_AUTO_LIGHT_START,
     autoDarkStart: Int = DEFAULT_AUTO_DARK_START,
     reducedMotion: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val darkTheme = themeMode.resolveIsDark(autoLightStart, autoDarkStart)
-    val useDynamic = dynamicColor && supportsDynamicColor()
+    val useDynamic = dynamicColor && supportsDynamicColor() && !highContrast
     val context = LocalContext.current
     val rawTokens = when {
+        highContrast -> if (darkTheme) HighContrastDarkDhikrColors else HighContrastLightDhikrColors
         useDynamic -> dynamicDhikrColors(context, darkTheme, strongBorders)
         darkTheme -> DarkDhikrColors.let { if (strongBorders) it.withStrongBorders() else it }
         else -> LightDhikrColors.let { if (strongBorders) it.withStrongBorders() else it }

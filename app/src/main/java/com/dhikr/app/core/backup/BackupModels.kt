@@ -200,6 +200,7 @@ data class BackupPreferences(
     @SerialName("hijriAdjustDays") val hijriAdjustDays: Int? = null,
     @SerialName("prayer") val prayer: BackupPrayerSettings? = null,
     @SerialName("fastingReminder") val fastingReminder: Boolean? = null,
+    @SerialName("highContrast") val highContrast: Boolean? = null,
 )
 
 @Serializable

@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity() {
             val themeMode by preferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
             val dynamicColor by preferencesRepository.dynamicColorEnabled.collectAsState(initial = true)
             val strongBorders by preferencesRepository.strongBorders.collectAsState(initial = false)
+            val highContrast by preferencesRepository.highContrast.collectAsState(initial = false)
             val autoLightStart by preferencesRepository.autoLightStart
                 .collectAsState(initial = DEFAULT_AUTO_LIGHT_START)
             val autoDarkStart by preferencesRepository.autoDarkStart
@@ -149,6 +150,7 @@ class MainActivity : AppCompatActivity() {
                 themeMode = themeMode,
                 dynamicColor = dynamicColor,
                 strongBorders = strongBorders,
+                highContrast = highContrast,
                 autoLightStart = autoLightStart,
                 autoDarkStart = autoDarkStart,
                 pendingRoutineId = pendingRoutineId,

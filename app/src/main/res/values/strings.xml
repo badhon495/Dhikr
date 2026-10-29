@@ -319,6 +319,8 @@
     <string name="settings_accessibility">Accessibility</string>
     <string name="settings_reduce_motion">Reduce motion</string>
     <string name="settings_reduce_motion_desc">Minimise animations across the app</string>
+    <string name="settings_high_contrast">High contrast</string>
+    <string name="settings_high_contrast_desc">Pure black and white with darker accents for easier reading. Overrides Material You colors</string>
     <string name="settings_strong_borders">Stronger borders</string>
     <string name="settings_strong_borders_desc">Sharpen card edges, dividers and progress rings so sections stand apart</string>
 
