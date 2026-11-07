@@ -45,7 +45,7 @@ data class SettingsUiState(
     val strongBorders: Boolean = true,
     val highContrast: Boolean = false,
     val dailyGoalTarget: Int = 500,
-    val dynamicColorEnabled: Boolean = true,
+    val dynamicColorEnabled: Boolean = false,
     val dynamicColorSupported: Boolean = supportsDynamicColor(),
     val counterScript: CounterScript = CounterScript.PRONUNCIATION,
     val appLanguage: AppLanguage = AppLanguage.ENGLISH,

@@ -91,18 +91,18 @@ val HighContrastDarkDhikrColors = DhikrColorTokens(
 )
 
 val DarkDhikrColors = DhikrColorTokens(
-    bg = Color(0xFF1C1A17),
-    surface = Color(0xFF2A261F),
-    card = Color(0xFF332E26),
-    text = Color(0xFFF6EFE2),
-    dim = Color(0xFFC0B6A5),
-    faint = Color(0xFF82796A),
-    line = Color(0x1FF6EFE2), // rgba(246,239,226,.12)
+    bg = Color(0xFF0D0C0A),
+    surface = Color(0xFF1A1815),
+    card = Color(0xFF211E19),
+    text = Color(0xFFF3EDE3),
+    dim = Color(0xFFB7AF9F),
+    faint = Color(0xFF7D7768),
+    line = Color(0x1FF3EDE3), // rgba(243,237,227,.12)
     sage = Color(0xFFAEBF92),
-    sageSoft = Color(0xFF3D472B),
+    sageSoft = Color(0xFF2B331F),
     sageMid = Color(0xFF728157),
     terra = Color(0xFFF6A06B),
-    terraSoft = Color(0xFF4D2F18),
-    track = Color(0x1AF6EFE2), // rgba(246,239,226,.10)
-    onSage = Color(0xFF272E1B),
+    terraSoft = Color(0xFF382314),
+    track = Color(0x1AF3EDE3), // rgba(243,237,227,.10)
+    onSage = Color(0xFF1C2114),
 )
