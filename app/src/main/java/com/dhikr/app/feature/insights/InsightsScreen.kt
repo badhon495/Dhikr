@@ -1,17 +1,10 @@
 package com.dhikr.app.feature.insights
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import com.dhikr.app.ui.LocalReducedMotion
-import com.dhikr.app.ui.Motion
 import com.dhikr.app.ui.animatedFill
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -156,6 +149,8 @@ fun InsightsScreen(
         val shareTitle = stringResource(R.string.insights_share_title)
         val shareTotalFormat = stringResource(R.string.insights_share_total)
         val shareChooser = stringResource(R.string.insights_share_chooser)
+        val consistency = state.consistency
+        val lang = LocalAppLanguage.current
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -164,7 +159,22 @@ fun InsightsScreen(
                     color = colors.text,
                     modifier = Modifier.headingSemantics(),
                 )
-                Text(monthName, fontSize = 13.sp, color = colors.dim, modifier = Modifier.padding(top = 2.dp))
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 2.dp)) {
+                    Text(monthName, fontSize = 13.sp, color = colors.dim)
+                    if (consistency != null && consistency.currentRun > 0) {
+                        Text(" · ", fontSize = 13.sp, color = colors.faint)
+                        Text(
+                            pluralStringResource(
+                                R.plurals.insights_consistency_run,
+                                consistency.currentRun,
+                                consistency.currentRun.localizedDigits(lang),
+                            ),
+                            fontSize = 13.sp,
+                            color = colors.sage,
+                            maxLines = 1,
+                        )
+                    }
+                }
             }
             // Share today's summary (plan.md §42). Only shown once there is
             // something counted today to share.
@@ -209,25 +219,6 @@ fun InsightsScreen(
             WeeklyGoalBar(state.week, state.weeklyGoalTarget)
         }
 
-        // Streak + milestone text stays on top; only the heatmap is collapsible.
-        // The summary arrives a beat after the totals; animating it in (also on
-        // every return to this tab) stops the layout below from jumping.
-        val consistency = state.consistency
-        val reducedMotion = LocalReducedMotion.current
-        val consistencyVisible = remember { MutableTransitionState(false) }
-        consistencyVisible.targetState = consistency != null
-        var lastConsistency by remember { mutableStateOf(consistency) }
-        if (consistency != null) lastConsistency = consistency
-        AnimatedVisibility(
-            visibleState = consistencyVisible,
-            enter = if (reducedMotion) EnterTransition.None else
-                fadeIn(tween(350, easing = Motion.StandardEasing)) +
-                    expandVertically(tween(350, easing = Motion.StandardEasing)),
-            exit = ExitTransition.None,
-        ) {
-            lastConsistency?.let { ConsistencyCard(it) }
-        }
-
         // Everything below the totals is an accordion: headers only until tapped,
         // one open at a time.
         var openSection by rememberSaveable { mutableStateOf<String?>(null) }
@@ -259,9 +250,6 @@ fun InsightsScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(136.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(colors.card)
-                .padding(12.dp)
                 .clearAndSetSemantics { contentDescription = barChartDescription },
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -326,11 +314,7 @@ fun InsightsScreen(
             modifier = Modifier.padding(bottom = 8.dp),
         )
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .background(colors.card)
-                .padding(12.dp),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             val sortedEntries = remember(state.calendarIntensity) {
                 state.calendarIntensity.entries.sortedBy { it.key }
@@ -405,6 +389,7 @@ fun InsightsScreen(
                     .padding(bottom = 10.dp)
                     .clip(RoundedCornerShape(20.dp))
                     .background(colors.card)
+                    .border(1.dp, colors.line, RoundedCornerShape(20.dp))
                     .padding(16.dp),
             ) {
                 Row(
@@ -489,13 +474,18 @@ private fun InsightsSection(
     content: @Composable () -> Unit,
 ) {
     val colors = DhikrTheme.colors
-    Column(modifier = Modifier.padding(top = 12.dp).fillMaxWidth()) {
+    Column(
+        modifier = Modifier
+            .padding(top = 12.dp)
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(20.dp)),
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(20.dp))
-                .background(colors.card)
                 .clickable(role = Role.Button, onClickLabel = title, onClick = onToggle)
                 .minTapTarget()
                 .padding(16.dp),
@@ -519,7 +509,7 @@ private fun InsightsSection(
             )
         }
         AnimatedVisibility(visible = expanded) {
-            Column(modifier = Modifier.padding(top = 8.dp)) { content() }
+            Column(modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) { content() }
         }
     }
 }
@@ -539,6 +529,7 @@ fun DhikrHistoryCard(
             .padding(bottom = 10.dp)
             .clip(RoundedCornerShape(22.dp))
             .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(22.dp))
             .padding(14.dp),
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
@@ -623,6 +614,7 @@ private fun WeeklyGoalBar(week: Int, target: Int) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(20.dp))
             .clearAndSetSemantics { contentDescription = description }
             .padding(14.dp),
     ) {
@@ -653,54 +645,6 @@ private fun WeeklyGoalBar(week: Int, target: Int) {
     }
 }
 
-/**
- * Consistency run and milestone (plan.md §18). Positive framing only: it
- * names what has been kept up, never what was missed.
- */
-@Composable
-private fun ConsistencyCard(summary: Consistency.Summary) {
-    val colors = DhikrTheme.colors
-    val lang = LocalAppLanguage.current
-    Column(
-        modifier = Modifier
-            .padding(top = 6.dp, bottom = 10.dp)
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(colors.sageSoft)
-            .padding(14.dp),
-    ) {
-        Text(
-            if (summary.currentRun > 0) {
-                pluralStringResource(R.plurals.insights_consistency_run, summary.currentRun, summary.currentRun.localizedDigits(lang))
-            } else {
-                stringResource(R.string.insights_consistency_start)
-            },
-            fontSize = 15.sp,
-            color = colors.text,
-        )
-        val reached = summary.reachedMilestone
-        val next = summary.nextMilestone
-        val detail = when {
-            reached != null && reached == summary.currentRun ->
-                pluralStringResource(R.plurals.insights_consistency_milestone, reached, reached.localizedDigits(lang))
-            next != null && summary.currentRun > 0 ->
-                pluralStringResource(R.plurals.insights_consistency_next, next, next.localizedDigits(lang))
-            else -> null
-        }
-        if (detail != null) {
-            Text(detail, fontSize = 12.sp, color = colors.dim, modifier = Modifier.padding(top = 3.dp))
-        }
-        if (summary.bestRun > summary.currentRun) {
-            Text(
-                pluralStringResource(R.plurals.insights_consistency_best, summary.bestRun, summary.bestRun.localizedDigits(lang)),
-                fontSize = 11.5.sp,
-                color = colors.faint,
-                modifier = Modifier.padding(top = 3.dp),
-            )
-        }
-    }
-}
-
 @Composable
 private fun TotalTile(label: String, value: Int, modifier: Modifier = Modifier) {
     val colors = DhikrTheme.colors
@@ -708,6 +652,7 @@ private fun TotalTile(label: String, value: Int, modifier: Modifier = Modifier) 
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(colors.surface)
+            .border(1.dp, colors.line, RoundedCornerShape(20.dp))
             .padding(14.dp),
     ) {
         Text(label.uppercase(), fontSize = 11.5.sp, color = colors.dim)

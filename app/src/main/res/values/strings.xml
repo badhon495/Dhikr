@@ -366,6 +366,7 @@
     <string name="settings_backup">Backup</string>
     <string name="settings_backup_desc">Save everything — your tasbih, routines, history and settings — to a file you can keep or move to another device.</string>
     <string name="settings_backup_export">Export backup</string>
+    <string name="settings_backup_restore_auto">Restore automatic backup (%1$s)</string>
     <string name="settings_backup_import">Import backup</string>
     <string name="settings_backup_last">Last backup: %1$s</string>
     <string name="settings_backup_last_never">Not backed up yet</string>
@@ -379,6 +380,10 @@
     <string name="settings_backup_drive_title">Backup to Google Drive</string>
     <string name="settings_backup_drive_desc">Backs up the same data to your own Google Drive, signed in with your own account.</string>
     <string name="settings_backup_drive_sign_in">Sign in with Google</string>
+    <string name="settings_backup_drive_auto">Back up automatically</string>
+    <string name="settings_backup_drive_auto_desc">Saves a copy on this device when you open the app, at most once a day, and also to Google Drive if you are signed in.</string>
+    <string name="settings_backup_drive_last">Last Drive backup: %1$s</string>
+    <string name="settings_backup_drive_last_never">No Drive backup yet</string>
     <string name="settings_backup_drive_sign_out">Sign out</string>
     <string name="settings_backup_drive_signed_in_as">Signed in as %1$s</string>
     <string name="settings_backup_drive_backup">Backup to Drive</string>

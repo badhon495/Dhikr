@@ -333,7 +333,7 @@ private fun SubLabel(text: String) {
 
 /** City list plus a manual-coordinates form. */
 @Composable
-private fun LocationDialog(
+internal fun LocationDialog(
     onPick: (latitude: Double, longitude: Double, name: String?) -> Unit,
     onDismiss: () -> Unit,
 ) {

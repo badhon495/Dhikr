@@ -75,6 +75,9 @@ class AppPreferencesRepository(private val context: Context) {
     private val autoCounterEnabledKey = booleanPreferencesKey("auto_counter_enabled")
     private val keepScreenOnKey = booleanPreferencesKey("keep_screen_on")
     private val lastBackupAtKey = longPreferencesKey("last_backup_at")
+    private val lastAutoLocalBackupAtKey = longPreferencesKey("last_auto_local_backup_at")
+    private val lastDriveBackupAtKey = longPreferencesKey("last_drive_backup_at")
+    private val autoBackupEnabledKey = booleanPreferencesKey("auto_backup_enabled")
     private val backupNudgeSnoozedUntilKey = longPreferencesKey("backup_nudge_snoozed_until")
     private val volumeKeyCountingKey = booleanPreferencesKey("volume_key_counting")
     private val weeklyGoalKey = intPreferencesKey("weekly_goal_target")
@@ -219,6 +222,28 @@ class AppPreferencesRepository(private val context: Context) {
 
     suspend fun setLastBackupAt(millis: Long) {
         context.preferencesDataStore.edit { it[lastBackupAtKey] = millis }
+    }
+
+    /** Epoch millis of the last successful Drive backup; 0 = never. */
+    val lastDriveBackupAt = context.preferencesDataStore.data.map { it[lastDriveBackupAtKey] ?: 0L }
+
+    suspend fun setLastDriveBackupAt(millis: Long) {
+        context.preferencesDataStore.edit { it[lastDriveBackupAtKey] = millis }
+    }
+
+    /** Epoch millis of the last automatic on-device backup; 0 = never. */
+    val lastAutoLocalBackupAt = context.preferencesDataStore.data.map { it[lastAutoLocalBackupAtKey] ?: 0L }
+
+    suspend fun setLastAutoLocalBackupAt(millis: Long) {
+        context.preferencesDataStore.edit { it[lastAutoLocalBackupAtKey] = millis }
+    }
+
+    /** Opt-in: back up automatically when the app opens and the last backup
+     *  is stale — on-device always, plus Drive when signed in. Off by default. */
+    val autoBackupEnabled = context.preferencesDataStore.data.map { it[autoBackupEnabledKey] ?: false }
+
+    suspend fun setAutoBackupEnabled(value: Boolean) {
+        context.preferencesDataStore.edit { it[autoBackupEnabledKey] = value }
     }
 
     /** Home's backup reminder stays hidden until this epoch millis. */

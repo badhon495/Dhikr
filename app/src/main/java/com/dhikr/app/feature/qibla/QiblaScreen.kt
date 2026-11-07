@@ -51,9 +51,12 @@ import com.dhikr.app.core.localization.LocalAppLanguage
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.core.prayer.Qibla
 import com.dhikr.app.core.prayer.QiblaCompass
+import com.dhikr.app.feature.settings.LocationDialog
 import com.dhikr.app.ui.headingSemantics
 import com.dhikr.app.ui.minTapTarget
+import androidx.compose.ui.text.font.FontWeight
 import com.dhikr.app.ui.theme.DhikrTheme
+import com.dhikr.app.ui.theme.PillShape
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
@@ -67,9 +70,16 @@ private const val ON_TARGET_DEGREES = 5.0
  * resumed.
  */
 @Composable
-fun QiblaScreen(latitude: Double?, longitude: Double?, locationName: String?, onBack: () -> Unit) {
+fun QiblaScreen(
+    latitude: Double?,
+    longitude: Double?,
+    locationName: String?,
+    onBack: () -> Unit,
+    onLocationChange: (latitude: Double, longitude: Double, name: String?) -> Unit,
+) {
     val colors = DhikrTheme.colors
     val lang = LocalAppLanguage.current
+    var showLocationDialog by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -110,6 +120,32 @@ fun QiblaScreen(latitude: Double?, longitude: Double?, locationName: String?, on
                 textAlign = TextAlign.Center,
                 modifier = Modifier.padding(top = 48.dp),
             )
+            Box(
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .clip(PillShape)
+                    .background(colors.surface)
+                    .clickable(role = Role.Button) { showLocationDialog = true }
+                    .minTapTarget()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    stringResource(R.string.settings_prayer_location_change),
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.sage,
+                )
+            }
+            if (showLocationDialog) {
+                LocationDialog(
+                    onPick = { lat, lng, name ->
+                        onLocationChange(lat, lng, name)
+                        showLocationDialog = false
+                    },
+                    onDismiss = { showLocationDialog = false },
+                )
+            }
             return@Column
         }
 
@@ -149,6 +185,32 @@ fun QiblaScreen(latitude: Double?, longitude: Double?, locationName: String?, on
             color = colors.dim,
             modifier = Modifier.padding(top = 8.dp),
         )
+        Box(
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .clip(PillShape)
+                .background(colors.surface)
+                .clickable(role = Role.Button) { showLocationDialog = true }
+                .minTapTarget()
+                .padding(horizontal = 14.dp, vertical = 6.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                stringResource(R.string.settings_prayer_location_change),
+                fontSize = 12.5.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colors.sage,
+            )
+        }
+        if (showLocationDialog) {
+            LocationDialog(
+                onPick = { lat, lng, name ->
+                    onLocationChange(lat, lng, name)
+                    showLocationDialog = false
+                },
+                onDismiss = { showLocationDialog = false },
+            )
+        }
         val bearingText = stringResource(R.string.qibla_bearing, bearing.roundToInt().localizedDigits(lang))
         Text(bearingText, fontSize = 15.sp, color = colors.text, modifier = Modifier.padding(top = 4.dp))
 

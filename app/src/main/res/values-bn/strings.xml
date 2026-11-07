@@ -363,6 +363,7 @@
     <string name="settings_backup">ব্যাকআপ</string>
     <string name="settings_backup_desc">সবকিছু — আপনার তাসবিহ, রুটিন, ইতিহাস ও সেটিংস — একটি ফাইলে সংরক্ষণ করুন যা আপনি রাখতে বা অন্য ডিভাইসে নিতে পারেন।</string>
     <string name="settings_backup_export">ব্যাকআপ এক্সপোর্ট</string>
+    <string name="settings_backup_restore_auto">স্বয়ংক্রিয় ব্যাকআপ পুনরুদ্ধার (%1$s)</string>
     <string name="settings_backup_import">ব্যাকআপ ইমপোর্ট</string>
     <string name="settings_backup_last">সর্বশেষ ব্যাকআপ: %1$s</string>
     <string name="settings_backup_last_never">এখনো ব্যাকআপ নেওয়া হয়নি</string>
@@ -376,6 +377,10 @@
     <string name="settings_backup_drive_title">গুগল ড্রাইভে ব্যাকআপ</string>
     <string name="settings_backup_drive_desc">আপনার নিজের গুগল অ্যাকাউন্টে সাইন ইন করে একই ডেটা আপনার গুগল ড্রাইভে ব্যাকআপ করুন।</string>
     <string name="settings_backup_drive_sign_in">গুগল দিয়ে সাইন ইন</string>
+    <string name="settings_backup_drive_auto">স্বয়ংক্রিয় ব্যাকআপ</string>
+    <string name="settings_backup_drive_auto_desc">অ্যাপ খুললে দিনে সর্বোচ্চ একবার এই ডিভাইসে কপি সংরক্ষণ হবে, এবং গুগল ড্রাইভে সাইন ইন থাকলে সেখানেও।</string>
+    <string name="settings_backup_drive_last">সর্বশেষ ড্রাইভ ব্যাকআপ: %1$s</string>
+    <string name="settings_backup_drive_last_never">এখনও ড্রাইভ ব্যাকআপ হয়নি</string>
     <string name="settings_backup_drive_sign_out">সাইন আউট</string>
     <string name="settings_backup_drive_signed_in_as">%1$s হিসেবে সাইন ইন করা আছে</string>
     <string name="settings_backup_drive_backup">ড্রাইভে ব্যাকআপ</string>

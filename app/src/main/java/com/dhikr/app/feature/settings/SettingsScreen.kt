@@ -1162,6 +1162,24 @@ private fun BackupControls(viewModel: BackupViewModel) {
         enabled = !working,
         onClick = { importLauncher.launch(arrayOf("application/json")) },
     )
+    // Newest automatic on-device copy, if any (see LocalAutoBackup). Re-read
+    // when a status change may have followed a new copy or a restore.
+    val autoBackupFile = remember(status) {
+        com.dhikr.app.core.backup.LocalAutoBackup
+            .list(java.io.File(context.filesDir, "auto_backups")).firstOrNull()
+    }
+    if (autoBackupFile != null) {
+        BackupActionRow(
+            label = stringResource(
+                R.string.settings_backup_restore_auto,
+                java.text.DateFormat.getDateTimeInstance(
+                    java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT,
+                ).format(Date(autoBackupFile.lastModified())),
+            ),
+            enabled = !working,
+            onClick = { viewModel.restore { autoBackupFile.readText(Charsets.UTF_8) } },
+        )
+    }
 
     Text(
         stringResource(R.string.settings_backup_import_note),
@@ -1271,6 +1289,14 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
         }
     }
 
+    val autoBackup by viewModel.autoBackupEnabled.collectAsState()
+    SwitchRow(
+        title = stringResource(R.string.settings_backup_drive_auto),
+        description = stringResource(R.string.settings_backup_drive_auto_desc),
+        checked = autoBackup,
+        onCheckedChange = viewModel::setAutoBackup,
+    )
+
     Text(
         stringResource(R.string.settings_backup_drive_desc),
         fontSize = 12.sp,
@@ -1307,6 +1333,23 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
                 signedInAccount.email ?: signedInAccount.displayName.orEmpty(),
             ),
             fontSize = 12.sp,
+            color = colors.dim,
+            modifier = Modifier.padding(bottom = 4.dp),
+        )
+        val lastDriveBackupAt by viewModel.lastDriveBackupAt.collectAsState()
+        Text(
+            text = if (lastDriveBackupAt > 0L) {
+                stringResource(
+                    R.string.settings_backup_drive_last,
+                    java.text.DateFormat.getDateTimeInstance(
+                        java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT,
+                    ).format(Date(lastDriveBackupAt)),
+                )
+            } else {
+                stringResource(R.string.settings_backup_drive_last_never)
+            },
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
             color = colors.dim,
             modifier = Modifier.padding(bottom = 4.dp),
         )

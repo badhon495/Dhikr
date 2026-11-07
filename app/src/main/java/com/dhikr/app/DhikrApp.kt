@@ -1,20 +1,33 @@
 package com.dhikr.app
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import android.net.Uri
+import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.Role
+import com.dhikr.app.ui.minTapTarget
+import com.dhikr.app.ui.theme.PillShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -51,7 +64,14 @@ import com.dhikr.app.R
 import com.dhikr.app.core.ai.BenefitsRepository
 import com.dhikr.app.core.ai.GeminiClient
 import com.dhikr.app.core.ai.SecureKeyStore
+import com.dhikr.app.core.backup.AutoBackupPolicy
+import com.dhikr.app.core.backup.LocalAutoBackup
+import java.io.File
 import com.dhikr.app.core.backup.BackupRepository
+import com.dhikr.app.core.drivesync.DriveSyncGraph
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import com.dhikr.app.core.database.DuaRepository
 import com.dhikr.app.core.database.HistoryRepository
 import com.dhikr.app.core.database.RoutineRepository
@@ -59,12 +79,7 @@ import com.dhikr.app.core.database.TasbihRepository
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.CounterTextSize
-import com.dhikr.app.core.drivesync.DriveApi
-import com.dhikr.app.core.drivesync.DriveAuthManager
 import com.dhikr.app.core.drivesync.DriveBackupRepository
-import com.dhikr.app.core.drivesync.DriveFileIdStore
-import com.dhikr.app.core.drivesync.DriveTokenStore
-import com.dhikr.app.core.drivesync.driveSyncDataStore
 import com.dhikr.app.core.prayer.PrayerSettings
 import com.dhikr.app.core.shortcuts.AppShortcuts
 import com.dhikr.app.feature.qibla.QiblaScreen
@@ -243,6 +258,46 @@ fun DhikrApp(
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val onCounterRoute = currentBackStackEntry?.destination?.route?.substringBefore("?") ==
             ROUTE_COUNTER.substringBefore("?")
+
+        // Opt-in auto backup, once per app open when stale. Step 1: an
+        // on-device copy (always, no network/sign-in needed). Step 2: Drive,
+        // if signed in. Silent — any failure (including a consent prompt,
+        // which needs the user) is skipped and retried on the next open.
+        LaunchedEffect(Unit) {
+            if (!preferencesRepository.autoBackupEnabled.first()) return@LaunchedEffect
+            val localBackup = BackupRepository(app.database, preferencesRepository)
+            val now = System.currentTimeMillis()
+
+            if (AutoBackupPolicy.isDue(true, now, preferencesRepository.lastAutoLocalBackupAt.first())) {
+                runCatching {
+                    withContext(Dispatchers.IO) {
+                        LocalAutoBackup.write(
+                            File(context.applicationContext.filesDir, "auto_backups"),
+                            localBackup.export(appVersionName),
+                            now,
+                        )
+                    }
+                    preferencesRepository.setLastAutoLocalBackupAt(now)
+                }
+            }
+
+            if (!AutoBackupPolicy.isDue(true, now, preferencesRepository.lastDriveBackupAt.first())) {
+                return@LaunchedEffect
+            }
+            val graph = DriveSyncGraph.create(context, localBackup, appVersionName)
+            val signedIn = withTimeoutOrNull(2_000) {
+                graph.authManager.signedInAccount.first { it != null }
+            } != null
+            if (!signedIn) return@LaunchedEffect
+            val outcome = runCatching {
+                withContext(Dispatchers.IO) { graph.backupRepository.backup(context) }
+            }.getOrNull()
+            if (outcome is DriveBackupRepository.BackupOutcome.Success) {
+                val done = System.currentTimeMillis()
+                preferencesRepository.setLastBackupAt(done)
+                preferencesRepository.setLastDriveBackupAt(done)
+            }
+        }
 
         // Launcher shortcuts for favourite routines track the Routines list
         // and the app language.
@@ -566,32 +621,23 @@ fun DhikrApp(
                             onBackedUp = { preferencesRepository.setLastBackupAt(System.currentTimeMillis()) },
                         ),
                     )
-                    val driveTokenStore = remember { DriveTokenStore(context.applicationContext) }
-                    val driveFileIdStore = remember { DriveFileIdStore(context.applicationContext.driveSyncDataStore) }
-                    val driveApi = remember { DriveApi() }
-                    val driveAuthManager = remember {
-                        DriveAuthManager(
-                            context = context.applicationContext,
-                            tokenStore = driveTokenStore,
-                            fileIdStore = driveFileIdStore,
-                            webClientId = BuildConfig.DRIVE_WEB_CLIENT_ID,
-                            androidClientId = BuildConfig.DRIVE_ANDROID_CLIENT_ID,
-                        )
+                    val driveGraph = remember {
+                        DriveSyncGraph.create(context, backupRepository, appVersionName)
                     }
-                    val driveBackupRepository = remember {
-                        DriveBackupRepository(
-                            tokenProvider = driveAuthManager,
-                            driveApi = driveApi,
-                            fileIdStore = driveFileIdStore,
-                            exportJson = { backupRepository.export(appVersionName) },
-                            restoreJson = backupRepository::restore,
-                        )
-                    }
+                    val driveAuthManager = driveGraph.authManager
+                    val driveBackupRepository = driveGraph.backupRepository
                     val driveSyncViewModel: DriveSyncViewModel = viewModel(
                         factory = DriveSyncViewModel.Factory(
                             driveAuthManager,
                             driveBackupRepository,
-                            onBackedUp = { preferencesRepository.setLastBackupAt(System.currentTimeMillis()) },
+                            onBackedUp = {
+                                val now = System.currentTimeMillis()
+                                preferencesRepository.setLastBackupAt(now)
+                                preferencesRepository.setLastDriveBackupAt(now)
+                            },
+                            lastDriveBackupAtFlow = preferencesRepository.lastDriveBackupAt,
+                            autoBackupEnabled = preferencesRepository.autoBackupEnabled,
+                            onAutoBackupChange = { preferencesRepository.setAutoBackupEnabled(it) },
                         ),
                     )
                     SettingsScreen(
@@ -610,6 +656,11 @@ fun DhikrApp(
                         longitude = prayerSettings.longitude,
                         locationName = prayerSettings.locationName,
                         onBack = { navController.popBackStack() },
+                        onLocationChange = { lat, lng, name ->
+                            coroutineScope.launch {
+                                preferencesRepository.setPrayerLocation(lat, lng, name)
+                            }
+                        },
                     )
                 }
                 composable(ROUTE_DUA) {
@@ -735,60 +786,85 @@ private fun DhikrBottomNav(
         Triple(ROUTE_INSIGHTS, R.string.nav_insights, NavInsightsIcon),
         Triple(ROUTE_SETTINGS, R.string.nav_settings, NavSettingsIcon),
     )
+    val selectedIndex = items.indexOfFirst { (route, _, _) ->
+        currentRoute?.substringBefore("?") == route.substringBefore("?")
+    }.coerceAtLeast(0)
+    val reduced = LocalReducedMotion.current
 
-    NavigationBar(containerColor = colors.surface) {
-        items.forEach { (route, labelRes, icon) ->
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colors.surface)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        items.forEachIndexed { index, (route, labelRes, icon) ->
             val baseRoute = route.substringBefore("?")
-            // Finding #7: an exact match against the route's own base path
-            // (not startsWith) so a sub-route sharing the same prefix — e.g.
-            // ROUTE_TASBIH_EDITOR ("tasbih/editor?id={id}") vs
-            // ROUTE_TASBIH_LIBRARY ("tasbih") — doesn't fool the Tasbih tab
-            // into showing selected while the editor screen is open.
-            // currentRoute is the *route template* (e.g. "tasbih/editor?id={id}"),
-            // not the resolved path, so comparing its own substringBefore("?")
-            // against baseRoute is the correct like-for-like comparison.
-            val selected = currentRoute?.substringBefore("?") == baseRoute
+            val selected = index == selectedIndex
             val label = stringResource(labelRes)
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    if (!selected) {
-                        // Finding #7: popUpTo the graph's start destination so
-                        // switching tabs doesn't grow the back stack unbounded
-                        // (and the system back button doesn't walk the whole
-                        // tab-switch history), launchSingleTop so repeated taps
-                        // on the same tab don't stack duplicate entries.
-                        //
-                        // No saveState/restoreState: saveState keys the popped
-                        // stack both by the popUpTo target (the start
-                        // destination) and by the tab's own destination id, so
-                        // restoreState on the very next tab tap re-inflates
-                        // whatever was stacked above it — tapping a tab while a
-                        // Counter (or editor) is open on top of it would bounce
-                        // straight back to that screen instead of the tab root.
-                        // These tabs are single-level roots with transient
-                        // detail screens pushed on top; "resume where left off"
-                        // isn't worth that.
-                        navController.navigate(baseRoute) {
-                            popUpTo(navController.graph.findStartDestination().id)
-                            launchSingleTop = true
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .animateContentSize(
+                        animationSpec = if (reduced) snap() else tween(Motion.SCREEN_MS, easing = Motion.StandardEasing),
+                    )
+                    .clip(PillShape)
+                    .background(if (selected) colors.sageSoft else Color.Transparent)
+                    .clickable(role = Role.Button) {
+                        if (!selected) {
+                            // Finding #7: popUpTo the graph's start destination so
+                            // switching tabs doesn't grow the back stack unbounded
+                            // (and the system back button doesn't walk the whole
+                            // tab-switch history), launchSingleTop so repeated taps
+                            // on the same tab don't stack duplicate entries.
+                            //
+                            // No saveState/restoreState: saveState keys the popped
+                            // stack both by the popUpTo target (the start
+                            // destination) and by the tab's own destination id, so
+                            // restoreState on the very next tab tap re-inflates
+                            // whatever was stacked above it — tapping a tab while a
+                            // Counter (or editor) is open on top of it would bounce
+                            // straight back to that screen instead of the tab root.
+                            // These tabs are single-level roots with transient
+                            // detail screens pushed on top; "resume where left off"
+                            // isn't worth that.
+                            navController.navigate(baseRoute) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
+                        } else {
+                            // Already on this tab — a repeat tap scrolls its
+                            // screen back to the top.
+                            onReselect(baseRoute)
                         }
-                    } else {
-                        // Already on this tab — a repeat tap scrolls its
-                        // screen back to the top.
-                        onReselect(baseRoute)
                     }
-                },
-                icon = { Icon(imageVector = icon, contentDescription = label) },
-                label = { Text(label, fontSize = 11.5.sp) },
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = colors.text,
-                    selectedTextColor = colors.text,
-                    indicatorColor = colors.sageSoft,
-                    unselectedIconColor = colors.faint,
-                    unselectedTextColor = colors.faint,
-                ),
-            )
+                    .minTapTarget()
+                    .padding(horizontal = if (selected) 16.dp else 12.dp, vertical = 10.dp),
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = if (selected) null else label,
+                    tint = if (selected) colors.text else colors.faint,
+                )
+                AnimatedVisibility(
+                    visible = selected,
+                    enter = if (reduced) EnterTransition.None else
+                        fadeIn(tween(Motion.SCREEN_MS, easing = Motion.StandardEasing)) +
+                            expandHorizontally(tween(Motion.SCREEN_MS, easing = Motion.StandardEasing)),
+                    exit = if (reduced) ExitTransition.None else
+                        fadeOut(tween(Motion.SCREEN_MS / 2)) +
+                            shrinkHorizontally(tween(Motion.SCREEN_MS, easing = Motion.StandardEasing)),
+                ) {
+                    Text(
+                        label,
+                        fontSize = 13.sp,
+                        color = colors.text,
+                        maxLines = 1,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
         }
     }
 }

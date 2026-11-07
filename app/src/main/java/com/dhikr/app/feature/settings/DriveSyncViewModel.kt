@@ -12,7 +12,11 @@ import com.dhikr.app.core.drivesync.DriveBackupRepository
 import com.dhikr.app.core.drivesync.SignedInAccount
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -37,7 +41,21 @@ class DriveSyncViewModel(
     private val backupRepository: DriveBackupRepository,
     /** Called after a Drive backup succeeds. */
     private val onBackedUp: suspend () -> Unit = {},
+    autoBackupEnabledFlow: Flow<Boolean> = flowOf(false),
+    private val onAutoBackupChange: suspend (Boolean) -> Unit = {},
+    lastDriveBackupAtFlow: Flow<Long> = flowOf(0L),
 ) : ViewModel() {
+
+    /** Epoch millis of the last successful Drive backup; 0 = never. */
+    val lastDriveBackupAt: StateFlow<Long> =
+        lastDriveBackupAtFlow.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), 0L)
+
+    val autoBackupEnabled: StateFlow<Boolean> =
+        autoBackupEnabledFlow.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
+
+    fun setAutoBackup(enabled: Boolean) {
+        viewModelScope.launch { onAutoBackupChange(enabled) }
+    }
 
     /** Why a [Status.Error] happened, so the UI can show a precise, distinct
      *  message instead of a generic one. */
@@ -197,9 +215,12 @@ class DriveSyncViewModel(
         private val authManager: DriveAuthManager,
         private val backupRepository: DriveBackupRepository,
         private val onBackedUp: suspend () -> Unit = {},
+        private val autoBackupEnabled: Flow<Boolean> = flowOf(false),
+        private val onAutoBackupChange: suspend (Boolean) -> Unit = {},
+        private val lastDriveBackupAtFlow: Flow<Long> = flowOf(0L),
     ) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            DriveSyncViewModel(authManager, backupRepository, onBackedUp) as T
+            DriveSyncViewModel(authManager, backupRepository, onBackedUp, autoBackupEnabled, onAutoBackupChange, lastDriveBackupAtFlow) as T
     }
 }
