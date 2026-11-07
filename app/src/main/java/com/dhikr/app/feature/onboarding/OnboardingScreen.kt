@@ -2,6 +2,7 @@ package com.dhikr.app.feature.onboarding
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -164,6 +165,7 @@ fun OnboardingScreen(
                     modifier = Modifier
                         .clip(PillShape)
                         .background(colors.card)
+                        .border(1.dp, colors.line, PillShape)
                         .clickable(role = Role.Button) {
                             scope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
                         }

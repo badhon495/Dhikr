@@ -1,6 +1,7 @@
 package com.dhikr.app.feature.insights
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -116,6 +117,7 @@ private fun MonthCard(month: MonthSummary, title: String) {
             .padding(bottom = 10.dp)
             .clip(RoundedCornerShape(22.dp))
             .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(22.dp))
             .padding(16.dp),
     ) {
         Row(

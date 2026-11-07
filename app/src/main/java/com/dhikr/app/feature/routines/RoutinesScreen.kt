@@ -12,6 +12,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -193,6 +194,7 @@ fun RoutinesScreen(
                 .heightIn(min = 48.dp)
                 .clip(PillShape)
                 .background(colors.surface)
+                .border(1.dp, colors.line, PillShape)
                 .padding(horizontal = 16.dp),
         ) {
             Icon(
@@ -550,6 +552,7 @@ private fun RoutineCard(
             .fillMaxWidth()
             .clip(RoundedCornerShape(26.dp))
             .background(if (completedToday) colors.sageSoft else colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(26.dp))
             .combinedClickable(
                 // Card body tap starts the routine in the counter. Long-press
                 // opens the Edit/Delete action menu (presets included).

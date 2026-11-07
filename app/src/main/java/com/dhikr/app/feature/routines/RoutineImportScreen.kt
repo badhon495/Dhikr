@@ -1,6 +1,7 @@
 package com.dhikr.app.feature.routines
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -130,6 +131,7 @@ private fun PreviewCard(routine: PreviewRoutine) {
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
             .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(20.dp))
             .padding(16.dp),
     ) {
         Text(routine.name, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = colors.text)
@@ -200,6 +202,7 @@ private fun SecondaryButton(label: String, modifier: Modifier = Modifier, onClic
             .padding(top = 8.dp)
             .clip(PillShape)
             .background(colors.surface)
+            .border(1.dp, colors.line, PillShape)
             .clickable(role = Role.Button, onClick = onClick)
             .minTapTarget()
             .padding(vertical = 12.dp),

@@ -190,6 +190,7 @@ fun RoutineEditorScreen(
                 .heightIn(min = 48.dp)
                 .clip(PillShape)
                 .background(colors.surface)
+                .border(1.dp, colors.line, PillShape)
                 .clickable(role = Role.Button, enabled = state.availableTasbih.isNotEmpty()) {
                     showPicker = true
                 }
@@ -314,6 +315,7 @@ private fun StepCard(
             .padding(bottom = 10.dp)
             .clip(ListRowShape)
             .background(colors.card)
+            .border(1.dp, colors.line, ListRowShape)
             .padding(14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {

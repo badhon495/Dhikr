@@ -9,6 +9,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -177,6 +178,7 @@ fun DuaScreen(
                     .heightIn(min = 44.dp)
                     .clip(PillShape)
                     .background(colors.surface)
+                    .border(1.dp, colors.line, PillShape)
                     .padding(horizontal = 14.dp),
             ) {
                 Icon(
@@ -217,6 +219,7 @@ fun DuaScreen(
                     modifier = Modifier
                         .clip(PillShape)
                         .background(colors.surface)
+                        .border(1.dp, colors.line, PillShape)
                         .clickable(
                             role = Role.Button,
                             onClickLabel = stringResource(R.string.dua_filter_content_description),
@@ -324,6 +327,7 @@ private fun DuaRow(
             .fillMaxWidth()
             .clip(ListRowShape)
             .background(colors.card)
+            .border(1.dp, colors.line, ListRowShape)
             .testTag("dua_row_${entry.id}")
             .combinedClickable(onClick = onEdit, onLongClick = onLongPress),
     ) {

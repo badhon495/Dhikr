@@ -254,6 +254,7 @@ fun HomeScreen(
                         .padding(top = 8.dp)
                         .clip(RoundedCornerShape(22.dp))
                         .background(colors.card)
+                        .border(1.dp, colors.line, RoundedCornerShape(22.dp))
                         .clickable(role = Role.Button) { onOpenTasbih(tasbih.id) },
                 ) {
                     // Green fill growing left-to-right with today's counting
@@ -549,6 +550,7 @@ private fun QuickAction(
         modifier = modifier
             .clip(RoundedCornerShape(18.dp))
             .background(colors.card)
+            .border(1.dp, colors.line, RoundedCornerShape(18.dp))
             .clickable(role = Role.Button) { onClick() }
             .minTapTarget()
             .padding(vertical = 12.dp, horizontal = 6.dp),

@@ -2,6 +2,7 @@ package com.dhikr.app.feature.qibla
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -125,6 +126,7 @@ fun QiblaScreen(
                     .padding(top = 16.dp)
                     .clip(PillShape)
                     .background(colors.surface)
+                    .border(1.dp, colors.line, PillShape)
                     .clickable(role = Role.Button) { showLocationDialog = true }
                     .minTapTarget()
                     .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -190,6 +192,7 @@ fun QiblaScreen(
                 .padding(top = 6.dp)
                 .clip(PillShape)
                 .background(colors.surface)
+                .border(1.dp, colors.line, PillShape)
                 .clickable(role = Role.Button) { showLocationDialog = true }
                 .minTapTarget()
                 .padding(horizontal = 14.dp, vertical = 6.dp),

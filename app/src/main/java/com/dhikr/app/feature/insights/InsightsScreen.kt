@@ -183,6 +183,7 @@ fun InsightsScreen(
                     modifier = Modifier
                         .clip(PillShape)
                         .background(colors.surface)
+                        .border(1.dp, colors.line, PillShape)
                         .clickable(role = Role.Button) {
                             viewModel.loadTodayForShare { items ->
                                 if (items.isEmpty()) return@loadTodayForShare
