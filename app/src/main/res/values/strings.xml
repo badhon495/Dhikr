@@ -10,6 +10,8 @@
     <string name="counter_lock_content_description">Counter lock</string>
     <string name="counter_dim_screen_on_content_description">Dim screen</string>
     <string name="counter_dim_screen_off_content_description">Undim screen</string>
+    <string name="counter_theme_dark_content_description">Switch to dark theme</string>
+    <string name="counter_theme_light_content_description">Switch to light theme</string>
     <string name="counter_dim_level_dialog_title">Dim level</string>
     <string name="counter_dim_level_percent">%1$d%% brightness</string>
     <string name="counter_undo">Undo</string>

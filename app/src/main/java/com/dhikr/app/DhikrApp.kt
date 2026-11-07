@@ -120,6 +120,7 @@ import com.dhikr.app.ui.LocalReducedMotion
 import com.dhikr.app.ui.LocalSnackbar
 import com.dhikr.app.ui.Motion
 import com.dhikr.app.ui.theme.DhikrTheme
+import com.dhikr.app.ui.theme.resolveIsDark
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -216,6 +217,7 @@ fun DhikrApp(
         val keepScreenOn by preferencesRepository.keepScreenOn.collectAsState(initial = false)
         val counterTextSize by preferencesRepository.counterTextSize.collectAsState(initial = CounterTextSize.DEFAULT)
         val volumeKeyCounting by preferencesRepository.volumeKeyCounting.collectAsState(initial = false)
+        val isDarkTheme = themeMode.resolveIsDark(autoLightStart, autoDarkStart)
         val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
         val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
             .collectAsState(initial = DEFAULT_DIM_BRIGHTNESS_LEVEL)
@@ -439,6 +441,11 @@ fun DhikrApp(
                         counterTextSize = counterTextSize,
                         keepScreenOn = keepScreenOn,
                         volumeKeyCounting = volumeKeyCounting,
+                        isDarkTheme = isDarkTheme,
+                        onToggleTheme = {
+                            val next = if (isDarkTheme) ThemeMode.LIGHT else ThemeMode.DARK
+                            coroutineScope.launch { preferencesRepository.setThemeMode(next) }
+                        },
                         dimScreenEnabled = dimScreenEnabled,
                         onToggleDimScreen = {
                             coroutineScope.launch { preferencesRepository.setDimScreenEnabled(!dimScreenEnabled) }

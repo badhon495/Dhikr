@@ -76,12 +76,16 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -103,7 +107,6 @@ import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.displayNote
 import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.core.utilities.MIN_SCREEN_BRIGHTNESS
-import com.dhikr.app.core.utilities.currentSystemBrightnessFraction
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.COUNTER_TAP_AREA_TEST_TAG
 import com.dhikr.app.ui.ClampedFontScale
@@ -148,9 +151,13 @@ fun CounterScreen(
     keepScreenOn: Boolean = false,
     // From the "Count with volume buttons" setting (off by default).
     volumeKeyCounting: Boolean = false,
+    // Resolved light/dark state of the app theme — tapping the button flips
+    // between ThemeMode.LIGHT/DARK (DhikrApp owns the actual preference).
+    isDarkTheme: Boolean = false,
+    onToggleTheme: () -> Unit = {},
     // App-wide screen dim (MainActivity applies the actual brightness change);
-    // this screen only shows/toggles it and, via long-press, lets the user set
-    // dimBrightnessLevel.
+    // this screen only long-presses into it and lets the user set
+    // dimBrightnessLevel — the tap gesture now drives isDarkTheme instead.
     dimScreenEnabled: Boolean = false,
     onToggleDimScreen: () -> Unit = {},
     dimBrightnessLevel: Float = DEFAULT_DIM_BRIGHTNESS_LEVEL,
@@ -579,30 +586,45 @@ fun CounterScreen(
                     )
                 }
             }
-            val dimLabel = if (dimScreenEnabled) {
-                stringResource(R.string.counter_dim_screen_off_content_description)
+            val themeLabel = if (isDarkTheme) {
+                stringResource(R.string.counter_theme_light_content_description)
             } else {
-                stringResource(R.string.counter_dim_screen_on_content_description)
+                stringResource(R.string.counter_theme_dark_content_description)
             }
-            IconButtonTooltip(label = dimLabel) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .combinedClickable(
-                            onClick = { onToggleDimScreen() },
-                            // Long-press opens the level slider rather than toggling —
-                            // the tap target is tiny, so a slider doesn't fit inline;
-                            // this is the only spare gesture the icon has to offer it.
-                            onLongClick = { showDimLevelDialog = true },
-                        ),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = dimScreenIcon(dimScreenEnabled),
-                        contentDescription = dimLabel,
-                        tint = if (dimScreenEnabled) colors.terra else colors.faint,
-                        modifier = Modifier.size(19.dp),
+            Box {
+                IconButtonTooltip(label = themeLabel) {
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .combinedClickable(
+                                onClick = { onToggleTheme() },
+                                // Long-press still opens the dim-brightness popup — the
+                                // only spare gesture this icon has to offer it.
+                                onLongClick = { showDimLevelDialog = true },
+                            ),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = themeToggleIcon(isDarkTheme),
+                            contentDescription = themeLabel,
+                            tint = colors.faint,
+                            modifier = Modifier.size(19.dp),
+                        )
+                    }
+                }
+                if (showDimLevelDialog) {
+                    // Turn dim on for the popup's duration so the slider actually
+                    // previews something — adjusting a level nobody can see defeats
+                    // the point. Only auto-enables; never auto-disables on dismiss,
+                    // since the user may have opened this while dim was already on.
+                    LaunchedEffect(Unit) {
+                        if (!dimScreenEnabled) onToggleDimScreen()
+                    }
+                    DimLevelPopup(
+                        level = dimBrightnessLevel,
+                        onLevelChange = onDimBrightnessLevelChange,
+                        onDismiss = { showDimLevelDialog = false },
                     )
                 }
             }
@@ -1172,90 +1194,56 @@ fun CounterScreen(
         )
     }
 
-    if (showDimLevelDialog) {
-        // Turn dim on for the dialog's duration so the slider actually
-        // previews something — adjusting a level nobody can see defeats the
-        // point. Only auto-enables; never auto-disables on dismiss, since the
-        // user may have opened this while dim was already on.
-        LaunchedEffect(Unit) {
-            if (!dimScreenEnabled) onToggleDimScreen()
-        }
-        DimLevelDialog(
-            level = dimBrightnessLevel,
-            onLevelChange = onDimBrightnessLevelChange,
-            onDismiss = { showDimLevelDialog = false },
-        )
-    }
 }
 
 /**
- * Dim-level slider, opened by long-pressing the top-bar dim button. The
- * slider's range is anchored to the device's own brightness: its top is
- * whatever system brightness is currently set (dimming is never brighter
- * than "normal"), its bottom is the practical minimum the screen can show.
- * Both bounds are read once, at dialog-open — the system setting itself
- * never moves while this is open, since the window-level override this
- * screen applies doesn't touch Settings.System.SCREEN_BRIGHTNESS.
+ * Dim-level slider, opened by long-pressing the top-bar dim button as a
+ * small popup anchored under it. The slider's range goes all the way to
+ * the device's true max brightness (1f) — not capped to whatever system
+ * brightness happens to be set right now, so the user can push past that
+ * if they want brighter-than-current.
  */
 @Composable
-private fun DimLevelDialog(
+private fun DimLevelPopup(
     level: Float,
     onLevelChange: (Float) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val colors = DhikrTheme.colors
-    val context = LocalContext.current
-    val maxBrightness = remember { currentSystemBrightnessFraction(context) }
-    // A level saved under a brighter device setting can exceed today's max
-    // (e.g. the user dimmed the device itself since last time) — clamp on
-    // open rather than let the slider show a value past its own track end.
-    // Pushed back through onLevelChange immediately so the persisted value
-    // matches what's shown even if the user closes without touching the
-    // slider — otherwise the next-applied brightness would silently differ
-    // from the dialog's own display.
-    val clampedLevel = level.coerceIn(MIN_SCREEN_BRIGHTNESS, maxBrightness)
-    var sliderValue by remember(level) { mutableStateOf(clampedLevel) }
-    LaunchedEffect(clampedLevel) {
-        if (clampedLevel != level) onLevelChange(clampedLevel)
-    }
-    AlertDialog(
+    var sliderValue by remember(level) { mutableStateOf(level.coerceIn(MIN_SCREEN_BRIGHTNESS, 1f)) }
+    Popup(
+        alignment = Alignment.TopEnd,
+        offset = IntOffset(0, with(LocalDensity.current) { 56.dp.roundToPx() }),
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.counter_dim_level_dialog_title)) },
-        containerColor = colors.card,
-        titleContentColor = colors.text,
-        textContentColor = colors.dim,
-        shape = DialogShape,
-        text = {
-            Column {
-                Text(
-                    text = stringResource(R.string.counter_dim_level_percent, (sliderValue * 100).toInt()),
-                    fontSize = 13.sp,
-                    color = colors.faint,
-                )
-                Slider(
-                    value = sliderValue,
-                    onValueChange = {
-                        sliderValue = it
-                        onLevelChange(it)
-                    },
-                    valueRange = MIN_SCREEN_BRIGHTNESS..maxBrightness,
-                    colors = SliderDefaults.colors(
-                        thumbColor = colors.sage,
-                        activeTrackColor = colors.sage,
-                    ),
-                )
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    text = stringResource(R.string.session_summary_close),
-                    color = colors.sage,
-                    fontWeight = FontWeight.SemiBold,
-                )
-            }
-        },
-    )
+        properties = PopupProperties(focusable = true),
+    ) {
+        Column(
+            modifier = Modifier
+                .width(220.dp)
+                .clip(DialogShape)
+                .background(colors.card)
+                .border(1.dp, colors.faint.copy(alpha = 0.2f), DialogShape)
+                .padding(16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.counter_dim_level_percent, (sliderValue * 100).toInt()),
+                fontSize = 13.sp,
+                color = colors.faint,
+            )
+            Slider(
+                value = sliderValue,
+                onValueChange = {
+                    sliderValue = it
+                    onLevelChange(it)
+                },
+                valueRange = MIN_SCREEN_BRIGHTNESS..1f,
+                colors = SliderDefaults.colors(
+                    thumbColor = colors.sage,
+                    activeTrackColor = colors.sage,
+                ),
+            )
+        }
+    }
 }
 
 /**

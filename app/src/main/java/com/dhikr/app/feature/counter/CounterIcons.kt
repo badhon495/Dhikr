@@ -359,6 +359,78 @@ fun dimScreenIcon(dimmed: Boolean): ImageVector = ImageVector.Builder(
     }
 }.build()
 
+/** Sun/crescent-moon glyph for the theme toggle: filled sun with rays for
+ *  light theme, filled crescent moon for dark theme. The crescent is one
+ *  path with two circle subpaths and an even-odd fill rule — the overlap
+ *  between the outer circle and the offset inner circle cancels out,
+ *  leaving just the lune. */
+fun themeToggleIcon(isDarkTheme: Boolean): ImageVector = ImageVector.Builder(
+    name = if (isDarkTheme) "ThemeMoon" else "ThemeSun",
+    defaultWidth = 24.dp,
+    defaultHeight = 24.dp,
+    viewportWidth = 24f,
+    viewportHeight = 24f,
+).apply {
+    if (isDarkTheme) {
+        path(
+            fill = SolidColor(Color.Black),
+            stroke = null,
+            pathFillType = PathFillType.EvenOdd,
+        ) {
+            // Outer circle: centre (12, 12.5), radius 7.5.
+            moveTo(19.5f, 12.5f)
+            curveTo(19.5f, 16.64f, 16.14f, 20f, 12f, 20f)
+            curveTo(7.86f, 20f, 4.5f, 16.64f, 4.5f, 12.5f)
+            curveTo(4.5f, 8.36f, 7.86f, 5f, 12f, 5f)
+            curveTo(16.14f, 5f, 19.5f, 8.36f, 19.5f, 12.5f)
+            close()
+            // Inner circle (subtracted via even-odd): centre (15, 9.5), radius 6.5
+            // — offset up-right so the leftover sliver reads as a crescent.
+            moveTo(21.5f, 9.5f)
+            curveTo(21.5f, 13.09f, 18.59f, 16f, 15f, 16f)
+            curveTo(11.41f, 16f, 8.5f, 13.09f, 8.5f, 9.5f)
+            curveTo(8.5f, 5.91f, 11.41f, 3f, 15f, 3f)
+            curveTo(18.59f, 3f, 21.5f, 5.91f, 21.5f, 9.5f)
+            close()
+        }
+    } else {
+        path(
+            fill = SolidColor(Color.Black),
+            stroke = null,
+            pathFillType = PathFillType.NonZero,
+        ) {
+            moveTo(17f, 12f)
+            curveTo(17f, 14.76f, 14.76f, 17f, 12f, 17f)
+            curveTo(9.24f, 17f, 7f, 14.76f, 7f, 12f)
+            curveTo(7f, 9.24f, 9.24f, 7f, 12f, 7f)
+            curveTo(14.76f, 7f, 17f, 9.24f, 17f, 12f)
+            close()
+        }
+        val rays = listOf(
+            12f to 3.5f to (12f to 1.5f),
+            12f to 20.5f to (12f to 22.5f),
+            3.5f to 12f to (1.5f to 12f),
+            20.5f to 12f to (22.5f to 12f),
+            5.46f to 5.46f to (4.05f to 4.05f),
+            18.54f to 18.54f to (19.95f to 19.95f),
+            5.46f to 18.54f to (4.05f to 19.95f),
+            18.54f to 5.46f to (19.95f to 4.05f),
+        )
+        for ((start, end) in rays) {
+            path(
+                fill = null,
+                stroke = SolidColor(Color.Black),
+                strokeLineWidth = STROKE_WIDTH,
+                strokeLineCap = StrokeCap.Round,
+                strokeLineJoin = StrokeJoin.Round,
+            ) {
+                moveTo(start.first, start.second)
+                lineTo(end.first, end.second)
+            }
+        }
+    }
+}.build()
+
 fun lockIcon(locked: Boolean): ImageVector = ImageVector.Builder(
     name = if (locked) "LockClosed" else "LockOpen",
     defaultWidth = 24.dp,
