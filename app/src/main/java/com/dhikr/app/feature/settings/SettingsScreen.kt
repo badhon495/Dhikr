@@ -397,8 +397,7 @@ fun SettingsScreen(
             { open = if (open == "backup") null else "backup" },
         ) {
             BackupControls(backupViewModel)
-            // Drive sync hidden until next release.
-            // DriveSyncControls(driveSyncViewModel)
+            DriveSyncControls(driveSyncViewModel)
         }
 
         // ---- Advanced (collapsed by default): experimental / power-user options ----
