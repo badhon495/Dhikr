@@ -748,7 +748,8 @@ object SeedData {
             pronunciationBn = "লা ইলাহা ইল্লা আনতা সুবহানাকা ইন্নি কুনতু মিনায যালিমীন",
             translation = "আপনি ছাড়া কোনো উপাস্য নেই, আপনি পবিত্র, নিশ্চয়ই আমি সীমালঙ্ঘনকারীদের অন্তর্ভুক্ত ছিলাম — There is no god worthy of worship except You; You are free from all imperfection. Indeed, I have been of the wrongdoers",
             lapTarget = 3,
-            note = "কুরআন ২১:৮৭ — মাছের পেটে ইউনুস (আঃ)-এর দুআ। নবি (সাঃ) বলেছেন কোনো মুসলিম এই দুআ দিয়ে প্রার্থনা করলে তা কবুল হয় — তিরমিযি ৩৫০৫।",
+            note = "Quran 21:87 — the dua of Yunus (as) in the belly of the fish. The Prophet (saw) said whichever Muslim prays with this dua it is accepted — Jami at-Tirmidhi 3505.",
+            noteBn = "কুরআন ২১:৮৭ — মাছের পেটে ইউনুস (আঃ)-এর দুআ। নবি (সাঃ) বলেছেন কোনো মুসলিম এই দুআ দিয়ে প্রার্থনা করলে তা কবুল হয় — তিরমিযি ৩৫০৫।",
             source = "Quran 21:87; Jami at-Tirmidhi 3505",
         ),
         dhikr(
@@ -760,7 +761,8 @@ object SeedData {
             pronunciationBn = "রব্বি ইন্নি যালামতু নাফসি ফাগফির লি",
             translation = "হে আমার রব, আমি নিজের উপর জুলুম করেছি, তাই আমাকে ক্ষমা করুন — My Lord, I have certainly wronged myself, so forgive me",
             lapTarget = 3,
-            note = "কুরআন ২৮:১৬ — কিবতিকে অনিচ্ছাকৃত হত্যার পর মুসা (আঃ)-এর দুআ।",
+            note = "Quran 28:16 — the dua of Musa (as) after unintentionally killing a Coptic man.",
+            noteBn = "কুরআন ২৮:১৬ — কিবতিকে অনিচ্ছাকৃত হত্যার পর মুসা (আঃ)-এর দুআ।",
             source = "Quran 28:16",
         ),
         dhikr(
@@ -772,7 +774,8 @@ object SeedData {
             pronunciationBn = "রব্বানা যালামনা আনফুসানা ওয়া ইল্লাম তাগফির লানা ওয়া তারহামনা লানাকুনান্না মিনাল খাসিরীন",
             translation = "হে আমাদের রব, আমরা নিজেদের উপর জুলুম করেছি; আপনি যদি আমাদের ক্ষমা না করেন ও দয়া না করেন তবে আমরা অবশ্যই ক্ষতিগ্রস্তদের অন্তর্ভুক্ত হব — Our Lord, we have wronged ourselves. If You do not forgive us and have mercy upon us, we will surely be amongst the losers",
             lapTarget = 3,
-            note = "কুরআন ৭:২৩ — গাছ থেকে খাওয়ার পর আদম (আঃ) ও হাওয়া (আঃ)-এর দুআ।",
+            note = "Quran 7:23 — the dua of Adam (as) and Hawwa (as) after eating from the tree.",
+            noteBn = "কুরআন ৭:২৩ — গাছ থেকে খাওয়ার পর আদম (আঃ) ও হাওয়া (আঃ)-এর দুআ।",
             source = "Quran 7:23",
         ),
         dhikr(
@@ -784,7 +787,8 @@ object SeedData {
             pronunciationBn = "আনতা ওয়ালিয়্যুনা ফাগফির লানা ওয়ারহামনা ওয়া আনতা খাইরুল গাফিরীন",
             translation = "আপনিই আমাদের অভিভাবক, তাই আমাদের ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ ক্ষমাকারী — You are our Protector, so forgive us and have mercy upon us. You are the best of those who forgive",
             lapTarget = 3,
-            note = "কুরআন ৭:১৫৫ — আল্লাহর নাম ‘আল-ওয়ালী’-র অসিলায় মুসা (আঃ)-এর দুআ।",
+            note = "Quran 7:155 — the dua of Musa (as) by Allah's name \"Al-Wali\".",
+            noteBn = "কুরআন ৭:১৫৫ — আল্লাহর নাম ‘আল-ওয়ালী’-র অসিলায় মুসা (আঃ)-এর দুআ।",
             source = "Quran 7:155",
         ),
         dhikr(
@@ -796,7 +800,8 @@ object SeedData {
             pronunciationBn = "রব্বানা ইন্নানা আমান্না ফাগফির লানা যুনুবানা ওয়া কিনা আযাবান নার",
             translation = "হে আমাদের রব, আমরা ঈমান এনেছি, তাই আমাদের গুনাহ ক্ষমা করুন এবং জাহান্নামের আযাব থেকে রক্ষা করুন — Our Lord, indeed we have believed, so forgive us our sins and protect us from the punishment of the Fire",
             lapTarget = 3,
-            note = "কুরআন ৩:১৬ — মুত্তাকিদের দুআ; ঈমানের অসিলায় তাওয়াসসুল।",
+            note = "Quran 3:16 — the dua of the pious; tawassul through faith.",
+            noteBn = "কুরআন ৩:১৬ — মুত্তাকিদের দুআ; ঈমানের অসিলায় তাওয়াসসুল।",
             source = "Quran 3:16",
         ),
         dhikr(
@@ -808,7 +813,8 @@ object SeedData {
             pronunciationBn = "রব্বিগফির ওয়ারহাম ওয়া আনতা খাইরুর রাহিমীন",
             translation = "হে আমার রব, ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ দয়ালু — My Lord, forgive and have mercy. You are the Best of those who are merciful",
             lapTarget = 3,
-            note = "কুরআন ২৩:১১৮ — সূরা আল-মুমিনূনের শেষ আয়াত।",
+            note = "Quran 23:118 — the last verse of Surah al-Mu'minun.",
+            noteBn = "কুরআন ২৩:১১৮ — সূরা আল-মুমিনূনের শেষ আয়াত।",
             source = "Quran 23:118",
         ),
         dhikr(
@@ -820,7 +826,8 @@ object SeedData {
             pronunciationBn = "রব্বি ইন্নি আউযু বিকা আন আসআলাকা মা লাইসা লি বিহি ইলম, ওয়া ইল্লা তাগফির লি ওয়া তারহামনি আকুম মিনাল খাসিরীন",
             translation = "হে আমার রব, যে বিষয়ে আমার জ্ঞান নেই তা আপনার কাছে চাওয়া থেকে আমি আপনার আশ্রয় চাই; আপনি যদি আমাকে ক্ষমা ও দয়া না করেন তবে আমি ক্ষতিগ্রস্তদের অন্তর্ভুক্ত হব — My Lord, I seek Your protection from asking You anything about which I have no knowledge. And unless You forgive me and have mercy upon me, I shall be amongst the losers",
             lapTarget = 3,
-            note = "কুরআন ১১:৪৭ — নূহ (আঃ)-এর দুআ।",
+            note = "Quran 11:47 — the dua of Nuh (as).",
+            noteBn = "কুরআন ১১:৪৭ — নূহ (আঃ)-এর দুআ।",
             source = "Quran 11:47",
         ),
         dhikr(
@@ -832,7 +839,8 @@ object SeedData {
             pronunciationBn = "রব্বানাগফির লানা ওয়া লিইখওয়ানিনাল্লাযিনা সাবাকুনা বিল ঈমান, ওয়া লা তাজআল ফি কুলুবিনা গিল্লাল লিল্লাযিনা আমানু রব্বানা ইন্নাকা রউফুর রাহীম",
             translation = "হে আমাদের রব, আমাদের ও ঈমানে আমাদের অগ্রগামী ভাইদের ক্ষমা করুন এবং মুমিনদের প্রতি আমাদের অন্তরে বিদ্বেষ রাখবেন না; হে আমাদের রব, নিশ্চয়ই আপনি অতি স্নেহশীল, পরম দয়ালু — Our Lord, forgive us and our brothers who preceded us in faith. Do not put in our hearts any hatred toward those who have believed. Our Lord, indeed You are the Most Compassionate, the Ever-Merciful",
             lapTarget = 3,
-            note = "কুরআন ৫৯:১০ — পরবর্তী প্রজন্মের মুমিনদের দুআ; জীবিত ও মৃত ভাই-বোনদের জন্য।",
+            note = "Quran 59:10 — the dua of later generations of believers, for living and deceased brothers and sisters.",
+            noteBn = "কুরআন ৫৯:১০ — পরবর্তী প্রজন্মের মুমিনদের দুআ; জীবিত ও মৃত ভাই-বোনদের জন্য।",
             source = "Quran 59:10",
         ),
         dhikr(
@@ -844,7 +852,8 @@ object SeedData {
             pronunciationBn = "রব্বানা আতমিম লানা নূরানা ওয়াগফির লানা ইন্নাকা আলা কুল্লি শাইইন কাদীর",
             translation = "হে আমাদের রব, আমাদের নূর পূর্ণ করুন ও আমাদের ক্ষমা করুন; নিশ্চয়ই আপনি সর্বশক্তিমান — Our Lord, perfect for us our light and forgive us. Indeed, You are All-Powerful over everything",
             lapTarget = 3,
-            note = "কুরআন ৬৬:৮ — কিয়ামতের দিন মুমিনদের দুআ যখন মুনাফিকদের নূর নিভে যাবে।",
+            note = "Quran 66:8 — the dua of believers on the Day of Judgement when the hypocrites' light is extinguished.",
+            noteBn = "কুরআন ৬৬:৮ — কিয়ামতের দিন মুমিনদের দুআ যখন মুনাফিকদের নূর নিভে যাবে।",
             source = "Quran 66:8",
         ),
         dhikr(
@@ -856,7 +865,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা আনতা রব্বি লা ইলাহা ইল্লা আনতা, খালাকতানি ওয়া আনা আবদুকা, ওয়া আনা আলা আহদিকা ওয়া ওয়াদিকা মাসতাতাতু, আউযু বিকা মিন শাররি মা সানাতু, আবূউ লাকা বিনিমাতিকা আলাইয়া ওয়া আবূউ বিযামবি, ফাগফির লি ফাইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা",
             translation = "হে আল্লাহ, আপনিই আমার রব, আপনি ছাড়া কোনো উপাস্য নেই; আপনি আমাকে সৃষ্টি করেছেন, আমি আপনার বান্দা; সাধ্যমতো আপনার অঙ্গীকার ও প্রতিশ্রুতির উপর আছি; আমি আমার কৃতকর্মের অনিষ্ট থেকে আপনার আশ্রয় চাই; আপনার নিয়ামত স্বীকার করছি এবং আমার গুনাহও স্বীকার করছি; আমাকে ক্ষমা করুন, কারণ আপনি ছাড়া গুনাহ কেউ ক্ষমা করতে পারে না — O Allah, You are my Lord. There is no god except You. You created me and I am Your slave, and I am upon Your covenant and pledge as much as I am able. I seek Your protection from the evil that I have done. I acknowledge Your favour upon me and I admit my sin. Forgive me, for none forgives sins but You",
             lapTarget = 3,
-            note = "সর্বোত্তম ইস্তিগফার। দৃঢ় বিশ্বাসের সাথে দিনে পড়ে সন্ধ্যার আগে বা রাতে পড়ে সকালের আগে মারা গেলে জান্নাতি — সহীহ বুখারি ৬৩০৬।",
+            note = "The best istighfar. Said during the day with firm belief and dies before evening, or said at night and dies before morning, enters Paradise — Sahih al-Bukhari 6306.",
+            noteBn = "সর্বোত্তম ইস্তিগফার। দৃঢ় বিশ্বাসের সাথে দিনে পড়ে সন্ধ্যার আগে বা রাতে পড়ে সকালের আগে মারা গেলে জান্নাতি — সহীহ বুখারি ৬৩০৬।",
             source = "Sahih al-Bukhari 6306",
         ),
         dhikr(
@@ -868,7 +878,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা আনতাল মালিকু লা ইলাহা ইল্লা আনতা, আনতা রব্বি ওয়া আনা আবদুকা, যালামতু নাফসি ওয়াতারাফতু বিযামবি, ফাগফির লি যুনূবি জামীআন, ইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা, ওয়াহদিনি লিআহসানিল আখলাকি লা ইয়াহদি লিআহসানিহা ইল্লা আনতা, ওয়াসরিফ আন্নি সাইয়িআহা লা ইয়াসরিফু আন্নি সাইয়িআহা ইল্লা আনতা",
             translation = "হে আল্লাহ, আপনিই বাদশাহ, আপনি ছাড়া কোনো উপাস্য নেই; আপনি আমার রব, আমি আপনার বান্দা; আমি নিজের উপর জুলুম করেছি ও গুনাহ স্বীকার করছি; আমার সব গুনাহ ক্ষমা করুন, আপনি ছাড়া গুনাহ কেউ ক্ষমা করে না; আমাকে উত্তম চরিত্রের পথ দেখান, আপনি ছাড়া কেউ তার পথ দেখাতে পারে না; মন্দ চরিত্র আমার থেকে দূর করুন, আপনি ছাড়া কেউ তা দূর করতে পারে না — O Allah, You are the King, there is no god worthy of worship except You. You are my Lord and I am Your slave. I have wronged myself and I confess my sin. Forgive all my sins; none forgives sins but You. Guide me to the best of character, for none guides to it but You; and turn its evil away from me, for none turns it away but You",
             lapTarget = 3,
-            note = "নবি (সাঃ) সালাত শুরুর দুআয় পড়তেন — সহীহ মুসলিম ৭৭১। শেষাংশ (‘লাব্বাইকা ওয়া সাদাইক…’) সংক্ষেপে দেওয়া হলো।",
+            note = "The Prophet (saw) said this at the start of prayer — Sahih Muslim 771. The closing part (\"Labbayka wa sa'dayk...\") is given in short.",
+            noteBn = "নবি (সাঃ) সালাত শুরুর দুআয় পড়তেন — সহীহ মুসলিম ৭৭১। শেষাংশ (‘লাব্বাইকা ওয়া সাদাইক…’) সংক্ষেপে দেওয়া হলো।",
             source = "Sahih Muslim 771",
         ),
         dhikr(
@@ -880,7 +891,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মাগফির লি খাতীআতি ওয়া জাহলি ওয়া ইসরাফি ফি আমরি, ওয়া মা আনতা আলামু বিহি মিন্নি, আল্লাহুম্মাগফির লি জিদ্দি ওয়া হাযলি ওয়া খাতাই ওয়া আমদি ওয়া কুল্লু যালিকা ইনদি",
             translation = "হে আল্লাহ, আমার ভুল, অজ্ঞতা, কাজে সীমালঙ্ঘন এবং যা আপনি আমার চেয়ে বেশি জানেন তা ক্ষমা করুন; হে আল্লাহ, আমার সিরিয়াসভাবে ও ঠাট্টাচ্ছলে, অনিচ্ছাকৃত ও ইচ্ছাকৃত—সব গুনাহ ক্ষমা করুন, এসবই আমার মধ্যে আছে — O Allah, forgive my mistakes, my ignorance, my transgression in my affairs, and what You know better than me. O Allah, forgive me for what I did in earnest and in jest, unintentionally and intentionally; all of that is in me",
             lapTarget = 3,
-            note = "নবি (সাঃ) এই দুআ করতেন — সহীহ মুসলিম ২৭১৯।",
+            note = "The Prophet (saw) used to make this dua — Sahih Muslim 2719.",
+            noteBn = "নবি (সাঃ) এই দুআ করতেন — সহীহ মুসলিম ২৭১৯।",
             source = "Sahih Muslim 2719",
         ),
         dhikr(
@@ -892,7 +904,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা রব্বা মুহাম্মাদিন ইগফির লি যামবি, ওয়া আযহিব গাইযা কালবি, ওয়া আইযনি মিন মুদিল্লাতিল ফিতান",
             translation = "হে আল্লাহ, মুহাম্মাদের রব, আমার গুনাহ ক্ষমা করুন, আমার অন্তরের ক্রোধ দূর করুন এবং বিভ্রান্তিকর ফিতনা থেকে আমাকে রক্ষা করুন — O Allah, Lord of Muhammad, forgive my sin, remove the anger of my heart and protect me from misleading trials",
             lapTarget = 3,
-            note = "আয়েশা (রাঃ) রাগান্বিত হলে নবি (সাঃ) তাঁকে এটি পড়তে বলতেন — ইবনুস সুন্নি ৪৫৬।",
+            note = "When Aisha (ra) was angry, the Prophet (saw) would tell her to say this — Ibn as-Sunni 456.",
+            noteBn = "আয়েশা (রাঃ) রাগান্বিত হলে নবি (সাঃ) তাঁকে এটি পড়তে বলতেন — ইবনুস সুন্নি ৪৫৬।",
             source = "Ibn as-Sunni 456",
         ),
         dhikr(
@@ -904,7 +917,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মাগফির লি যামবি কুল্লাহু, দিক্কাহু ওয়া জিল্লাহু, ওয়া আউওয়ালাহু ওয়া আখিরাহু, ওয়া আলানিয়াতাহু ওয়া সিররাহু",
             translation = "হে আল্লাহ, আমার সব গুনাহ ক্ষমা করুন—ছোট ও বড়, প্রথম ও শেষ, প্রকাশ্য ও গোপন — O Allah, forgive me all my sins: the minor and the major, the first and the last, the public and the private",
             lapTarget = 3,
-            note = "নবি (সাঃ) সিজদায় এই দুআ পড়তেন — সহীহ মুসলিম ৪৮৩।",
+            note = "The Prophet (saw) recited this in sujud — Sahih Muslim 483.",
+            noteBn = "নবি (সাঃ) সিজদায় এই দুআ পড়তেন — সহীহ মুসলিম ৪৮৩।",
             source = "Sahih Muslim 483",
         ),
         dhikr(
@@ -916,7 +930,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি যালামতু নাফসি যুলমান কাছীরা, ওয়া লা ইয়াগফিরুয যুনূবা ইল্লা আনতা, ফাগফির লি মাগফিরাতান মিন ইনদিকা, ওয়ারহামনি, ইন্নাকা আনতাল গাফুরুর রাহীম",
             translation = "হে আল্লাহ, আমি নিজের উপর অনেক বেশি জুলুম করেছি, আপনি ছাড়া গুনাহ কেউ ক্ষমা করে না; আপনার পক্ষ থেকে আমাকে ক্ষমা দান করুন ও দয়া করুন, নিশ্চয়ই আপনি ক্ষমাশীল, পরম দয়ালু — O Allah, I have wronged myself greatly and none forgives sins but You; so grant me forgiveness from You and have mercy on me. You are the Most Forgiving, the Most Merciful",
             lapTarget = 3,
-            note = "নবি (সাঃ) আবু বকর (রাঃ)-কে সালাতে পড়ার জন্য এই দুআ শিখিয়েছেন — সহীহ বুখারি ৮৩৪।",
+            note = "The Prophet (saw) taught this dua to Abu Bakr (ra) to say in prayer — Sahih al-Bukhari 834.",
+            noteBn = "নবি (সাঃ) আবু বকর (রাঃ)-কে সালাতে পড়ার জন্য এই দুআ শিখিয়েছেন — সহীহ বুখারি ৮৩৪।",
             source = "Sahih al-Bukhari 834",
         ),
         dhikr(
@@ -928,7 +943,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মাগফির লি, ওয়ারহামনি, ওয়া আফিনি, ওয়াহদিনি ওয়ারযুকনি",
             translation = "হে আল্লাহ, আমাকে ক্ষমা করুন, দয়া করুন, সুস্থতা দিন, হেদায়েত দিন ও রিযিক দিন — O Allah, forgive me, have mercy on me, grant me wellbeing, guide me and grant me sustenance",
             lapTarget = 3,
-            note = "নবি (সাঃ) দুই সিজদার মাঝে এই দুআ পড়তেন — আবু দাউদ ৮৫০।",
+            note = "The Prophet (saw) recited this between the two prostrations — Sunan Abi Dawud 850.",
+            noteBn = "নবি (সাঃ) দুই সিজদার মাঝে এই দুআ পড়তেন — আবু দাউদ ৮৫০।",
             source = "Sunan Abi Dawud 850",
         ),
         dhikr(
@@ -940,7 +956,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা বাইদ বাইনি ওয়া বাইনা খাতায়ায়া কামা বাআদতা বাইনাল মাশরিকি ওয়াল মাগরিব, আল্লাহুম্মা নাক্কিনি মিনাল খাতায়া কামা ইউনাক্কাস সাউবুল আবয়াদু মিনাদ দানাস, আল্লাহুম্মাগসিল খাতায়ায়া বিল মাই ওয়াস সালজি ওয়াল বারাদ",
             translation = "হে আল্লাহ, আমার ও আমার গুনাহের মধ্যে দূরত্ব সৃষ্টি করুন যেমন পূর্ব ও পশ্চিমের মধ্যে দূরত্ব রেখেছেন; হে আল্লাহ, আমাকে গুনাহ থেকে পবিত্র করুন যেমন সাদা কাপড় ময়লা থেকে পরিষ্কার করা হয়; হে আল্লাহ, আমার গুনাহ পানি, বরফ ও শিলা দিয়ে ধুয়ে দিন — O Allah, distance me from my sins as You have distanced the East from the West. O Allah, purify me from my sins as a white cloth is purified from dirt. O Allah, wash away my sins with water, snow and hail",
             lapTarget = 3,
-            note = "নবি (সাঃ) তাকবিরে তাহরিমা ও কিরাআতের মাঝে এই দুআ পড়তেন — সহীহ বুখারি ৭৪৪, সহীহ মুসলিম ৫৯৮।",
+            note = "The Prophet (saw) recited this between the opening takbir and the recitation — Sahih al-Bukhari 744, Sahih Muslim 598.",
+            noteBn = "নবি (সাঃ) তাকবিরে তাহরিমা ও কিরাআতের মাঝে এই দুআ পড়তেন — সহীহ বুখারি ৭৪৪, সহীহ মুসলিম ৫৯৮।",
             source = "Sahih al-Bukhari 744; Sahih Muslim 598",
         ),
         dhikr(
@@ -952,7 +969,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মাগফির লিল মুমিনীনা ওয়াল মুমিনাত",
             translation = "হে আল্লাহ, মুমিন পুরুষ ও মুমিন নারীদের ক্ষমা করুন — O Allah, forgive the believing men and the believing women",
             lapTarget = 3,
-            note = "যে প্রতিদিন এটি বলে, প্রত্যেক মুমিন পুরুষ ও নারীর বিনিময়ে তার জন্য একটি নেকি লেখা হয় — তাবারানি, মুজামুল কাবির ও মুসনাদুশ শামিয়্যিন ২১৫৫।",
+            note = "Whoever says this every day, a good deed is recorded for him for every believing man and woman — Tabarani, al-Mu'jam al-Kabir and Musnad ash-Shamiyyin 2155.",
+            noteBn = "যে প্রতিদিন এটি বলে, প্রত্যেক মুমিন পুরুষ ও নারীর বিনিময়ে তার জন্য একটি নেকি লেখা হয় — তাবারানি, মুজামুল কাবির ও মুসনাদুশ শামিয়্যিন ২১৫৫।",
             source = "al-Mu'jam al-Kabir (Tabarani); Musnad ash-Shamiyyin 2155",
         ),
 
@@ -979,7 +997,8 @@ object SeedData {
                 "কুল আউযু বিরব্বিন নাস, মালিকিন নাস, ইলাহিন নাস, মিন শাররিল ওয়াসওয়াসিল খান্নাস, আল্লাযি ইউওয়াসউইসু ফি সুদূরিন নাস, মিনাল জিন্নাতি ওয়ান নাস",
             translation = "সূরা আল-ইখলাস, আল-ফালাক ও আন-নাস — Say: He is Allah, the One; Allah, the Eternal Refuge; He neither begets nor is born; nor is there to Him any equivalent. ; Say: I seek refuge in the Lord of daybreak, from the evil of what He created, from the evil of darkness when it settles, from the evil of the blowers in knots, and from the evil of an envier when he envies. ; Say: I seek refuge in the Lord of mankind, the King of mankind, the God of mankind, from the evil of the retreating whisperer who whispers in the breasts of mankind, from among the jinn and mankind",
             lapTarget = 3,
-            note = "সকাল-সন্ধ্যা ও ঘুমের সময় তিনবার পড়লে সবকিছু থেকে যথেষ্ট হয় — তিরমিযি ৩৫৭৫। পৃথকভাবে [[surah_ikhlas]], [[surah_falaq]], [[surah_nas]] দেখুন।",
+            note = "Reciting it three times morning, evening and at bedtime is sufficient against everything — Jami at-Tirmidhi 3575. See [[surah_ikhlas]], [[surah_falaq]], [[surah_nas]] separately.",
+            noteBn = "সকাল-সন্ধ্যা ও ঘুমের সময় তিনবার পড়লে সবকিছু থেকে যথেষ্ট হয় — তিরমিযি ৩৫৭৫। পৃথকভাবে [[surah_ikhlas]], [[surah_falaq]], [[surah_nas]] দেখুন।",
             source = "Jami at-Tirmidhi 3575",
         ),
         dhikr(
@@ -991,7 +1010,8 @@ object SeedData {
             pronunciationBn = "কুল হুওয়াল্লাহু আহাদ, আল্লাহুস সামাদ, লাম ইয়ালিদ ওয়া লাম ইউলাদ, ওয়া লাম ইয়াকুল লাহু কুফুওয়ান আহাদ",
             translation = "বলো, তিনিই আল্লাহ, এক; আল্লাহ অমুখাপেক্ষী; তিনি জন্ম দেননি ও জন্মগ্রহণ করেননি; তাঁর সমকক্ষ কেউ নেই — Say: He is Allah, the One; Allah, the Eternal Refuge; He neither begets nor is born; nor is there to Him any equivalent",
             lapTarget = 3,
-            note = "কুরআনের এক-তৃতীয়াংশের সমান — সহীহ বুখারি ৫০১৩। এক ব্যক্তির এটির প্রতি ভালোবাসা তাকে জান্নাতে প্রবেশ করাল — বুখারি ৭৩৭৫।",
+            note = "Equal to one-third of the Quran — Sahih al-Bukhari 5013. A man's love for it admitted him to Paradise — Sahih al-Bukhari 7375.",
+            noteBn = "কুরআনের এক-তৃতীয়াংশের সমান — সহীহ বুখারি ৫০১৩। এক ব্যক্তির এটির প্রতি ভালোবাসা তাকে জান্নাতে প্রবেশ করাল — বুখারি ৭৩৭৫।",
             source = "Quran 112; Sahih al-Bukhari 5013",
         ),
         dhikr(
@@ -1003,7 +1023,8 @@ object SeedData {
             pronunciationBn = "কুল আউযু বিরব্বিল ফালাক, মিন শাররি মা খালাক, ওয়া মিন শাররি গাসিকিন ইযা ওয়াকাব, ওয়া মিন শাররিন নাফফাছাতি ফিল উকাদ, ওয়া মিন শাররি হাসিদিন ইযা হাসাদ",
             translation = "বলো, আমি আশ্রয় চাই ভোরের রবের, তিনি যা সৃষ্টি করেছেন তার অনিষ্ট থেকে, অন্ধকার যখন ঘনিয়ে আসে তার অনিষ্ট থেকে, গিরায় ফুঁ-দানকারীদের অনিষ্ট থেকে, এবং হিংসুক যখন হিংসা করে তার অনিষ্ট থেকে — Say: I seek refuge in the Lord of daybreak, from the evil of what He created, from the evil of darkness when it settles, from the evil of the blowers in knots, and from the evil of an envier when he envies",
             lapTarget = 3,
-            note = "মুআওবিযাতাইনের একটি; জাদু, বদনজর ও শয়তান থেকে শ্রেষ্ঠ আশ্রয় — সহীহ মুসলিম ৮১৪। সকাল-সন্ধ্যা ও ঘুমের সময় তিনবার।",
+            note = "One of the Mu'awwidhatayn; the best refuge from magic, the evil eye and Shaytan — Sahih Muslim 814. Recite three times morning, evening and at bedtime.",
+            noteBn = "মুআওবিযাতাইনের একটি; জাদু, বদনজর ও শয়তান থেকে শ্রেষ্ঠ আশ্রয় — সহীহ মুসলিম ৮১৪। সকাল-সন্ধ্যা ও ঘুমের সময় তিনবার।",
             source = "Quran 113; Sahih Muslim 814",
         ),
         dhikr(
@@ -1015,7 +1036,8 @@ object SeedData {
             pronunciationBn = "কুল আউযু বিরব্বিন নাস, মালিকিন নাস, ইলাহিন নাস, মিন শাররিল ওয়াসওয়াসিল খান্নাস, আল্লাযি ইউওয়াসউইসু ফি সুদূরিন নাস, মিনাল জিন্নাতি ওয়ান নাস",
             translation = "বলো, আমি আশ্রয় চাই মানুষের রবের, মানুষের অধিপতির, মানুষের উপাস্যের—আত্মগোপনকারী কুমন্ত্রণাদাতার অনিষ্ট থেকে, যে মানুষের অন্তরে কুমন্ত্রণা দেয়, জিন ও মানুষের মধ্য থেকে — Say: I seek refuge in the Lord of mankind, the King of mankind, the God of mankind, from the evil of the retreating whisperer who whispers in the breasts of mankind, from among the jinn and mankind",
             lapTarget = 3,
-            note = "মুআওবিযাতাইনের একটি; অন্তরের কুমন্ত্রণা থেকে আশ্রয়। নবি (সাঃ) অসুস্থ হলে এটি ও আল-ফালাক পড়ে শরীরে ফুঁ দিতেন — সহীহ বুখারি ৫০১৬।",
+            note = "One of the Mu'awwidhatayn; refuge from the whispering of the heart. The Prophet (saw) recited this and al-Falaq and blew on himself when ill — Sahih al-Bukhari 5016.",
+            noteBn = "মুআওবিযাতাইনের একটি; অন্তরের কুমন্ত্রণা থেকে আশ্রয়। নবি (সাঃ) অসুস্থ হলে এটি ও আল-ফালাক পড়ে শরীরে ফুঁ দিতেন — সহীহ বুখারি ৫০১৬।",
             source = "Quran 114; Sahih al-Bukhari 5016",
         ),
         dhikr(
@@ -1027,7 +1049,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আসআলুকাল আফিয়াতা ফিদ দুনইয়া ওয়াল আখিরাহ, আল্লাহুম্মা ইন্নি আসআলুকাল আফওয়া ওয়াল আফিয়াতা ফি দিনি ওয়া দুনইয়ায়া ওয়া আহলি ওয়া মালি, আল্লাহুম্মাসতুর আওরাতি ওয়া আমিন রাওআতি, আল্লাহুম্মাহফাযনি মিন বাইনি ইয়াদাইয়া ওয়া মিন খালফি ওয়া আন ইয়ামিনি ওয়া আন শিমালি ওয়া মিন ফাওকি, ওয়া আউযু বিআযামাতিকা আন উগতালা মিন তাহতি",
             translation = "হে আল্লাহ, দুনিয়া ও আখিরাতে সুস্থতা চাই; হে আল্লাহ, আমার দ্বীন, দুনিয়া, পরিবার ও সম্পদে ক্ষমা ও সুস্থতা চাই; হে আল্লাহ, আমার দোষ ঢেকে দিন ও ভয় দূর করুন; হে আল্লাহ, আমার সামনে-পিছনে, ডানে-বামে ও উপর থেকে রক্ষা করুন, এবং নিচ থেকে অতর্কিতে ধ্বংস হওয়া থেকে আপনার মহত্ত্বের অসিলায় আশ্রয় চাই — O Allah, I ask You for wellbeing in this world and the next. O Allah, I ask You for pardon and wellbeing in my religion, my worldly affairs, my family and my wealth. O Allah, conceal my faults and calm my fears. O Allah, guard me from before me and behind me, from my right and my left and from above me, and I seek refuge in Your Greatness from being destroyed from beneath me",
             lapTarget = 1,
-            note = "নবি (সাঃ) সকাল-সন্ধ্যায় কখনো এ দুআ ছাড়তেন না — আবু দাউদ ৫০৭৪, ইবনে মাজাহ ৩৮৭১।",
+            note = "The Prophet (saw) never left this dua morning or evening — Sunan Abi Dawud 5074, Ibn Majah 3871.",
+            noteBn = "নবি (সাঃ) সকাল-সন্ধ্যায় কখনো এ দুআ ছাড়তেন না — আবু দাউদ ৫০৭৪, ইবনে মাজাহ ৩৮৭১।",
             source = "Sunan Abi Dawud 5074; Sunan Ibn Majah 3871",
         ),
         dhikr(
@@ -1039,7 +1062,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা আলিমাল গাইবি ওয়াশ শাহাদাতি, ফাতিরাস সামাওয়াতি ওয়াল আরদ, রব্বা কুল্লি শাইইন ওয়া মালিকাহু, আশহাদু আন লা ইলাহা ইল্লা আনতা, আউযু বিকা মিন শাররি নাফসি, ওয়া মিন শাররিশ শাইতানি ওয়া শিরকিহি, ওয়া আন আকতারিফা আলা নাফসি সূআন আও আজুররাহু ইলা মুসলিম",
             translation = "হে আল্লাহ, দৃশ্য-অদৃশ্যের জ্ঞানী, আসমান-জমিনের স্রষ্টা, সবকিছুর রব ও মালিক; আমি সাক্ষ্য দিই আপনি ছাড়া কোনো উপাস্য নেই; আমার নফসের অনিষ্ট থেকে, শয়তান ও তার শিরক থেকে, এবং নিজের বা কোনো মুসলিমের উপর অনিষ্ট ডেকে আনা থেকে আপনার আশ্রয় চাই — O Allah, Knower of the unseen and the seen, Creator of the heavens and the earth, Lord and Sovereign of all things; I bear witness there is no god but You. I seek refuge in You from the evil of my self, from the evil of Shaytan and his shirk, and from bringing evil upon myself or upon a Muslim",
             lapTarget = 1,
-            note = "নবি (সাঃ) আবু বকর (রাঃ)-কে সকাল-সন্ধ্যা ও শোয়ার সময় পড়তে বলেছেন — তিরমিযি ৩৩৯২; শেষাংশ (ওয়া আন আকতারিফা…) তিরমিযি ৩৫২৯।",
+            note = "The Prophet (saw) told Abu Bakr (ra) to recite this morning, evening and at bedtime — Jami at-Tirmidhi 3392; the closing part (\"wa an aktarifa...\") is in Jami at-Tirmidhi 3529.",
+            noteBn = "নবি (সাঃ) আবু বকর (রাঃ)-কে সকাল-সন্ধ্যা ও শোয়ার সময় পড়তে বলেছেন — তিরমিযি ৩৩৯২; শেষাংশ (ওয়া আন আকতারিফা…) তিরমিযি ৩৫২৯।",
             source = "Jami at-Tirmidhi 3392; Jami at-Tirmidhi 3529",
         ),
         dhikr(
@@ -1051,7 +1075,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা মা আসবাহা বি মিন নিমাতিন আও বিআহাদিন মিন খালকিকা ফামিনকা ওয়াহদাকা লা শারিকা লাকা, ফালাকাল হামদু ওয়া লাকাশ শুকর",
             translation = "হে আল্লাহ, সকালে আমার বা আপনার কোনো সৃষ্টির কাছে যে নিয়ামত পৌঁছেছে তা কেবল আপনার কাছ থেকে, আপনার কোনো শরিক নেই; সকল প্রশংসা ও কৃতজ্ঞতা আপনারই — O Allah, whatever blessing has come to me or to any of Your creation this morning is from You alone, no partner have You; to You is all praise and all thanks",
             lapTarget = 1,
-            note = "যে সকালে এটি বলে সে সেদিনের শোকর আদায় করল, সন্ধ্যায় বললে সে রাতের শোকর আদায় করল — আবু দাউদ ৫০৭৩।",
+            note = "Whoever says this in the morning has given thanks for that day; said in the evening, for that night — Sunan Abi Dawud 5073.",
+            noteBn = "যে সকালে এটি বলে সে সেদিনের শোকর আদায় করল, সন্ধ্যায় বললে সে রাতের শোকর আদায় করল — আবু দাউদ ৫০৭৩।",
             source = "Sunan Abi Dawud 5073",
         ),
         dhikr(
@@ -1063,7 +1088,8 @@ object SeedData {
             pronunciationBn = "আসবাহনা আলা ফিতরাতিল ইসলাম, ওয়া আলা কালিমাতিল ইখলাস, ওয়া আলা দিনি নাবিয়্যিনা মুহাম্মাদ, ওয়া আলা মিল্লাতি আবিনা ইবরাহিমা হানিফাম মুসলিমাও ওয়া মা কানা মিনাল মুশরিকিন",
             translation = "আমরা সকালে উপনীত হলাম ইসলামের ফিতরাত, ইখলাসের কালিমা, আমাদের নবি মুহাম্মাদের দ্বীন ও আমাদের পিতা ইবরাহিমের মিল্লাতের উপর—যিনি একনিষ্ঠ মুসলিম ছিলেন, মুশরিকদের অন্তর্ভুক্ত ছিলেন না — We have entered the morning upon the natural way of Islam, the word of sincerity, the religion of our Prophet Muhammad, and the way of our father Ibrahim, upright and Muslim, and he was not of the polytheists",
             lapTarget = 1,
-            note = "নবি (সাঃ) সকালে এটি পড়তেন — আহমাদ ১৫৩৬০।",
+            note = "The Prophet (saw) recited this in the morning — Ahmad 15360.",
+            noteBn = "নবি (সাঃ) সকালে এটি পড়তেন — আহমাদ ১৫৩৬০।",
             source = "Musnad Ahmad 15360",
         ),
         dhikr(
@@ -1075,7 +1101,8 @@ object SeedData {
             pronunciationBn = "আসবাহতু উছনি আলাইকা হামদা, ওয়া আশহাদু আন লা ইলাহা ইল্লাল্লাহ",
             translation = "আমি সকালে উপনীত হলাম আপনার প্রশংসা করতে করতে, এবং সাক্ষ্য দিই আল্লাহ ছাড়া কোনো উপাস্য নেই — I have entered the morning praising You, and I bear witness that there is no god but Allah",
             lapTarget = 3,
-            note = "নাসাঈ, আস-সুনানুল কুবরা ১০৩৩১।",
+            note = "Sunan an-Nasa'i, al-Sunan al-Kubra 10331.",
+            noteBn = "নাসাঈ, আস-সুনানুল কুবরা ১০৩৩১।",
             source = "an-Nasa'i, as-Sunan al-Kubra 10331",
         ),
         dhikr(
@@ -1087,7 +1114,8 @@ object SeedData {
             pronunciationBn = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহি ওয়াল হামদু লিল্লাহ, লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, রব্বি আসআলুকা খাইরা মা ফি হাযাল ইয়াওমি ওয়া খাইরা মা বাদাহু, ওয়া আউযু বিকা মিন শাররি মা ফি হাযাল ইয়াওমি ওয়া শাররি মা বাদাহু, রব্বি আউযু বিকা মিনাল কাসালি ওয়া সূইল কিবার, রব্বি আউযু বিকা মিন আযাবিন ফিন নারি ওয়া আযাবিন ফিল কাবর",
             translation = "আমরা সকালে উপনীত হলাম আর রাজত্ব আল্লাহরই, সকল প্রশংসা আল্লাহর; আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; হে রব, আজকের ও পরবর্তী কল্যাণ চাই, আজকের ও পরবর্তী অনিষ্ট থেকে আশ্রয় চাই; হে রব, অলসতা ও বার্ধক্যের মন্দ থেকে আশ্রয় চাই; হে রব, জাহান্নাম ও কবরের আযাব থেকে আশ্রয় চাই — We have entered the morning and the dominion belongs to Allah… My Lord, I ask You for the good of this day and what follows it, and I seek refuge in You from the evil of this day and what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from the punishment of the Fire and the punishment of the grave",
             lapTarget = 1,
-            note = "নবি (সাঃ) সকালে এটি পড়তেন — সহীহ মুসলিম ২৭২৩।",
+            note = "The Prophet (saw) recited this in the morning — Sahih Muslim 2723.",
+            noteBn = "নবি (সাঃ) সকালে এটি পড়তেন — সহীহ মুসলিম ২৭২৩।",
             source = "Sahih Muslim 2723",
         ),
         dhikr(
@@ -1099,7 +1127,8 @@ object SeedData {
             pronunciationBn = "আসবাহনা ওয়া আসবাহাল মুলকু লিল্লাহি রব্বিল আলামিন, আল্লাহুম্মা ইন্নি আসআলুকা খাইরা হাযাল ইয়াওম, ফাতহাহু ওয়া নাসরাহু ওয়া নূরাহু ওয়া বারাকাতাহু ওয়া হুদাহু, ওয়া আউযু বিকা মিন শাররি মা ফিহি ওয়া শাররি মা বাদাহু",
             translation = "আমরা সকালে উপনীত হলাম আর রাজত্ব বিশ্বজগতের রব আল্লাহরই; হে আল্লাহ, আমি এই দিনের কল্যাণ চাই—এর বিজয়, সাহায্য, নূর, বরকত ও হেদায়েত; আর এর ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই — We have entered the morning and the dominion belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this day: its victory, its help, its light, its blessing and its guidance; and I seek refuge in You from the evil in it and the evil after it",
             lapTarget = 1,
-            note = "আবু দাউদ ৫০৮৪।",
+            note = "Sunan Abi Dawud 5084.",
+            noteBn = "আবু দাউদ ৫০৮৪।",
             source = "Sunan Abi Dawud 5084",
         ),
         dhikr(
@@ -1111,7 +1140,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আসবাহতু উশহিদুকা, ওয়া উশহিদু হামালাতা আরশিকা ওয়া মালাইকাতাকা ওয়া জামিআ খালকিকা, আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
             translation = "হে আল্লাহ, আমি সকালে উপনীত হয়ে আপনাকে, আপনার আরশ বহনকারীদের, ফেরেশতাদের ও সকল সৃষ্টিকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন, এবং মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I have entered the morning calling You to witness, and calling the bearers of Your Throne, Your angels and all Your creation to witness, that You are Allah, none is worthy of worship but You alone, no partner have You, and that Muhammad is Your slave and Messenger",
             lapTarget = 4,
-            note = "যে সকাল বা সন্ধ্যায় এটি চারবার বলে, আল্লাহ তাকে জাহান্নাম থেকে মুক্ত করে দেন — আবু দাউদ ৫০৬৯।",
+            note = "Whoever says this four times morning or evening, Allah frees him from the Fire — Sunan Abi Dawud 5069.",
+            noteBn = "যে সকাল বা সন্ধ্যায় এটি চারবার বলে, আল্লাহ তাকে জাহান্নাম থেকে মুক্ত করে দেন — আবু দাউদ ৫০৬৯।",
             source = "Sunan Abi Dawud 5069",
         ),
         dhikr(
@@ -1123,7 +1153,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা বিকা আসবাহনা ওয়া বিকা আমসাইনা ওয়া বিকা নাহইয়া ওয়া বিকা নামুতু ওয়া ইলাইকান নুশূর",
             translation = "হে আল্লাহ, আপনার অনুগ্রহে আমরা সকালে উপনীত হলাম, আপনার অনুগ্রহে সন্ধ্যায়, আপনার অনুগ্রহে বাঁচি ও মরি, এবং আপনার কাছেই পুনরুত্থান — O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and to You is the resurrection",
             lapTarget = 1,
-            note = "নবি (সাঃ) সকালে এটি পড়তেন — তিরমিযি ৩৩৯১, আবু দাউদ ৫০৬৮।",
+            note = "The Prophet (saw) recited this in the morning — Jami at-Tirmidhi 3391, Sunan Abi Dawud 5068.",
+            noteBn = "নবি (সাঃ) সকালে এটি পড়তেন — তিরমিযি ৩৩৯১, আবু দাউদ ৫০৬৮।",
             source = "Jami at-Tirmidhi 3391; Sunan Abi Dawud 5068",
         ),
         dhikr(
@@ -1135,7 +1166,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা আফিনি ফি বাদানি, আল্লাহুম্মা আফিনি ফি সামই, আল্লাহুম্মা আফিনি ফি বাসারি, লা ইলাহা ইল্লা আনতা, আল্লাহুম্মা ইন্নি আউযু বিকা মিনাল কুফরি ওয়াল ফাকর, আল্লাহুম্মা ইন্নি আউযু বিকা মিন আযাবিল কাবর, লা ইলাহা ইল্লা আনতা",
             translation = "হে আল্লাহ, আমার শরীরে সুস্থতা দিন, আমার শ্রবণে সুস্থতা দিন, আমার দৃষ্টিতে সুস্থতা দিন; আপনি ছাড়া কোনো উপাস্য নেই; হে আল্লাহ, কুফর ও দারিদ্র্য থেকে আপনার আশ্রয় চাই; হে আল্লাহ, কবরের আযাব থেকে আপনার আশ্রয় চাই; আপনি ছাড়া কোনো উপাস্য নেই — O Allah, grant me health in my body. O Allah, grant me health in my hearing. O Allah, grant me health in my sight. There is no god but You. O Allah, I seek refuge in You from disbelief and poverty. O Allah, I seek refuge in You from the punishment of the grave. There is no god but You",
             lapTarget = 3,
-            note = "নবি (সাঃ) সকাল-সন্ধ্যায় এই দুআ ছাড়তেন না — আবু দাউদ ৫০৯০, আহমাদ ২০৪৩০।",
+            note = "The Prophet (saw) never left this dua morning or evening — Sunan Abi Dawud 5090, Ahmad 20430.",
+            noteBn = "নবি (সাঃ) সকাল-সন্ধ্যায় এই দুআ ছাড়তেন না — আবু দাউদ ৫০৯০, আহমাদ ২০৪৩০।",
             source = "Sunan Abi Dawud 5090; Musnad Ahmad 20430",
         ),
         dhikr(
@@ -1147,7 +1179,8 @@ object SeedData {
             pronunciationBn = "রাদিতু বিল্লাহি রব্বা, ওয়া বিল ইসলামি দিনা, ওয়া বিমুহাম্মাদিন সাল্লাল্লাহু আলাইহি ওয়া সাল্লামা নাবিয়্যা",
             translation = "আমি আল্লাহকে রব হিসেবে, ইসলামকে দ্বীন হিসেবে ও মুহাম্মাদ (সাঃ)-কে নবি হিসেবে পেয়ে সন্তুষ্ট — I am pleased with Allah as Lord, with Islam as religion and with Muhammad (peace be upon him) as Prophet",
             lapTarget = 3,
-            note = "যে সকাল-সন্ধ্যায় তিনবার এটি বলে, কিয়ামতের দিন আল্লাহ তাকে সন্তুষ্ট করা তাঁর দায়িত্বে নিয়ে নেন — আহমাদ ১৮৯৬৭, আবু দাউদ ৫০৭২, তিরমিযি ৩৩৮৯।",
+            note = "Whoever says this three times morning and evening, Allah takes it upon Himself to please him on the Day of Judgement — Ahmad 18967, Sunan Abi Dawud 5072, Jami at-Tirmidhi 3389.",
+            noteBn = "যে সকাল-সন্ধ্যায় তিনবার এটি বলে, কিয়ামতের দিন আল্লাহ তাকে সন্তুষ্ট করা তাঁর দায়িত্বে নিয়ে নেন — আহমাদ ১৮৯৬৭, আবু দাউদ ৫০৭২, তিরমিযি ৩৩৮৯।",
             source = "Musnad Ahmad 18967; Jami at-Tirmidhi 3389",
         ),
         dhikr(
@@ -1159,7 +1192,8 @@ object SeedData {
             pronunciationBn = "বিসমিল্লাহিল্লাযি লা ইয়াদুররু মাআসমিহি শাইউন ফিল আরদি ওয়া লা ফিস সামা, ওয়া হুয়াস সামিউল আলিম",
             translation = "সেই আল্লাহর নামে, যাঁর নামের সাথে আসমান-জমিনের কোনো কিছুই ক্ষতি করতে পারে না; তিনি সর্বশ্রোতা, সর্বজ্ঞ — In the name of Allah, with whose name nothing on earth or in the heaven can cause harm, and He is the All-Hearing, the All-Knowing",
             lapTarget = 3,
-            note = "যে সকাল-সন্ধ্যায় তিনবার এটি বলে, কোনো কিছুই তার ক্ষতি করতে পারে না — আবু দাউদ ৫০৮৮, তিরমিযি ৩৩৮৮, ইবনে মাজাহ ৩৮৬৯।",
+            note = "Whoever says this three times morning and evening, nothing can harm him — Sunan Abi Dawud 5088, Jami at-Tirmidhi 3388, Ibn Majah 3869.",
+            noteBn = "যে সকাল-সন্ধ্যায় তিনবার এটি বলে, কোনো কিছুই তার ক্ষতি করতে পারে না — আবু দাউদ ৫০৮৮, তিরমিযি ৩৩৮৮, ইবনে মাজাহ ৩৮৬৯।",
             source = "Sunan Abi Dawud 5088; Jami at-Tirmidhi 3388",
         ),
         dhikr(
@@ -1171,7 +1205,8 @@ object SeedData {
             pronunciationBn = "সুবহানাল্লাহ, ওয়াল হামদু লিল্লাহ, ওয়াল্লাহু আকবার",
             translation = "আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ সর্বমহান — Glory be to Allah, all praise is due to Allah, and Allah is the Greatest",
             lapTarget = 100,
-            note = "সকালে ১০০ বার তাসবিহ-তাহমিদ-তাকবির; সেদিন কেউ তার চেয়ে উত্তম আমল নিয়ে আসতে পারে না যে একই বা বেশি বলেছে — নাসাঈ, আস-সুনানুল কুবরা ১০৬৫৭।",
+            note = "100 tasbih-tahmid-takbir in the morning; no one that day can bring a better deed than one who said the same or more — Sunan an-Nasa'i, al-Sunan al-Kubra 10657.",
+            noteBn = "সকালে ১০০ বার তাসবিহ-তাহমিদ-তাকবির; সেদিন কেউ তার চেয়ে উত্তম আমল নিয়ে আসতে পারে না যে একই বা বেশি বলেছে — নাসাঈ, আস-সুনানুল কুবরা ১০৬৫৭।",
             source = "an-Nasa'i, as-Sunan al-Kubra 10657",
         ),
 
@@ -1192,7 +1227,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা মা আমসা বি মিন নিমাতিন আও বিআহাদিন মিন খালকিকা ফামিনকা ওয়াহদাকা লা শারিকা লাকা, ফালাকাল হামদু ওয়া লাকাশ শুকর",
             translation = "হে আল্লাহ, সন্ধ্যায় আমার বা আপনার কোনো সৃষ্টির কাছে যে নিয়ামত পৌঁছেছে তা কেবল আপনার কাছ থেকে, আপনার কোনো শরিক নেই; সকল প্রশংসা ও কৃতজ্ঞতা আপনারই — O Allah, whatever blessing has come to me or to any of Your creation this evening is from You alone, no partner have You; to You is all praise and all thanks",
             lapTarget = 1,
-            note = "যে সন্ধ্যায় এটি বলে সে রাতের শোকর আদায় করল — আবু দাউদ ৫০৭৩।",
+            note = "Whoever says this in the evening has given thanks for that night — Sunan Abi Dawud 5073.",
+            noteBn = "যে সন্ধ্যায় এটি বলে সে রাতের শোকর আদায় করল — আবু দাউদ ৫০৭৩।",
             source = "Sunan Abi Dawud 5073",
         ),
         dhikr(
@@ -1204,7 +1240,8 @@ object SeedData {
             pronunciationBn = "আমসাইনা আলা ফিতরাতিল ইসলাম, ওয়া আলা কালিমাতিল ইখলাস, ওয়া আলা দিনি নাবিয়্যিনা মুহাম্মাদ, ওয়া আলা মিল্লাতি আবিনা ইবরাহিমা হানিফাম মুসলিমাও ওয়া মা কানা মিনাল মুশরিকিন",
             translation = "আমরা সন্ধ্যায় উপনীত হলাম ইসলামের ফিতরাত, ইখলাসের কালিমা, আমাদের নবি মুহাম্মাদের দ্বীন ও আমাদের পিতা ইবরাহিমের মিল্লাতের উপর—যিনি একনিষ্ঠ মুসলিম ছিলেন, মুশরিকদের অন্তর্ভুক্ত ছিলেন না — We have entered the evening upon the natural way of Islam, the word of sincerity, the religion of our Prophet Muhammad, and the way of our father Ibrahim, upright and Muslim, and he was not of the polytheists",
             lapTarget = 1,
-            note = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — আহমাদ ১৫৩৬০, নাসাঈ।",
+            note = "The Prophet (saw) recited this in the evening — Ahmad 15360, an-Nasa'i.",
+            noteBn = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — আহমাদ ১৫৩৬০, নাসাঈ।",
             source = "Musnad Ahmad 15360",
         ),
         dhikr(
@@ -1216,7 +1253,8 @@ object SeedData {
             pronunciationBn = "আমসাইতু উছনি আলাইকা হামদা, ওয়া আশহাদু আন লা ইলাহা ইল্লাল্লাহ",
             translation = "আমি সন্ধ্যায় উপনীত হলাম আপনার প্রশংসা করতে করতে, এবং সাক্ষ্য দিই আল্লাহ ছাড়া কোনো উপাস্য নেই — I have entered the evening praising You, and I bear witness that there is no god but Allah",
             lapTarget = 3,
-            note = "নাসাঈ, আস-সুনানুল কুবরা ১০৪০৬।",
+            note = "Sunan an-Nasa'i, al-Sunan al-Kubra 10406.",
+            noteBn = "নাসাঈ, আস-সুনানুল কুবরা ১০৪০৬।",
             source = "an-Nasa'i, as-Sunan al-Kubra 10406",
         ),
         dhikr(
@@ -1228,7 +1266,8 @@ object SeedData {
             pronunciationBn = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহি ওয়াল হামদু লিল্লাহ, লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, রব্বি আসআলুকা খাইরা মা ফি হাযিহিল লাইলাতি ওয়া খাইরা মা বাদাহা, ওয়া আউযু বিকা মিন শাররি মা ফি হাযিহিল লাইলাতি ওয়া শাররি মা বাদাহা, রব্বি আউযু বিকা মিনাল কাসালি ওয়া সূইল কিবার, রব্বি আউযু বিকা মিন আযাবিন ফিন নারি ওয়া আযাবিন ফিল কাবর",
             translation = "আমরা সন্ধ্যায় উপনীত হলাম আর রাজত্ব আল্লাহরই, সকল প্রশংসা আল্লাহর; আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; হে রব, এই রাত ও পরবর্তীর কল্যাণ চাই, এই রাত ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই; হে রব, অলসতা ও বার্ধক্যের মন্দ থেকে আশ্রয় চাই; হে রব, জাহান্নাম ও কবরের আযাব থেকে আশ্রয় চাই — We have entered the evening and the dominion belongs to Allah… My Lord, I ask You for the good of this night and what follows it, and I seek refuge in You from the evil of this night and what follows it. My Lord, I seek refuge in You from laziness and the misery of old age. My Lord, I seek refuge in You from the punishment of the Fire and the punishment of the grave",
             lapTarget = 1,
-            note = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — সহীহ মুসলিম ২৭২৩।",
+            note = "The Prophet (saw) recited this in the evening — Sahih Muslim 2723.",
+            noteBn = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — সহীহ মুসলিম ২৭২৩।",
             source = "Sahih Muslim 2723",
         ),
         dhikr(
@@ -1240,7 +1279,8 @@ object SeedData {
             pronunciationBn = "আমসাইনা ওয়া আমসাল মুলকু লিল্লাহি রব্বিল আলামিন, আল্লাহুম্মা ইন্নি আসআলুকা খাইরা হাযিহিল লাইলাহ, ফাতহাহা ওয়া নাসরাহা ওয়া নূরাহা ওয়া বারাকাতাহা ওয়া হুদাহা, ওয়া আউযু বিকা মিন শাররি মা ফিহা ওয়া শাররি মা বাদাহা",
             translation = "আমরা সন্ধ্যায় উপনীত হলাম আর রাজত্ব বিশ্বজগতের রব আল্লাহরই; হে আল্লাহ, আমি এই রাতের কল্যাণ চাই—এর বিজয়, সাহায্য, নূর, বরকত ও হেদায়েত; আর এর ও পরবর্তীর অনিষ্ট থেকে আশ্রয় চাই — We have entered the evening and the dominion belongs to Allah, Lord of the worlds. O Allah, I ask You for the good of this night: its victory, its help, its light, its blessing and its guidance; and I seek refuge in You from the evil in it and the evil after it",
             lapTarget = 1,
-            note = "আবু দাউদ ৫০৮৪।",
+            note = "Sunan Abi Dawud 5084.",
+            noteBn = "আবু দাউদ ৫০৮৪।",
             source = "Sunan Abi Dawud 5084",
         ),
         dhikr(
@@ -1252,7 +1292,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আমসাইতু উশহিদুকা, ওয়া উশহিদু হামালাতা আরশিকা ওয়া মালাইকাতাকা ওয়া জামিআ খালকিকা, আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
             translation = "হে আল্লাহ, আমি সন্ধ্যায় উপনীত হয়ে আপনাকে, আপনার আরশ বহনকারীদের, ফেরেশতাদের ও সকল সৃষ্টিকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন, এবং মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I have entered the evening calling You to witness, and calling the bearers of Your Throne, Your angels and all Your creation to witness, that You are Allah, none is worthy of worship but You alone, no partner have You, and that Muhammad is Your slave and Messenger",
             lapTarget = 4,
-            note = "যে সকাল বা সন্ধ্যায় এটি চারবার বলে, আল্লাহ তাকে জাহান্নাম থেকে মুক্ত করে দেন — আবু দাউদ ৫০৬৯।",
+            note = "Whoever says this four times morning or evening, Allah frees him from the Fire — Sunan Abi Dawud 5069.",
+            noteBn = "যে সকাল বা সন্ধ্যায় এটি চারবার বলে, আল্লাহ তাকে জাহান্নাম থেকে মুক্ত করে দেন — আবু দাউদ ৫০৬৯।",
             source = "Sunan Abi Dawud 5069",
         ),
         dhikr(
@@ -1264,7 +1305,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা বিকা আমসাইনা ওয়া বিকা আসবাহনা ওয়া বিকা নাহইয়া ওয়া বিকা নামুতু ওয়া ইলাইকাল মাসীর",
             translation = "হে আল্লাহ, আপনার অনুগ্রহে আমরা সন্ধ্যায় উপনীত হলাম, আপনার অনুগ্রহে সকালে, আপনার অনুগ্রহে বাঁচি ও মরি, এবং আপনার কাছেই প্রত্যাবর্তন — O Allah, by You we enter the evening and by You we enter the morning, by You we live and by You we die, and to You is the return",
             lapTarget = 1,
-            note = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — তিরমিযি ৩৩৯১, আবু দাউদ ৫০৬৮।",
+            note = "The Prophet (saw) recited this in the evening — Jami at-Tirmidhi 3391, Sunan Abi Dawud 5068.",
+            noteBn = "নবি (সাঃ) সন্ধ্যায় এটি পড়তেন — তিরমিযি ৩৩৯১, আবু দাউদ ৫০৬৮।",
             source = "Jami at-Tirmidhi 3391; Sunan Abi Dawud 5068",
         ),
         dhikr(
@@ -1276,7 +1318,8 @@ object SeedData {
             pronunciationBn = "আউযু বিকালিমাতিল্লাহিত তাম্মাতি মিন শাররি মা খালাক",
             translation = "আমি আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় তাঁর সৃষ্টির অনিষ্ট থেকে আশ্রয় চাই — I seek refuge in Allah's perfect words from the evil of what He has created",
             lapTarget = 3,
-            note = "যে সন্ধ্যায় তিনবার এটি বলে, সে রাতে কোনো বিষ বা পোকা তার ক্ষতি করবে না — তিরমিযি ৩৬০৪, ইবনে হিব্বান ১০২১।",
+            note = "Whoever says this three times in the evening, no poison or insect will harm him that night — Jami at-Tirmidhi 3604, Ibn Hibban 1021.",
+            noteBn = "যে সন্ধ্যায় তিনবার এটি বলে, সে রাতে কোনো বিষ বা পোকা তার ক্ষতি করবে না — তিরমিযি ৩৬০৪, ইবনে হিব্বান ১০২১।",
             source = "Jami at-Tirmidhi 3604",
         ),
 
@@ -1298,7 +1341,8 @@ object SeedData {
             pronunciationBn = "আমানার রাসূলু বিমা উনযিলা ইলাইহি মির রব্বিহি ওয়াল মুমিনূন, কুল্লুন আমানা বিল্লাহি ওয়া মালাইকাতিহি ওয়া কুতুবিহি ওয়া রুসুলিহ, লা নুফাররিকু বাইনা আহাদিম মির রুসুলিহ, ওয়া কালু সামিনা ওয়া আতানা, গুফরানাকা রব্বানা ওয়া ইলাইকাল মাসীর ۞ লা ইউকাল্লিফুল্লাহু নাফসান ইল্লা উসআহা, লাহা মা কাসাবাত ওয়া আলাইহা মাকতাসাবাত, রব্বানা লা তুআখিযনা ইন নাসীনা আও আখতানা, রব্বানা ওয়া লা তাহমিল আলাইনা ইসরান কামা হামালতাহু আলাল্লাযিনা মিন কাবলিনা, রব্বানা ওয়া লা তুহাম্মিলনা মা লা তাকাতা লানা বিহ, ওয়াফু আন্না, ওয়াগফির লানা, ওয়ারহামনা, আনতা মাওলানা ফানসুরনা আলাল কাওমিল কাফিরীন",
             translation = "সূরা আল-বাকারার শেষ দুই আয়াত (২৮৫-২৮৬): রসূল তার প্রতিপালকের পক্ষ হতে যা তার প্রতি অবতীর্ণ হয়েছে তাতে ঈমান এনেছে এবং মু’মিনগণও। তারা সবাই আল্লাহ, তাঁর ফেরেশতা, তাঁর কিতাবসমূহ ও রসূলগণের উপর ঈমান এনেছে; (তারা বলে) ‘আমরা রসূলগণের মধ্যে কারও ব্যাপারে তারতম্য করি না’, এবং বলে ‘আমরা শুনেছি ও মেনে নিয়েছি; হে আমাদের প্রতিপালক, আমাদের ক্ষমা কর, আর প্রত্যাবর্তন তোমারই দিকে।’ আল্লাহ কারও উপর সাধ্যের অতিরিক্ত কিছু আরোপ করেন না; সে যা ভালো করেছে তার ফল সে পাবে এবং যা মন্দ করেছে তার ফল সে-ই ভোগ করবে। হে আমাদের প্রতিপালক, আমরা যদি ভুলে যাই কিংবা ভুল করি তবে আমাদের পাকড়াও করো না; হে আমাদের প্রতিপালক, আমাদের আগের লোকদের উপর যেমন গুরুভার অর্পণ করেছিলে আমাদের উপর তেমন ভার অর্পণ করো না; হে আমাদের প্রতিপালক, যে ভার বহনের ক্ষমতা আমাদের নেই তা আমাদের উপর চাপিয়ে দিও না; আমাদের রেহাই দাও, আমাদের ক্ষমা কর, আমাদের প্রতি দয়া কর; তুমিই আমাদের অভিভাবক, কাজেই কাফির সম্প্রদায়ের বিরুদ্ধে আমাদের বিজয়ী কর — The Messenger has believed in what was revealed to him from his Lord, and so have the believers. All of them have believed in Allah, His angels, His books and His messengers, saying, \"We make no distinction between any of His messengers.\" And they say, \"We hear and we obey. We seek Your forgiveness, our Lord, and to You is the final destination.\" Allah does not burden a soul beyond its capacity. It will have the good it has gained and bear the evil it has earned. \"Our Lord, do not take us to task if we forget or err. Our Lord, do not lay upon us a burden like that which You laid upon those before us. Our Lord, do not burden us with that which we have no ability to bear. Pardon us, forgive us and have mercy upon us. You are our Protector, so give us victory over the disbelieving people.\"",
             lapTarget = 1,
-            note = "রাতে যে এই দুই আয়াত পড়ে তা তার জন্য যথেষ্ট হয় — সহীহ বুখারি ৫০০৯, মুসলিম ৮০৮।",
+            note = "Whoever recites these two verses at night, they are sufficient for him — Sahih al-Bukhari 5009, Sahih Muslim 808.",
+            noteBn = "রাতে যে এই দুই আয়াত পড়ে তা তার জন্য যথেষ্ট হয় — সহীহ বুখারি ৫০০৯, মুসলিম ৮০৮।",
             source = "Sahih al-Bukhari 5009; Sahih Muslim 808",
         ),
         dhikr(
@@ -1310,7 +1354,8 @@ object SeedData {
             pronunciationBn = "কুল ইয়া আইয়ুহাল কাফিরূন, লা আবুদু মা তাবুদূন, ওয়া লা আনতুম আবিদূনা মা আবুদ, ওয়া লা আনা আবিদুম মা আবাত্তুম, ওয়া লা আনতুম আবিদূনা মা আবুদ, লাকুম দিনুকুম ওয়া লিয়া দীন",
             translation = "বলো, হে কাফিরগণ, আমি তা ইবাদত করি না যা তোমরা ইবাদত করো… তোমাদের দ্বীন তোমাদের, আমার দ্বীন আমার — Say: O disbelievers, I do not worship what you worship… To you your religion, and to me mine",
             lapTarget = 1,
-            note = "শোয়ার সময় পড়লে শিরক থেকে মুক্তি — তিরমিযি ৩৪০৩, আবু দাউদ ৫০৫৫ (হাসান)।",
+            note = "Reciting it at bedtime frees one from shirk — Jami at-Tirmidhi 3403, Sunan Abi Dawud 5055 (hasan).",
+            noteBn = "শোয়ার সময় পড়লে শিরক থেকে মুক্তি — তিরমিযি ৩৪০৩, আবু দাউদ ৫০৫৫ (হাসান)।",
             source = "Jami at-Tirmidhi 3403; Sunan Abi Dawud 5055",
         ),
         dhikr(
@@ -1322,7 +1367,8 @@ object SeedData {
             pronunciationBn = "বিসমিকা রব্বি ওয়াদাতু জামবি, ওয়া বিকা আরফাউহু, ইন আমসাকতা নাফসি ফারহামহা, ওয়া ইন আরসালতাহা ফাহফাযহা বিমা তাহফাযু বিহি ইবাদাকাস সালিহীন",
             translation = "হে আমার রব, আপনার নামে আমি পাশ রাখলাম, আপনার নামেই তা তুলব; আমার প্রাণ যদি আটকে রাখেন তবে দয়া করুন, ছেড়ে দিলে যেভাবে সৎ বান্দাদের রক্ষা করেন সেভাবে রক্ষা করুন — In Your name, my Lord, I lay down my side, and by You I raise it. If You take my soul, have mercy on it; if You release it, protect it as You protect Your righteous servants",
             lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার সময় ডান হাত গালের নিচে রেখে এটি পড়তেন — সহীহ বুখারি ৬৩২০, মুসলিম ২৭১৪।",
+            note = "The Prophet (saw) recited this at bedtime with his right hand under his cheek — Sahih al-Bukhari 6320, Sahih Muslim 2714.",
+            noteBn = "নবি (সাঃ) শোয়ার সময় ডান হাত গালের নিচে রেখে এটি পড়তেন — সহীহ বুখারি ৬৩২০, মুসলিম ২৭১৪।",
             source = "Sahih al-Bukhari 6320; Sahih Muslim 2714",
         ),
         dhikr(
@@ -1334,7 +1380,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা কিনি আযাবাকা ইয়াওমা তাবআছু ইবাদাকা",
             translation = "হে আল্লাহ, যেদিন আপনি আপনার বান্দাদের পুনরুত্থিত করবেন সেদিন আপনার শাস্তি থেকে আমাকে রক্ষা করুন — O Allah, protect me from Your punishment on the Day You resurrect Your servants",
             lapTarget = 3,
-            note = "নবি (সাঃ) ঘুমানোর সময় ডান হাত গালের নিচে রেখে তিনবার পড়তেন — আবু দাউদ ৫০৪৫, তিরমিযি ৩৩৯৮।",
+            note = "The Prophet (saw) recited this three times at bedtime with his right hand under his cheek — Sunan Abi Dawud 5045, Jami at-Tirmidhi 3398.",
+            noteBn = "নবি (সাঃ) ঘুমানোর সময় ডান হাত গালের নিচে রেখে তিনবার পড়তেন — আবু দাউদ ৫০৪৫, তিরমিযি ৩৩৯৮।",
             source = "Sunan Abi Dawud 5045; Jami at-Tirmidhi 3398",
         ),
         dhikr(
@@ -1346,7 +1393,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি আতআমানা ওয়া সাকানা, ওয়া কাফানা, ওয়া আওয়ানা, ফাকাম মিম্মান লা কাফিয়া লাহু ওয়া লা মুওয়িয়া",
             translation = "সকল প্রশংসা আল্লাহর, যিনি আমাদের খাওয়ালেন, পান করালেন, যথেষ্ট হলেন ও আশ্রয় দিলেন; অথচ কত মানুষের যথেষ্টকারী ও আশ্রয়দাতা কেউ নেই — All praise is for Allah who fed us and gave us drink, sufficed us and sheltered us; how many are there with none to suffice or shelter them",
             lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার সময় এটি পড়তেন — সহীহ মুসলিম ২৭১৫।",
+            note = "The Prophet (saw) recited this at bedtime — Sahih Muslim 2715.",
+            noteBn = "নবি (সাঃ) শোয়ার সময় এটি পড়তেন — সহীহ মুসলিম ২৭১৫।",
             source = "Sahih Muslim 2715",
         ),
         dhikr(
@@ -1358,7 +1406,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা রব্বাস সামাওয়াতি ওয়া রব্বাল আরদি ওয়া রব্বাল আরশিল আযীম, রব্বানা ওয়া রব্বা কুল্লি শাইইন, ফালিকাল হাব্বি ওয়ান নাওয়া, ওয়া মুনযিলাত তাওরাতি ওয়াল ইনজিলি ওয়াল ফুরকান, আউযু বিকা মিন শাররি কুল্লি শাইইন আনতা আখিযুম বিনাসিয়াতিহি, আল্লাহুম্মা আনতাল আউওয়ালু ফালাইসা কাবলাকা শাই, ওয়া আনতাল আখিরু ফালাইসা বাদাকা শাই, ওয়া আনতায যাহিরু ফালাইসা ফাওকাকা শাই, ওয়া আনতাল বাতিনু ফালাইসা দূনাকা শাই, ইকদি আন্নাদ দাইনা ওয়া আগনিনা মিনাল ফাকর",
             translation = "হে আল্লাহ, আসমান-জমিন ও মহান আরশের রব, আমাদের রব ও সবকিছুর রব, বীজ ও আঁটি বিদারণকারী, তাওরাত-ইনজিল-ফুরকান অবতীর্ণকারী; আপনি যার কপাল ধরে আছেন তার অনিষ্ট থেকে আশ্রয় চাই; আপনি প্রথম, আপনার আগে কিছু নেই; আপনি শেষ, আপনার পরে কিছু নেই; আপনি প্রকাশ্য, আপনার ওপরে কিছু নেই; আপনি গোপন, আপনার চেয়ে নিকটবর্তী কিছু নেই; আমাদের ঋণ পরিশোধ করে দিন ও দারিদ্র্য থেকে অভাবমুক্ত করুন — O Allah, Lord of the heavens and the earth and the Mighty Throne… I seek refuge in You from the evil of everything You seize by the forelock… settle our debt for us and free us from poverty",
             lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার সময় এটি পড়তে বলতেন — সহীহ মুসলিম ২৭১৩।",
+            note = "The Prophet (saw) told others to recite this at bedtime — Sahih Muslim 2713.",
+            noteBn = "নবি (সাঃ) শোয়ার সময় এটি পড়তে বলতেন — সহীহ মুসলিম ২৭১৩।",
             source = "Sahih Muslim 2713",
         ),
         dhikr(
@@ -1370,7 +1419,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আউযু বিওয়াজহিকাল কারীম, ওয়া কালিমাতিকাত তাম্মাতি মিন শাররি মা আনতা আখিযুম বিনাসিয়াতিহি, আল্লাহুম্মা আনতা তাকশিফুল মাগরামা ওয়াল মাছাম, আল্লাহুম্মা লা ইউহযামু জুনদুকা, ওয়া লা ইউখলাফু ওয়াদুকা, ওয়া লা ইয়ানফাউ যাল জাদ্দি মিনকাল জাদ্দু, সুবহানাকা ওয়া বিহামদিকা",
             translation = "হে আল্লাহ, আপনার সম্মানিত সত্তা ও পূর্ণাঙ্গ বাণীসমূহের অসিলায় আপনি যার কপাল ধরে আছেন তার অনিষ্ট থেকে আশ্রয় চাই; হে আল্লাহ, আপনিই ঋণ ও পাপ দূর করেন; হে আল্লাহ, আপনার বাহিনী পরাজিত হয় না, আপনার প্রতিশ্রুতি ভঙ্গ হয় না, সম্পদশালীর সম্পদ আপনার কাছে কাজে আসে না; আপনি পবিত্র ও প্রশংসিত — O Allah, I seek refuge in Your Noble Face and Your perfect words from the evil of what You seize by the forelock… Your host is not defeated, Your promise is not broken… Glory and praise be to You",
             lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার সময় এটি পড়তে শেখাতেন — আবু দাউদ ৫০৫২ (হাসান)।",
+            note = "The Prophet (saw) taught this to be recited at bedtime — Sunan Abi Dawud 5052 (hasan).",
+            noteBn = "নবি (সাঃ) শোয়ার সময় এটি পড়তে শেখাতেন — আবু দাউদ ৫০৫২ (হাসান)।",
             source = "Sunan Abi Dawud 5052",
         ),
         dhikr(
@@ -1382,7 +1432,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নাকা খালাকতা নাফসি ওয়া আনতা তাওয়াফফাহা, লাকা মামাতুহা ওয়া মাহইয়াহা, ইন আহইয়াইতাহা ফাহফাযহা, ওয়া ইন আমাত্তাহা ফাগফির লাহা, আল্লাহুম্মা ইন্নি আসআলুকাল আফিয়াহ",
             translation = "হে আল্লাহ, আপনি আমার প্রাণ সৃষ্টি করেছেন, আপনিই তা কবজ করবেন; এর মৃত্যু ও জীবন আপনারই; একে জীবিত রাখলে রক্ষা করুন, মৃত্যু দিলে ক্ষমা করুন; হে আল্লাহ, আমি আপনার কাছে সুস্থতা চাই — O Allah, You created my soul and You take it back; to You is its death and its life. If You keep it alive, protect it; if You cause it to die, forgive it. O Allah, I ask You for wellbeing",
             lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার সময় এটি পড়তেন, ইবনে উমার (রাঃ) বর্ণিত — সহীহ মুসলিম ২৭১২, আহমাদ ৫৫০২।",
+            note = "The Prophet (saw) recited this at bedtime, narrated by Ibn Umar (ra) — Sahih Muslim 2712, Ahmad 5502.",
+            noteBn = "নবি (সাঃ) শোয়ার সময় এটি পড়তেন, ইবনে উমার (রাঃ) বর্ণিত — সহীহ মুসলিম ২৭১২, আহমাদ ৫৫০২।",
             source = "Sahih Muslim 2712; Musnad Ahmad 5502",
         ),
         dhikr(
@@ -1394,7 +1445,8 @@ object SeedData {
             pronunciationBn = "বিসমিল্লাহি ওয়াদাতু জামবি, আল্লাহুম্মাগফির লি যামবি, ওয়া আখসি শাইতানি, ওয়া ফুক্কা রিহানি, ওয়াজআলনি ফিন নাদিয়্যিল আলা",
             translation = "আল্লাহর নামে পাশ রাখলাম; হে আল্লাহ, আমার গুনাহ ক্ষমা করুন, আমার শয়তানকে বিতাড়িত করুন, আমার দায় মুক্ত করুন এবং আমাকে ঊর্ধ্বলোকের মজলিসে স্থান দিন — In the name of Allah I lay down my side. O Allah, forgive my sin, drive away my devil, release my pledge, and place me in the highest assembly",
             lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার সময় এটি পড়তে বলতেন — আবু দাউদ ৫০৫৪ (হাসান)।",
+            note = "The Prophet (saw) told others to recite this at bedtime — Sunan Abi Dawud 5054 (hasan).",
+            noteBn = "নবি (সাঃ) শোয়ার সময় এটি পড়তে বলতেন — আবু দাউদ ৫০৫৪ (হাসান)।",
             source = "Sunan Abi Dawud 5054",
         ),
         dhikr(
@@ -1406,7 +1458,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি কাফানি ওয়া আওয়ানি, ওয়াল হামদু লিল্লাহিল্লাযি আতআমানি ওয়া সাকানি, ওয়াল হামদু লিল্লাহিল্লাযি মান্না আলাইয়া ফাআফদালা, আল্লাহুম্মা ইন্নি আসআলুকা বিইযযাতিকা আন তুনাজ্জিয়ানি মিনান নার",
             translation = "সকল প্রশংসা আল্লাহর, যিনি আমাকে যথেষ্ট হলেন ও আশ্রয় দিলেন; সকল প্রশংসা আল্লাহর, যিনি খাওয়ালেন ও পান করালেন; সকল প্রশংসা আল্লাহর, যিনি অনুগ্রহ করে বেশি বেশি দিলেন; হে আল্লাহ, আপনার মর্যাদার অসিলায় আমাকে জাহান্নাম থেকে রক্ষা করুন — All praise is for Allah who sufficed me and sheltered me… O Allah, I ask You by Your Might to save me from the Fire",
             lapTarget = 1,
-            note = "নবি (সাঃ) শোয়ার সময় এটি পড়তেন — মুসলিম ২৭১৫ (দীর্ঘ বর্ণনা), হাকিম।",
+            note = "The Prophet (saw) recited this at bedtime — Muslim 2715 (longer narration), al-Hakim.",
+            noteBn = "নবি (সাঃ) শোয়ার সময় এটি পড়তেন — মুসলিম ২৭১৫ (দীর্ঘ বর্ণনা), হাকিম।",
             source = "Sahih Muslim 2715; al-Mustadrak (Hakim)",
         ),
         dhikr(
@@ -1418,7 +1471,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা বিসমিকা আমুতু ওয়া আহইয়া",
             translation = "হে আল্লাহ, আপনার নামেই আমি মরি ও বাঁচি — O Allah, in Your name I die and I live",
             lapTarget = 1,
-            note = "নবি (সাঃ) শয্যা গ্রহণের সময় এটি পড়তেন — সহীহ বুখারি ৬৩২৪।",
+            note = "The Prophet (saw) recited this when taking to bed — Sahih al-Bukhari 6324.",
+            noteBn = "নবি (সাঃ) শয্যা গ্রহণের সময় এটি পড়তেন — সহীহ বুখারি ৬৩২৪।",
             source = "Sahih al-Bukhari 6324",
         ),
         dhikr(
@@ -1430,7 +1484,8 @@ object SeedData {
             pronunciationBn = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, আলহামদু লিল্লাহি, ওয়া সুবহানাল্লাহি, ওয়া লা ইলাহা ইল্লাল্লাহু, ওয়াল্লাহু আকবার, ওয়া লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহ",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; সকল প্রশংসা আল্লাহর, আল্লাহ পবিত্র, আল্লাহ ছাড়া কোনো উপাস্য নেই, আল্লাহ সর্বমহান, আর আল্লাহ ছাড়া কোনো শক্তি-সামর্থ্য নেই — There is no god but Allah alone… praise be to Allah, glory be to Allah, there is no god but Allah, Allah is the Greatest, and there is no power nor strength except by Allah",
             lapTarget = 1,
-            note = "রাতে জেগে উঠে এটি পড়ে দুআ করলে দুআ কবুল হয়; উঠে অজু করে সালাত পড়লে সালাত কবুল হয় — সহীহ বুখারি ১১৫৪।",
+            note = "Whoever wakes at night and recites this and makes dua, the dua is accepted; if he then performs wudu and prays, the prayer is accepted — Sahih al-Bukhari 1154.",
+            noteBn = "রাতে জেগে উঠে এটি পড়ে দুআ করলে দুআ কবুল হয়; উঠে অজু করে সালাত পড়লে সালাত কবুল হয় — সহীহ বুখারি ১১৫৪।",
             source = "Sahih al-Bukhari 1154",
         ),
         dhikr(
@@ -1442,7 +1497,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা আসলামতু নাফসি ইলাইকা, ওয়া ফাওয়াদতু আমরি ইলাইকা, ওয়া ওয়াজজাহতু ওয়াজহি ইলাইকা, ওয়া আলজাতু যাহরি ইলাইকা, রাগবাতান ওয়া রাহবাতান ইলাইকা, লা মালজাআ ওয়া লা মানজা মিনকা ইল্লা ইলাইকা, আমানতু বিকিতাবিকাল্লাযি আনযালতা ওয়া বিনাবিয়্যিকাল্লাযি আরসালতা",
             translation = "হে আল্লাহ, আমি আমার প্রাণ আপনার কাছে সঁপে দিলাম, আমার কাজ আপনার কাছে সোপর্দ করলাম, আমার মুখ আপনার দিকে ফেরালাম, আমার পিঠ আপনার আশ্রয়ে দিলাম—আপনার প্রতি আগ্রহ ও ভয়ে; আপনার কাছ থেকে আপনি ছাড়া কোনো আশ্রয় বা মুক্তি নেই; আপনার অবতীর্ণ কিতাব ও প্রেরিত নবিতে ঈমান আনলাম — O Allah, I submit myself to You, entrust my affair to You, turn my face to You and lay myself down relying on You, out of hope and fear of You. There is no refuge or escape from You except to You. I believe in Your Book which You revealed and Your Prophet whom You sent",
             lapTarget = 1,
-            note = "শোয়ার সময় অজু করে ডান কাত হয়ে এটি পড়ে মারা গেলে ফিতরাতের উপর মৃত্যু; এটি যেন রাতের শেষ কথা হয় — সহীহ বুখারি ৬৩১১, মুসলিম ২৭১০।",
+            note = "Whoever performs wudu, lies on his right side and recites this at bedtime and dies, dies upon the natural faith (fitrah); let it be the last thing he says at night — Sahih al-Bukhari 6311, Muslim 2710.",
+            noteBn = "শোয়ার সময় অজু করে ডান কাত হয়ে এটি পড়ে মারা গেলে ফিতরাতের উপর মৃত্যু; এটি যেন রাতের শেষ কথা হয় — সহীহ বুখারি ৬৩১১, মুসলিম ২৭১০।",
             source = "Sahih al-Bukhari 6311; Sahih Muslim 2710",
         ),
 
@@ -1462,7 +1518,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি লাম ইয়াত্তাখিয ওয়ালাদাও ওয়া লাম ইয়াকুল্লাহু শারিকুন ফিল মুলকি ওয়া লাম ইয়াকুল্লাহু ওয়ালিয়্যুম মিনায যুল্লি ওয়া কাব্বিরহু তাকবীরা",
             translation = "সকল প্রশংসা আল্লাহর, যিনি সন্তান গ্রহণ করেননি, রাজত্বে তাঁর কোনো শরিক নেই, এবং দুর্বলতাবশত তাঁর কোনো অভিভাবকের প্রয়োজন নেই — All praise is for Allah who has not taken a son, has no partner in His dominion, and needs no protector out of weakness",
             lapTarget = 1,
-            note = "কুরআন ১৭:১১১ — সূরা আল-ইসরার শেষ আয়াত (আয়াতুল ইযয)।",
+            note = "Quran 17:111 — the last verse of Surah al-Isra (Ayat al-Izz).",
+            noteBn = "কুরআন ১৭:১১১ — সূরা আল-ইসরার শেষ আয়াত (আয়াতুল ইযয)।",
             source = "Quran 17:111",
         ),
         dhikr(
@@ -1474,7 +1531,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি খালাকাস সামাওয়াতি ওয়াল আরদা ওয়া জাআলায যুলুমাতি ওয়ান নূর",
             translation = "সকল প্রশংসা আল্লাহর, যিনি আসমান ও জমিন সৃষ্টি করেছেন এবং অন্ধকার ও আলো সৃষ্টি করেছেন — All praise is for Allah who created the heavens and the earth and made the darkness and the light",
             lapTarget = 1,
-            note = "কুরআন ৬:১ — সূরা আল-আনআমের প্রথম আয়াত।",
+            note = "Quran 6:1 — the opening verse of Surah al-An'am.",
+            noteBn = "কুরআন ৬:১ — সূরা আল-আনআমের প্রথম আয়াত।",
             source = "Quran 6:1",
         ),
         dhikr(
@@ -1486,7 +1544,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি আনযালা আলা আবদিহিল কিতাবা ওয়া লাম ইয়াজআল লাহু ইওয়াজা",
             translation = "সকল প্রশংসা আল্লাহর, যিনি তাঁর বান্দার প্রতি কিতাব নাযিল করেছেন এবং তাতে কোনো বক্রতা রাখেননি — All praise is for Allah who sent down the Book to His servant and placed no crookedness in it",
             lapTarget = 1,
-            note = "কুরআন ১৮:১ — সূরা আল-কাহফের প্রথম আয়াত।",
+            note = "Quran 18:1 — the opening verse of Surah al-Kahf.",
+            noteBn = "কুরআন ১৮:১ — সূরা আল-কাহফের প্রথম আয়াত।",
             source = "Quran 18:1",
         ),
         dhikr(
@@ -1498,7 +1557,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি লাহু মা ফিস সামাওয়াতি ওয়া মা ফিল আরদি ওয়া লাহুল হামদু ফিল আখিরাতি ওয়া হুয়াল হাকীমুল খাবীর",
             translation = "সকল প্রশংসা আল্লাহর, আসমান ও জমিনে যা কিছু আছে সব তাঁরই, আখিরাতেও সকল প্রশংসা তাঁরই; তিনি প্রজ্ঞাময়, সম্যক অবগত — All praise is for Allah, to whom belongs whatever is in the heavens and the earth, and for Him is all praise in the Hereafter; He is the All-Wise, the All-Aware",
             lapTarget = 1,
-            note = "কুরআন ৩৪:১ — সূরা সাবার প্রথম আয়াত।",
+            note = "Quran 34:1 — the opening verse of Surah Saba.",
+            noteBn = "কুরআন ৩৪:১ — সূরা সাবার প্রথম আয়াত।",
             source = "Quran 34:1",
         ),
         dhikr(
@@ -1510,7 +1570,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহি ফাতিরিস সামাওয়াতি ওয়াল আরদি জাইলিল মালাইকাতি রুসুলান উলি আজনিহাতিম মাছনা ওয়া ছুলাছা ওয়া রুবাআ, ইয়াযীদু ফিল খালকি মা ইয়াশা, ইন্নাল্লাহা আলা কুল্লি শাইইন কাদীর",
             translation = "সকল প্রশংসা আল্লাহর, আসমান-জমিনের স্রষ্টা, যিনি ফেরেশতাদের দুই-তিন-চার ডানাবিশিষ্ট বার্তাবাহক বানিয়েছেন; তিনি সৃষ্টিতে যা ইচ্ছা বৃদ্ধি করেন; নিশ্চয়ই আল্লাহ সর্বশক্তিমান — All praise is for Allah, Originator of the heavens and the earth, who made the angels messengers with wings, in twos, threes and fours; He adds to creation what He wills; indeed Allah is All-Powerful over everything",
             lapTarget = 1,
-            note = "কুরআন ৩৫:১ — সূরা ফাতিরের প্রথম আয়াত।",
+            note = "Quran 35:1 — the opening verse of Surah Fatir.",
+            noteBn = "কুরআন ৩৫:১ — সূরা ফাতিরের প্রথম আয়াত।",
             source = "Quran 35:1",
         ),
         dhikr(
@@ -1522,7 +1583,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা লাকাল হামদু আনতা নূরুস সামাওয়াতি ওয়াল আরদি ওয়া মান ফিহিন্না, ওয়া লাকাল হামদু আনতা কাইয়িমুস সামাওয়াতি ওয়াল আরদি ওয়া মান ফিহিন্না, ওয়া লাকাল হামদু আনতাল হাক্কু, ওয়া ওয়াদুকাল হাক্কু, ওয়া কাওলুকাল হাক্কু, ওয়া লিকাউকাল হাক্কু, ওয়াল জান্নাতু হাক্কু, ওয়ান নারু হাক্কু, ওয়াস সাআতু হাক্কু, ওয়ান নাবিয়্যূনা হাক্কু, ওয়া মুহাম্মাদুন হাক্কু, আল্লাহুম্মা লাকা আসলামতু, ওয়া আলাইকা তাওয়াক্কালতু, ওয়া বিকা আমানতু, ওয়া ইলাইকা আনাবতু, ওয়া বিকা খাসামতু, ওয়া ইলাইকা হাকামতু",
             translation = "হে আল্লাহ, সকল প্রশংসা আপনার; আপনি আসমান-জমিন ও এর মধ্যকার সবকিছুর নূর; সকল প্রশংসা আপনার; আপনি এদের ধারক; সকল প্রশংসা আপনার; আপনিই সত্য, আপনার প্রতিশ্রুতি সত্য, আপনার বাণী সত্য, আপনার সাক্ষাৎ সত্য, জান্নাত সত্য, জাহান্নাম সত্য, কিয়ামত সত্য, নবিগণ সত্য, মুহাম্মাদ (সাঃ) সত্য; হে আল্লাহ, আপনার কাছে আত্মসমর্পণ করলাম, আপনার ওপর ভরসা করলাম, আপনাতে ঈমান আনলাম, আপনার দিকে প্রত্যাবর্তন করলাম, আপনার সাহায্যে বিতর্ক করলাম, আপনার কাছে বিচার চাইলাম — O Allah, to You is all praise; You are the Light of the heavens and the earth and all therein… You are the Truth, Your promise is true… Paradise is true, the Fire is true, the Hour is true, the Prophets are true and Muhammad is true. O Allah, to You I submit, in You I trust, in You I believe, to You I turn, by You I contend, and to You I refer judgement",
             lapTarget = 1,
-            note = "নবি (সাঃ) তাহাজ্জুদে দাঁড়িয়ে এই দুআ দিয়ে শুরু করতেন — সহীহ বুখারি ৬৩১৭, মুসলিম ৭৬৯।",
+            note = "The Prophet (saw) began Tahajjud by standing and opening with this dua — Sahih al-Bukhari 6317, Muslim 769.",
+            noteBn = "নবি (সাঃ) তাহাজ্জুদে দাঁড়িয়ে এই দুআ দিয়ে শুরু করতেন — সহীহ বুখারি ৬৩১৭, মুসলিম ৭৬৯।",
             source = "Sahih al-Bukhari 6317; Sahih Muslim 769",
         ),
         dhikr(
@@ -1534,7 +1596,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা লাকাল হামদু কুল্লুহু, আল্লাহুম্মা লা কাবিদা লিমা বাসাত্তা, ওয়া লা বাসিতা লিমা কাবাদতা, ওয়া লা হাদিয়া লিমান আদলালতা, ওয়া লা মুদিল্লা লিমান হাদাইতা, ওয়া লা মুতিয়া লিমা মানাতা, ওয়া লা মানিআ লিমা আতাইতা, ওয়া লা মুকাররিবা লিমা বাআদতা, ওয়া লা মুবাইদা লিমা কাররাবতা",
             translation = "হে আল্লাহ, সকল প্রশংসা আপনার; আপনি যা প্রসারিত করেন তা কেউ সংকুচিত করতে পারে না, আপনি যা সংকুচিত করেন তা কেউ প্রসারিত করতে পারে না; আপনি যাকে পথভ্রষ্ট করেন তাকে কেউ পথ দেখাতে পারে না, আপনি যাকে হেদায়েত দেন তাকে কেউ বিভ্রান্ত করতে পারে না; আপনি যা আটকে রাখেন তা কেউ দিতে পারে না, আপনি যা দেন তা কেউ আটকাতে পারে না; আপনি যা দূরে রাখেন তা কেউ নিকটবর্তী করতে পারে না, আপনি যা নিকটবর্তী করেন তা কেউ দূরে রাখতে পারে না — O Allah, to You is all praise. None can withhold what You extend, none can extend what You withhold; none can guide whom You leave astray, none can misguide whom You guide; none can give what You withhold, none can withhold what You give; none can bring near what You put far, none can put far what You bring near",
             lapTarget = 1,
-            note = "উহুদের যুদ্ধের পর নবি (সাঃ) এই দুআ করেছিলেন — আহমাদ ১৫০৬৬।",
+            note = "The Prophet (saw) made this dua after the Battle of Uhud — Ahmad 15066.",
+            noteBn = "উহুদের যুদ্ধের পর নবি (সাঃ) এই দুআ করেছিলেন — আহমাদ ১৫০৬৬।",
             source = "Musnad Ahmad 15066",
         ),
         dhikr(
@@ -1546,7 +1609,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা রব্বানা লাকাল হামদু মিলআস সামাওয়াতি ওয়া মিলআল আরদি ওয়া মিলআ মা শিতা মিন শাইইন বাদু, আহলাছ ছানাই ওয়াল মাজদি, আহাক্কু মা কালাল আবদু ওয়া কুল্লুনা লাকা আবদুন, লা মানিআ লিমা আতাইতা ওয়া লা মুতিয়া লিমা মানাতা ওয়া লা ইয়ানফাউ যাল জাদ্দি মিনকাল জাদ্দু",
             translation = "হে আল্লাহ, হে আমাদের রব, সকল প্রশংসা আপনার—আসমান-জমিন ভরে এবং এরপর আপনি যা চান তা ভরে; আপনি প্রশংসা ও মহিমার যোগ্য; বান্দা যা বলে তার মধ্যে সবচেয়ে সত্য—আর আমরা সবাই আপনার বান্দা—আপনি যা দেন তা কেউ আটকাতে পারে না, আপনি যা আটকান তা কেউ দিতে পারে না, সম্পদশালীর সম্পদ আপনার কাছে কাজে আসে না — O Allah, our Lord, to You is all praise, filling the heavens and the earth and filling whatever You wish beyond. You are worthy of praise and glory. The truest thing the servant has said — and we are all Your servants — none can withhold what You give and none can give what You withhold, and the wealth of the wealthy avails not against You",
             lapTarget = 1,
-            note = "রুকু থেকে উঠে নবি (সাঃ) এই প্রশংসা পড়তেন — আবু দাউদ ৮৪৭, মুসলিম ৪৭৭।",
+            note = "The Prophet (saw) recited this praise on rising from the bowing (ruku) — Sunan Abi Dawud 847, Muslim 477.",
+            noteBn = "রুকু থেকে উঠে নবি (সাঃ) এই প্রশংসা পড়তেন — আবু দাউদ ৮৪৭, মুসলিম ৪৭৭।",
             source = "Sunan Abi Dawud 847; Sahih Muslim 477",
         ),
         dhikr(
@@ -1558,7 +1622,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহি রব্বিল আলামিন, আর রাহমানির রাহীম, মালিকি ইয়াওমিদ দীন, লা ইলাহা ইল্লা আনতা তাফআলু মা তুরীদ, আল্লাহুম্মা আনতাল্লাহু লা ইলাহা ইল্লা আনতা, আনতাল গানিয়্যু ওয়া নাহনুল ফুকারা",
             translation = "সকল প্রশংসা আল্লাহর, বিশ্বজগতের রব, পরম করুণাময়, পরম দয়ালু, বিচার দিনের মালিক; আপনি ছাড়া কোনো উপাস্য নেই, আপনি যা চান তা করেন; হে আল্লাহ, আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই; আপনি অভাবমুক্ত, আমরা অভাবী — All praise is for Allah, Lord of the worlds, the Most Compassionate, the Most Merciful, Master of the Day of Judgement; there is no god but You, You do what You will. O Allah, You are Allah, there is no god but You; You are the Rich, and we are the poor",
             lapTarget = 1,
-            note = "ইবনে হিব্বান ৯৯১; আল্লাহর কাছে দুআর সময় প্রশংসার একটি রূপ।",
+            note = "Ibn Hibban 991; a form of praise used when making dua to Allah.",
+            noteBn = "ইবনে হিব্বান ৯৯১; আল্লাহর কাছে দুআর সময় প্রশংসার একটি রূপ।",
             source = "Sahih Ibn Hibban 991",
         ),
         dhikr(
@@ -1570,7 +1635,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহিল্লাযি ইউতিমু ওয়া লা ইউতআম, মান্না আলাইনা ফাহাদানা ওয়া আতআমানা ওয়া সাকানা, ওয়া কুল্লা বালাইন হাসানিন আবলানা, আলহামদু লিল্লাহি গাইরা মুওয়াদ্দাইন ওয়া লা মুকাফাইন ওয়া লা মাকফুরিন ওয়া লা মুসতাগনান আনহু, আলহামদু লিল্লাহি রব্বিল আলামিন",
             translation = "সকল প্রশংসা আল্লাহর, যিনি খাওয়ান কিন্তু তাঁকে খাওয়ানো হয় না; তিনি আমাদের প্রতি অনুগ্রহ করেছেন—হেদায়েত দিয়েছেন, খাইয়েছেন, পান করিয়েছেন এবং প্রতিটি উত্তম পরীক্ষায় পরীক্ষা করেছেন; সকল প্রশংসা আল্লাহর—যে প্রশংসা কখনো শেষ হবে না, যার প্রতিদান দেওয়া যায় না, যা অস্বীকার করা যায় না, যা থেকে অমুখাপেক্ষী হওয়া যায় না — All praise is for Allah who feeds and is not fed; He favoured us, guided us, fed us and gave us drink, and tested us with every good trial. All praise is for Allah — a praise never bidden farewell, never repaid, never denied, never dispensed with. All praise is for Allah, Lord of the worlds",
             lapTarget = 1,
-            note = "নবি (সাঃ) খাওয়ার পর এই প্রশংসা করতেন — নাসাঈ, আস-সুনানুল কুবরা ১০০৬০, ইবনে হিব্বান ৫২১৯।",
+            note = "The Prophet (saw) gave this praise after eating — Sunan an-Nasa'i, al-Sunan al-Kubra 10060, Ibn Hibban 5219.",
+            noteBn = "নবি (সাঃ) খাওয়ার পর এই প্রশংসা করতেন — নাসাঈ, আস-সুনানুল কুবরা ১০০৬০, ইবনে হিব্বান ৫২১৯।",
             source = "an-Nasa'i, as-Sunan al-Kubra 10060; Sahih Ibn Hibban 5219",
         ),
         dhikr(
@@ -1582,7 +1648,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহি হামদান কাছীরান তাইয়্যিবান মুবারাকান ফিহি মুবারাকান আলাইহি, কামা ইউহিব্বু রব্বুনা ওয়া ইয়ারদা",
             translation = "সকল প্রশংসা আল্লাহর—প্রচুর, পবিত্র, বরকতময় প্রশংসা, যেভাবে আমাদের রব ভালোবাসেন ও সন্তুষ্ট হন — All praise is for Allah, praise abundant, pure and blessed, as our Lord loves and is pleased with",
             lapTarget = 1,
-            note = "এক সাহাবি রুকু থেকে উঠে এটি বলেছিলেন; নবি (সাঃ) দেখলেন ৩০+ ফেরেশতা এটি আগে লেখার প্রতিযোগিতা করছে — নাসাঈ ৯৩১, বুখারি ৭৯৯।",
+            note = "A companion said this on rising from ruku; the Prophet (saw) saw more than 30 angels racing to record it first — an-Nasa'i 931, al-Bukhari 799.",
+            noteBn = "এক সাহাবি রুকু থেকে উঠে এটি বলেছিলেন; নবি (সাঃ) দেখলেন ৩০+ ফেরেশতা এটি আগে লেখার প্রতিযোগিতা করছে — নাসাঈ ৯৩১, বুখারি ৭৯৯।",
             source = "Sunan an-Nasa'i 931; Sahih al-Bukhari 799",
         ),
         dhikr(
@@ -1594,7 +1661,8 @@ object SeedData {
             pronunciationBn = "আলহামদু লিল্লাহি হামদান কাছীরান তাইয়্যিবান মুবারাকান ফিহি, কামা ইউহিব্বু রব্বুনা আন ইউহমাদা ওয়া ইয়ামবাগি লাহু",
             translation = "সকল প্রশংসা আল্লাহর—প্রচুর, পবিত্র, বরকতময় প্রশংসা, যেভাবে আমাদের রব প্রশংসিত হতে ভালোবাসেন এবং যা তাঁর জন্য উপযুক্ত — All praise is for Allah, praise abundant, pure and blessed, as our Lord loves to be praised and as befits Him",
             lapTarget = 1,
-            note = "উপরের দুআর আরেকটি বর্ণিত রূপ — নাসাঈ, আস-সুনানুল কুবরা ৭৭১৮, আহমাদ ১২৬১২।",
+            note = "Another narrated form of the dua above — Sunan an-Nasa'i, al-Sunan al-Kubra 7718, Ahmad 12612.",
+            noteBn = "উপরের দুআর আরেকটি বর্ণিত রূপ — নাসাঈ, আস-সুনানুল কুবরা ৭৭১৮, আহমাদ ১২৬১২।",
             source = "an-Nasa'i, as-Sunan al-Kubra 7718; Musnad Ahmad 12612",
         ),
         dhikr(
@@ -1606,7 +1674,8 @@ object SeedData {
             pronunciationBn = "সুবহানাল্লাহি আদাদা মা খালাক, ওয়া সুবহানাল্লাহি মিলআ মা খালাক, ওয়া সুবহানাল্লাহি আদাদা মা ফিল আরদি ওয়াস সামা, ওয়া সুবহানাল্লাহি মিলআ মা ফিল আরদি ওয়াস সামা, ওয়া সুবহানাল্লাহি আদাদা মা আহসা কিতাবুহু, ওয়া সুবহানাল্লাহি মিলআ মা আহসা কিতাবুহু, ওয়া সুবহানাল্লাহি আদাদা কুল্লি শাই, ওয়া সুবহানাল্লাহি মিলআ কুল্লি শাই, ওয়াল হামদু লিল্লাহি আদাদা মা খালাক, ওয়াল হামদু লিল্লাহি মিলআ মা খালাক, ওয়াল হামদু লিল্লাহি আদাদা মা ফিল আরদি ওয়াস সামা, ওয়াল হামদু লিল্লাহি মিলআ মা ফিল আরদি ওয়াস সামা, ওয়াল হামদু লিল্লাহি আদাদা মা আহসা কিতাবুহু, ওয়াল হামদু লিল্লাহি মিলআ মা আহসা কিতাবুহু, ওয়াল হামদু লিল্লাহি আদাদা কুল্লি শাই, ওয়াল হামদু লিল্লাহি মিলআ কুল্লি শাই",
             translation = "আল্লাহ পবিত্র—তাঁর সৃষ্টির সংখ্যা, তাঁর সৃষ্টির পূর্ণতা, আসমান-জমিনে যা আছে তার সংখ্যা ও পূর্ণতা, তাঁর কিতাব যা গণনা করেছে তার সংখ্যা ও পূর্ণতা, প্রতিটি জিনিসের সংখ্যা ও পূর্ণতা পরিমাণ; এবং সকল প্রশংসা আল্লাহর—একইভাবে — Glory be to Allah as much as His creation, as fills His creation, as what is in the earth and sky, as fills them, as His Book has recorded, as fills His Book, as everything, as fills everything; and all praise is for Allah — likewise",
             lapTarget = 1,
-            note = "সবচেয়ে উত্তম যিকরের একটি — আহমাদ ২২১৯৮, ইবনে হিব্বান ৮৩০।",
+            note = "One of the best forms of dhikr — Ahmad 22198, Ibn Hibban 830.",
+            noteBn = "সবচেয়ে উত্তম যিকরের একটি — আহমাদ ২২১৯৮, ইবনে হিব্বান ৮৩০।",
             source = "Musnad Ahmad 22198; Sahih Ibn Hibban 830",
         ),
         dhikr(
@@ -1618,7 +1687,8 @@ object SeedData {
             pronunciationBn = "সুবহানাকাল্লাহুম্মা ওয়া বিহামদিকা, ওয়া তাবারাকাসমুকা, ওয়া তাআলা জাদ্দুকা, ওয়া লা ইলাহা গাইরুকা",
             translation = "হে আল্লাহ, আপনি কতই না পবিত্র, সকল প্রশংসা আপনার; আপনার নাম বরকতময়, আপনার মর্যাদা সুউচ্চ, আপনি ছাড়া কোনো উপাস্য নেই — How perfect are You O Allah, and all praise is Yours; blessed is Your name, exalted is Your majesty, and there is no god but You",
             lapTarget = 1,
-            note = "সালাত শুরুর দুআ (দুআয়ে ইসতিফতাহ) — আবু দাউদ ৭৭৫, তিরমিযি ২৪৩।",
+            note = "The opening dua of prayer (Dua al-Istiftah) — Sunan Abi Dawud 775, Jami at-Tirmidhi 243.",
+            noteBn = "সালাত শুরুর দুআ (দুআয়ে ইসতিফতাহ) — আবু দাউদ ৭৭৫, তিরমিযি ২৪৩।",
             source = "Sunan Abi Dawud 775; Jami at-Tirmidhi 243",
         ),
         dhikr(
@@ -1630,7 +1700,8 @@ object SeedData {
             pronunciationBn = "সুবহানা যিল জাবারুতি ওয়াল মালাকুতি ওয়াল কিবরিয়াই ওয়াল আযামাহ",
             translation = "পবিত্র সেই সত্তা, যিনি পরাক্রম, রাজত্ব, গর্ব ও মহত্ত্বের অধিকারী — Glory be to the Owner of might, dominion, majesty and greatness",
             lapTarget = 1,
-            note = "নবি (সাঃ) রাতের সালাতের রুকু-সিজদায় এটি পড়তেন — আবু দাউদ ৮৭৩, নাসাঈ ১১৩২।",
+            note = "The Prophet (saw) recited this in the bowing and prostration of the night prayer — Sunan Abi Dawud 873, an-Nasa'i 1132.",
+            noteBn = "নবি (সাঃ) রাতের সালাতের রুকু-সিজদায় এটি পড়তেন — আবু দাউদ ৮৭৩, নাসাঈ ১১৩২।",
             source = "Sunan Abi Dawud 873; Sunan an-Nasa'i 1132",
         ),
         dhikr(
@@ -1642,7 +1713,8 @@ object SeedData {
             pronunciationBn = "সুব্বূহুন কুদ্দূসুন রব্বুল মালাইকাতি ওয়ার রূহ",
             translation = "পরম পবিত্র, পরম বরকতময়, ফেরেশতা ও রূহের (জিবরিলের) রব — Supremely Perfect, Most Pure, Lord of the angels and the Spirit",
             lapTarget = 1,
-            note = "নবি (সাঃ) রুকু ও সিজদায় এটি পড়তেন — সহীহ মুসলিম ৪৮৭।",
+            note = "The Prophet (saw) recited this in ruku and sujud — Sahih Muslim 487.",
+            noteBn = "নবি (সাঃ) রুকু ও সিজদায় এটি পড়তেন — সহীহ মুসলিম ৪৮৭।",
             source = "Sahih Muslim 487",
         ),
         dhikr(
@@ -1654,7 +1726,8 @@ object SeedData {
             pronunciationBn = "আল্লাহু আকবারু কাবীরা, ওয়াল হামদু লিল্লাহি কাছীরা, ওয়া সুবহানাল্লাহি বুকরাতাও ওয়া আসীলা",
             translation = "আল্লাহ প্রকৃতই সর্বমহান; সকল প্রশংসা আল্লাহর প্রচুর পরিমাণে; আল্লাহ পবিত্র সকাল-সন্ধ্যায় — Allah is truly the Greatest; abundant praise is for Allah; glory be to Allah morning and evening",
             lapTarget = 1,
-            note = "এক সাহাবি এটি বলায় নবি (সাঃ) বললেন এতে জান্নাতের দরজা খুলে যায় — সহীহ মুসলিম ৬০১।",
+            note = "When a companion said this, the Prophet (saw) said it opens the gates of Paradise — Sahih Muslim 601.",
+            noteBn = "এক সাহাবি এটি বলায় নবি (সাঃ) বললেন এতে জান্নাতের দরজা খুলে যায় — সহীহ মুসলিম ৬০১।",
             source = "Sahih Muslim 601",
         ),
         dhikr(
@@ -1666,7 +1739,8 @@ object SeedData {
             pronunciationBn = "লা ইলাহা ইল্লাল্লাহুল ওয়াহিদুল কাহহার, রব্বুস সামাওয়াতি ওয়াল আরদি ওয়া মা বাইনাহুমাল আযীযুল গাফফার",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি এক, মহাপ্রতাপশালী; আসমান-জমিন ও এর মধ্যকার সবকিছুর রব, পরাক্রমশালী, পরম ক্ষমাশীল — There is no god but Allah, the One, the All-Prevailing, Lord of the heavens and the earth and what is between them, the Almighty, the Most Forgiving",
             lapTarget = 1,
-            note = "ইবনে হিব্বান ৫৫৩০; দুশ্চিন্তার সময় নবি (সাঃ)-এর দুআর একটি রূপ।",
+            note = "Ibn Hibban 5530; a form of the Prophet's (saw) dua at times of distress.",
+            noteBn = "ইবনে হিব্বান ৫৫৩০; দুশ্চিন্তার সময় নবি (সাঃ)-এর দুআর একটি রূপ।",
             source = "Sahih Ibn Hibban 5530",
         ),
         dhikr(
@@ -1678,7 +1752,8 @@ object SeedData {
             pronunciationBn = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, লাহুল মুলকু ওয়া লাহুল হামদু, ওয়া হুয়া আলা কুল্লি শাইইন কাদীর, সুবহানাল্লাহি ওয়াল হামদু লিল্লাহি ওয়া লা ইলাহা ইল্লাল্লাহু ওয়াল্লাহু আকবার, ওয়া লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহিল আলিয়্যিল আযীম",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; রাজত্ব ও প্রশংসা তাঁরই, তিনি সর্বশক্তিমান; আল্লাহ পবিত্র, সকল প্রশংসা আল্লাহর, আল্লাহ ছাড়া কোনো উপাস্য নেই, আল্লাহ সর্বমহান; সুউচ্চ মহান আল্লাহ ছাড়া কোনো শক্তি-সামর্থ্য নেই — There is no god but Allah alone… glory be to Allah, praise be to Allah, there is no god but Allah, Allah is the Greatest, and there is no power nor strength except by Allah, the Most High, the Magnificent",
             lapTarget = 1,
-            note = "ইবনে মাজাহ ৩৭৯৪; ব্যাপক প্রশংসার একটি রূপ।",
+            note = "Ibn Majah 3794; a comprehensive form of praise.",
+            noteBn = "ইবনে মাজাহ ৩৭৯৪; ব্যাপক প্রশংসার একটি রূপ।",
             source = "Sunan Ibn Majah 3794",
         ),
         dhikr(
@@ -1690,7 +1765,8 @@ object SeedData {
             pronunciationBn = "লা ইলাহা ইল্লাল্লাহুল আযীমুল হালীম, লা ইলাহা ইল্লাল্লাহু রব্বুল আরশিল আযীম, লা ইলাহা ইল্লাল্লাহু রব্বুস সামাওয়াতি ওয়া রব্বুল আরদি ওয়া রব্বুল আরশিল কারীম",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, মহান, পরম সহনশীল; আল্লাহ ছাড়া কোনো উপাস্য নেই, মহান আরশের রব; আল্লাহ ছাড়া কোনো উপাস্য নেই, আসমানের রব, জমিনের রব ও সম্মানিত আরশের রব — There is no god but Allah, the Magnificent, the Forbearing; there is no god but Allah, Lord of the Mighty Throne; there is no god but Allah, Lord of the heavens, Lord of the earth and Lord of the Noble Throne",
             lapTarget = 1,
-            note = "দুশ্চিন্তা ও দুঃখের সময় নবি (সাঃ)-এর দুআ — সহীহ বুখারি ৬৩৪৫, মুসলিম ২৭৩০।",
+            note = "The Prophet's (saw) dua at times of distress and grief — Sahih al-Bukhari 6345, Muslim 2730.",
+            noteBn = "দুশ্চিন্তা ও দুঃখের সময় নবি (সাঃ)-এর দুআ — সহীহ বুখারি ৬৩৪৫, মুসলিম ২৭৩০।",
             source = "Sahih al-Bukhari 6345; Sahih Muslim 2730",
         ),
         dhikr(
@@ -1702,7 +1778,8 @@ object SeedData {
             pronunciationBn = "লা ইলাহা ইল্লাল্লাহুল হালীমুল কারীম, লা ইলাহা ইল্লাল্লাহুল আলিয়্যুল আযীম, সুবহানাল্লাহি রব্বিস সামাওয়াতিস সাবই ওয়া রব্বিল আরশিল আযীম, আলহামদু লিল্লাহি রব্বিল আলামিন",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, পরম সহনশীল, মহানুভব; আল্লাহ ছাড়া কোনো উপাস্য নেই, সুউচ্চ, মহান; পবিত্র আল্লাহ, সাত আসমানের রব ও মহান আরশের রব; সকল প্রশংসা আল্লাহর, বিশ্বজগতের রব — There is no god but Allah, the Forbearing, the Most Generous; there is no god but Allah, the Most High, the Magnificent; glory be to Allah, Lord of the seven heavens and Lord of the Mighty Throne; all praise is for Allah, Lord of the worlds",
             lapTarget = 1,
-            note = "যে বিপদের সময় এটি পড়ে তার দুআ কবুল হয় ও গুনাহ মাফ হয় — আহমাদ ১/৯১, হাকিম।",
+            note = "Whoever says this in time of hardship, his dua is accepted and his sins are forgiven — Ahmad 1/91, al-Hakim.",
+            noteBn = "যে বিপদের সময় এটি পড়ে তার দুআ কবুল হয় ও গুনাহ মাফ হয় — আহমাদ ১/৯১, হাকিম।",
             source = "Musnad Ahmad 1/91; al-Mustadrak (Hakim)",
         ),
         dhikr(
@@ -1714,7 +1791,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি উশহিদুকা, ওয়া উশহিদু মালাইকাতাকা ওয়া হামালাতা আরশিকা, ওয়া উশহিদু মান ফিস সামাওয়াতি ওয়া মান ফিল আরদি আন্নাকা আনতাল্লাহু লা ইলাহা ইল্লা আনতা ওয়াহদাকা লা শারিকা লাকা, ওয়া আশহাদু আন্না মুহাম্মাদান আবদুকা ওয়া রাসূলুকা",
             translation = "হে আল্লাহ, আমি আপনাকে, আপনার ফেরেশতাদের, আপনার আরশ বহনকারীদের এবং আসমান-জমিনের সকলকে সাক্ষী রাখছি যে আপনিই আল্লাহ, আপনি ছাড়া কোনো উপাস্য নেই, একক, শরিকহীন; আর সাক্ষ্য দিই মুহাম্মাদ (সাঃ) আপনার বান্দা ও রাসূল — O Allah, I call You to witness, and Your angels and the bearers of Your Throne, and all in the heavens and the earth, that You are Allah, there is no god but You alone, no partner have You; and I bear witness that Muhammad is Your slave and Messenger",
             lapTarget = 1,
-            note = "যে এটি একবার বলে আল্লাহ তার এক-চতুর্থাংশ জাহান্নাম থেকে মুক্ত করেন, দুবারে অর্ধেক, চারবারে সম্পূর্ণ — আবু দাউদ ৫০৭৮ (এর ভিত্তিতে)।",
+            note = "Whoever says this once, Allah frees a quarter of him from the Fire; twice, half; four times, all of him — based on Sunan Abi Dawud 5078.",
+            noteBn = "যে এটি একবার বলে আল্লাহ তার এক-চতুর্থাংশ জাহান্নাম থেকে মুক্ত করেন, দুবারে অর্ধেক, চারবারে সম্পূর্ণ — আবু দাউদ ৫০৭৮ (এর ভিত্তিতে)।",
             source = "Sunan Abi Dawud 5078",
         ),
         dhikr(
@@ -1726,7 +1804,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আউযু বিরিদাকা মিন সাখাতিকা, ওয়া বিমুআফাতিকা মিন উকুবাতিকা, ওয়া আউযু বিকা মিনকা, লা উহসি ছানাআন আলাইকা, আনতা কামা আছনাইতা আলা নাফসিকা",
             translation = "হে আল্লাহ, আপনার ক্রোধ থেকে আপনার সন্তুষ্টির আশ্রয় চাই, আপনার শাস্তি থেকে আপনার ক্ষমার আশ্রয় চাই, আপনার কাছ থেকে আপনারই আশ্রয় চাই; আমি আপনার প্রশংসা গুনে শেষ করতে পারি না, আপনি তেমনই যেমন আপনি নিজের প্রশংসা করেছেন — O Allah, I seek refuge in Your pleasure from Your anger, in Your pardon from Your punishment, and I seek refuge in You from You. I cannot enumerate Your praise; You are as You have praised Yourself",
             lapTarget = 1,
-            note = "নবি (সাঃ) সিজদায় এটি পড়তেন — সহীহ মুসলিম ৪৮৬, আবু দাউদ ৮৭৯।",
+            note = "The Prophet (saw) recited this in sujud — Sahih Muslim 486, Sunan Abi Dawud 879.",
+            noteBn = "নবি (সাঃ) সিজদায় এটি পড়তেন — সহীহ মুসলিম ৪৮৬, আবু দাউদ ৮৭৯।",
             source = "Sahih Muslim 486; Sunan Abi Dawud 879",
         ),
         dhikr(
@@ -1738,7 +1817,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা মালিকাল মুলকি তুতিল মুলকা মান তাশাউ ওয়া তানযিউল মুলকা মিম্মান তাশাউ, ওয়া তুইযযু মান তাশাউ ওয়া তুযিল্লু মান তাশাউ, বিয়াদিকাল খাইর, ইন্নাকা আলা কুল্লি শাইইন কাদীর, রাহমানাদ দুনইয়া ওয়াল আখিরাতি ওয়া রাহীমাহুমা, তুতিহিমা মান তাশাউ ওয়া তামনাউ মিনহুমা মান তাশাউ, ইরহামনি রাহমাতান তুগনিনি বিহা আন রাহমাতি মান সিওয়াক",
             translation = "হে আল্লাহ, রাজত্বের মালিক, আপনি যাকে চান রাজত্ব দেন, যার কাছ থেকে চান কেড়ে নেন; যাকে চান সম্মান দেন, যাকে চান অপমান করেন; সকল কল্যাণ আপনার হাতে; আপনি সর্বশক্তিমান; হে দুনিয়া-আখিরাতের পরম করুণাময় ও পরম দয়ালু, আপনি এ দুটি থেকে যাকে চান দেন, যাকে চান বঞ্চিত করেন; আমাকে এমন রহমত দিন যা আমাকে আপনি ছাড়া অন্য কারও রহমত থেকে অমুখাপেক্ষী করে দেয় — O Allah, Owner of sovereignty, You give sovereignty to whom You will and take it from whom You will… have mercy on me with a mercy that frees me from need of anyone else's mercy",
             lapTarget = 1,
-            note = "কুরআন ৩:২৬-এর সূচনা সহ প্রসারিত দুআ — তাবারানি, আল-মুজামুস সাগীর ৫৫৮।",
+            note = "An extended dua opening with Quran 3:26 — Tabarani, al-Mu'jam as-Saghir 558.",
+            noteBn = "কুরআন ৩:২৬-এর সূচনা সহ প্রসারিত দুআ — তাবারানি, আল-মুজামুস সাগীর ৫৫৮।",
             source = "al-Mu'jam al-Saghir (Tabarani) 558",
         ),
         dhikr(
@@ -1750,7 +1830,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আসআলুকা বিআন্না লাকাল হামদা, লা ইলাহা ইল্লা আনতাল মান্নান, বাদীউস সামাওয়াতি ওয়াল আরদি, ইয়া যাল জালালি ওয়াল ইকরাম, ইয়া হাইয়্যু ইয়া কাইয়্যূম",
             translation = "হে আল্লাহ, আমি আপনার কাছে চাই এই কারণে যে সকল প্রশংসা আপনার; আপনি ছাড়া কোনো উপাস্য নেই, আপনি মহাদাতা, আসমান-জমিনের অভিনব স্রষ্টা; হে মহিমা ও সম্মানের অধিকারী, হে চিরঞ্জীব, হে সর্বসত্তার ধারক — O Allah, I ask You, as all praise belongs to You, there is no god but You, the Bestower of good, the Originator of the heavens and the earth. O Owner of Majesty and Honour, O Ever-Living, O Sustainer",
             lapTarget = 1,
-            note = "নবি (সাঃ) বলেছেন এই ব্যক্তি আল্লাহকে তাঁর ইসমে আযম দিয়ে ডেকেছে, যা দিয়ে চাইলে দেওয়া হয় — আবু দাউদ ১৪৯৫, তিরমিযি ৩৫৪৪, ইবনে মাজাহ ৩৮৫৮।",
+            note = "The Prophet (saw) said this person called upon Allah by His Greatest Name, by which whoever asks is given — Sunan Abi Dawud 1495, Jami at-Tirmidhi 3544, Ibn Majah 3858.",
+            noteBn = "নবি (সাঃ) বলেছেন এই ব্যক্তি আল্লাহকে তাঁর ইসমে আযম দিয়ে ডেকেছে, যা দিয়ে চাইলে দেওয়া হয় — আবু দাউদ ১৪৯৫, তিরমিযি ৩৫৪৪, ইবনে মাজাহ ৩৮৫৮।",
             source = "Sunan Abi Dawud 1495; Jami at-Tirmidhi 3544",
         ),
 
@@ -1772,7 +1853,8 @@ object SeedData {
             pronunciationBn = "বিসমিল্লাহির রাহমানির রাহীম, আলহামদু লিল্লাহি রব্বিল আলামিন, আর রাহমানির রাহীম, মালিকি ইয়াওমিদ দীন, ইয়্যাকা নাবুদু ওয়া ইয়্যাকা নাসতাইন, ইহদিনাস সিরাতাল মুসতাকীম, সিরাতাল্লাযিনা আনআমতা আলাইহিম গাইরিল মাগদূবি আলাইহিম ওয়া লাদ দাল্লীন",
             translation = "পরম করুণাময় পরম দয়ালু আল্লাহর নামে। সকল প্রশংসা আল্লাহর, বিশ্বজগতের রব; পরম করুণাময়, পরম দয়ালু; বিচার দিনের মালিক; আপনারই ইবাদত করি ও আপনারই সাহায্য চাই; আমাদের সরল পথ দেখান—তাদের পথ যাদের প্রতি অনুগ্রহ করেছেন, যাদের প্রতি ক্রোধ নেমে আসেনি ও যারা পথভ্রষ্ট নয় — In the name of Allah, the Most Compassionate, the Most Merciful. All praise is for Allah, Lord of the worlds… Guide us to the Straight Path, the path of those You have blessed, not of those who earned Your anger nor of those who went astray",
             lapTarget = 1,
-            note = "কুরআন ১:১-৭ — শ্রেষ্ঠ দুআ; প্রতি রাকাতে ফরজ, শিফা ও রুকইয়ার সূরা।",
+            note = "Quran 1:1-7 — the greatest dua; obligatory in every unit of prayer, and a surah of healing and protection.",
+            noteBn = "কুরআন ১:১-৭ — শ্রেষ্ঠ দুআ; প্রতি রাকাতে ফরজ, শিফা ও রুকইয়ার সূরা।",
             source = "Quran 1:1-7",
         ),
         dhikr(
@@ -1784,7 +1866,8 @@ object SeedData {
             pronunciationBn = "রব্বানা আমান্না ফাগফির লানা ওয়ারহামনা ওয়া আনতা খাইরুর রাহিমীন",
             translation = "হে আমাদের রব, আমরা ঈমান এনেছি, তাই আমাদের ক্ষমা করুন ও দয়া করুন; আপনিই শ্রেষ্ঠ দয়ালু — Our Lord, we have believed, so forgive us and have mercy upon us; You are the Best of those who are merciful",
             lapTarget = 1,
-            note = "কুরআন ২৩:১০৯ — জান্নাতিদের দুআ।",
+            note = "Quran 23:109 — the dua of the people of Paradise.",
+            noteBn = "কুরআন ২৩:১০৯ — জান্নাতিদের দুআ।",
             source = "Quran 23:109",
         ),
         dhikr(
@@ -1796,7 +1879,8 @@ object SeedData {
             pronunciationBn = "রব্বিবনি লি ইনদাকা বাইতান ফিল জান্নাহ",
             translation = "হে আমার রব, আপনার কাছে জান্নাতে আমার জন্য একটি ঘর নির্মাণ করুন — My Lord, build for me a house near You in Paradise",
             lapTarget = 1,
-            note = "কুরআন ৬৬:১১ — ফিরাউনের স্ত্রী আসিয়া (আঃ)-এর দুআ।",
+            note = "Quran 66:11 — the dua of Asiya (as), wife of Pharaoh.",
+            noteBn = "কুরআন ৬৬:১১ — ফিরাউনের স্ত্রী আসিয়া (আঃ)-এর দুআ।",
             source = "Quran 66:11",
         ),
         dhikr(
@@ -1808,7 +1892,8 @@ object SeedData {
             pronunciationBn = "রব্বানাসরিফ আন্না আযাবা জাহান্নামা ইন্না আযাবাহা কানা গারামা, ইন্নাহা সাআত মুসতাকাররাও ওয়া মুকামা",
             translation = "হে আমাদের রব, আমাদের থেকে জাহান্নামের শাস্তি ফিরিয়ে দিন; নিশ্চয়ই এর শাস্তি অবিচ্ছিন্ন; নিশ্চয়ই তা নিকৃষ্ট আবাস ও অবস্থান — Our Lord, turn away from us the punishment of Hell; its punishment is unrelenting; it is an evil abode and dwelling",
             lapTarget = 1,
-            note = "কুরআন ২৫:৬৫-৬৬ — ইবাদুর রহমানের দুআ।",
+            note = "Quran 25:65-66 — the dua of the servants of the Most Merciful.",
+            noteBn = "কুরআন ২৫:৬৫-৬৬ — ইবাদুর রহমানের দুআ।",
             source = "Quran 25:65-66",
         ),
         dhikr(
@@ -1820,7 +1905,8 @@ object SeedData {
             pronunciationBn = "রব্বানা মা খালাকতা হাযা বাতিলা সুবহানাকা ফাকিনা আযাবান নার, রব্বানা ইন্নাকা মান তুদখিলিন নারা ফাকাদ আখযাইতাহু ওয়া মা লিয যালিমিনা মিন আনসার, রব্বানা ইন্নানা সামিনা মুনাদিয়াই ইউনাদি লিল ঈমানি আন আমিনু বিরব্বিকুম ফাআমান্না, রব্বানা ফাগফির লানা যুনুবানা ওয়া কাফফির আন্না সাইয়িআতিনা ওয়া তাওয়াফফানা মাআল আবরার, রব্বানা ওয়া আতিনা মা ওয়াআত্তানা আলা রুসুলিকা ওয়া লা তুখযিনা ইয়াওমাল কিয়ামাহ ইন্নাকা লা তুখলিফুল মিআদ",
             translation = "হে আমাদের রব, আপনি এসব অনর্থক সৃষ্টি করেননি; আপনি পবিত্র; আমাদের জাহান্নামের শাস্তি থেকে রক্ষা করুন… হে আমাদের রব, আমাদের গুনাহ ক্ষমা করুন, আমাদের মন্দ কাজগুলো মুছে দিন এবং সৎকর্মশীলদের সাথে মৃত্যু দিন; হে আমাদের রব, আপনার রাসূলদের মাধ্যমে যে প্রতিশ্রুতি দিয়েছেন তা আমাদের দিন এবং কিয়ামতের দিন লাঞ্ছিত করবেন না; নিশ্চয়ই আপনি প্রতিশ্রুতি ভঙ্গ করেন না — Our Lord, You did not create this in vain… so protect us from the punishment of the Fire… Our Lord, forgive us our sins, remove our evil deeds and let us die with the righteous. Our Lord, give us what You promised through Your messengers and do not disgrace us on the Day of Resurrection; You do not break Your promise",
             lapTarget = 1,
-            note = "কুরআন ৩:১৯১-১৯৪ — সূরা আলে-ইমরানের শেষ ১০ আয়াতের অংশ; নবি (সাঃ) রাতে উঠে এগুলো পড়তেন।",
+            note = "Quran 3:191-194 — part of the last ten verses of Surah Al Imran; the Prophet (saw) recited these on rising at night.",
+            noteBn = "কুরআন ৩:১৯১-১৯৪ — সূরা আলে-ইমরানের শেষ ১০ আয়াতের অংশ; নবি (সাঃ) রাতে উঠে এগুলো পড়তেন।",
             source = "Quran 3:191-194",
         ),
         dhikr(
@@ -1832,7 +1918,8 @@ object SeedData {
             pronunciationBn = "রব্বানা ওয়াসিতা কুল্লা শাইইন রাহমাতাও ওয়া ইলমান ফাগফির লিল্লাযিনা তাবু ওয়াত্তাবাউ সাবিলাকা ওয়া কিহিম আযাবাল জাহীম, রব্বানা ওয়া আদখিলহুম জান্নাতি আদনিনিল্লাতি ওয়াআত্তাহুম ওয়া মান সালাহা মিন আবাইহিম ওয়া আযওয়াজিহিম ওয়া যুররিয়্যাতিহিম ইন্নাকা আনতাল আযীযুল হাকীম, ওয়া কিহিমুস সাইয়িআত ওয়া মান তাকিস সাইয়িআতি ইয়াওমাইযিন ফাকাদ রাহিমতাহু ওয়া যালিকা হুয়াল ফাওযুল আযীম",
             translation = "হে আমাদের রব, আপনি রহমত ও জ্ঞানে সবকিছু পরিবেষ্টন করেছেন; যারা তওবা করেছে ও আপনার পথ অনুসরণ করেছে তাদের ক্ষমা করুন ও জাহান্নামের শাস্তি থেকে রক্ষা করুন; হে আমাদের রব, তাদের ও তাদের সৎ পিতা-মাতা, স্ত্রী ও সন্তানদের চিরস্থায়ী জান্নাতে প্রবেশ করান; আপনি পরাক্রমশালী, প্রজ্ঞাময়; তাদের মন্দ পরিণতি থেকে রক্ষা করুন — Our Lord, You encompass all things in mercy and knowledge, so forgive those who repent and follow Your way and protect them from the punishment of Hell… admit them to the Gardens of Eden… and protect them from evil consequences; that is the great triumph",
             lapTarget = 1,
-            note = "কুরআন ৪০:৭-৯ — আরশ বহনকারী ফেরেশতাদের মুমিনদের জন্য দুআ।",
+            note = "Quran 40:7-9 — the dua of the angels bearing the Throne for the believers.",
+            noteBn = "কুরআন ৪০:৭-৯ — আরশ বহনকারী ফেরেশতাদের মুমিনদের জন্য দুআ।",
             source = "Quran 40:7-9",
         ),
         dhikr(
@@ -1844,7 +1931,8 @@ object SeedData {
             pronunciationBn = "রব্বানা আতিনা মিল লাদুনকা রাহমাতাও ওয়া হাইয়ি লানা মিন আমরিনা রাশাদা",
             translation = "হে আমাদের রব, আপনার পক্ষ থেকে আমাদের রহমত দিন এবং আমাদের কাজে সঠিক পথ সহজ করে দিন — Our Lord, grant us mercy from Yourself and prepare for us right guidance in our affair",
             lapTarget = 1,
-            note = "কুরআন ১৮:১০ — আসহাবে কাহফের দুআ।",
+            note = "Quran 18:10 — the dua of the companions of the cave.",
+            noteBn = "কুরআন ১৮:১০ — আসহাবে কাহফের দুআ।",
             source = "Quran 18:10",
         ),
         dhikr(
@@ -1856,7 +1944,8 @@ object SeedData {
             pronunciationBn = "রব্বানা লা তুযিগ কুলুবানা বাদা ইয হাদাইতানা ওয়া হাব লানা মিল লাদুনকা রাহমাতান ইন্নাকা আনতাল ওয়াহহাব",
             translation = "হে আমাদের রব, হেদায়েত দেওয়ার পর আমাদের অন্তরকে বাঁকা করবেন না এবং আপনার পক্ষ থেকে আমাদের রহমত দান করুন; নিশ্চয়ই আপনি মহাদাতা — Our Lord, do not let our hearts deviate after You have guided us, and grant us mercy from Yourself; You are the Bestower",
             lapTarget = 1,
-            note = "কুরআন ৩:৮ — অন্তরের অবিচলতার দুআ; নবি (সাঃ) অধিক পড়তেন।",
+            note = "Quran 3:8 — a dua for firmness of the heart; the Prophet (saw) recited it often.",
+            noteBn = "কুরআন ৩:৮ — অন্তরের অবিচলতার দুআ; নবি (সাঃ) অধিক পড়তেন।",
             source = "Quran 3:8",
         ),
         dhikr(
@@ -1868,7 +1957,8 @@ object SeedData {
             pronunciationBn = "রব্বি যিদনি ইলমা",
             translation = "হে আমার রব, আমার জ্ঞান বৃদ্ধি করুন — My Lord, increase me in knowledge",
             lapTarget = 1,
-            note = "কুরআন ২০:১১৪।",
+            note = "Quran 20:114.",
+            noteBn = "কুরআন ২০:১১৪।",
             source = "Quran 20:114",
         ),
         dhikr(
@@ -1880,7 +1970,8 @@ object SeedData {
             pronunciationBn = "রব্বি হাব লি হুকমাও ওয়া আলহিকনি বিস সালিহীন, ওয়াজআল লি লিসানা সিদকিন ফিল আখিরীন, ওয়াজআলনি মিও ওয়ারাছাতি জান্নাতিন নাঈম, ওয়া লা তুখযিনি ইয়াওমা ইউবআছূন, ইয়াওমা লা ইয়ানফাউ মালুও ওয়া লা বানূন, ইল্লা মান আতাল্লাহা বিকালবিন সালীম",
             translation = "হে আমার রব, আমাকে প্রজ্ঞা দিন ও সৎকর্মশীলদের সাথে মিলিত করুন; পরবর্তীদের মধ্যে আমার সুনাম রাখুন; আমাকে জান্নাতুন নাঈমের উত্তরাধিকারী করুন; পুনরুত্থানের দিন লাঞ্ছিত করবেন না—যেদিন ধন-সম্পদ ও সন্তান কাজে আসবে না, কেবল সে ছাড়া যে সুস্থ অন্তরে আল্লাহর কাছে আসবে — My Lord, grant me wisdom and join me with the righteous… do not disgrace me on the Day they are resurrected—the Day when neither wealth nor children avail, except one who comes to Allah with a sound heart",
             lapTarget = 1,
-            note = "কুরআন ২৬:৮৩-৮৯ — ইবরাহিম (আঃ)-এর দুআ।",
+            note = "Quran 26:83-89 — the dua of Ibrahim (as).",
+            noteBn = "কুরআন ২৬:৮৩-৮৯ — ইবরাহিম (আঃ)-এর দুআ।",
             source = "Quran 26:83-89",
         ),
         dhikr(
@@ -1892,7 +1983,8 @@ object SeedData {
             pronunciationBn = "রব্বিজআলনি মুকীমাস সালাতি ওয়া মিন যুররিয়্যাতি, রব্বানা ওয়া তাকাব্বাল দুআ, রব্বানাগফির লি ওয়া লিওয়ালিদাইয়া ওয়া লিলমুমিনীনা ইয়াওমা ইয়াকুমুল হিসাব",
             translation = "হে আমার রব, আমাকে ও আমার বংশধরদের নামাজ কায়েমকারী বানান; হে আমাদের রব, আমার দুআ কবুল করুন; হে আমাদের রব, হিসাবের দিন আমাকে, আমার পিতা-মাতাকে ও মুমিনদের ক্ষমা করুন — My Lord, make me an establisher of prayer, and my offspring too. Our Lord, accept my supplication. Our Lord, forgive me, my parents and the believers on the Day the account is established",
             lapTarget = 1,
-            note = "কুরআন ১৪:৪০-৪১ — ইবরাহিম (আঃ)-এর দুআ।",
+            note = "Quran 14:40-41 — the dua of Ibrahim (as).",
+            noteBn = "কুরআন ১৪:৪০-৪১ — ইবরাহিম (আঃ)-এর দুআ।",
             source = "Quran 14:40-41",
         ),
         dhikr(
@@ -1904,7 +1996,8 @@ object SeedData {
             pronunciationBn = "রব্বি হাব লি মিল লাদুনকা যুররিয়্যাতান তাইয়্যিবাতান ইন্নাকা সামিউদ দুআ",
             translation = "হে আমার রব, আপনার পক্ষ থেকে আমাকে সৎ সন্তান দান করুন; নিশ্চয়ই আপনি দুআ শ্রবণকারী — My Lord, grant me from Yourself good offspring; indeed You are the Hearer of supplication",
             lapTarget = 1,
-            note = "কুরআন ৩:৩৮ — যাকারিয়া (আঃ)-এর দুআ।",
+            note = "Quran 3:38 — the dua of Zakariyya (as).",
+            noteBn = "কুরআন ৩:৩৮ — যাকারিয়া (আঃ)-এর দুআ।",
             source = "Quran 3:38",
         ),
         dhikr(
@@ -1916,7 +2009,8 @@ object SeedData {
             pronunciationBn = "রব্বি হাব লি মিনাস সালিহীন",
             translation = "হে আমার রব, আমাকে সৎকর্মশীলদের মধ্য থেকে সন্তান দান করুন — My Lord, grant me offspring from among the righteous",
             lapTarget = 1,
-            note = "কুরআন ৩৭:১০০ — ইবরাহিম (আঃ)-এর দুআ।",
+            note = "Quran 37:100 — the dua of Ibrahim (as).",
+            noteBn = "কুরআন ৩৭:১০০ — ইবরাহিম (আঃ)-এর দুআ।",
             source = "Quran 37:100",
         ),
         dhikr(
@@ -1928,7 +2022,8 @@ object SeedData {
             pronunciationBn = "রব্বি লা তাযারনি ফারদাও ওয়া আনতা খাইরুল ওয়ারিছীন",
             translation = "হে আমার রব, আমাকে একা রাখবেন না, আপনিই শ্রেষ্ঠ উত্তরাধিকারী — My Lord, do not leave me alone, though You are the best of inheritors",
             lapTarget = 1,
-            note = "কুরআন ২১:৮৯ — যাকারিয়া (আঃ)-এর দুআ।",
+            note = "Quran 21:89 — the dua of Zakariyya (as).",
+            noteBn = "কুরআন ২১:৮৯ — যাকারিয়া (আঃ)-এর দুআ।",
             source = "Quran 21:89",
         ),
         dhikr(
@@ -1940,7 +2035,8 @@ object SeedData {
             pronunciationBn = "রব্বানা হাব লানা মিন আযওয়াজিনা ওয়া যুররিয়্যাতিনা কুররাতা আইউনিও ওয়াজআলনা লিলমুত্তাকীনা ইমামা",
             translation = "হে আমাদের রব, আমাদের স্ত্রী ও সন্তানদের চোখের শীতলতা বানিয়ে দিন এবং আমাদের মুত্তাকিদের নেতা বানান — Our Lord, grant us from our spouses and offspring comfort to our eyes, and make us leaders of the God-fearing",
             lapTarget = 1,
-            note = "কুরআন ২৫:৭৪ — ইবাদুর রহমানের দুআ।",
+            note = "Quran 25:74 — the dua of the servants of the Most Merciful.",
+            noteBn = "কুরআন ২৫:৭৪ — ইবাদুর রহমানের দুআ।",
             source = "Quran 25:74",
         ),
         dhikr(
@@ -1952,7 +2048,8 @@ object SeedData {
             pronunciationBn = "রব্বি আওযিনি আন আশকুরা নিমাতাকাল্লাতি আনআমতা আলাইয়া ওয়া আলা ওয়ালিদাইয়া ওয়া আন আমালা সালিহান তারদাহু ওয়া আদখিলনি বিরাহমাতিকা ফি ইবাদিকাস সালিহীন",
             translation = "হে আমার রব, আমাকে সামর্থ্য দিন যেন আপনার নিয়ামতের শোকর করি যা আমার ও আমার পিতা-মাতার প্রতি দিয়েছেন এবং এমন সৎকাজ করি যাতে আপনি সন্তুষ্ট; আর আপনার রহমতে আমাকে আপনার সৎ বান্দাদের অন্তর্ভুক্ত করুন — My Lord, enable me to be grateful for Your favour upon me and my parents, and to do righteousness that pleases You, and admit me by Your mercy among Your righteous servants",
             lapTarget = 1,
-            note = "কুরআন ২৭:১৯ — সুলাইমান (আঃ)-এর দুআ।",
+            note = "Quran 27:19 — the dua of Sulayman (as).",
+            noteBn = "কুরআন ২৭:১৯ — সুলাইমান (আঃ)-এর দুআ।",
             source = "Quran 27:19",
         ),
         dhikr(
@@ -1964,7 +2061,8 @@ object SeedData {
             pronunciationBn = "রব্বি আওযিনি আন আশকুরা নিমাতাকাল্লাতি আনআমতা আলাইয়া ওয়া আলা ওয়ালিদাইয়া ওয়া আন আমালা সালিহান তারদাহু ওয়া আসলিহ লি ফি যুররিয়্যাতি ইন্নি তুবতু ইলাইকা ওয়া ইন্নি মিনাল মুসলিমীন",
             translation = "হে আমার রব, আমাকে সামর্থ্য দিন যেন আপনার নিয়ামতের শোকর করি… এবং আমার বংশধরদের সংশোধন করে দিন; আমি আপনার কাছে তওবা করলাম এবং আমি আত্মসমর্পণকারীদের অন্তর্ভুক্ত — My Lord, enable me to be grateful for Your favour… and make my offspring righteous; I have repented to You and I am of those who submit",
             lapTarget = 1,
-            note = "কুরআন ৪৬:১৫ — সন্তান ও পিতা-মাতার জন্য দুআ।",
+            note = "Quran 46:15 — a dua for one's children and parents.",
+            noteBn = "কুরআন ৪৬:১৫ — সন্তান ও পিতা-মাতার জন্য দুআ।",
             source = "Quran 46:15",
         ),
         dhikr(
@@ -1976,7 +2074,8 @@ object SeedData {
             pronunciationBn = "রব্বি আউযু বিকা মিন হামাযাতিশ শায়াতিন, ওয়া আউযু বিকা রব্বি আন ইয়াহদুরূন",
             translation = "হে আমার রব, শয়তানদের কুমন্ত্রণা থেকে আপনার আশ্রয় চাই; হে আমার রব, তারা যেন আমার কাছে না আসে সে জন্যও আপনার আশ্রয় চাই — My Lord, I seek refuge in You from the promptings of the devils, and I seek refuge in You, my Lord, lest they be present with me",
             lapTarget = 1,
-            note = "কুরআন ২৩:৯৭-৯৮।",
+            note = "Quran 23:97-98.",
+            noteBn = "কুরআন ২৩:৯৭-৯৮।",
             source = "Quran 23:97-98",
         ),
         dhikr(
@@ -1988,7 +2087,8 @@ object SeedData {
             pronunciationBn = "রব্বানাগফির লানা যুনুবানা ওয়া ইসরাফানা ফি আমরিনা ওয়া ছাব্বিত আকদামানা ওয়ানসুরনা আলাল কাওমিল কাফিরীন",
             translation = "হে আমাদের রব, আমাদের গুনাহ ও কাজে সীমালঙ্ঘন ক্ষমা করুন, আমাদের পা অবিচল রাখুন এবং কাফির সম্প্রদায়ের বিরুদ্ধে সাহায্য করুন — Our Lord, forgive us our sins and our excesses in our affairs, make our feet firm and help us against the disbelieving people",
             lapTarget = 1,
-            note = "কুরআন ৩:১৪৭ — নবিদের সঙ্গীদের দুআ।",
+            note = "Quran 3:147 — the dua of the companions of the prophets.",
+            noteBn = "কুরআন ৩:১৪৭ — নবিদের সঙ্গীদের দুআ।",
             source = "Quran 3:147",
         ),
         dhikr(
@@ -2000,7 +2100,8 @@ object SeedData {
             pronunciationBn = "রব্বানা আফরিগ আলাইনা সাবরাও ওয়া ছাব্বিত আকদামানা ওয়ানসুরনা আলাল কাওমিল কাফিরীন",
             translation = "হে আমাদের রব, আমাদের উপর ধৈর্য ঢেলে দিন, আমাদের পা অবিচল রাখুন এবং কাফির সম্প্রদায়ের বিরুদ্ধে সাহায্য করুন — Our Lord, pour upon us patience, make our feet firm and help us against the disbelieving people",
             lapTarget = 1,
-            note = "কুরআন ২:২৫০ — তালুতের সঙ্গীদের দুআ জালুতের বিরুদ্ধে।",
+            note = "Quran 2:250 — the dua of Talut's companions against Jalut.",
+            noteBn = "কুরআন ২:২৫০ — তালুতের সঙ্গীদের দুআ জালুতের বিরুদ্ধে।",
             source = "Quran 2:250",
         ),
         dhikr(
@@ -2012,7 +2113,8 @@ object SeedData {
             pronunciationBn = "রব্বিনসুরনি আলাল কাওমিল মুফসিদীন",
             translation = "হে আমার রব, বিপর্যয় সৃষ্টিকারী সম্প্রদায়ের বিরুদ্ধে আমাকে সাহায্য করুন — My Lord, help me against the corrupting people",
             lapTarget = 1,
-            note = "কুরআন ২৯:৩০ — লুত (আঃ)-এর দুআ।",
+            note = "Quran 29:30 — the dua of Lut (as).",
+            noteBn = "কুরআন ২৯:৩০ — লুত (আঃ)-এর দুআ।",
             source = "Quran 29:30",
         ),
         dhikr(
@@ -2024,7 +2126,8 @@ object SeedData {
             pronunciationBn = "রব্বানা লা তাজআলনা মাআল কাওমিয যালিমীন",
             translation = "হে আমাদের রব, আমাদের জালিম সম্প্রদায়ের অন্তর্ভুক্ত করবেন না — Our Lord, do not place us with the wrongdoing people",
             lapTarget = 1,
-            note = "কুরআন ৭:৪৭ — আরাফবাসীদের দুআ।",
+            note = "Quran 7:47 — the dua of the people of al-A'raf.",
+            noteBn = "কুরআন ৭:৪৭ — আরাফবাসীদের দুআ।",
             source = "Quran 7:47",
         ),
         dhikr(
@@ -2036,7 +2139,8 @@ object SeedData {
             pronunciationBn = "রব্বানা লা তাজআলনা ফিতনাতাল লিলকাওমিয যালিমীন, ওয়া নাজ্জিনা বিরাহমাতিকা মিনাল কাওমিল কাফিরীন",
             translation = "হে আমাদের রব, আমাদের জালিম সম্প্রদায়ের পরীক্ষার পাত্র বানাবেন না এবং আপনার রহমতে কাফির সম্প্রদায় থেকে আমাদের রক্ষা করুন — Our Lord, do not make us a trial for the wrongdoing people, and save us by Your mercy from the disbelieving people",
             lapTarget = 1,
-            note = "কুরআন ১০:৮৫-৮৬ — মুসা (আঃ)-এর অনুসারীদের দুআ।",
+            note = "Quran 10:85-86 — the dua of the followers of Musa (as).",
+            noteBn = "কুরআন ১০:৮৫-৮৬ — মুসা (আঃ)-এর অনুসারীদের দুআ।",
             source = "Quran 10:85-86",
         ),
         dhikr(
@@ -2048,7 +2152,8 @@ object SeedData {
             pronunciationBn = "রব্বানা আলাইকা তাওয়াক্কালনা ওয়া ইলাইকা আনাবনা ওয়া ইলাইকাল মাসীর, রব্বানা লা তাজআলনা ফিতনাতাল লিল্লাযিনা কাফারু ওয়াগফির লানা রব্বানা ইন্নাকা আনতাল আযীযুল হাকীম",
             translation = "হে আমাদের রব, আপনার উপরই ভরসা করলাম, আপনার দিকেই প্রত্যাবর্তন করলাম, প্রত্যাবর্তন আপনার কাছেই; হে আমাদের রব, যারা কুফরি করেছে তাদের জন্য আমাদের পরীক্ষার পাত্র বানাবেন না এবং আমাদের ক্ষমা করুন; নিশ্চয়ই আপনি পরাক্রমশালী, প্রজ্ঞাময় — Our Lord, upon You we rely, to You we turn, and to You is the destination. Our Lord, do not make us a trial for those who disbelieve, and forgive us, our Lord; You are the Almighty, the All-Wise",
             lapTarget = 1,
-            note = "কুরআন ৬০:৪-৫ — ইবরাহিম (আঃ) ও তাঁর সঙ্গীদের দুআ।",
+            note = "Quran 60:4-5 — the dua of Ibrahim (as) and his companions.",
+            noteBn = "কুরআন ৬০:৪-৫ — ইবরাহিম (আঃ) ও তাঁর সঙ্গীদের দুআ।",
             source = "Quran 60:4-5",
         ),
         dhikr(
@@ -2060,7 +2165,8 @@ object SeedData {
             pronunciationBn = "আন্নি মাস্সানিয়াদ দুররু ওয়া আনতা আরহামুর রাহিমীন",
             translation = "আমাকে দুর্দশা স্পর্শ করেছে, আর আপনি দয়ালুদের মধ্যে শ্রেষ্ঠ দয়ালু — Adversity has touched me, and You are the Most Merciful of the merciful",
             lapTarget = 1,
-            note = "কুরআন ২১:৮৩ — আইয়ুব (আঃ)-এর কষ্টের সময়ের দুআ।",
+            note = "Quran 21:83 — the dua of Ayyub (as) in his time of affliction.",
+            noteBn = "কুরআন ২১:৮৩ — আইয়ুব (আঃ)-এর কষ্টের সময়ের দুআ।",
             source = "Quran 21:83",
         ),
         dhikr(
@@ -2072,7 +2178,8 @@ object SeedData {
             pronunciationBn = "ফাতিরাস সামাওয়াতি ওয়াল আরদি আনতা ওয়ালিয়্যি ফিদ দুনইয়া ওয়াল আখিরাহ তাওয়াফফানি মুসলিমাও ওয়া আলহিকনি বিস সালিহীন",
             translation = "হে আসমান-জমিনের স্রষ্টা, আপনি দুনিয়া ও আখিরাতে আমার অভিভাবক; আমাকে মুসলিম অবস্থায় মৃত্যু দিন এবং সৎকর্মশীলদের সাথে মিলিত করুন — Originator of the heavens and the earth, You are my Protector in this world and the Hereafter; cause me to die a Muslim and join me with the righteous",
             lapTarget = 1,
-            note = "কুরআন ১২:১০১ — ইউসুফ (আঃ)-এর দুআ।",
+            note = "Quran 12:101 — the dua of Yusuf (as).",
+            noteBn = "কুরআন ১২:১০১ — ইউসুফ (আঃ)-এর দুআ।",
             source = "Quran 12:101",
         ),
         dhikr(
@@ -2084,7 +2191,8 @@ object SeedData {
             pronunciationBn = "রব্বানা তাকাব্বাল মিন্না ইন্নাকা আনতাস সামিউল আলীম, ওয়া তুব আলাইনা ইন্নাকা আনতাত তাওয়াবুর রাহীম",
             translation = "হে আমাদের রব, আমাদের থেকে কবুল করুন; নিশ্চয়ই আপনি সর্বশ্রোতা, সর্বজ্ঞ; আর আমাদের তওবা কবুল করুন; নিশ্চয়ই আপনি তওবা কবুলকারী, পরম দয়ালু — Our Lord, accept from us; indeed You are the All-Hearing, the All-Knowing. And accept our repentance; indeed You are the Accepter of repentance, the Merciful",
             lapTarget = 1,
-            note = "কুরআন ২:১২৭-১২৮ — কাবা নির্মাণকালে ইবরাহিম (আঃ) ও ইসমাইল (আঃ)-এর দুআ।",
+            note = "Quran 2:127-128 — the dua of Ibrahim (as) and Ismail (as) while building the Kaaba.",
+            noteBn = "কুরআন ২:১২৭-১২৮ — কাবা নির্মাণকালে ইবরাহিম (আঃ) ও ইসমাইল (আঃ)-এর দুআ।",
             source = "Quran 2:127-128",
         ),
 
@@ -2100,7 +2208,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা ইবরাহিমা ওয়া আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ, আল্লাহুম্মা বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিমা ওয়া আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি করেছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত; হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad as You sent blessings upon Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious. O Allah, bless Muhammad and the family of Muhammad as You blessed Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious",
             lapTarget = 1,
-            note = "কাব ইবনে উজরা (রাঃ) বর্ণিত সবচেয়ে প্রসিদ্ধ দরূদ, তাশাহহুদে পড়া হয় — সহীহ বুখারি ৩৩৭০, মুসলিম ৪০৬।",
+            note = "The most well-known salawat, narrated by Ka'b ibn Ujrah (ra), recited in tashahhud — Sahih al-Bukhari 3370, Muslim 406.",
+            noteBn = "কাব ইবনে উজরা (রাঃ) বর্ণিত সবচেয়ে প্রসিদ্ধ দরূদ, তাশাহহুদে পড়া হয় — সহীহ বুখারি ৩৩৭০, মুসলিম ৪০৬।",
             source = "Sahih al-Bukhari 3370; Sahih Muslim 406",
         ),
         dhikr(
@@ -2112,7 +2221,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন কামা সাল্লাইতা আলা আলি ইবরাহিমা, আল্লাহুম্মা বারিক আলা মুহাম্মাদিন কামা বারাকতা আলা আলি ইবরাহিম",
             translation = "হে আল্লাহ, মুহাম্মাদের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; হে আল্লাহ, মুহাম্মাদের প্রতি বরকত দিন যেভাবে ইবরাহিমের পরিবারের প্রতি দিয়েছেন — O Allah, send blessings upon Muhammad as You sent blessings upon the family of Ibrahim; O Allah, bless Muhammad as You blessed the family of Ibrahim",
             lapTarget = 1,
-            note = "আবু মাসউদ আনসারি (রাঃ) বর্ণিত; সাহাবিরা দরুদ পড়ার পদ্ধতি জিজ্ঞেস করলে নবি (সাঃ) এটি শিখিয়েছেন — সুনান নাসাঈ ১২৮৬ (আলবানি: সনদ সহীহ)।",
+            note = "Narrated by Abu Mas'ud al-Ansari (ra); the Prophet (saw) taught this when the companions asked how to send blessings on him — Sunan an-Nasa'i 1286 (Albani: sound chain).",
+            noteBn = "আবু মাসউদ আনসারি (রাঃ) বর্ণিত; সাহাবিরা দরুদ পড়ার পদ্ধতি জিজ্ঞেস করলে নবি (সাঃ) এটি শিখিয়েছেন — সুনান নাসাঈ ১২৮৬ (আলবানি: সনদ সহীহ)।",
             source = "Sunan an-Nasa'i 1286",
         ),
         dhikr(
@@ -2124,7 +2234,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আযওয়াজিহি ওয়া যুররিয়্যাতিহি, কামা সাল্লাইতা আলা আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আযওয়াজিহি ওয়া যুররিয়্যাতিহি, কামা বারাকতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ, তাঁর স্ত্রীগণ ও বংশধরদের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; আর মুহাম্মাদ, তাঁর স্ত্রীগণ ও বংশধরদের প্রতি বরকত দিন যেভাবে ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad, his wives and his offspring as You blessed the family of Ibrahim; and bless Muhammad, his wives and his offspring as You blessed the family of Ibrahim; You are Praiseworthy, Glorious",
             lapTarget = 1,
-            note = "আবু হুমাইদ আস-সাইদি (রাঃ) বর্ণিত — সহীহ বুখারি ৩৩৬৯, মুসলিম ৪০৭।",
+            note = "Narrated by Abu Humaid as-Sa'idi (ra) — Sahih al-Bukhari 3369, Muslim 407.",
+            noteBn = "আবু হুমাইদ আস-সাইদি (রাঃ) বর্ণিত — সহীহ বুখারি ৩৩৬৯, মুসলিম ৪০৭।",
             source = "Sahih al-Bukhari 3369; Sahih Muslim 407",
         ),
         dhikr(
@@ -2136,7 +2247,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা আলি ইবরাহিমা ফিল আলামিন, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; আর মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে বিশ্বজগতে ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad as You blessed the family of Ibrahim, and bless Muhammad and the family of Muhammad as You blessed the family of Ibrahim among the worlds; You are Praiseworthy, Glorious",
             lapTarget = 1,
-            note = "আবু মাসউদ আল-আনসারি (রাঃ) বর্ণিত — সহীহ মুসলিম ৪০৫।",
+            note = "Narrated by Abu Mas'ud al-Ansari (ra) — Sahih Muslim 405.",
+            noteBn = "আবু মাসউদ আল-আনসারি (রাঃ) বর্ণিত — সহীহ মুসলিম ৪০৫।",
             source = "Sahih Muslim 405",
         ),
         dhikr(
@@ -2148,7 +2260,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা ইবরাহিমা ওয়া আলি ইবরাহিমা, ইন্নাকা হামিদুম মাজীদ, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিমা ওয়া আলি ইবরাহিমা, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি করেছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত; আর মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad as You sent blessings upon Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious. And bless Muhammad and the family of Muhammad as You blessed Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious",
             lapTarget = 1,
-            note = "তালহা ইবনে উবাইদুল্লাহ (রাঃ) বর্ণিত; সাহাবিরা দরুদের পদ্ধতি জিজ্ঞেস করলে নবি (সাঃ) এটি শিখিয়েছেন — সুনান নাসাঈ ১২৯০ (আলবানি: সহীহ)।",
+            note = "Narrated by Talha ibn Ubaydullah (ra); the Prophet (saw) taught this when the companions asked how to send blessings on him — Sunan an-Nasa'i 1290 (Albani: sahih).",
+            noteBn = "তালহা ইবনে উবাইদুল্লাহ (রাঃ) বর্ণিত; সাহাবিরা দরুদের পদ্ধতি জিজ্ঞেস করলে নবি (সাঃ) এটি শিখিয়েছেন — সুনান নাসাঈ ১২৯০ (আলবানি: সহীহ)।",
             source = "Sunan an-Nasa'i 1290",
         ),
         dhikr(
@@ -2160,7 +2273,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন আবদিকা ওয়া রাসূলিকা, কামা সাল্লাইতা আলা আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিম",
             translation = "হে আল্লাহ, আপনার বান্দা ও রাসূল মুহাম্মাদের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; আর মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিমের প্রতি দিয়েছেন — O Allah, send blessings upon Muhammad, Your servant and Messenger, as You blessed the family of Ibrahim; and bless Muhammad and the family of Muhammad as You blessed Ibrahim",
             lapTarget = 1,
-            note = "আবু হুমাইদ আস-সাইদি (রাঃ) বর্ণিত রূপ — সহীহ বুখারি ৬৩৫৮।",
+            note = "A form narrated by Abu Humaid as-Sa'idi (ra) — Sahih al-Bukhari 6358.",
+            noteBn = "আবু হুমাইদ আস-সাইদি (রাঃ) বর্ণিত রূপ — সহীহ বুখারি ৬৩৫৮।",
             source = "Sahih al-Bukhari 6358",
         ),
         dhikr(
@@ -2172,7 +2286,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ, আল্লাহুম্মা বারিক আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিমের পরিবারের প্রতি করেছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত; হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad and the family of Muhammad as You blessed the family of Ibrahim; You are Praiseworthy, Glorious. O Allah, bless Muhammad and the family of Muhammad as You blessed the family of Ibrahim; You are Praiseworthy, Glorious",
             lapTarget = 1,
-            note = "আবু সাঈদ আল-খুদরি (রাঃ) বর্ণিত রূপ — সহীহ বুখারি ৪৭৯৮।",
+            note = "A form narrated by Abu Sa'id al-Khudri (ra) — Sahih al-Bukhari 4798.",
+            noteBn = "আবু সাঈদ আল-খুদরি (রাঃ) বর্ণিত রূপ — সহীহ বুখারি ৪৭৯৮।",
             source = "Sahih al-Bukhari 4798",
         ),
         dhikr(
@@ -2184,7 +2299,7 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিন নাবিয়্যিল উম্মিয়্যি ওয়া আলা আলি মুহাম্মাদ, কামা সাল্লাইতা আলা ইবরাহিমা ওয়া আলা আলি ইবরাহিম, ওয়া বারিক আলা মুহাম্মাদিন নাবিয়্যিল উম্মিয়্যি ওয়া আলা আলি মুহাম্মাদ, কামা বারাকতা আলা ইবরাহিমা ওয়া আলা আলি ইবরাহিম, ইন্নাকা হামিদুম মাজীদ",
             translation = "হে আল্লাহ, উম্মি নবি মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি করেছেন; আর উম্মি নবি মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি বরকত দিন যেভাবে ইবরাহিম ও ইবরাহিমের পরিবারের প্রতি দিয়েছেন; নিশ্চয়ই আপনি প্রশংসিত, মহিমান্বিত — O Allah, send blessings upon Muhammad the unlettered Prophet and the family of Muhammad as You blessed Ibrahim and the family of Ibrahim; and bless Muhammad the unlettered Prophet and the family of Muhammad as You blessed Ibrahim and the family of Ibrahim; You are Praiseworthy, Glorious",
             lapTarget = 1,
-            note = "আবু মাসউদ উকবা ইবনে আমর (রাঃ) বর্ণিত — সুনান দারাকুতনি, কিতাবুস সালাত (দারাকুতনি: “হাসান মুত্তাসিল”); সহীহুল জামি ৬৭০ (আলবানি: হাসান)। শুরুর অংশ আবু দাউদ ৯৮১-এও আছে।",
+            note = "Narrated by Abu Mas'ud Uqba ibn Amr (ra) — Sunan ad-Darimi, Kitab as-Salat (al-Darimi: \"hasan muttasil\"); Sahih al-Jami 670 (Albani: hasan). The opening part is also in Sunan Abi Dawud 981.",
             noteBn = "আবু মাসউদ উকবা ইবনে আমর (রাঃ) বর্ণিত — সুনান দারাকুতনি, কিতাবুস সালাত (দারাকুতনি: “হাসান মুত্তাসিল”); সহীহুল জামি ৬৭০ (আলবানি: হাসান)। শুরুর অংশ আবু দাউদ ৯৮১-এও আছে।",
             source = "Sunan ad-Daraqutni, Kitab as-Salah; Sahih al-Jami 670",
         ),
@@ -2197,7 +2312,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদিও ওয়া আলা আলি মুহাম্মাদ",
             translation = "হে আল্লাহ, মুহাম্মাদ ও মুহাম্মাদের পরিবারের প্রতি রহমত বর্ষণ করুন — O Allah, send blessings upon Muhammad and the family of Muhammad",
             lapTarget = 1,
-            note = "সংক্ষিপ্ত রূপ — নাসাঈ, আস-সুনানুস সুগরা ১২৯১।",
+            note = "A shorter form — Sunan an-Nasa'i, al-Sunan as-Sughra 1291.",
+            noteBn = "সংক্ষিপ্ত রূপ — নাসাঈ, আস-সুনানুস সুগরা ১২৯১।",
             source = "an-Nasa'i, as-Sunan al-Sughra 1291",
         ),
 
@@ -2217,7 +2333,8 @@ object SeedData {
             pronunciationBn = "আউযু বিকালিমাতিল্লাহিত তাম্মাতিল্লাতি লা ইউজাওয়িযুহুন্না বাররুও ওয়া লা ফাজির, মিন শাররি মা খালাকা ওয়া বারাআ ওয়া যারাআ, ওয়া মিন শাররি মা ইয়ানযিলু মিনাস সামাই ওয়া মিন শাররি মা ইয়ারুজু ফিহা, ওয়া মিন শাররি মা যারাআ ফিল আরদি ওয়া মিন শাররি মা ইয়াখরুজু মিনহা, ওয়া মিন শাররি ফিতানিল লাইলি ওয়ান নাহার, ওয়া মিন শাররি কুল্লি তারিকিন ইল্লা তারিকাই ইয়াতরুকু বিখাইরিন ইয়া রাহমান",
             translation = "আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় আশ্রয় চাই—যা কোনো সৎ বা পাপী অতিক্রম করতে পারে না—তিনি যা সৃষ্টি করেছেন, অস্তিত্ব দিয়েছেন ও ছড়িয়ে দিয়েছেন তার অনিষ্ট থেকে; আসমান থেকে যা নামে ও এতে যা ওঠে তার অনিষ্ট থেকে; জমিনে যা ছড়িয়েছেন ও এ থেকে যা বের হয় তার অনিষ্ট থেকে; দিন-রাতের ফিতনার অনিষ্ট থেকে; এবং কল্যাণ নিয়ে আগমনকারী ছাড়া প্রতিটি রাতের আগন্তুকের অনিষ্ট থেকে—হে পরম করুণাময় — I seek refuge in the perfect words of Allah, which no righteous or wicked can surpass, from the evil of what He created, brought into being and scattered… from the evil of the trials of night and day, and from the evil of every night-comer except one that comes with good, O Most Merciful",
             lapTarget = 1,
-            note = "নবি (সাঃ) রাতে এই দুআ পড়তেন — তাবারানি, আল-মুজামুল কাবির ৩৮৩৮।",
+            note = "The Prophet (saw) recited this dua at night — Tabarani, al-Mu'jam al-Kabir 3838.",
+            noteBn = "নবি (সাঃ) রাতে এই দুআ পড়তেন — তাবারানি, আল-মুজামুল কাবির ৩৮৩৮।",
             source = "al-Mu'jam al-Kabir (Tabarani) 3838",
         ),
         dhikr(
@@ -2229,7 +2346,8 @@ object SeedData {
             pronunciationBn = "আউযু বিওয়াজহিল্লাহিল আযীমিল্লাযি লাইসা শাইউন আযামা মিনহু, ওয়া বিকালিমাতিল্লাহিত তাম্মাতিল্লাতি লা ইউজাওয়িযুহুন্না বাররুও ওয়া লা ফাজির, ওয়া বিআসমাইল্লাহিল হুসনা কুল্লিহা মা আলিমতু মিনহা ওয়া মা লাম আলাম, মিন শাররি মা খালাকা ওয়া বারাআ ওয়া যারাআ",
             translation = "আশ্রয় চাই মহান আল্লাহর সত্তার অসিলায়, যাঁর চেয়ে বড় কিছু নেই; আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায়, যা কোনো সৎ বা পাপী অতিক্রম করতে পারে না; এবং আল্লাহর সকল সুন্দর নামের অসিলায়—যা আমি জানি ও যা জানি না—তিনি যা সৃষ্টি করেছেন, অস্তিত্ব দিয়েছেন ও ছড়িয়েছেন তার অনিষ্ট থেকে — I seek refuge in the Face of Allah the Supreme, than whom nothing is greater; in the perfect words of Allah which no righteous or wicked can surpass; and in all the beautiful names of Allah, those I know and those I do not, from the evil of what He created, brought into being and scattered",
             lapTarget = 1,
-            note = "খালিদ ইবনুল ওয়ালিদ (রাঃ)-কে নবি (সাঃ) অনিদ্রা ও ভয়ের জন্য শিখিয়েছেন — আবু দাউদ ৩৮৯৩, তিরমিযি ৩৫২৩।",
+            note = "The Prophet (saw) taught this to Khalid ibn al-Walid (ra) for sleeplessness and fear — Sunan Abi Dawud 3893, Jami at-Tirmidhi 3523.",
+            noteBn = "খালিদ ইবনুল ওয়ালিদ (রাঃ)-কে নবি (সাঃ) অনিদ্রা ও ভয়ের জন্য শিখিয়েছেন — আবু দাউদ ৩৮৯৩, তিরমিযি ৩৫২৩।",
             source = "Sunan Abi Dawud 3893; Jami at-Tirmidhi 3523",
         ),
         dhikr(
@@ -2241,7 +2359,8 @@ object SeedData {
             pronunciationBn = "আউযু বিকালিমাতিল্লাহিত তাম্মাতি মিন গাদাবিহি ওয়া ইকাবিহি, ওয়া শাররি ইবাদিহি, ওয়া মিন হামাযাতিশ শায়াতিনি ওয়া আন ইয়াহদুরূন",
             translation = "আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় আশ্রয় চাই তাঁর ক্রোধ ও শাস্তি থেকে, তাঁর বান্দাদের অনিষ্ট থেকে, শয়তানদের কুমন্ত্রণা থেকে এবং তারা আমার কাছে উপস্থিত হওয়া থেকে — I seek refuge in the perfect words of Allah from His anger and His punishment, from the evil of His servants, from the promptings of the devils and from their presence with me",
             lapTarget = 1,
-            note = "ঘুমের সময় ভয় পেলে নবি (সাঃ) এটি পড়তে বলতেন — তিরমিযি ৩৫২৮, আবু দাউদ ৩৮৯৩, আহমাদ ৬৬৯৬।",
+            note = "The Prophet (saw) told others to recite this if afraid during sleep — Jami at-Tirmidhi 3528, Sunan Abi Dawud 3893, Ahmad 6696.",
+            noteBn = "ঘুমের সময় ভয় পেলে নবি (সাঃ) এটি পড়তে বলতেন — তিরমিযি ৩৫২৮, আবু দাউদ ৩৮৯৩, আহমাদ ৬৬৯৬।",
             source = "Jami at-Tirmidhi 3528; Musnad Ahmad 6696",
         ),
         dhikr(
@@ -2253,7 +2372,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আউযু বিকা মিনাল বারাসি, ওয়াল জুনুনি, ওয়াল জুযামি, ওয়া মিন সাইয়িইল আসকাম",
             translation = "হে আল্লাহ, শ্বেতী, উন্মাদনা, কুষ্ঠ ও নিকৃষ্ট রোগসমূহ থেকে আপনার আশ্রয় চাই — O Allah, I seek refuge in You from leprosy, insanity, elephantiasis and evil diseases",
             lapTarget = 1,
-            note = "নবি (সাঃ)-এর নিয়মিত দুআ — আবু দাউদ ১৫৫৪, নাসাঈ ৫৪৯৩।",
+            note = "A dua the Prophet (saw) said regularly — Sunan Abi Dawud 1554, an-Nasa'i 5493.",
+            noteBn = "নবি (সাঃ)-এর নিয়মিত দুআ — আবু দাউদ ১৫৫৪, নাসাঈ ৫৪৯৩।",
             source = "Sunan Abi Dawud 1554; Sunan an-Nasa'i 5493",
         ),
         dhikr(
@@ -2265,7 +2385,8 @@ object SeedData {
             pronunciationBn = "উইযুকুমা বিকালিমাতিল্লাহিত তাম্মাতি মিন কুল্লি শাইতানিও ওয়া হাম্মাহ, ওয়া মিন কুল্লি আইনিল লাম্মাহ",
             translation = "আমি তোমাদের দুজনকে আল্লাহর পূর্ণাঙ্গ বাণীসমূহের অসিলায় প্রতিটি শয়তান ও বিষাক্ত প্রাণী থেকে এবং প্রতিটি ক্ষতিকর নজর থেকে আশ্রয়ে দিচ্ছি — I seek protection for you both in the perfect words of Allah from every devil and poisonous creature, and from every harmful evil eye",
             lapTarget = 1,
-            note = "নবি (সাঃ) হাসান ও হুসাইন (রাঃ)-এর জন্য এটি পড়তেন; ইবরাহিম (আঃ) ইসমাইল ও ইসহাক (আঃ)-এর জন্য পড়তেন। একজনের জন্য: “উইযুকা” — সহীহ বুখারি ৩৩৭১।",
+            note = "The Prophet (saw) recited this for Hasan and Husain (ra); Ibrahim (as) recited it for Ismail and Ishaq (as). For one person: \"u'idhuka\" — Sahih al-Bukhari 3371.",
+            noteBn = "নবি (সাঃ) হাসান ও হুসাইন (রাঃ)-এর জন্য এটি পড়তেন; ইবরাহিম (আঃ) ইসমাইল ও ইসহাক (আঃ)-এর জন্য পড়তেন। একজনের জন্য: “উইযুকা” — সহীহ বুখারি ৩৩৭১।",
             source = "Sahih al-Bukhari 3371",
         ),
         dhikr(
@@ -2277,7 +2398,8 @@ object SeedData {
             pronunciationBn = "বিসমিল্লাহ (তিনবার), আউযু বিল্লাহি ওয়া কুদরাতিহি মিন শাররি মা আজিদু ওয়া উহাযির",
             translation = "আল্লাহর নামে (তিনবার); আমি যা অনুভব করছি ও যার ভয় করছি তার অনিষ্ট থেকে আল্লাহ ও তাঁর ক্ষমতার অসিলায় আশ্রয় চাই — In the name of Allah (three times); I seek refuge in Allah and His power from the evil of what I feel and what I fear",
             lapTarget = 7,
-            note = "শরীরে ব্যথা অনুভব করলে ব্যথার জায়গায় হাত রেখে সাতবার পড়তে হবে — সহীহ মুসলিম ২২০২।",
+            note = "When feeling pain in the body, place the hand on the painful spot and recite it seven times — Sahih Muslim 2202.",
+            noteBn = "শরীরে ব্যথা অনুভব করলে ব্যথার জায়গায় হাত রেখে সাতবার পড়তে হবে — সহীহ মুসলিম ২২০২।",
             source = "Sahih Muslim 2202",
         ),
         dhikr(
@@ -2289,7 +2411,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা ইন্নি আসআলুকা তাজিলা আফিয়াতিকা, ওয়া সাবরান আলা বালিয়্যাতিকা, ওয়া খুরূজান মিনাদ দুনইয়া ইলা রাহমাতিকা",
             translation = "হে আল্লাহ, আমি আপনার কাছে চাই দ্রুত আরোগ্য, আপনার পরীক্ষায় ধৈর্য, এবং দুনিয়া থেকে আপনার রহমতের দিকে প্রস্থান — O Allah, I ask You for a swift recovery from You, patience with Your trial, and a departure from this world to Your mercy",
             lapTarget = 1,
-            note = "অসুস্থতার সময় পড়ার দুআ — হাকিম ১৯১৭।",
+            note = "A dua for times of illness — al-Hakim 1917.",
+            noteBn = "অসুস্থতার সময় পড়ার দুআ — হাকিম ১৯১৭।",
             source = "al-Mustadrak (Hakim) 1917",
         ),
         dhikr(
@@ -2301,7 +2424,8 @@ object SeedData {
             pronunciationBn = "রব্বুনাল্লাহুল্লাযি ফিস সামাই তাকাদ্দাসাসমুক, আমরুকা ফিস সামাই ওয়াল আরদ, কামা রাহমাতুকা ফিস সামাই ফাজআল রাহমাতাকা ফিল আরদ, ইগফির লানা হূবানা ওয়া খাতায়ানা আনতা রব্বুত তাইয়্যিবীন, আনযিল রাহমাতান মিন রাহমাতিকা, ওয়া শিফাআন মিন শিফাইকা আলা হাযাল ওয়াজাই ফাইয়াবরাআ",
             translation = "আমাদের রব আল্লাহ, যিনি আসমানে; আপনার নাম পবিত্র; আপনার আদেশ আসমান-জমিনে চলে; যেমন আপনার রহমত আসমানে তেমনি জমিনেও রহমত দিন; আমাদের গুনাহ ও ভুল ক্ষমা করুন, আপনি সৎ লোকদের রব; আপনার রহমত থেকে রহমত ও আপনার শিফা থেকে শিফা এই ব্যথার উপর নাযিল করুন যেন তা সেরে যায় — Our Lord Allah who is in the heaven, hallowed be Your name… as Your mercy is in the heaven, place Your mercy on the earth; forgive us our sins and errors; You are the Lord of the good. Send down mercy from Your mercy and healing from Your healing upon this pain so it heals",
             lapTarget = 1,
-            note = "রুকইয়ার দুআ, অসুস্থের উপর পড়া হয় — আবু দাউদ ৩৮৯২।",
+            note = "A ruqyah dua, recited over the ill — Sunan Abi Dawud 3892.",
+            noteBn = "রুকইয়ার দুআ, অসুস্থের উপর পড়া হয় — আবু দাউদ ৩৮৯২।",
             source = "Sunan Abi Dawud 3892",
         ),
         dhikr(
@@ -2313,7 +2437,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা রব্বান নাস, আযহিবিল বাস, ইশফি আনতাশ শাফি, লা শিফাআ ইল্লা শিফাউকা, শিফাআন লা ইউগাদিরু সাকামা",
             translation = "হে আল্লাহ, মানুষের রব, এই কষ্ট দূর করুন, সুস্থ করে দিন—আপনিই আরোগ্যদাতা; আপনার শিফা ছাড়া কোনো শিফা নেই; এমন শিফা যা কোনো রোগ অবশিষ্ট রাখে না — O Allah, Lord of mankind, remove the harm and heal; You are the Healer; there is no cure but Your cure; a cure that leaves no illness behind",
             lapTarget = 1,
-            note = "নবি (সাঃ) অসুস্থের উপর ডান হাত রেখে এটি পড়তেন — সহীহ বুখারি ৫৭৪৩, মুসলিম ২১৯১।",
+            note = "The Prophet (saw) recited this with his right hand on the ill — Sahih al-Bukhari 5743, Muslim 2191.",
+            noteBn = "নবি (সাঃ) অসুস্থের উপর ডান হাত রেখে এটি পড়তেন — সহীহ বুখারি ৫৭৪৩, মুসলিম ২১৯১।",
             source = "Sahih al-Bukhari 5743; Sahih Muslim 2191",
         ),
         dhikr(
@@ -2325,7 +2450,8 @@ object SeedData {
             pronunciationBn = "বিসমিল্লাহি আরকিকা মিন কুল্লি শাইইন ইউযিক, মিন শাররি কুল্লি নাফসিন আও আইনি হাসিদিন, আল্লাহু ইয়াশফিক, বিসমিল্লাহি আরকিক",
             translation = "আল্লাহর নামে আমি তোমাকে ঝাড়ফুঁক করছি প্রতিটি কষ্টদায়ক জিনিস থেকে, প্রতিটি নফস বা হিংসুক নজরের অনিষ্ট থেকে; আল্লাহ তোমাকে সুস্থ করুন; আল্লাহর নামে আমি তোমাকে ঝাড়ফুঁক করছি — In the name of Allah I perform ruqyah over you from everything that harms you, from the evil of every soul or envious eye; may Allah heal you; in the name of Allah I perform ruqyah over you",
             lapTarget = 1,
-            note = "জিবরিল (আঃ) নবি (সাঃ) অসুস্থ হলে এই দুআ দিয়ে ঝাড়ফুঁক করতেন — সহীহ মুসলিম ২১৮৬।",
+            note = "Jibril (as) performed ruqyah on the Prophet (saw) with this dua when he was ill — Sahih Muslim 2186.",
+            noteBn = "জিবরিল (আঃ) নবি (সাঃ) অসুস্থ হলে এই দুআ দিয়ে ঝাড়ফুঁক করতেন — সহীহ মুসলিম ২১৮৬।",
             source = "Sahih Muslim 2186",
         ),
         dhikr(
@@ -2337,7 +2463,8 @@ object SeedData {
             pronunciationBn = "বিসমিল্লাহি তুরবাতু আরদিনা বিরিকাতি বাদিনা, ইউশফা সাকীমুনা বিইযনি রব্বিনা",
             translation = "আল্লাহর নামে; আমাদের জমিনের মাটি আমাদের কারও থুতুর সাথে (মিশিয়ে); আমাদের অসুস্থ ব্যক্তি আমাদের রবের অনুমতিতে সুস্থ হবে — In the name of Allah, the dust of our land with the saliva of one of us; our sick one is healed by the permission of our Lord",
             lapTarget = 1,
-            note = "নবি (সাঃ) অসুস্থ বা ক্ষতস্থানের জন্য শাহাদাত আঙুল মাটিতে রেখে এটি পড়তেন — সহীহ বুখারি ৫৭৪৫, মুসলিম ২১৯৪।",
+            note = "The Prophet (saw) recited this with his index finger on the ground for the ill or injured — Sahih al-Bukhari 5745, Muslim 2194.",
+            noteBn = "নবি (সাঃ) অসুস্থ বা ক্ষতস্থানের জন্য শাহাদাত আঙুল মাটিতে রেখে এটি পড়তেন — সহীহ বুখারি ৫৭৪৫, মুসলিম ২১৯৪।",
             source = "Sahih al-Bukhari 5745; Sahih Muslim 2194",
         ),
         dhikr(
@@ -2349,7 +2476,8 @@ object SeedData {
             pronunciationBn = "আসআলুল্লাহাল আযীমা রব্বাল আরশিল আযীমি আন ইয়াশফিয়াক",
             translation = "আমি মহান আল্লাহর কাছে, মহান আরশের রবের কাছে চাই যেন তিনি তোমাকে সুস্থ করেন — I ask Allah the Supreme, Lord of the Mighty Throne, to heal you",
             lapTarget = 7,
-            note = "যে কোনো অসুস্থের কাছে গিয়ে তার মৃত্যুর সময় না এলে সাতবার এটি পড়লে আল্লাহ তাকে সুস্থ করেন — তিরমিযি ২০৮৩, আবু দাউদ ৩১০৬ (সহীহ)।",
+            note = "Whoever visits someone ill whose time has not yet come and recites this seven times, Allah cures him — Jami at-Tirmidhi 2083, Sunan Abi Dawud 3106 (sahih).",
+            noteBn = "যে কোনো অসুস্থের কাছে গিয়ে তার মৃত্যুর সময় না এলে সাতবার এটি পড়লে আল্লাহ তাকে সুস্থ করেন — তিরমিযি ২০৮৩, আবু দাউদ ৩১০৬ (সহীহ)।",
             source = "Jami at-Tirmidhi 2083; Sunan Abi Dawud 3106",
         ),
         dhikr(
@@ -2361,7 +2489,8 @@ object SeedData {
             pronunciationBn = "লা বাসা তাহুরুন ইন শাআল্লাহ",
             translation = "কোনো ক্ষতি নেই, ইনশাআল্লাহ এটি (গুনাহের) পবিত্রতা হবে — No harm, it is a purification, Allah willing",
             lapTarget = 1,
-            note = "নবি (সাঃ) জ্বরে আক্রান্ত রোগীকে দেখতে গিয়ে এটি বলতেন — সহীহ বুখারি ৩৬১৬।",
+            note = "The Prophet (saw) said this when visiting a feverish patient — Sahih al-Bukhari 3616.",
+            noteBn = "নবি (সাঃ) জ্বরে আক্রান্ত রোগীকে দেখতে গিয়ে এটি বলতেন — সহীহ বুখারি ৩৬১৬।",
             source = "Sahih al-Bukhari 3616",
         ),
 
@@ -2380,7 +2509,8 @@ object SeedData {
             pronunciationBn = "লা ইলাহা ইল্লাল্লাহু ওয়াহদাহু লা শারিকা লাহু, আল্লাহু আকবারু কাবীরা, ওয়াল হামদু লিল্লাহি কাছীরা, সুবহানাল্লাহি রব্বিল আলামিন, লা হাওলা ওয়া লা কুওয়াতা ইল্লা বিল্লাহিল আযীযিল হাকীম",
             translation = "আল্লাহ ছাড়া কোনো উপাস্য নেই, তিনি একক, শরিকহীন; আল্লাহ সর্বমহান, মহত্ত্ব তাঁরই; সকল প্রশংসা আল্লাহর প্রচুর পরিমাণে; বিশ্বজগতের রব আল্লাহ পবিত্র; পরাক্রমশালী প্রজ্ঞাময় আল্লাহ ছাড়া কোনো শক্তি-সামর্থ্য নেই — There is no god but Allah alone, no partner has He; Allah is the Greatest, greatness is His; abundant praise is for Allah; glory be to Allah, Lord of the worlds; there is no might nor power except by Allah, the Almighty, the All-Wise",
             lapTarget = 3,
-            note = "এক বেদুইনকে নবি (সাঃ) এটি শিখিয়েছেন যেন সে রবের জন্য বলে — সহীহ মুসলিম ২৬৯৬। এরপর নিজের জন্য [[bd_ghfirli_4]] পড়তে বলেছেন।",
+            note = "The Prophet (saw) taught this to a Bedouin to say for his Lord — Sahih Muslim 2696. He then told him to recite [[bd_ghfirli_4]] for himself.",
+            noteBn = "এক বেদুইনকে নবি (সাঃ) এটি শিখিয়েছেন যেন সে রবের জন্য বলে — সহীহ মুসলিম ২৬৯৬। এরপর নিজের জন্য [[bd_ghfirli_4]] পড়তে বলেছেন।",
             source = "Sahih Muslim 2696",
         ),
         dhikr(
@@ -2392,7 +2522,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মাগফির লি ওয়ারহামনি ওয়াহদিনি ওয়ারযুকনি",
             translation = "হে আল্লাহ, আমাকে ক্ষমা করুন, দয়া করুন, হেদায়েত দিন ও রিযিক দিন — O Allah, forgive me, have mercy on me, guide me and provide for me",
             lapTarget = 3,
-            note = "বেদুইনকে নবি (সাঃ) নিজের জন্য এটি বলতে বলেছেন — সহীহ মুসলিম ২৬৯৬। দুই সিজদার মাঝের দুআয় ‘ওয়া আফিনি’ অতিরিক্ত থাকে ([[istighfar_afini]])।",
+            note = "The Prophet (saw) told the Bedouin to say this for himself — Sahih Muslim 2696. The dua between the two prostrations has an extra \"wa afini\" ([[istighfar_afini]]).",
+            noteBn = "বেদুইনকে নবি (সাঃ) নিজের জন্য এটি বলতে বলেছেন — সহীহ মুসলিম ২৬৯৬। দুই সিজদার মাঝের দুআয় ‘ওয়া আফিনি’ অতিরিক্ত থাকে ([[istighfar_afini]])।",
             source = "Sahih Muslim 2696",
         ),
         dhikr(
@@ -2404,7 +2535,8 @@ object SeedData {
             pronunciationBn = "আল্লাহুম্মা সাল্লি আলা মুহাম্মাদ",
             translation = "হে আল্লাহ, মুহাম্মাদের প্রতি রহমত বর্ষণ করুন — O Allah, send blessings upon Muhammad",
             lapTarget = 10,
-            note = "যে আমার প্রতি একবার দরূদ পাঠায়, আল্লাহ তার প্রতি দশবার রহমত বর্ষণ করেন — সহীহ মুসলিম ৪০৮।",
+            note = "Whoever sends blessings on me once, Allah sends blessings on him tenfold — Sahih Muslim 408.",
+            noteBn = "যে আমার প্রতি একবার দরূদ পাঠায়, আল্লাহ তার প্রতি দশবার রহমত বর্ষণ করেন — সহীহ মুসলিম ৪০৮।",
             source = "Sahih Muslim 408",
         ),
         dhikr(
@@ -2416,7 +2548,8 @@ object SeedData {
             pronunciationBn = "সুবহানাকাল্লাহুম্মা ওয়া বিহামদিকা, তাবারাকাসমুকা, ওয়া তাআলা জাদ্দুকা, ওয়া লা ইলাহা গাইরুকা, রব্বি ইন্নি কাদ যালামতু নাফসি ফাগফির লি ইন্নাহু লা ইয়াগফিরুয যুনূবা ইল্লা আনতা",
             translation = "হে আল্লাহ, আপনি কতই না পবিত্র, সকল প্রশংসা আপনার; আপনার নাম বরকতময়, আপনার মর্যাদা সুউচ্চ, আপনি ছাড়া কোনো উপাস্য নেই; হে আমার রব, আমি নিজের উপর জুলুম করেছি, তাই আমাকে ক্ষমা করুন; আপনি ছাড়া গুনাহ কেউ ক্ষমা করতে পারে না — Glory and praise be to You, O Allah; blessed is Your name, exalted is Your majesty, there is no god but You. My Lord, I have wronged myself, so forgive me; none forgives sins but You",
             lapTarget = 1,
-            note = "ইবনে মাসউদ (রাঃ): আল্লাহর কাছে সবচেয়ে প্রিয় বাক্যগুলোর একটি — আয-যুহদ (হান্নাদ ইবনুস সারি)।",
+            note = "Ibn Mas'ud (ra): one of the words most beloved to Allah — az-Zuhd (Hannad ibn as-Sari).",
+            noteBn = "ইবনে মাসউদ (রাঃ): আল্লাহর কাছে সবচেয়ে প্রিয় বাক্যগুলোর একটি — আয-যুহদ (হান্নাদ ইবনুস সারি)।",
             source = "az-Zuhd (Hannad ibn al-Sari)",
         ),
 
