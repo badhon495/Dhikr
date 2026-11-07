@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -84,6 +85,7 @@ fun ReminderSection(
                 .heightIn(min = 48.dp)
                 .clip(ListRowShape)
                 .background(colors.card)
+                .border(1.dp, colors.line, ListRowShape)
                 .padding(horizontal = 14.dp, vertical = 8.dp),
         ) {
             Column(modifier = Modifier.weight(1f)) {
@@ -121,6 +123,7 @@ fun ReminderSection(
                     .heightIn(min = 48.dp)
                     .clip(ListRowShape)
                     .background(colors.card)
+                    .border(1.dp, colors.line, ListRowShape)
                     .clickable(role = Role.Button) { showTimePicker = true }
                     .padding(horizontal = 14.dp, vertical = 8.dp),
             ) {
