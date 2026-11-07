@@ -143,7 +143,7 @@ private const val ROUTE_DUA_EDITOR = "dua/edit?duaId={duaId}"
 fun DhikrApp(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
-    strongBorders: Boolean = false,
+    strongBorders: Boolean = true,
     highContrast: Boolean = false,
     autoLightStart: Int = DEFAULT_AUTO_LIGHT_START,
     autoDarkStart: Int = DEFAULT_AUTO_DARK_START,

@@ -63,7 +63,7 @@ android {
         // Real OAuth client ids come from Google Cloud Console setup the
         // project owner does separately, placed in local.properties (never
         // committed) — see driveWebClientId/driveAndroidClientId above.
-        buildConfigField("String", "DRIVE_WEB_CLI`ENT_ID", "\"$driveWebClientId\"")
+        buildConfigField("String", "DRIVE_WEB_CLIENT_ID", "\"$driveWebClientId\"")
         buildConfigField("String", "DRIVE_ANDROID_CLIENT_ID", "\"$driveAndroidClientId\"")
     }
 

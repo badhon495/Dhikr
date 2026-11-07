@@ -152,8 +152,8 @@ class AppPreferencesRepository(private val context: Context) {
 
     /** Heavier card borders, section dividers and ring track — a legibility aid
      *  for when the soft default hairlines blur adjacent surfaces together.
-     *  Off by default; applied in [com.dhikr.app.ui.theme.DhikrTheme]. */
-    val strongBorders = context.preferencesDataStore.data.map { it[strongBordersKey] ?: false }
+     *  On by default; applied in [com.dhikr.app.ui.theme.DhikrTheme]. */
+    val strongBorders = context.preferencesDataStore.data.map { it[strongBordersKey] ?: true }
 
     suspend fun setStrongBorders(value: Boolean) {
         context.preferencesDataStore.edit { it[strongBordersKey] = value }

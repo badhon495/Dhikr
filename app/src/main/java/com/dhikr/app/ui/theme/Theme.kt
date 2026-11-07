@@ -66,7 +66,7 @@ fun ThemeMode.resolveIsDark(
 fun DhikrTheme(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     dynamicColor: Boolean = false,
-    strongBorders: Boolean = false,
+    strongBorders: Boolean = true,
     highContrast: Boolean = false,
     autoLightStart: Int = DEFAULT_AUTO_LIGHT_START,
     autoDarkStart: Int = DEFAULT_AUTO_DARK_START,

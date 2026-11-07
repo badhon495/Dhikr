@@ -42,7 +42,7 @@ data class SettingsUiState(
     val autoDarkStart: Int = DEFAULT_AUTO_DARK_START,
     val hapticMode: HapticMode = HapticMode.EVERY_TAP,
     val reducedMotion: Boolean = false,
-    val strongBorders: Boolean = false,
+    val strongBorders: Boolean = true,
     val highContrast: Boolean = false,
     val dailyGoalTarget: Int = 500,
     val dynamicColorEnabled: Boolean = true,
