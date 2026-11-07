@@ -64,10 +64,10 @@
     <string name="home_goal_ring_description">দৈনিক লক্ষ্য: %2$d এর %1$d</string>
     <string name="home_continue_session_kicker">সেশন চালিয়ে যান</string>
     <string name="home_continue_session_description">%1$s চালিয়ে যান, %3$d এর %2$d</string>
-    <string name="home_favorites_title">প্রিয়</string>
+    <string name="home_favorites_title">প্রিয় তাসবিহ</string>
     <string name="home_favorites_all">সব</string>
     <string name="home_favorites_empty_hint">এখানে যোগ করতে তাসবিহ লাইব্রেরিতে গিয়ে তাসবিহে তারা চিহ্ন দিন।</string>
-    <string name="home_routines_title">রুটিন</string>
+    <string name="home_routines_title">প্রিয় রুটিন</string>
     <string name="home_routines_manage">পরিচালনা</string>
     <string name="home_routines_empty_hint">এখানে যোগ করতে রুটিন পেজে গিয়ে রুটিনে তারা চিহ্ন দিন।</string>
     <string name="home_backup_nudge_title">আপনার যিকির সুরক্ষিত রাখুন</string>

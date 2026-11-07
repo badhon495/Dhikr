@@ -6,6 +6,7 @@ import com.dhikr.app.ui.doneKeyboardActions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -177,6 +178,7 @@ fun TasbihLibraryScreen(
                 .heightIn(min = 48.dp)
                 .clip(PillShape)
                 .background(colors.surface)
+                .border(1.dp, colors.line, PillShape)
                 .padding(horizontal = 16.dp),
         ) {
             Icon(
@@ -501,6 +503,7 @@ private fun TasbihRow(
             .fillMaxWidth()
             .clip(ListRowShape)
             .background(colors.card)
+            .border(1.dp, colors.line, ListRowShape)
             .combinedClickable(onClick = onClick, onLongClick = onLongPress),
     ) {
         // Green fill growing left-to-right with today's counting progress
