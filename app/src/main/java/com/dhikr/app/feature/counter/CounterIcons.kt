@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.addPathNodes
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
@@ -359,11 +360,10 @@ fun dimScreenIcon(dimmed: Boolean): ImageVector = ImageVector.Builder(
     }
 }.build()
 
-/** Sun/crescent-moon glyph for the theme toggle: filled sun with rays for
- *  light theme, filled crescent moon for dark theme. The crescent is one
- *  path with two circle subpaths and an even-odd fill rule — the overlap
- *  between the outer circle and the offset inner circle cancels out,
- *  leaving just the lune. */
+/** Theme-toggle glyph showing the current mode: a plain crescent moon in
+ *  dark theme, a sun (disc + eight rays) in light theme. The moon is the
+ *  Material "dark_mode" outline (Apache 2.0) — a single closed crescent
+ *  path, so it renders cleanly at small sizes. */
 fun themeToggleIcon(isDarkTheme: Boolean): ImageVector = ImageVector.Builder(
     name = if (isDarkTheme) "ThemeMoon" else "ThemeSun",
     defaultWidth = 24.dp,
@@ -372,55 +372,38 @@ fun themeToggleIcon(isDarkTheme: Boolean): ImageVector = ImageVector.Builder(
     viewportHeight = 24f,
 ).apply {
     if (isDarkTheme) {
-        path(
+        addPath(
+            pathData = addPathNodes(MOON_PATH),
             fill = SolidColor(Color.Black),
-            stroke = null,
-            pathFillType = PathFillType.EvenOdd,
-        ) {
-            // Outer circle: centre (12, 12.5), radius 7.5.
-            moveTo(19.5f, 12.5f)
-            curveTo(19.5f, 16.64f, 16.14f, 20f, 12f, 20f)
-            curveTo(7.86f, 20f, 4.5f, 16.64f, 4.5f, 12.5f)
-            curveTo(4.5f, 8.36f, 7.86f, 5f, 12f, 5f)
-            curveTo(16.14f, 5f, 19.5f, 8.36f, 19.5f, 12.5f)
-            close()
-            // Inner circle (subtracted via even-odd): centre (15, 9.5), radius 6.5
-            // — offset up-right so the leftover sliver reads as a crescent.
-            moveTo(21.5f, 9.5f)
-            curveTo(21.5f, 13.09f, 18.59f, 16f, 15f, 16f)
-            curveTo(11.41f, 16f, 8.5f, 13.09f, 8.5f, 9.5f)
-            curveTo(8.5f, 5.91f, 11.41f, 3f, 15f, 3f)
-            curveTo(18.59f, 3f, 21.5f, 5.91f, 21.5f, 9.5f)
-            close()
-        }
+        )
     } else {
         path(
             fill = SolidColor(Color.Black),
             stroke = null,
             pathFillType = PathFillType.NonZero,
         ) {
-            moveTo(17f, 12f)
-            curveTo(17f, 14.76f, 14.76f, 17f, 12f, 17f)
-            curveTo(9.24f, 17f, 7f, 14.76f, 7f, 12f)
-            curveTo(7f, 9.24f, 9.24f, 7f, 12f, 7f)
-            curveTo(14.76f, 7f, 17f, 9.24f, 17f, 12f)
+            moveTo(16.5f, 12f)
+            curveTo(16.5f, 14.49f, 14.49f, 16.5f, 12f, 16.5f)
+            curveTo(9.51f, 16.5f, 7.5f, 14.49f, 7.5f, 12f)
+            curveTo(7.5f, 9.51f, 9.51f, 7.5f, 12f, 7.5f)
+            curveTo(14.49f, 7.5f, 16.5f, 9.51f, 16.5f, 12f)
             close()
         }
         val rays = listOf(
-            12f to 3.5f to (12f to 1.5f),
-            12f to 20.5f to (12f to 22.5f),
-            3.5f to 12f to (1.5f to 12f),
-            20.5f to 12f to (22.5f to 12f),
-            5.46f to 5.46f to (4.05f to 4.05f),
-            18.54f to 18.54f to (19.95f to 19.95f),
-            5.46f to 18.54f to (4.05f to 19.95f),
-            18.54f to 5.46f to (19.95f to 4.05f),
+            (12f to 4f) to (12f to 2f),
+            (12f to 20f) to (12f to 22f),
+            (4f to 12f) to (2f to 12f),
+            (20f to 12f) to (22f to 12f),
+            (6.34f to 6.34f) to (4.93f to 4.93f),
+            (17.66f to 17.66f) to (19.07f to 19.07f),
+            (6.34f to 17.66f) to (4.93f to 19.07f),
+            (17.66f to 6.34f) to (19.07f to 4.93f),
         )
         for ((start, end) in rays) {
             path(
                 fill = null,
                 stroke = SolidColor(Color.Black),
-                strokeLineWidth = STROKE_WIDTH,
+                strokeLineWidth = 2f,
                 strokeLineCap = StrokeCap.Round,
                 strokeLineJoin = StrokeJoin.Round,
             ) {
@@ -430,6 +413,11 @@ fun themeToggleIcon(isDarkTheme: Boolean): ImageVector = ImageVector.Builder(
         }
     }
 }.build()
+
+private const val MOON_PATH =
+    "M12,3c-4.97,0 -9,4.03 -9,9s4.03,9 9,9s9,-4.03 9,-9c0,-0.46 -0.04,-0.92 -0.1,-1.36" +
+        "c-0.98,1.37 -2.58,2.26 -4.4,2.26c-2.98,0 -5.4,-2.42 -5.4,-5.4" +
+        "c0,-1.81 0.89,-3.42 2.26,-4.4C12.92,3.04 12.46,3 12,3z"
 
 fun lockIcon(locked: Boolean): ImageVector = ImageVector.Builder(
     name = if (locked) "LockClosed" else "LockOpen",

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.doublePreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -16,6 +15,8 @@ import com.dhikr.app.core.prayer.DEFAULT_PRAYER_OFFSET_MINUTES
 import com.dhikr.app.core.prayer.Prayer
 import com.dhikr.app.core.prayer.PrayerSettings
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
@@ -29,8 +30,17 @@ enum class ThemeMode { SYSTEM, LIGHT, DARK, AUTO_TIME }
 const val DEFAULT_AUTO_LIGHT_START = 7 * 60
 const val DEFAULT_AUTO_DARK_START = 18 * 60
 
-/** Default dim level (5% brightness) for [AppPreferencesRepository.dimBrightnessLevel]. */
-const val DEFAULT_DIM_BRIGHTNESS_LEVEL = 0.05f
+/**
+ * Screen-dim state is deliberately session-only: held in process memory, never
+ * written to DataStore. Swiping the app away or restarting the device drops it,
+ * so the app always comes back up at the device's own brightness rather than a
+ * custom level the user set last time. Top-level (not per-instance) because
+ * several [AppPreferencesRepository] instances exist and must share it.
+ */
+private val sessionDimScreenEnabled = MutableStateFlow(false)
+
+/** Null means "no custom level chosen this session" — follow the device brightness. */
+private val sessionDimBrightnessLevel = MutableStateFlow<Float?>(null)
 
 /**
  * When the counter vibrates.
@@ -80,8 +90,6 @@ class AppPreferencesRepository(private val context: Context) {
     private val fastingReminderKey = booleanPreferencesKey("fasting_reminder_enabled")
     private fun prayerRoutineKey(prayer: Prayer) = stringPreferencesKey("prayer_routine_${prayer.name}")
     private val hasSeenOnboardingKey = booleanPreferencesKey("has_seen_onboarding")
-    private val dimScreenEnabledKey = booleanPreferencesKey("dim_screen_enabled")
-    private val dimBrightnessLevelKey = floatPreferencesKey("dim_brightness_level")
     private val benefitsLanguageKey = stringPreferencesKey("benefits_language")
     private val benefitsPromptOverrideKey = stringPreferencesKey("benefits_prompt_override")
 
@@ -336,24 +344,23 @@ class AppPreferencesRepository(private val context: Context) {
         context.preferencesDataStore.edit { it[hasSeenOnboardingKey] = value }
     }
 
-    /** Dims the screen to a fixed low brightness app-wide, toggled from the
-     *  Counter screen's top bar. Off by default. Applied in [MainActivity]. */
-    val dimScreenEnabled = context.preferencesDataStore.data.map { it[dimScreenEnabledKey] ?: false }
+    /** Applies the custom brightness level app-wide, toggled from the Counter
+     *  screen's top bar. Off at every app start (session-only, see
+     *  [sessionDimScreenEnabled]). Applied in [MainActivity]. */
+    val dimScreenEnabled: Flow<Boolean> = sessionDimScreenEnabled
 
-    suspend fun setDimScreenEnabled(value: Boolean) {
-        context.preferencesDataStore.edit { it[dimScreenEnabledKey] = value }
+    fun setDimScreenEnabled(value: Boolean) {
+        sessionDimScreenEnabled.value = value
     }
 
-    /** How dark the dim toggle makes the screen (0.01-1.0 fraction of max
-     *  brightness), user-adjustable via the Counter screen's dim slider.
-     *  Only takes effect while [dimScreenEnabled] is on — "off" always means
-     *  the device's normal (unmanaged) brightness, not a stored level. */
-    val dimBrightnessLevel = context.preferencesDataStore.data.map {
-        it[dimBrightnessLevelKey] ?: DEFAULT_DIM_BRIGHTNESS_LEVEL
-    }
+    /** Custom brightness (0.01-1.0 fraction of max) picked on the Counter
+     *  screen's slider, or null when none was picked this session — the slider
+     *  then starts from the device's current brightness. Only takes effect
+     *  while [dimScreenEnabled] is on. Session-only, never persisted. */
+    val dimBrightnessLevel: Flow<Float?> = sessionDimBrightnessLevel
 
-    suspend fun setDimBrightnessLevel(value: Float) {
-        context.preferencesDataStore.edit { it[dimBrightnessLevelKey] = value.coerceIn(0.01f, 1f) }
+    fun setDimBrightnessLevel(value: Float) {
+        sessionDimBrightnessLevel.value = value.coerceIn(0.01f, 1f)
     }
 
     /**

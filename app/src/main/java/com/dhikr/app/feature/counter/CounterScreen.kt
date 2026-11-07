@@ -99,7 +99,6 @@ import com.dhikr.app.core.counter.CounterDisplay
 import com.dhikr.app.core.counter.LiveCounter
 import com.dhikr.app.core.datastore.CounterScript
 import com.dhikr.app.core.datastore.CounterTextSize
-import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.HapticMode
 import com.dhikr.app.core.haptics.rememberHaptics
 import com.dhikr.app.core.localization.LocalAppLanguage
@@ -107,6 +106,7 @@ import com.dhikr.app.core.localization.displayName
 import com.dhikr.app.core.localization.displayNote
 import com.dhikr.app.core.localization.displayPronunciation
 import com.dhikr.app.core.utilities.MIN_SCREEN_BRIGHTNESS
+import com.dhikr.app.core.utilities.currentSystemBrightnessFraction
 import com.dhikr.app.core.localization.localizedDigits
 import com.dhikr.app.ui.COUNTER_TAP_AREA_TEST_TAG
 import com.dhikr.app.ui.ClampedFontScale
@@ -160,7 +160,8 @@ fun CounterScreen(
     // dimBrightnessLevel — the tap gesture now drives isDarkTheme instead.
     dimScreenEnabled: Boolean = false,
     onToggleDimScreen: () -> Unit = {},
-    dimBrightnessLevel: Float = DEFAULT_DIM_BRIGHTNESS_LEVEL,
+    // Null = no custom level this session; the slider starts at device brightness.
+    dimBrightnessLevel: Float? = null,
     onDimBrightnessLevelChange: (Float) -> Unit = {},
     onBack: () -> Unit,
     // Reports the lock toggle up to DhikrApp, which owns the Scaffold the
@@ -1197,20 +1198,23 @@ fun CounterScreen(
 }
 
 /**
- * Dim-level slider, opened by long-pressing the top-bar dim button as a
- * small popup anchored under it. The slider's range goes all the way to
- * the device's true max brightness (1f) — not capped to whatever system
- * brightness happens to be set right now, so the user can push past that
- * if they want brighter-than-current.
+ * Brightness slider, opened by long-pressing the top-bar night-mode button
+ * as a small popup anchored under it. Starts at the device's current
+ * brightness until the user picks a custom level this session (the level is
+ * never persisted, so a fresh app start always returns to device brightness).
+ * The range goes to the true max (1f), so the user can also go brighter.
  */
 @Composable
 private fun DimLevelPopup(
-    level: Float,
+    level: Float?,
     onLevelChange: (Float) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val colors = DhikrTheme.colors
-    var sliderValue by remember(level) { mutableStateOf(level.coerceIn(MIN_SCREEN_BRIGHTNESS, 1f)) }
+    val context = LocalContext.current
+    var sliderValue by remember(level) {
+        mutableStateOf((level ?: currentSystemBrightnessFraction(context)).coerceIn(MIN_SCREEN_BRIGHTNESS, 1f))
+    }
     Popup(
         alignment = Alignment.TopEnd,
         offset = IntOffset(0, with(LocalDensity.current) { 56.dp.roundToPx() }),

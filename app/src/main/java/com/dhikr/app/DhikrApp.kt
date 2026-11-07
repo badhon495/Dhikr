@@ -71,7 +71,6 @@ import com.dhikr.app.feature.qibla.QiblaScreen
 import com.dhikr.app.feature.settings.DriveSyncViewModel
 import kotlinx.coroutines.flow.combine
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
-import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
 import com.dhikr.app.core.localization.AppLanguage
 import com.dhikr.app.core.localization.LocalAppLanguage
@@ -220,7 +219,7 @@ fun DhikrApp(
         val isDarkTheme = themeMode.resolveIsDark(autoLightStart, autoDarkStart)
         val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
         val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
-            .collectAsState(initial = DEFAULT_DIM_BRIGHTNESS_LEVEL)
+            .collectAsState(initial = null)
         val appLanguage by AppLanguage.state.collectAsState()
         // Unlike the preferences above, this one gates a full-screen overlay, so
         // an initial=false here flashes the onboarding screen on every Activity

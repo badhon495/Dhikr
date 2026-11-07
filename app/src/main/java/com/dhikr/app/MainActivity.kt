@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalContext
 import com.dhikr.app.core.datastore.AppPreferencesRepository
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_DARK_START
 import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
-import com.dhikr.app.core.datastore.DEFAULT_DIM_BRIGHTNESS_LEVEL
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.core.notifications.ReminderNotifications
 import com.dhikr.app.ui.theme.resolveIsDark
@@ -101,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 .collectAsState(initial = DEFAULT_AUTO_DARK_START)
             val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
             val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
-                .collectAsState(initial = DEFAULT_DIM_BRIGHTNESS_LEVEL)
+                .collectAsState(initial = null)
 
             // Explicit transparent style, re-applied via SideEffect whenever the
             // resolved dark/light signal flips — now driven by the user's theme
@@ -139,7 +138,8 @@ class MainActivity : AppCompatActivity() {
             // lets that settle first so this write always lands last.
             LaunchedEffect(dimScreenEnabled, dimBrightnessLevel) {
                 kotlinx.coroutines.delay(16L)
-                val targetBrightness = if (dimScreenEnabled) dimBrightnessLevel else -1f
+                // No custom level picked yet this session means "device brightness" too.
+                val targetBrightness = if (dimScreenEnabled) dimBrightnessLevel ?: -1f else -1f
                 val params = window.attributes
                 if (params.screenBrightness != targetBrightness) {
                     params.screenBrightness = targetBrightness
