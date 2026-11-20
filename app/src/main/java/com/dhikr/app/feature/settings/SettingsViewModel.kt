@@ -35,6 +35,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 
 data class SettingsUiState(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
@@ -149,8 +151,12 @@ class SettingsViewModel(
     val uiState: StateFlow<SettingsUiState> = _uiState.asStateFlow()
 
     init {
+        // viewModelScope runs on Dispatchers.Main.immediate, so a bare
+        // launch here still executed the Keystore/Tink setup synchronously
+        // inside this constructor — on the main thread, during the Settings
+        // nav transition. withContext(IO) actually moves it off.
         viewModelScope.launch {
-            val hasKey = secureKeyStore.hasKey
+            val hasKey = withContext(Dispatchers.IO) { secureKeyStore.hasKey }
             _uiState.value = _uiState.value.copy(hasGeminiKey = hasKey)
         }
 

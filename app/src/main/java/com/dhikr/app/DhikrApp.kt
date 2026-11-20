@@ -253,6 +253,19 @@ fun DhikrApp(
         // Per-tab "scroll to top" signal. Tapping a bottom-nav tab you're
         // already on bumps its counter; the tab screen watches its own entry
         // and animates its scroll container back to the top on each change.
+        // Settings' heavier dependencies, created lazily on the first Settings
+        // visit (not at app start) and kept for the rest of the session.
+        val settingsDeps = remember {
+            lazy {
+                val backupRepository = BackupRepository(app.database, preferencesRepository)
+                SettingsDeps(
+                    secureKeyStore = SecureKeyStore(context.applicationContext),
+                    backupRepository = backupRepository,
+                    driveGraph = DriveSyncGraph.create(context.applicationContext, backupRepository, appVersionName),
+                )
+            }
+        }
+
         val scrollTopSignals = remember { mutableStateMapOf<String, Int>() }
         fun signalOf(route: String) = scrollTopSignals[route] ?: 0
 
@@ -604,8 +617,12 @@ fun DhikrApp(
                     )
                 }
                 composable(ROUTE_SETTINGS) {
-                    val secureKeyStore = remember { SecureKeyStore(context.applicationContext) }
-                    val backupRepository = remember { BackupRepository(app.database, preferencesRepository) }
+                    // Held above the NavHost (built on the first Settings
+                    // visit, then reused): remember{} in here re-ran on every
+                    // visit, repeating the encrypted-prefs Keystore/Tink setup
+                    // and rebuilding the Drive auth objects each time.
+                    val secureKeyStore = settingsDeps.value.secureKeyStore
+                    val backupRepository = settingsDeps.value.backupRepository
                     val viewModel: SettingsViewModel = viewModel(
                         factory = SettingsViewModel.Factory(
                             preferencesRepository,
@@ -622,9 +639,7 @@ fun DhikrApp(
                             onBackedUp = { preferencesRepository.setLastBackupAt(System.currentTimeMillis()) },
                         ),
                     )
-                    val driveGraph = remember {
-                        DriveSyncGraph.create(context, backupRepository, appVersionName)
-                    }
+                    val driveGraph = settingsDeps.value.driveGraph
                     val driveAuthManager = driveGraph.authManager
                     val driveBackupRepository = driveGraph.backupRepository
                     val driveSyncViewModel: DriveSyncViewModel = viewModel(
@@ -706,6 +721,14 @@ fun DhikrApp(
         }
     }
 }
+
+/** Settings-only dependencies hoisted out of the Settings destination; see
+ *  `settingsDeps` in [DhikrApp]. */
+private class SettingsDeps(
+    val secureKeyStore: SecureKeyStore,
+    val backupRepository: BackupRepository,
+    val driveGraph: DriveSyncGraph,
+)
 
 /** Bottom-nav tab order, left to right, as shown in [DhikrBottomNav]. Drives
  *  slide direction on tab switches — later tab slides in from the end. */

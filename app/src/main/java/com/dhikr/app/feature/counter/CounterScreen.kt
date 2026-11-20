@@ -69,6 +69,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -477,10 +478,34 @@ fun CounterScreen(
     }
     val progressArcColor = lerp(colors.terra, colors.sage, lapPulse.value)
 
-    Column(
+    // The ViewModel emits CounterUiState.Empty first and the real session a
+    // few Room queries later — usually while the tab-switch slide is still
+    // running. Composing the full screen for Empty and then again for the
+    // loaded state doubled the heaviest work of the transition, so until the
+    // session is ready only a bare background is composed; the real content is
+    // composed once and faded in. Alpha is read inside graphicsLayer so the
+    // fade itself never recomposes this screen.
+    val contentAlpha = remember { Animatable(if (state.sessionReady) 1f else 0f) }
+    LaunchedEffect(state.sessionReady, reducedMotion) {
+        if (!state.sessionReady) return@LaunchedEffect
+        if (reducedMotion) {
+            contentAlpha.snapTo(1f)
+        } else {
+            contentAlpha.animateTo(1f, tween(Motion.FAST_MS, easing = Motion.StandardEasing))
+        }
+    }
+
+    if (!state.sessionReady) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colors.bg),
+        )
+    } else Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colors.bg),
+            .background(colors.bg)
+            .graphicsLayer { alpha = contentAlpha.value },
     ) {
         // ---- Top bar: back, dhikr name + session label, lock toggle ----
         Row(

@@ -163,8 +163,12 @@ class CounterViewModel(
             if (routine != null && routine.steps.isNotEmpty()) {
                 activeRoutine = routine
                 val sortedSteps = routine.steps.sortedBy { it.stepOrder }
+                // One query for every step's name instead of one getById per
+                // step — a 99-step routine (Asma-ul-Husna) was 99 sequential
+                // Room round-trips before the screen could show anything.
+                val tasbihById = tasbihRepository.getAll().associateBy { it.id }
                 routineStepNames = sortedSteps.map { step ->
-                    tasbihRepository.getById(step.tasbihId)?.displayName(AppLanguage.current) ?: step.tasbihId
+                    tasbihById[step.tasbihId]?.displayName(AppLanguage.current) ?: step.tasbihId
                 }
                 sortedRoutineSteps = sortedSteps
                 cachedRoutineStepDisplays = sortedSteps.mapIndexed { i, step ->
