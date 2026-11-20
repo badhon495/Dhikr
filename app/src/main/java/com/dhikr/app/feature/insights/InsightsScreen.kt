@@ -34,7 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -68,6 +67,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dhikr.app.ui.revealWhenLoaded
 
 private const val DHIKR_HISTORY_PREVIEW_LIMIT = 3
 
@@ -79,7 +80,7 @@ fun InsightsScreen(
     onSeeAllDhikr: () -> Unit,
     scrollToTopSignal: Int = 0,
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val colors = DhikrTheme.colors
     val scrollState = rememberScrollState()
 
@@ -87,9 +88,17 @@ fun InsightsScreen(
         if (scrollToTopSignal > 0) scrollState.animateScrollTo(0)
     }
 
+    // isEmpty defaults to true, so before this gate every visit flashed the
+    // "no history yet" empty state until Room answered. Nothing but the
+    // background is composed until the first real data arrives.
+    if (!state.isLoaded) {
+        Box(modifier = Modifier.fillMaxSize().background(colors.bg))
+        return
+    }
+
     if (state.isEmpty) {
         Column(
-            modifier = Modifier.fillMaxSize().background(colors.bg).padding(32.dp),
+            modifier = Modifier.fillMaxSize().background(colors.bg).revealWhenLoaded(state.isLoaded).padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -138,6 +147,7 @@ fun InsightsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.bg)
+            .revealWhenLoaded(state.isLoaded)
             .verticalScroll(scrollState)
             .testTag(INSIGHTS_SCREEN_TEST_TAG)
             .padding(16.dp),

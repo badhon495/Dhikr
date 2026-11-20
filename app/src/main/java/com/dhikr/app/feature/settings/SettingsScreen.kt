@@ -40,7 +40,6 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -85,6 +84,7 @@ import com.dhikr.app.ui.theme.PillShape
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun SettingsScreen(
@@ -94,7 +94,7 @@ fun SettingsScreen(
     scrollToTopSignal: Int = 0,
     onOpenQibla: () -> Unit = {},
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val colors = DhikrTheme.colors
     val scrollState = rememberScrollState()
     // Accordion: only one top-level section open at a time; null = all collapsed.
@@ -1074,8 +1074,8 @@ private fun KeyActionPill(
 private fun BackupControls(viewModel: BackupViewModel) {
     val colors = DhikrTheme.colors
     val context = LocalContext.current
-    val status by viewModel.status.collectAsState()
-    val lastBackupAt by viewModel.lastBackupAt.collectAsState()
+    val status by viewModel.status.collectAsStateWithLifecycle()
+    val lastBackupAt by viewModel.lastBackupAt.collectAsStateWithLifecycle()
 
     val exportLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json"),
@@ -1251,8 +1251,8 @@ private enum class DrivePendingAction { SIGN_IN, BACKUP, RESTORE }
 private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
     val colors = DhikrTheme.colors
     val context = LocalContext.current
-    val account by viewModel.signedInAccount.collectAsState()
-    val status by viewModel.status.collectAsState()
+    val account by viewModel.signedInAccount.collectAsStateWithLifecycle()
+    val status by viewModel.status.collectAsStateWithLifecycle()
 
     // Tracks which action was in flight when the Drive Authorization API
     // demanded a consent screen, so it can be retried once that consent
@@ -1289,7 +1289,7 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
         }
     }
 
-    val autoBackup by viewModel.autoBackupEnabled.collectAsState()
+    val autoBackup by viewModel.autoBackupEnabled.collectAsStateWithLifecycle()
     SwitchRow(
         title = stringResource(R.string.settings_backup_drive_auto),
         description = stringResource(R.string.settings_backup_drive_auto_desc),
@@ -1336,7 +1336,7 @@ private fun DriveSyncControls(viewModel: DriveSyncViewModel) {
             color = colors.dim,
             modifier = Modifier.padding(bottom = 4.dp),
         )
-        val lastDriveBackupAt by viewModel.lastDriveBackupAt.collectAsState()
+        val lastDriveBackupAt by viewModel.lastDriveBackupAt.collectAsStateWithLifecycle()
         Text(
             text = if (lastDriveBackupAt > 0L) {
                 stringResource(

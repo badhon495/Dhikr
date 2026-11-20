@@ -35,7 +35,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,6 +64,8 @@ import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.ListRowShape
 import com.dhikr.app.ui.theme.PillShape
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dhikr.app.ui.revealWhenLoaded
 
 @Composable
 fun DuaScreen(
@@ -73,7 +74,7 @@ fun DuaScreen(
     onAddDua: () -> Unit,
     onEditDua: (id: String) -> Unit,
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val colors = DhikrTheme.colors
     val snackbar = LocalSnackbar.current
     val undoText = stringResource(R.string.feedback_undo)
@@ -108,6 +109,7 @@ fun DuaScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.bg)
+            .revealWhenLoaded(state.isLoaded)
             .padding(horizontal = 16.dp),
     ) {
         // ---- Header: back arrow + title + add button ----

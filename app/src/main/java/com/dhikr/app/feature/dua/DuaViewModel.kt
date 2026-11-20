@@ -13,7 +13,12 @@ import kotlinx.coroutines.launch
 
 data class DuaCategoryUi(val category: String, val entries: List<DuaEntity>)
 
-data class DuaUiState(val categories: List<DuaCategoryUi>)
+data class DuaUiState(
+    val categories: List<DuaCategoryUi>,
+    // False until the first real data emission; the screen stays invisible
+    // until then (see ui/revealWhenLoaded) so default values never flash.
+    val isLoaded: Boolean = false,
+)
 
 /**
  * Groups [DuaRepository.observeAll]'s already-ordered list (DAO's
@@ -28,6 +33,7 @@ class DuaViewModel(private val repository: DuaRepository) : ViewModel() {
             DuaUiState(
                 entries.groupBy { it.category }
                     .map { (category, groupEntries) -> DuaCategoryUi(category, groupEntries) },
+                isLoaded = true,
             )
         }
         .stateIn(

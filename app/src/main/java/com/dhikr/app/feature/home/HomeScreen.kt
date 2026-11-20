@@ -30,7 +30,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -76,6 +75,8 @@ import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.Caprasimo
 import com.dhikr.app.ui.theme.DhikrTheme
 import kotlin.math.min
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dhikr.app.ui.revealWhenLoaded
 
 @Composable
 fun HomeScreen(
@@ -90,7 +91,7 @@ fun HomeScreen(
     onOpenSettings: () -> Unit = {},
     scrollToTopSignal: Int = 0,
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val colors = DhikrTheme.colors
     val lang = LocalAppLanguage.current
     val scrollState = rememberScrollState()
@@ -103,6 +104,7 @@ fun HomeScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.bg)
+            .revealWhenLoaded(state.isLoaded)
             .verticalScroll(scrollState)
             .testTag(HOME_SCREEN_TEST_TAG)
             .padding(16.dp),

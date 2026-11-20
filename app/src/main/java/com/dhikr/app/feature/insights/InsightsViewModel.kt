@@ -26,6 +26,9 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 data class InsightsUiState(
+    // False until the first real data emission; the screen stays invisible
+    // until then (see ui/revealWhenLoaded) so default values never flash.
+    val isLoaded: Boolean = false,
     val today: Int = 0,
     val week: Int = 0,
     val month: Int = 0,
@@ -80,6 +83,9 @@ class InsightsViewModel(
                         month = totals.month,
                         allTime = totals.allTime,
                         isEmpty = totals.allTime == 0,
+                        // With history, wait for the charts below so totals
+                        // and charts appear together instead of in two steps.
+                        isLoaded = it.isLoaded || totals.allTime == 0,
                     )
                 }
                 if (totals.allTime == 0) return@mapLatest
@@ -108,6 +114,7 @@ class InsightsViewModel(
                             recentMonths = resolvedRecentMonths,
                             dailyGoalTarget = resolvedDailyGoalTarget,
                             consistency = resolvedConsistency,
+                            isLoaded = true,
                         )
                     }
                 }

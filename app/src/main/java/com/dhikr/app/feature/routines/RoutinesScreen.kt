@@ -45,7 +45,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -80,6 +79,8 @@ import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.PillShape
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dhikr.app.ui.revealWhenLoaded
 
 @Composable
 fun RoutinesScreen(
@@ -90,7 +91,7 @@ fun RoutinesScreen(
     onEditRoutine: (String) -> Unit,
     onImportRequested: (suspend () -> String) -> Unit,
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val colors = DhikrTheme.colors
     val lang = LocalAppLanguage.current
     val context = LocalContext.current
@@ -100,8 +101,8 @@ fun RoutinesScreen(
     var actionMenuTarget by remember { mutableStateOf<RoutineWithSteps?>(null) }
 
     var shareDialogOpen by remember { mutableStateOf(false) }
-    val shareStatus by shareViewModel.status.collectAsState()
-    val shareSelectable by shareViewModel.selectable.collectAsState()
+    val shareStatus by shareViewModel.status.collectAsStateWithLifecycle()
+    val shareSelectable by shareViewModel.selectable.collectAsStateWithLifecycle()
 
     var importMenuOpen by remember { mutableStateOf(false) }
     var pasteDialogOpen by remember { mutableStateOf(false) }
@@ -133,6 +134,7 @@ fun RoutinesScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.bg)
+            .revealWhenLoaded(state.isLoaded)
             .imePadding()
             .padding(horizontal = 16.dp),
     ) {

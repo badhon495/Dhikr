@@ -53,7 +53,6 @@ import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,7 +62,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
@@ -129,6 +127,9 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.min
 import kotlinx.coroutines.delay
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.TextStyle
 
 private const val LONG_TEXT_THRESHOLD = 90
 
@@ -170,7 +171,7 @@ fun CounterScreen(
     // bottom nav bar lives in — CounterScreen has no reach to it directly.
     onLockedChanged: (Boolean) -> Unit = {},
 ) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     // B2: collected separately so a 1s timer tick recomposes only the nodes
     // that read it (top-bar label, summary dialogs), not the whole screen.
     // Kept as a State and read only via `elapsedSecondsState.value` inside
@@ -178,7 +179,7 @@ fun CounterScreen(
     // this function's body — including inside Row/Column/Box content, which
     // are inline and share this scope — would recompose the entire screen
     // on every tick.
-    val elapsedSecondsState = viewModel.elapsedSeconds.collectAsState()
+    val elapsedSecondsState = viewModel.elapsedSeconds.collectAsStateWithLifecycle()
     val colors = DhikrTheme.colors
     val haptics = rememberHaptics()
     val reducedMotion = LocalReducedMotion.current
@@ -377,7 +378,7 @@ fun CounterScreen(
         }
     }
 
-    val animatedProgress by animateFloatAsState(
+    val animatedProgress = animateFloatAsState(
         targetValue = min(1f, state.progressFraction),
         animationSpec = if (reducedMotion) {
             snap()
@@ -423,7 +424,9 @@ fun CounterScreen(
     }
     // While the rollover flourish plays, the ring shows the flourish sweep alone
     // (full -> 0) so the unwind is visible; otherwise it tracks real progress.
-    val ringProgress = if (flourishing) ringFlourish.value else animatedProgress
+    // Lambdas, not values: read inside the ring's draw/graphicsLayer blocks so
+    // the per-frame animation never recomposes this screen — only redraws.
+    val ringProgress: () -> Float = { if (flourishing) ringFlourish.value else animatedProgress.value }
 
     // Subtle lap-complete feedback (plan.md §14): the progress arc tints from
     // terra toward sage and back over ~300ms when the lap number ticks up.
@@ -476,7 +479,7 @@ fun CounterScreen(
         }
         lastRoutineStepIndex = state.currentRoutineStepIndex
     }
-    val progressArcColor = lerp(colors.terra, colors.sage, lapPulse.value)
+    val progressArcColor: () -> Color = { lerp(colors.terra, colors.sage, lapPulse.value) }
 
     // The ViewModel emits CounterUiState.Empty first and the real session a
     // few Room queries later — usually while the tab-switch slide is still
@@ -507,601 +510,72 @@ fun CounterScreen(
             .background(colors.bg)
             .graphicsLayer { alpha = contentAlpha.value },
     ) {
-        // ---- Top bar: back, dhikr name + session label, lock toggle ----
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 14.dp, vertical = 6.dp)
-                .height(48.dp),
-        ) {
-            val backLabel = stringResource(R.string.counter_back_content_description)
-            IconButtonTooltip(label = backLabel) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        // Back navigation is blocked while the counter is locked, so a
-                        // stray pocket-touch can't drop out of an active session.
-                        .clickable { if (state.locked) showLockedHint() else onBack() },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = backChevronIcon(),
-                        contentDescription = backLabel,
-                        tint = if (state.locked) colors.faint else colors.dim,
-                        modifier = Modifier.size(21.dp),
-                    )
-                }
-            }
-            val sessionLabelDescription = stringResource(R.string.counter_session_label_content_description)
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 4.dp),
-            ) {
-                Text(
-                    text = state.dhikr.displayName(lang),
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = colors.text,
-                    maxLines = 1,
-                )
-                SessionLabelText(
-                    elapsedSeconds = { elapsedSecondsState.value },
-                    routineStepCount = state.routineSteps.size,
-                    routineStepsDone = if (state.isRoutineComplete) {
-                        state.routineSteps.size
-                    } else {
-                        state.currentRoutineStepIndex.coerceIn(0, state.routineSteps.size)
-                    },
-                    totalCount = state.totalCount,
-                    color = colors.faint,
-                    modifier = Modifier
-                        .clickable(
-                            enabled = state.sessionReady,
-                            role = Role.Button,
-                        ) { showSessionSummary = true }
-                        .semantics {
-                            contentDescription = sessionLabelDescription
-                        },
-                )
-            }
-            val notesLabel = stringResource(R.string.counter_notes_content_description)
-            IconButtonTooltip(label = notesLabel) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        // Read-only, so it stays gated on sessionReady/locked like the
-                        // rest of the row rather than the note's own emptiness — an
-                        // empty note still opens the dialog (with a placeholder line)
-                        // rather than looking broken/unresponsive.
-                        .clickable(enabled = state.sessionReady) {
-                            if (state.locked) showLockedHint() else showNotesDialog = true
-                        },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = noteIcon(),
-                        contentDescription = notesLabel,
-                        tint = if (state.locked) colors.faint else {
-                            if (state.dhikr.displayNote(lang).isNotBlank()) colors.dim else colors.faint
-                        },
-                        modifier = Modifier.size(18.dp),
-                    )
-                }
-            }
-            val lockLabel = stringResource(R.string.counter_lock_content_description)
-            IconButtonTooltip(label = lockLabel) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        // The lock toggle is otherwise always enabled — it is the only
-                        // way back out of the locked state — but is still gated on
-                        // sessionReady (finding #2): Room's seed data may not have
-                        // loaded yet, and there is nothing to lock/unlock before then.
-                        .clickable(enabled = state.sessionReady) { viewModel.onToggleLock() },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = lockIcon(state.locked),
-                        contentDescription = lockLabel,
-                        tint = if (state.locked) colors.terra else colors.faint,
-                        modifier = Modifier.size(19.dp),
-                    )
-                }
-            }
-            val themeLabel = if (isDarkTheme) {
-                stringResource(R.string.counter_theme_light_content_description)
-            } else {
-                stringResource(R.string.counter_theme_dark_content_description)
-            }
-            Box {
-                IconButtonTooltip(label = themeLabel) {
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .combinedClickable(
-                                onClick = { onToggleTheme() },
-                                // Long-press still opens the dim-brightness popup — the
-                                // only spare gesture this icon has to offer it.
-                                onLongClick = { showDimLevelDialog = true },
-                            ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = themeToggleIcon(isDarkTheme),
-                            contentDescription = themeLabel,
-                            tint = colors.faint,
-                            modifier = Modifier.size(19.dp),
-                        )
-                    }
-                }
-                if (showDimLevelDialog) {
-                    // Turn dim on for the popup's duration so the slider actually
-                    // previews something — adjusting a level nobody can see defeats
-                    // the point. Only auto-enables; never auto-disables on dismiss,
-                    // since the user may have opened this while dim was already on.
-                    LaunchedEffect(Unit) {
-                        if (!dimScreenEnabled) onToggleDimScreen()
-                    }
-                    DimLevelPopup(
-                        level = dimBrightnessLevel,
-                        onLevelChange = onDimBrightnessLevelChange,
-                        onDismiss = { showDimLevelDialog = false },
-                    )
-                }
-            }
-        }
+        CounterTopBar(
+            state = state,
+            elapsedSeconds = { elapsedSecondsState.value },
+            isDarkTheme = isDarkTheme,
+            showDimLevelDialog = showDimLevelDialog,
+            dimScreenEnabled = dimScreenEnabled,
+            dimBrightnessLevel = dimBrightnessLevel,
+            onBack = onBack,
+            onLockedHint = { showLockedHint() },
+            onOpenSessionSummary = { showSessionSummary = true },
+            onOpenNotes = { showNotesDialog = true },
+            onToggleLock = { viewModel.onToggleLock() },
+            onToggleTheme = onToggleTheme,
+            onToggleDimScreen = onToggleDimScreen,
+            onDimLevelDialogChange = { showDimLevelDialog = it },
+            onDimBrightnessLevelChange = onDimBrightnessLevelChange,
+        )
 
-        // ---- Routine progress chips: current sage-filled, completed faint,
-        // upcoming dim. Only rendered when a routine is actively running. A
-        // routine can have many steps (the Asma-ul-Husna preset has 99), so the
-        // strip scrolls horizontally and keeps the current step in view. ----
-        if (state.routineSteps.isNotEmpty()) {
-            val chipListState = rememberLazyListState()
-            LaunchedEffect(state.currentRoutineStepIndex) {
-                val target = state.currentRoutineStepIndex
-                if (target >= 0 && target < state.routineSteps.size) {
-                    // Bias one item earlier so the current chip is not flush to
-                    // the leading edge.
-                    chipListState.animateScrollToItem((target - 1).coerceAtLeast(0))
-                }
-            }
-            LazyRow(
-                state = chipListState,
-                horizontalArrangement = Arrangement.spacedBy(7.dp),
-                contentPadding = PaddingValues(horizontal = 14.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-            ) {
-                itemsIndexed(
-                    state.routineSteps,
-                    key = { _, step -> step.stepOrder },
-                ) { index, step ->
-                    val isCurrent = index == state.currentRoutineStepIndex
-                    val isCompleted = index < state.currentRoutineStepIndex
-                    val isViewed = index == state.viewingRoutineStepIndex
-                    val bg = if (isCurrent) colors.sage else colors.surface
-                    val fg = when {
-                        isCurrent -> colors.onSage
-                        isCompleted -> colors.faint
-                        else -> colors.dim
-                    }
-                    // Completed steps are tappable to glance back read-only
-                    // (CounterViewModel.onSelectRoutineStep); tapping the
-                    // currently-previewed chip again — or the live current
-                    // chip while previewing — returns to the live step.
-                    // Future (not-yet-reached) steps stay inert.
-                    val chipClickable = isCompleted || (isCurrent && state.isViewingPastStep)
-                    val chipAlpha = if (!isCurrent && !isCompleted) 0.55f else 1f
-                    Box(
-                        modifier = Modifier
-                            .clip(PillShape)
-                            .background(bg)
-                            .then(
-                                if (isViewed) {
-                                    Modifier.border(1.5.dp, colors.terra, PillShape)
-                                } else {
-                                    Modifier
-                                }
-                            )
-                            .alpha(chipAlpha)
-                            .clickable(enabled = chipClickable) {
-                                if (isCurrent || isViewed) {
-                                    viewModel.onReturnToCurrentStep()
-                                } else {
-                                    viewModel.onSelectRoutineStep(index)
-                                }
-                            }
-                            .padding(horizontal = 11.dp, vertical = 5.dp),
-                    ) {
-                        Text(
-                            (if (isCompleted) "✓ " else "") + "${step.tasbihName.substringBefore(' ')} ${step.targetCount}",
-                            fontSize = 12.sp,
-                            color = fg,
-                            maxLines = 1,
-                        )
-                    }
-                }
-            }
-        }
+        RoutineChipStrip(
+            steps = state.routineSteps,
+            currentIndex = state.currentRoutineStepIndex,
+            viewingIndex = state.viewingRoutineStepIndex,
+            isViewingPastStep = state.isViewingPastStep,
+            onReturnToCurrentStep = { viewModel.onReturnToCurrentStep() },
+            onSelectStep = { viewModel.onSelectRoutineStep(it) },
+        )
 
-        // ---- Tap area: the whole middle of the screen counts ----
-        // The tap gesture and the scroll container sit on the outer Box, which
-        // fills all space left between the top bar and the control row. Inside a
-        // scroller the content is measured with an unbounded height, so
-        // Arrangement.Center alone would not centre anything; BoxWithConstraints
-        // hands us the real viewport height and `heightIn(min = ...)` pins the
-        // content to it. Longer dhikr text grows past that and scrolls normally.
-        val tapInteractionSource = remember { MutableInteractionSource() }
-        val tapActionLabel = stringResource(R.string.counter_tap_action_label)
-        BoxWithConstraints(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .clickable(
-                    interactionSource = tapInteractionSource,
-                    indication = null,
-                    // Room's seed data may not have loaded yet (finding #2) —
-                    // disable the tap target rather than let it silently do
-                    // nothing (or, pre-fix, crash the ViewModel). Also disabled
-                    // while previewing a completed routine step (read-only).
-                    enabled = state.sessionReady && !state.isViewingPastStep,
-                    // TalkBack: "double-tap to Count" instead of the generic
-                    // "double-tap to activate" on this full-screen tap zone.
-                    onClickLabel = tapActionLabel,
-                ) {
-                    if (hapticMode == HapticMode.EVERY_TAP) {
-                        haptics.tick()
-                    }
-                    viewModel.onTap()
-                }
-                .testTag(COUNTER_TAP_AREA_TEST_TAG),
-        ) {
-            val viewportHeight = maxHeight
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .heightIn(min = viewportHeight)
-                    .padding(horizontal = 20.dp, vertical = 6.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                if (scriptText.isNotEmpty()) {
-                    val baseStyle = if (showArabic) ArabicLineStyle else pronunciationStyle
-                    val scale = counterTextSize.scale
-                    Text(
-                        text = scriptText,
-                        style = if (scale == 1f) baseStyle else baseStyle.copy(
-                            fontSize = baseStyle.fontSize * scale,
-                            lineHeight = baseStyle.lineHeight * scale,
-                        ),
-                        color = if (showArabic) colors.text else colors.dim,
-                        textAlign = if (isLongText) TextAlign.Justify else TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = if (isLongText) 16.dp else 22.dp),
-                    )
-                }
+        CounterTapArea(
+            state = state,
+            scriptText = scriptText,
+            showArabic = showArabic,
+            isLongText = isLongText,
+            pronunciationStyle = pronunciationStyle,
+            counterTextSize = counterTextSize,
+            ringSize = ringSize,
+            countScale = countScale,
+            ringProgress = ringProgress,
+            progressArcColor = progressArcColor,
+            showLapTargetNumber = showLapTargetNumber,
+            rapidTaps = { rapidTaps },
+            countStyle = countStyle,
+            onTap = {
+                if (hapticMode == HapticMode.EVERY_TAP) haptics.tick()
+                viewModel.onTap()
+            },
+            modifier = Modifier.weight(1f),
+        )
 
-                // Progress ring + count
-                Box(
-                    modifier = Modifier
-                        .size(ringSize)
-                        .scale(countScale.value),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Canvas(modifier = Modifier.fillMaxSize()) {
-                        val strokeWidthPx = 12.dp.toPx()
-                        val inset = strokeWidthPx / 2f
-                        val arcSize = Size(size.width - strokeWidthPx, size.height - strokeWidthPx)
-                        drawArc(
-                            color = colors.track,
-                            startAngle = -90f,
-                            sweepAngle = 360f,
-                            useCenter = false,
-                            topLeft = Offset(inset, inset),
-                            size = arcSize,
-                            style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
-                        )
-                        if (ringProgress > 0f) {
-                            drawArc(
-                                color = progressArcColor,
-                                startAngle = -90f,
-                                sweepAngle = 360f * ringProgress,
-                                useCenter = false,
-                                topLeft = Offset(inset, inset),
-                                size = arcSize,
-                                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
-                            )
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize(0.82f)
-                            .clip(CircleShape)
-                            .background(colors.card),
-                    )
-                    val countDescription = stringResource(
-                        R.string.counter_count_description,
-                        state.count,
-                        state.dhikr.lapTarget,
-                    )
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        // Read as one polite live-region node ("437 of 1000")
-                        // rather than the number and label as separate nodes.
-                        modifier = Modifier.semantics(mergeDescendants = true) {
-                            liveRegion = LiveRegionMode.Polite
-                            contentDescription = countDescription
-                        },
-                    ) {
-                        ClampedFontScale {
-                            // During a lap-rollover flourish the number shows the
-                            // lap target with the ring full, then snaps back.
-                            // For a 1-per-lap dhikr the engine count is always 0,
-                            // so between taps show reps done (lap - 1) instead.
-                            // A past-step preview has no real lap/count from an
-                            // engine at all — state.count is already the step's
-                            // finished tally (CounterViewModel.onSelectRoutineStep),
-                            // so show it as-is rather than run it through the
-                            // lap-1 reasoning meant for a live session.
-                            val shownCount = when {
-                                state.isViewingPastStep -> state.count
-                                showLapTargetNumber -> state.dhikr.lapTarget
-                                state.dhikr.lapTarget == 1 -> (state.lap - 1).coerceAtLeast(0)
-                                else -> state.count
-                            }
-                            // The ring/Box already pops on every tap (countScale,
-                            // above); this adds a small slide+fade on the digits
-                            // themselves so the new value reads as arriving, not
-                            // just appearing — kept brief so it doesn't fight that
-                            // bounce or lag behind fast repeated taps.
-                            AnimatedContent(
-                                targetState = shownCount,
-                                transitionSpec = {
-                                    if (reducedMotion || rapidTaps) {
-                                        EnterTransition.None togetherWith ExitTransition.None
-                                    } else {
-                                        (slideInVertically(tween(Motion.FAST_MS, easing = Motion.StandardEasing)) { it / 3 } +
-                                            fadeIn(tween(Motion.FAST_MS)))
-                                            .togetherWith(fadeOut(tween(Motion.FAST_MS)))
-                                    }
-                                },
-                                label = "counterDigits",
-                            ) { value ->
-                                Text(
-                                    text = value.localizedDigits(lang),
-                                    style = countStyle,
-                                    color = colors.text,
-                                )
-                            }
-                        }
-                        Text(
-                            // A 1-per-lap dhikr counts whole laps, so its target
-                            // is the lap count, not the (always 1) per-lap target.
-                            text = stringResource(
-                                R.string.counter_of_target,
-                                if (state.dhikr.lapTarget == 1) state.totalLaps else state.dhikr.lapTarget,
-                            ),
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colors.faint,
-                        )
-                    }
-                }
-
-                // Lap pips + lap label
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(top = 20.dp),
-                ) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
-                        for (i in 1..state.totalLaps) {
-                            val pipWidth = if (!state.isViewingPastStep && i == state.lap) 26.dp else 8.dp
-                            val pipColor = when {
-                                // A past-step preview has no in-progress lap to
-                                // highlight — the whole (single) lap is done, so
-                                // paint it completed (sage) rather than
-                                // "current" (terra).
-                                state.isViewingPastStep -> colors.sage
-                                i < state.lap -> colors.sage
-                                i == state.lap -> colors.terra
-                                else -> colors.track
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .width(pipWidth)
-                                    .height(8.dp)
-                                    .clip(PillShape)
-                                    .background(pipColor),
-                            )
-                        }
-                    }
-                    Text(
-                        text = stringResource(
-                            R.string.counter_lap_label,
-                            state.lap,
-                            state.totalLaps,
-                            state.totalCount,
-                            state.dhikr.lapTarget * state.totalLaps,
-                        ),
-                        fontSize = 12.5.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colors.dim,
-                        modifier = Modifier.padding(top = 9.dp),
-                    )
-                }
-
-                Text(
-                    text = when {
-                        state.isViewingPastStep -> stringResource(R.string.counter_viewing_past_step_hint)
-                        state.locked -> stringResource(R.string.counter_tap_hint_locked)
-                        else -> stringResource(R.string.counter_tap_hint)
-                    },
-                    fontSize = 12.sp,
-                    color = colors.faint,
-                    modifier = Modifier.padding(top = 16.dp),
-                )
-            }
-        }
-
-        // ---- Control row: prev, undo, pause/resume, reset, next. (Notes moved
-        // to the top bar, beside the lock toggle — it's a look-something-up
-        // action, not a counting control, and living here made the row
-        // asymmetric once the top bar had a free slot for it.)
-        // Icon-only throughout (no visible labels) — every button's meaning is
-        // still exposed to TalkBack via contentDescription. Outside a routine,
-        // Prev/Next switch between tasbih in Tasbih-Library order. Inside a
-        // routine, Prev glances back at the previous completed step
-        // (read-only) and Next only works while previewing a completed step,
-        // walking back toward the live one — future steps stay locked.
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical = 16.dp),
-        ) {
-            run {
-                val previousLabel = stringResource(R.string.counter_previous_content_description)
-                IconButtonTooltip(label = previousLabel) {
-                    Box(
-                        modifier = Modifier
-                            .size(46.dp)
-                            .clip(CircleShape)
-                            .background(colors.surface)
-                            .clickable(enabled = state.canGoToPrevious) {
-                                if (state.locked) showLockedHint() else viewModel.onPrevious()
-                            }
-                            .minTapTarget(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = backChevronIcon(),
-                            contentDescription = previousLabel,
-                            tint = if (state.canGoToPrevious && !state.locked) colors.dim else colors.faint,
-                            modifier = Modifier.size(18.dp),
-                        )
-                    }
-                }
-            }
-            val undoLabel = stringResource(R.string.counter_undo)
-            IconButtonTooltip(label = undoLabel) {
-                Box(
-                    modifier = Modifier
-                        .size(46.dp)
-                        .clip(CircleShape)
-                        .background(colors.surface)
-                        // Undo is blocked while locked, same as reset — a pocket
-                        // touch shouldn't be able to unwind counted taps either.
-                        .clickable(enabled = state.sessionReady && state.canUndo && !state.isViewingPastStep) {
-                            if (state.locked) showLockedHint() else viewModel.onUndo()
-                        }
-                        .minTapTarget(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = undoIcon(),
-                        contentDescription = undoLabel,
-                        tint = if (state.canUndo && !state.locked && !state.isViewingPastStep) colors.text else colors.faint,
-                        modifier = Modifier.size(17.dp),
-                    )
-                }
-            }
-            val pauseResumeLabel = if (state.running) {
-                stringResource(R.string.counter_pause)
-            } else {
-                stringResource(R.string.counter_resume)
-            }
-            IconButtonTooltip(label = pauseResumeLabel) {
-                Box(
-                    modifier = Modifier
-                        .size(46.dp)
-                        .clip(CircleShape)
-                        .background(if (state.locked) colors.surface else colors.sage)
-                        // Room's seed data may not have loaded yet (finding #2).
-                        // Pause/resume is blocked while locked too — the lock's
-                        // whole point is a session that can't be knocked off
-                        // course by a stray touch. Also blocked while
-                        // previewing a completed routine step (read-only).
-                        .clickable(enabled = state.sessionReady && !state.isViewingPastStep) {
-                            if (state.locked) showLockedHint() else viewModel.onTogglePause()
-                        }
-                        .minTapTarget(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = if (state.running) pauseIcon() else playIcon(),
-                        contentDescription = pauseResumeLabel,
-                        tint = if (state.locked || state.isViewingPastStep) colors.faint else colors.onSage,
-                        modifier = Modifier.size(17.dp),
-                    )
-                }
-            }
-            val resetLabel = stringResource(R.string.counter_reset_content_description)
-            IconButtonTooltip(label = resetLabel) {
-                Box(
-                    modifier = Modifier
-                        .size(46.dp)
-                        .clip(CircleShape)
-                        .background(colors.surface)
-                        // Reset is destructive, so it is blocked while locked and, when
-                        // unlocked, only opens the confirmation dialog. Also gated on
-                        // sessionReady (finding #2) — Room's seed data may not have
-                        // loaded yet — and blocked while previewing a completed
-                        // routine step (read-only).
-                        .clickable(enabled = state.sessionReady && !state.isViewingPastStep) {
-                            if (state.locked) {
-                                showLockedHint()
-                            } else {
-                                val restore = viewModel.onReset()
-                                if (restore != null) {
-                                    snackbar?.show(resetDoneText, undoText) { restore() }
-                                }
-                            }
-                        }
-                        .minTapTarget(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = resetIcon(),
-                        contentDescription = resetLabel,
-                        tint = if (state.locked || state.isViewingPastStep) colors.faint else colors.dim,
-                        modifier = Modifier.size(18.dp),
-                    )
-                }
-            }
-            run {
-                val nextLabel = stringResource(R.string.counter_next_content_description)
-                IconButtonTooltip(label = nextLabel) {
-                    Box(
-                        modifier = Modifier
-                            .size(46.dp)
-                            .clip(CircleShape)
-                            .background(colors.surface)
-                            .clickable(enabled = state.canGoToNext) {
-                                if (state.locked) showLockedHint() else viewModel.onNext()
-                            }
-                            .minTapTarget(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = forwardChevronIcon(),
-                            contentDescription = nextLabel,
-                            tint = if (state.canGoToNext && !state.locked) colors.dim else colors.faint,
-                            modifier = Modifier.size(18.dp),
-                        )
-                    }
-                }
-            }
-        }
+        CounterControlRow(
+            canGoToNext = state.canGoToNext,
+            canGoToPrevious = state.canGoToPrevious,
+            canUndo = state.canUndo,
+            isViewingPastStep = state.isViewingPastStep,
+            locked = state.locked,
+            running = state.running,
+            sessionReady = state.sessionReady,
+            onLockedHint = { showLockedHint() },
+            onPrevious = { viewModel.onPrevious() },
+            onUndo = { viewModel.onUndo() },
+            onTogglePause = { viewModel.onTogglePause() },
+            onReset = {
+                val restore = viewModel.onReset()
+                if (restore != null) snackbar?.show(resetDoneText, undoText) { restore() }
+            },
+            onNext = { viewModel.onNext() },
+        )
     }
 
     if (state.isRoutineComplete) {
@@ -1230,6 +704,719 @@ fun CounterScreen(
  * never persisted, so a fresh app start always returns to device brightness).
  * The range goes to the true max (1f), so the user can also go brighter.
  */
+/** Counter top bar: back, dhikr name + session label, notes, lock, theme. */
+@Composable
+private fun CounterTopBar(
+    state: CounterUiState,
+    elapsedSeconds: () -> Int,
+    isDarkTheme: Boolean,
+    showDimLevelDialog: Boolean,
+    dimScreenEnabled: Boolean,
+    dimBrightnessLevel: Float?,
+    onBack: () -> Unit,
+    onLockedHint: () -> Unit,
+    onOpenSessionSummary: () -> Unit,
+    onOpenNotes: () -> Unit,
+    onToggleLock: () -> Unit,
+    onToggleTheme: () -> Unit,
+    onToggleDimScreen: () -> Unit,
+    onDimLevelDialogChange: (Boolean) -> Unit,
+    onDimBrightnessLevelChange: (Float) -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
+    // ---- Top bar: back, dhikr name + session label, lock toggle ----
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 14.dp, vertical = 6.dp)
+            .height(48.dp),
+    ) {
+        val backLabel = stringResource(R.string.counter_back_content_description)
+        IconButtonTooltip(label = backLabel) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    // Back navigation is blocked while the counter is locked, so a
+                    // stray pocket-touch can't drop out of an active session.
+                    .clickable { if (state.locked) onLockedHint() else onBack() },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = backChevronIcon(),
+                    contentDescription = backLabel,
+                    tint = if (state.locked) colors.faint else colors.dim,
+                    modifier = Modifier.size(21.dp),
+                )
+            }
+        }
+        val sessionLabelDescription = stringResource(R.string.counter_session_label_content_description)
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 4.dp),
+        ) {
+            Text(
+                text = state.dhikr.displayName(lang),
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colors.text,
+                maxLines = 1,
+            )
+            SessionLabelText(
+                elapsedSeconds = elapsedSeconds,
+                routineStepCount = state.routineSteps.size,
+                routineStepsDone = if (state.isRoutineComplete) {
+                    state.routineSteps.size
+                } else {
+                    state.currentRoutineStepIndex.coerceIn(0, state.routineSteps.size)
+                },
+                totalCount = state.totalCount,
+                color = colors.faint,
+                modifier = Modifier
+                    .clickable(
+                        enabled = state.sessionReady,
+                        role = Role.Button,
+                    ) { onOpenSessionSummary() }
+                    .semantics {
+                        contentDescription = sessionLabelDescription
+                    },
+            )
+        }
+        val notesLabel = stringResource(R.string.counter_notes_content_description)
+        IconButtonTooltip(label = notesLabel) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    // Read-only, so it stays gated on sessionReady/locked like the
+                    // rest of the row rather than the note's own emptiness — an
+                    // empty note still opens the dialog (with a placeholder line)
+                    // rather than looking broken/unresponsive.
+                    .clickable(enabled = state.sessionReady) {
+                        if (state.locked) onLockedHint() else onOpenNotes()
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = noteIcon(),
+                    contentDescription = notesLabel,
+                    tint = if (state.locked) colors.faint else {
+                        if (state.dhikr.displayNote(lang).isNotBlank()) colors.dim else colors.faint
+                    },
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
+        val lockLabel = stringResource(R.string.counter_lock_content_description)
+        IconButtonTooltip(label = lockLabel) {
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    // The lock toggle is otherwise always enabled — it is the only
+                    // way back out of the locked state — but is still gated on
+                    // sessionReady (finding #2): Room's seed data may not have
+                    // loaded yet, and there is nothing to lock/unlock before then.
+                    .clickable(enabled = state.sessionReady) { onToggleLock() },
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = lockIcon(state.locked),
+                    contentDescription = lockLabel,
+                    tint = if (state.locked) colors.terra else colors.faint,
+                    modifier = Modifier.size(19.dp),
+                )
+            }
+        }
+        val themeLabel = if (isDarkTheme) {
+            stringResource(R.string.counter_theme_light_content_description)
+        } else {
+            stringResource(R.string.counter_theme_dark_content_description)
+        }
+        Box {
+            IconButtonTooltip(label = themeLabel) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .combinedClickable(
+                            onClick = { onToggleTheme() },
+                            // Long-press still opens the dim-brightness popup — the
+                            // only spare gesture this icon has to offer it.
+                            onLongClick = { onDimLevelDialogChange(true) },
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = themeToggleIcon(isDarkTheme),
+                        contentDescription = themeLabel,
+                        tint = colors.faint,
+                        modifier = Modifier.size(19.dp),
+                    )
+                }
+            }
+            if (showDimLevelDialog) {
+                // Turn dim on for the popup's duration so the slider actually
+                // previews something — adjusting a level nobody can see defeats
+                // the point. Only auto-enables; never auto-disables on dismiss,
+                // since the user may have opened this while dim was already on.
+                LaunchedEffect(Unit) {
+                    if (!dimScreenEnabled) onToggleDimScreen()
+                }
+                DimLevelPopup(
+                    level = dimBrightnessLevel,
+                    onLevelChange = onDimBrightnessLevelChange,
+                    onDismiss = { onDimLevelDialogChange(false) },
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Routine step chips. Takes only the routine fields, so it skips recomposition
+ * on ordinary taps (the step list instance is cached in the ViewModel).
+ */
+@Composable
+private fun RoutineChipStrip(
+    steps: List<RoutineStepDisplay>,
+    currentIndex: Int,
+    viewingIndex: Int?,
+    isViewingPastStep: Boolean,
+    onReturnToCurrentStep: () -> Unit,
+    onSelectStep: (Int) -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    // ---- Routine progress chips: current sage-filled, completed faint,
+    // upcoming dim. Only rendered when a routine is actively running. A
+    // routine can have many steps (the Asma-ul-Husna preset has 99), so the
+    // strip scrolls horizontally and keeps the current step in view. ----
+    if (steps.isNotEmpty()) {
+        val chipListState = rememberLazyListState()
+        LaunchedEffect(currentIndex) {
+            val target = currentIndex
+            if (target >= 0 && target < steps.size) {
+                // Bias one item earlier so the current chip is not flush to
+                // the leading edge.
+                chipListState.animateScrollToItem((target - 1).coerceAtLeast(0))
+            }
+        }
+        LazyRow(
+            state = chipListState,
+            horizontalArrangement = Arrangement.spacedBy(7.dp),
+            contentPadding = PaddingValues(horizontal = 14.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+        ) {
+            itemsIndexed(
+                steps,
+                key = { _, step -> step.stepOrder },
+            ) { index, step ->
+                val isCurrent = index == currentIndex
+                val isCompleted = index < currentIndex
+                val isViewed = index == viewingIndex
+                val bg = if (isCurrent) colors.sage else colors.surface
+                val fg = when {
+                    isCurrent -> colors.onSage
+                    isCompleted -> colors.faint
+                    else -> colors.dim
+                }
+                // Completed steps are tappable to glance back read-only
+                // (CounterViewModel.onSelectRoutineStep); tapping the
+                // currently-previewed chip again — or the live current
+                // chip while previewing — returns to the live step.
+                // Future (not-yet-reached) steps stay inert.
+                val chipClickable = isCompleted || (isCurrent && isViewingPastStep)
+                val chipAlpha = if (!isCurrent && !isCompleted) 0.55f else 1f
+                Box(
+                    modifier = Modifier
+                        .clip(PillShape)
+                        .background(bg)
+                        .then(
+                            if (isViewed) {
+                                Modifier.border(1.5.dp, colors.terra, PillShape)
+                            } else {
+                                Modifier
+                            }
+                        )
+                        .alpha(chipAlpha)
+                        .clickable(enabled = chipClickable) {
+                            if (isCurrent || isViewed) {
+                                onReturnToCurrentStep()
+                            } else {
+                                onSelectStep(index)
+                            }
+                        }
+                        .padding(horizontal = 11.dp, vertical = 5.dp),
+                ) {
+                    Text(
+                        (if (isCompleted) "✓ " else "") + "${step.tasbihName.substringBefore(' ')} ${step.targetCount}",
+                        fontSize = 12.sp,
+                        color = fg,
+                        maxLines = 1,
+                    )
+                }
+            }
+        }
+    }
+}
+
+/** Full-height tap zone: dhikr text, ring, lap pips and hint. */
+@Composable
+private fun CounterTapArea(
+    state: CounterUiState,
+    scriptText: String,
+    showArabic: Boolean,
+    isLongText: Boolean,
+    pronunciationStyle: TextStyle,
+    counterTextSize: CounterTextSize,
+    ringSize: Dp,
+    countScale: Animatable<Float, *>,
+    ringProgress: () -> Float,
+    progressArcColor: () -> Color,
+    showLapTargetNumber: Boolean,
+    rapidTaps: () -> Boolean,
+    countStyle: TextStyle,
+    onTap: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val colors = DhikrTheme.colors
+    // ---- Tap area: the whole middle of the screen counts ----
+    // The tap gesture and the scroll container sit on the outer Box, which
+    // fills all space left between the top bar and the control row. Inside a
+    // scroller the content is measured with an unbounded height, so
+    // Arrangement.Center alone would not centre anything; BoxWithConstraints
+    // hands us the real viewport height and `heightIn(min = ...)` pins the
+    // content to it. Longer dhikr text grows past that and scrolls normally.
+    val tapInteractionSource = remember { MutableInteractionSource() }
+    val tapActionLabel = stringResource(R.string.counter_tap_action_label)
+    BoxWithConstraints(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(
+                interactionSource = tapInteractionSource,
+                indication = null,
+                // Room's seed data may not have loaded yet (finding #2) —
+                // disable the tap target rather than let it silently do
+                // nothing (or, pre-fix, crash the ViewModel). Also disabled
+                // while previewing a completed routine step (read-only).
+                enabled = state.sessionReady && !state.isViewingPastStep,
+                // TalkBack: "double-tap to Count" instead of the generic
+                // "double-tap to activate" on this full-screen tap zone.
+                onClickLabel = tapActionLabel,
+            ) {
+                onTap()
+            }
+            .testTag(COUNTER_TAP_AREA_TEST_TAG),
+    ) {
+        val viewportHeight = maxHeight
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .heightIn(min = viewportHeight)
+                .padding(horizontal = 20.dp, vertical = 6.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            if (scriptText.isNotEmpty()) {
+                val baseStyle = if (showArabic) ArabicLineStyle else pronunciationStyle
+                val scale = counterTextSize.scale
+                Text(
+                    text = scriptText,
+                    style = if (scale == 1f) baseStyle else baseStyle.copy(
+                        fontSize = baseStyle.fontSize * scale,
+                        lineHeight = baseStyle.lineHeight * scale,
+                    ),
+                    color = if (showArabic) colors.text else colors.dim,
+                    textAlign = if (isLongText) TextAlign.Justify else TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = if (isLongText) 16.dp else 22.dp),
+                )
+            }
+
+            CounterRing(
+                ringSize = ringSize,
+                scale = { countScale.value },
+                progress = ringProgress,
+                arcColor = progressArcColor,
+                count = state.count,
+                lap = state.lap,
+                totalLaps = state.totalLaps,
+                lapTarget = state.dhikr.lapTarget,
+                isViewingPastStep = state.isViewingPastStep,
+                showLapTargetNumber = showLapTargetNumber,
+                rapidTaps = rapidTaps,
+                countStyle = countStyle,
+            )
+            // Lap pips + lap label
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(top = 20.dp),
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                    for (i in 1..state.totalLaps) {
+                        val pipWidth = if (!state.isViewingPastStep && i == state.lap) 26.dp else 8.dp
+                        val pipColor = when {
+                            // A past-step preview has no in-progress lap to
+                            // highlight — the whole (single) lap is done, so
+                            // paint it completed (sage) rather than
+                            // "current" (terra).
+                            state.isViewingPastStep -> colors.sage
+                            i < state.lap -> colors.sage
+                            i == state.lap -> colors.terra
+                            else -> colors.track
+                        }
+                        Box(
+                            modifier = Modifier
+                                .width(pipWidth)
+                                .height(8.dp)
+                                .clip(PillShape)
+                                .background(pipColor),
+                        )
+                    }
+                }
+                Text(
+                    text = stringResource(
+                        R.string.counter_lap_label,
+                        state.lap,
+                        state.totalLaps,
+                        state.totalCount,
+                        state.dhikr.lapTarget * state.totalLaps,
+                    ),
+                    fontSize = 12.5.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colors.dim,
+                    modifier = Modifier.padding(top = 9.dp),
+                )
+            }
+
+            Text(
+                text = when {
+                    state.isViewingPastStep -> stringResource(R.string.counter_viewing_past_step_hint)
+                    state.locked -> stringResource(R.string.counter_tap_hint_locked)
+                    else -> stringResource(R.string.counter_tap_hint)
+                },
+                fontSize = 12.sp,
+                color = colors.faint,
+                modifier = Modifier.padding(top = 16.dp),
+            )
+        }
+    }
+}
+
+/**
+ * Progress ring + count. The per-frame animated values (pop scale, progress
+ * sweep, lap-pulse colour) arrive as lambdas and are read only in
+ * graphicsLayer / Canvas draw, so a tap's animations redraw this ring without
+ * recomposing anything.
+ */
+@Composable
+private fun CounterRing(
+    ringSize: Dp,
+    scale: () -> Float,
+    progress: () -> Float,
+    arcColor: () -> Color,
+    count: Int,
+    lap: Int,
+    totalLaps: Int,
+    lapTarget: Int,
+    isViewingPastStep: Boolean,
+    showLapTargetNumber: Boolean,
+    rapidTaps: () -> Boolean,
+    countStyle: TextStyle,
+) {
+    val colors = DhikrTheme.colors
+    val lang = LocalAppLanguage.current
+    val reducedMotion = LocalReducedMotion.current
+    // Progress ring + count
+    Box(
+        modifier = Modifier
+            .size(ringSize)
+            .graphicsLayer {
+                val s = scale()
+                scaleX = s
+                scaleY = s
+            },
+        contentAlignment = Alignment.Center,
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val p = progress()
+            val strokeWidthPx = 12.dp.toPx()
+            val inset = strokeWidthPx / 2f
+            val arcSize = Size(size.width - strokeWidthPx, size.height - strokeWidthPx)
+            drawArc(
+                color = colors.track,
+                startAngle = -90f,
+                sweepAngle = 360f,
+                useCenter = false,
+                topLeft = Offset(inset, inset),
+                size = arcSize,
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
+            )
+            if (p > 0f) {
+                drawArc(
+                    color = arcColor(),
+                    startAngle = -90f,
+                    sweepAngle = 360f * p,
+                    useCenter = false,
+                    topLeft = Offset(inset, inset),
+                    size = arcSize,
+                    style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
+                )
+            }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize(0.82f)
+                .clip(CircleShape)
+                .background(colors.card),
+        )
+        val countDescription = stringResource(
+            R.string.counter_count_description,
+            count,
+            lapTarget,
+        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            // Read as one polite live-region node ("437 of 1000")
+            // rather than the number and label as separate nodes.
+            modifier = Modifier.semantics(mergeDescendants = true) {
+                liveRegion = LiveRegionMode.Polite
+                contentDescription = countDescription
+            },
+        ) {
+            ClampedFontScale {
+                // During a lap-rollover flourish the number shows the
+                // lap target with the ring full, then snaps back.
+                // For a 1-per-lap dhikr the engine count is always 0,
+                // so between taps show reps done (lap - 1) instead.
+                // A past-step preview has no real lap/count from an
+                // engine at all — count is already the step's
+                // finished tally (CounterViewModel.onSelectRoutineStep),
+                // so show it as-is rather than run it through the
+                // lap-1 reasoning meant for a live session.
+                val shownCount = when {
+                    isViewingPastStep -> count
+                    showLapTargetNumber -> lapTarget
+                    lapTarget == 1 -> (lap - 1).coerceAtLeast(0)
+                    else -> count
+                }
+                // The ring/Box already pops on every tap (countScale,
+                // above); this adds a small slide+fade on the digits
+                // themselves so the new value reads as arriving, not
+                // just appearing — kept brief so it doesn't fight that
+                // bounce or lag behind fast repeated taps.
+                AnimatedContent(
+                    targetState = shownCount,
+                    transitionSpec = {
+                        if (reducedMotion || rapidTaps()) {
+                            EnterTransition.None togetherWith ExitTransition.None
+                        } else {
+                            (slideInVertically(tween(Motion.FAST_MS, easing = Motion.StandardEasing)) { it / 3 } +
+                                fadeIn(tween(Motion.FAST_MS)))
+                                .togetherWith(fadeOut(tween(Motion.FAST_MS)))
+                        }
+                    },
+                    label = "counterDigits",
+                ) { value ->
+                    Text(
+                        text = value.localizedDigits(lang),
+                        style = countStyle,
+                        color = colors.text,
+                    )
+                }
+            }
+            Text(
+                // A 1-per-lap dhikr counts whole laps, so its target
+                // is the lap count, not the (always 1) per-lap target.
+                text = stringResource(
+                    R.string.counter_of_target,
+                    if (lapTarget == 1) totalLaps else lapTarget,
+                ),
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colors.faint,
+            )
+        }
+    }
+}
+
+/**
+ * Control row: prev, undo, pause/resume, reset, next. Takes only the flags it
+ * shows, so it skips recomposition on ordinary taps.
+ */
+@Composable
+private fun CounterControlRow(
+    canGoToNext: Boolean,
+    canGoToPrevious: Boolean,
+    canUndo: Boolean,
+    isViewingPastStep: Boolean,
+    locked: Boolean,
+    running: Boolean,
+    sessionReady: Boolean,
+    onLockedHint: () -> Unit,
+    onPrevious: () -> Unit,
+    onUndo: () -> Unit,
+    onTogglePause: () -> Unit,
+    onReset: () -> Unit,
+    onNext: () -> Unit,
+) {
+    val colors = DhikrTheme.colors
+    // ---- Control row: prev, undo, pause/resume, reset, next. (Notes moved
+    // to the top bar, beside the lock toggle — it's a look-something-up
+    // action, not a counting control, and living here made the row
+    // asymmetric once the top bar had a free slot for it.)
+    // Icon-only throughout (no visible labels) — every button's meaning is
+    // still exposed to TalkBack via contentDescription. Outside a routine,
+    // Prev/Next switch between tasbih in Tasbih-Library order. Inside a
+    // routine, Prev glances back at the previous completed step
+    // (read-only) and Next only works while previewing a completed step,
+    // walking back toward the live one — future steps stay locked.
+    Row(
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 16.dp),
+    ) {
+        run {
+            val previousLabel = stringResource(R.string.counter_previous_content_description)
+            IconButtonTooltip(label = previousLabel) {
+                Box(
+                    modifier = Modifier
+                        .size(46.dp)
+                        .clip(CircleShape)
+                        .background(colors.surface)
+                        .clickable(enabled = canGoToPrevious) {
+                            if (locked) onLockedHint() else onPrevious()
+                        }
+                        .minTapTarget(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = backChevronIcon(),
+                        contentDescription = previousLabel,
+                        tint = if (canGoToPrevious && !locked) colors.dim else colors.faint,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
+            }
+        }
+        val undoLabel = stringResource(R.string.counter_undo)
+        IconButtonTooltip(label = undoLabel) {
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .clip(CircleShape)
+                    .background(colors.surface)
+                    // Undo is blocked while locked, same as reset — a pocket
+                    // touch shouldn't be able to unwind counted taps either.
+                    .clickable(enabled = sessionReady && canUndo && !isViewingPastStep) {
+                        if (locked) onLockedHint() else onUndo()
+                    }
+                    .minTapTarget(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = undoIcon(),
+                    contentDescription = undoLabel,
+                    tint = if (canUndo && !locked && !isViewingPastStep) colors.text else colors.faint,
+                    modifier = Modifier.size(17.dp),
+                )
+            }
+        }
+        val pauseResumeLabel = if (running) {
+            stringResource(R.string.counter_pause)
+        } else {
+            stringResource(R.string.counter_resume)
+        }
+        IconButtonTooltip(label = pauseResumeLabel) {
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .clip(CircleShape)
+                    .background(if (locked) colors.surface else colors.sage)
+                    // Room's seed data may not have loaded yet (finding #2).
+                    // Pause/resume is blocked while locked too — the lock's
+                    // whole point is a session that can't be knocked off
+                    // course by a stray touch. Also blocked while
+                    // previewing a completed routine step (read-only).
+                    .clickable(enabled = sessionReady && !isViewingPastStep) {
+                        if (locked) onLockedHint() else onTogglePause()
+                    }
+                    .minTapTarget(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = if (running) pauseIcon() else playIcon(),
+                    contentDescription = pauseResumeLabel,
+                    tint = if (locked || isViewingPastStep) colors.faint else colors.onSage,
+                    modifier = Modifier.size(17.dp),
+                )
+            }
+        }
+        val resetLabel = stringResource(R.string.counter_reset_content_description)
+        IconButtonTooltip(label = resetLabel) {
+            Box(
+                modifier = Modifier
+                    .size(46.dp)
+                    .clip(CircleShape)
+                    .background(colors.surface)
+                    // Reset is destructive, so it is blocked while locked and, when
+                    // unlocked, only opens the confirmation dialog. Also gated on
+                    // sessionReady (finding #2) — Room's seed data may not have
+                    // loaded yet — and blocked while previewing a completed
+                    // routine step (read-only).
+                    .clickable(enabled = sessionReady && !isViewingPastStep) {
+                        if (locked) {
+                            onLockedHint()
+                        } else {
+                            onReset()
+                        }
+                    }
+                    .minTapTarget(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = resetIcon(),
+                    contentDescription = resetLabel,
+                    tint = if (locked || isViewingPastStep) colors.faint else colors.dim,
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
+        run {
+            val nextLabel = stringResource(R.string.counter_next_content_description)
+            IconButtonTooltip(label = nextLabel) {
+                Box(
+                    modifier = Modifier
+                        .size(46.dp)
+                        .clip(CircleShape)
+                        .background(colors.surface)
+                        .clickable(enabled = canGoToNext) {
+                            if (locked) onLockedHint() else onNext()
+                        }
+                        .minTapTarget(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = forwardChevronIcon(),
+                        contentDescription = nextLabel,
+                        tint = if (canGoToNext && !locked) colors.dim else colors.faint,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
+            }
+        }
+    }
+}
+
 /**
  * Top-bar session label ("3/21 · 01:39" in a routine, "01:39 · 42/min"
  * otherwise). Its own restartable composable so the 1s timer tick, read via

@@ -44,6 +44,9 @@ private fun List<TasbihEntity>.sortedWith(sort: TasbihSort): List<TasbihEntity> 
 }
 
 data class TasbihLibraryUiState(
+    // False until the first real data emission; the screen stays invisible
+    // until then (see ui/revealWhenLoaded) so default values never flash.
+    val isLoaded: Boolean = false,
     val query: String = "",
     val results: List<TasbihEntity> = emptyList(),
     val builtInCount: Int = 0,
@@ -96,6 +99,7 @@ class TasbihLibraryViewModel(
             customCount = all.count { !it.isBuiltIn },
             progressByTasbihId = progress,
             sort = sort,
+            isLoaded = true,
         )
     }.stateIn(
         scope = viewModelScope,

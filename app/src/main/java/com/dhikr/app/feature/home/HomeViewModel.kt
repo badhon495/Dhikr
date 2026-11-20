@@ -40,6 +40,9 @@ data class ContinueSessionInfo(val tasbihName: String, val count: Int, val targe
 data class CurrentWaqtInfo(val prayer: Prayer, val startMillis: Long, val nextStartMillis: Long?)
 
 data class HomeUiState(
+    // False until the first real data emission; the screen stays invisible
+    // until then (see ui/revealWhenLoaded) so default values never flash.
+    val isLoaded: Boolean = false,
     val dateLabel: String = "",
     // Null if the platform calendar can't produce one (never expected on API 24+).
     val hijriDate: HijriDate? = null,
@@ -174,7 +177,7 @@ class HomeViewModel(
                     tasbihProgress = tasbihProgress,
                 )
             }
-            .onEach { _uiState.value = it }
+            .onEach { _uiState.value = it.copy(isLoaded = true) }
             .launchIn(viewModelScope)
     }
 

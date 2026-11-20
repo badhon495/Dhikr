@@ -36,7 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -138,6 +137,7 @@ import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.resolveIsDark
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 private const val ROUTE_HOME = "home"
 private const val ROUTE_TASBIH_LIBRARY = "tasbih"
@@ -179,7 +179,7 @@ fun DhikrApp(
     // lambda, so DhikrTheme can't see it unless it's passed in explicitly.
     val context = LocalContext.current
     val preferencesRepository = remember { AppPreferencesRepository(context.applicationContext) }
-    val reducedMotion by preferencesRepository.reducedMotion.collectAsState(initial = false)
+    val reducedMotion by preferencesRepository.reducedMotion.collectAsStateWithLifecycle(initialValue = false)
     DhikrTheme(
         themeMode = themeMode,
         dynamicColor = dynamicColor,
@@ -226,22 +226,22 @@ fun DhikrApp(
         val reminderScheduler = remember {
             com.dhikr.app.core.notifications.ReminderScheduler(context.applicationContext)
         }
-        val hapticMode by preferencesRepository.hapticMode.collectAsState(initial = HapticMode.EVERY_TAP)
-        val counterScript by preferencesRepository.counterScript.collectAsState(initial = CounterScript.PRONUNCIATION)
-        val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsState(initial = false)
-        val keepScreenOn by preferencesRepository.keepScreenOn.collectAsState(initial = false)
-        val counterTextSize by preferencesRepository.counterTextSize.collectAsState(initial = CounterTextSize.DEFAULT)
-        val volumeKeyCounting by preferencesRepository.volumeKeyCounting.collectAsState(initial = false)
+        val hapticMode by preferencesRepository.hapticMode.collectAsStateWithLifecycle(initialValue = HapticMode.EVERY_TAP)
+        val counterScript by preferencesRepository.counterScript.collectAsStateWithLifecycle(initialValue = CounterScript.PRONUNCIATION)
+        val autoCounterEnabled by preferencesRepository.autoCounterEnabled.collectAsStateWithLifecycle(initialValue = false)
+        val keepScreenOn by preferencesRepository.keepScreenOn.collectAsStateWithLifecycle(initialValue = false)
+        val counterTextSize by preferencesRepository.counterTextSize.collectAsStateWithLifecycle(initialValue = CounterTextSize.DEFAULT)
+        val volumeKeyCounting by preferencesRepository.volumeKeyCounting.collectAsStateWithLifecycle(initialValue = false)
         val isDarkTheme = themeMode.resolveIsDark(autoLightStart, autoDarkStart)
-        val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
+        val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsStateWithLifecycle(initialValue = false)
         val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
-            .collectAsState(initial = null)
-        val appLanguage by AppLanguage.state.collectAsState()
+            .collectAsStateWithLifecycle(initialValue = null)
+        val appLanguage by AppLanguage.state.collectAsStateWithLifecycle()
         // Unlike the preferences above, this one gates a full-screen overlay, so
         // an initial=false here flashes the onboarding screen on every Activity
         // recreation (e.g. rotation) until DataStore's real value loads. Start
         // null and treat null as "still loading" — render nothing until known.
-        val hasSeenOnboarding by preferencesRepository.hasSeenOnboarding.collectAsState(initial = null)
+        val hasSeenOnboarding by preferencesRepository.hasSeenOnboarding.collectAsStateWithLifecycle(initialValue = null)
         val coroutineScope = rememberCoroutineScope()
 
         // Hoisted here rather than read off CounterViewModel directly: this
@@ -666,7 +666,7 @@ fun DhikrApp(
                 }
                 composable(ROUTE_QIBLA) {
                     val prayerSettings by preferencesRepository.prayerSettings
-                        .collectAsState(initial = PrayerSettings())
+                        .collectAsStateWithLifecycle(initialValue = PrayerSettings())
                     QiblaScreen(
                         latitude = prayerSettings.latitude,
                         longitude = prayerSettings.longitude,

@@ -11,7 +11,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,6 +23,7 @@ import com.dhikr.app.core.datastore.DEFAULT_AUTO_LIGHT_START
 import com.dhikr.app.core.datastore.ThemeMode
 import com.dhikr.app.core.notifications.ReminderNotifications
 import com.dhikr.app.ui.theme.resolveIsDark
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class MainActivity : AppCompatActivity() {
 
@@ -90,17 +90,17 @@ class MainActivity : AppCompatActivity() {
             val preferencesRepository = remember {
                 AppPreferencesRepository(context.applicationContext)
             }
-            val themeMode by preferencesRepository.themeMode.collectAsState(initial = ThemeMode.SYSTEM)
-            val dynamicColor by preferencesRepository.dynamicColorEnabled.collectAsState(initial = false)
-            val strongBorders by preferencesRepository.strongBorders.collectAsState(initial = true)
-            val highContrast by preferencesRepository.highContrast.collectAsState(initial = false)
+            val themeMode by preferencesRepository.themeMode.collectAsStateWithLifecycle(initialValue = ThemeMode.SYSTEM)
+            val dynamicColor by preferencesRepository.dynamicColorEnabled.collectAsStateWithLifecycle(initialValue = false)
+            val strongBorders by preferencesRepository.strongBorders.collectAsStateWithLifecycle(initialValue = true)
+            val highContrast by preferencesRepository.highContrast.collectAsStateWithLifecycle(initialValue = false)
             val autoLightStart by preferencesRepository.autoLightStart
-                .collectAsState(initial = DEFAULT_AUTO_LIGHT_START)
+                .collectAsStateWithLifecycle(initialValue = DEFAULT_AUTO_LIGHT_START)
             val autoDarkStart by preferencesRepository.autoDarkStart
-                .collectAsState(initial = DEFAULT_AUTO_DARK_START)
-            val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsState(initial = false)
+                .collectAsStateWithLifecycle(initialValue = DEFAULT_AUTO_DARK_START)
+            val dimScreenEnabled by preferencesRepository.dimScreenEnabled.collectAsStateWithLifecycle(initialValue = false)
             val dimBrightnessLevel by preferencesRepository.dimBrightnessLevel
-                .collectAsState(initial = null)
+                .collectAsStateWithLifecycle(initialValue = null)
 
             // Explicit transparent style, re-applied via SideEffect whenever the
             // resolved dark/light signal flips — now driven by the user's theme

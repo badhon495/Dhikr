@@ -17,6 +17,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class RoutinesUiState(
+    // False until the first real data emission; the screen stays invisible
+    // until then (see ui/revealWhenLoaded) so default values never flash.
+    val isLoaded: Boolean = false,
     val query: String = "",
     // The full routine list is small, so search filters it in memory by name
     // rather than re-querying the DAO the way the Tasbih library does.
@@ -69,6 +72,7 @@ class RoutinesViewModel(
             tasbihNamesById = tasbihs.associate { it.id to it.displayName(lang) },
             completedTodayIds = dayProgress.completedRoutineIds,
             progressByRoutineId = dayProgress.fractionByRoutineId,
+            isLoaded = true,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), RoutinesUiState())
 

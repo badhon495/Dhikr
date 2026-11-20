@@ -33,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -64,10 +63,11 @@ import com.dhikr.app.ui.theme.DhikrTheme
 import com.dhikr.app.ui.theme.ListRowShape
 import com.dhikr.app.ui.theme.NotoNaskhArabic
 import com.dhikr.app.ui.theme.PillShape
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun TasbihEditorScreen(viewModel: TasbihEditorViewModel, onBack: () -> Unit) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val guardedBack = unsavedChangesGuard(
         state = state,
         ready = !state.isEditingExisting || state.name.isNotBlank() || state.pronunciation.isNotBlank() || state.arabic.isNotBlank(),

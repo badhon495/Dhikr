@@ -37,6 +37,7 @@ class DhikrApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        if (BuildConfig.DEBUG) enableStrictMode()
         com.dhikr.app.core.notifications.ReminderNotifications.ensureChannel(this)
         // B7: the seed check/insert are suspend Room calls — dispatch on IO,
         // not Default. Room runs the actual SQLite work on its own executor,
@@ -105,5 +106,31 @@ class DhikrApplication : Application() {
             .filter { it !in favourites && routineDao.countStepsUsingTasbih(it) == 0 }
         // Chunked to stay under SQLite's bound-variable limit.
         purgeable.chunked(500).forEach { tasbihDao.deleteByIds(it) }
+    }
+
+    /**
+     * Debug builds only: logs (tag "StrictMode") any disk read/write or
+     * network call made on the main thread, plus leaked closeables/cursors.
+     * Main-thread I/O is what produced the Settings-open stall, so this
+     * surfaces the next one as soon as it is written. Log-only, never crashes.
+     */
+    private fun enableStrictMode() {
+        android.os.StrictMode.setThreadPolicy(
+            android.os.StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .detectCustomSlowCalls()
+                .penaltyLog()
+                .build(),
+        )
+        android.os.StrictMode.setVmPolicy(
+            android.os.StrictMode.VmPolicy.Builder()
+                .detectLeakedClosableObjects()
+                .detectLeakedSqlLiteObjects()
+                .detectActivityLeaks()
+                .penaltyLog()
+                .build(),
+        )
     }
 }

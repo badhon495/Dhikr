@@ -30,7 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -62,10 +61,11 @@ import com.dhikr.app.ui.theme.DialogShape
 import com.dhikr.app.ui.theme.ListRowShape
 import com.dhikr.app.ui.theme.NotoNaskhArabic
 import com.dhikr.app.ui.theme.PillShape
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun DuaEditorScreen(viewModel: DuaEditorViewModel, onBack: () -> Unit) {
-    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val guardedBack = unsavedChangesGuard(
         state = state,
         ready = !state.isEditMode || state.name.isNotBlank() || state.arabic.isNotBlank(),
