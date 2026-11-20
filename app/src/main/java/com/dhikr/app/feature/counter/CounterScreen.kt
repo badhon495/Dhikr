@@ -68,6 +68,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
@@ -171,7 +172,12 @@ fun CounterScreen(
     val state by viewModel.uiState.collectAsState()
     // B2: collected separately so a 1s timer tick recomposes only the nodes
     // that read it (top-bar label, summary dialogs), not the whole screen.
-    val elapsedSeconds by viewModel.elapsedSeconds.collectAsState()
+    // Kept as a State and read only via `elapsedSecondsState.value` inside
+    // non-inline scopes (SessionLabelText, dialogs). Reading it directly in
+    // this function's body — including inside Row/Column/Box content, which
+    // are inline and share this scope — would recompose the entire screen
+    // on every tick.
+    val elapsedSecondsState = viewModel.elapsedSeconds.collectAsState()
     val colors = DhikrTheme.colors
     val haptics = rememberHaptics()
     val reducedMotion = LocalReducedMotion.current
@@ -516,21 +522,16 @@ fun CounterScreen(
                     color = colors.text,
                     maxLines = 1,
                 )
-                Text(
-                    text = if (state.routineSteps.isNotEmpty()) {
-                        val total = state.routineSteps.size
-                        val done = if (state.isRoutineComplete) {
-                            total
-                        } else {
-                            state.currentRoutineStepIndex.coerceIn(0, total)
-                        }
-                        "$done/$total  ·  ${formatDuration(elapsedSeconds)}"
+                SessionLabelText(
+                    elapsedSeconds = { elapsedSecondsState.value },
+                    routineStepCount = state.routineSteps.size,
+                    routineStepsDone = if (state.isRoutineComplete) {
+                        state.routineSteps.size
                     } else {
-                        formatSessionLabel(elapsedSeconds, state.totalCount)
+                        state.currentRoutineStepIndex.coerceIn(0, state.routineSteps.size)
                     },
-                    fontSize = 12.sp,
+                    totalCount = state.totalCount,
                     color = colors.faint,
-                    maxLines = 1,
                     modifier = Modifier
                         .clickable(
                             enabled = state.sessionReady,
@@ -1117,7 +1118,7 @@ fun CounterScreen(
                             R.string.routine_complete_body,
                             state.routineName ?: state.dhikr.displayName(lang),
                             state.totalCount,
-                            formatDuration(elapsedSeconds),
+                            formatDuration(elapsedSecondsState.value),
                         ),
                         fontSize = 13.5.sp,
                         color = colors.dim,
@@ -1162,7 +1163,7 @@ fun CounterScreen(
     if (showSessionSummary) {
         SessionSummaryDialog(
             startedAtMillis = state.sessionStartedAtMillis,
-            elapsedSeconds = elapsedSeconds,
+            elapsedSeconds = elapsedSecondsState.value,
             totalCount = state.totalCount,
             onDismiss = { showSessionSummary = false },
         )
@@ -1204,6 +1205,34 @@ fun CounterScreen(
  * never persisted, so a fresh app start always returns to device brightness).
  * The range goes to the true max (1f), so the user can also go brighter.
  */
+/**
+ * Top-bar session label ("3/21 · 01:39" in a routine, "01:39 · 42/min"
+ * otherwise). Its own restartable composable so the 1s timer tick, read via
+ * [elapsedSeconds], recomposes only this Text — not the whole CounterScreen.
+ */
+@Composable
+private fun SessionLabelText(
+    elapsedSeconds: () -> Int,
+    routineStepCount: Int,
+    routineStepsDone: Int,
+    totalCount: Int,
+    color: Color,
+    modifier: Modifier = Modifier,
+) {
+    val seconds = elapsedSeconds()
+    Text(
+        text = if (routineStepCount > 0) {
+            "$routineStepsDone/$routineStepCount  ·  ${formatDuration(seconds)}"
+        } else {
+            formatSessionLabel(seconds, totalCount)
+        },
+        fontSize = 12.sp,
+        color = color,
+        maxLines = 1,
+        modifier = modifier,
+    )
+}
+
 @Composable
 private fun DimLevelPopup(
     level: Float?,

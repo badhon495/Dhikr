@@ -4,7 +4,8 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,7 +24,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.semantics.Role
 import com.dhikr.app.ui.minTapTarget
 import com.dhikr.app.ui.theme.PillShape
@@ -779,13 +780,15 @@ private fun DhikrBottomNav(
     // Stroke vectors ported from the prototype's NAV table, sharing
     // CounterIcons.kt's treatment (24x24, 2.75 stroke, round caps) — see
     // ui/NavIcons.kt.
-    val items = listOf(
-        Triple(ROUTE_HOME, R.string.nav_home, NavHomeIcon),
-        Triple(ROUTE_TASBIH_LIBRARY, R.string.nav_tasbih, NavTasbihIcon),
-        Triple(ROUTE_COUNTER, R.string.nav_count, NavCountIcon),
-        Triple(ROUTE_INSIGHTS, R.string.nav_insights, NavInsightsIcon),
-        Triple(ROUTE_SETTINGS, R.string.nav_settings, NavSettingsIcon),
-    )
+    val items = remember {
+        listOf(
+            Triple(ROUTE_HOME, R.string.nav_home, NavHomeIcon),
+            Triple(ROUTE_TASBIH_LIBRARY, R.string.nav_tasbih, NavTasbihIcon),
+            Triple(ROUTE_COUNTER, R.string.nav_count, NavCountIcon),
+            Triple(ROUTE_INSIGHTS, R.string.nav_insights, NavInsightsIcon),
+            Triple(ROUTE_SETTINGS, R.string.nav_settings, NavSettingsIcon),
+        )
+    }
     val selectedIndex = items.indexOfFirst { (route, _, _) ->
         currentRoute?.substringBefore("?") == route.substringBefore("?")
     }.coerceAtLeast(0)
@@ -803,14 +806,32 @@ private fun DhikrBottomNav(
             val baseRoute = route.substringBefore("?")
             val selected = index == selectedIndex
             val label = stringResource(labelRes)
+            // Width change comes only from the label's expandHorizontally
+            // below. No animateContentSize on this pill: stacking it on top
+            // of expandHorizontally made it chase a target that moved every
+            // frame (re-measure + restart per frame), which is what made the
+            // bar stutter. Padding and fill animate alongside instead of
+            // snapping, so the pill grows as one smooth motion.
+            val pillPadding by animateDpAsState(
+                targetValue = if (selected) 16.dp else 12.dp,
+                animationSpec = if (reduced) snap() else tween(Motion.SCREEN_MS, easing = Motion.StandardEasing),
+                label = "navPillPadding",
+            )
+            val pillColor by animateColorAsState(
+                targetValue = if (selected) colors.sageSoft else colors.sageSoft.copy(alpha = 0f),
+                animationSpec = if (reduced) snap() else tween(Motion.SCREEN_MS, easing = Motion.StandardEasing),
+                label = "navPillColor",
+            )
+            val iconTint by animateColorAsState(
+                targetValue = if (selected) colors.text else colors.faint,
+                animationSpec = if (reduced) snap() else tween(Motion.SCREEN_MS, easing = Motion.StandardEasing),
+                label = "navIconTint",
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .animateContentSize(
-                        animationSpec = if (reduced) snap() else tween(Motion.SCREEN_MS, easing = Motion.StandardEasing),
-                    )
                     .clip(PillShape)
-                    .background(if (selected) colors.sageSoft else Color.Transparent)
+                    .drawBehind { drawRect(pillColor) }
                     .clickable(role = Role.Button) {
                         if (!selected) {
                             // Finding #7: popUpTo the graph's start destination so
@@ -840,12 +861,12 @@ private fun DhikrBottomNav(
                         }
                     }
                     .minTapTarget()
-                    .padding(horizontal = if (selected) 16.dp else 12.dp, vertical = 10.dp),
+                    .padding(horizontal = pillPadding, vertical = 10.dp),
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = if (selected) null else label,
-                    tint = if (selected) colors.text else colors.faint,
+                    tint = iconTint,
                 )
                 AnimatedVisibility(
                     visible = selected,

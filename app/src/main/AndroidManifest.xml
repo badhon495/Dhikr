@@ -23,6 +23,9 @@
         android:localeConfig="@xml/locales_config"
         android:theme="@style/Theme.Dhikr"
         android:supportsRtl="true">
+        <!-- Lets Perfetto/Macrobenchmark read app trace sections on release builds. -->
+        <profileable android:shell="true" />
+
 
         <!-- Enables AppCompat's per-app language backport on API < 33 so
              setApplicationLocales persists without a manual store. -->

@@ -40,7 +40,7 @@ class BaselineProfileGenerator {
         device.wait(Until.hasObject(By.res(PACKAGE, "home_screen")), TIMEOUT)
 
         // Home -> Tasbih tab.
-        device.findObject(By.text("Tasbih"))?.click()
+        clickTab("Tasbih")
         device.wait(Until.hasObject(By.res(PACKAGE, "tasbih_list")), TIMEOUT)
 
         // Open the first Tasbih into the Counter. The list is a LazyColumn whose rows may be
@@ -69,14 +69,36 @@ class BaselineProfileGenerator {
         device.waitForIdle()
 
         // Insights tab, then the monthly-history link ("See all months").
-        device.findObject(By.text("Insights"))?.click()
+        clickTab("Insights")
         device.wait(Until.hasObject(By.res(PACKAGE, "insights_screen")), TIMEOUT)
         device.findObject(By.textContains("months"))?.click()
         device.waitForIdle()
 
         // Back to Home.
         device.pressBack()
-        device.findObject(By.text("Home"))?.click()
+        clickTab("Home")
         device.wait(Until.hasObject(By.res(PACKAGE, "home_screen")), TIMEOUT)
+    }
+
+    /**
+     * Unselected bottom-nav tabs show only an icon — the label lives in the
+     * icon's contentDescription and only appears as visible text once the tab
+     * is selected. Match either, so the click isn't silently skipped.
+     */
+    private fun androidx.benchmark.macro.MacrobenchmarkScope.clickTab(label: String) {
+        // Waits out an in-flight screen transition, and retries if the node
+        // is recycled between lookup and click (StaleObjectException).
+        device.waitForIdle()
+        repeat(3) {
+            val tab = device.wait(Until.findObject(By.desc(label)), TIMEOUT)
+                ?: device.findObject(By.text(label))
+                ?: return
+            try {
+                tab.click()
+                return
+            } catch (_: androidx.test.uiautomator.StaleObjectException) {
+                device.waitForIdle()
+            }
+        }
     }
 }
